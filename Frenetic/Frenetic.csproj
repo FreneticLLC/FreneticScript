@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Frenetic</RootNamespace>
+    <AssemblyName>Frenetic</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandSystem\AbstractCommand.cs" />
+    <Compile Include="CommandSystem\AbstractCommandEntryData.cs" />
+    <Compile Include="CommandSystem\CommandEntry.cs" />
+    <Compile Include="CommandSystem\CommandQueue.cs" />
+    <Compile Include="CommandSystem\Commands.cs" />
+    <Compile Include="CommandSystem\CommandScript.cs" />
+    <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
+    <Compile Include="CommandSystem\CommonCmds\DebugOutputInvalidCommand.cs" />
+    <Compile Include="CommandSystem\CommonCmds\EchoCommand.cs" />
+    <Compile Include="CommandSystem\CommonCmds\NoopCommand.cs" />
+    <Compile Include="CommandSystem\CommonCmds\SetCommand.cs" />
+    <Compile Include="CommandSystem\CommonCmds\ToggleCommand.cs" />
+    <Compile Include="CommandSystem\Outputter.cs" />
+    <Compile Include="CommandSystem\QueueCmds\BreakCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\CallCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\DebugCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\DefineCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\DetermineCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\ElseCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\EventCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\FireeventCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\ForeachCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\FunctionCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\IfCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\InsertCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\ParsingCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\RegistereventCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\RepeatCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\RunCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\ScriptCacheCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\StopCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\UndefineCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\WaitCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />
+    <Compile Include="CommandSystem\ScriptEvent.cs" />
+    <Compile Include="CVar.cs" />
+    <Compile Include="CVarSystem.cs" />
+    <Compile Include="FreneticUtilities.cs" />
+    <Compile Include="MessageType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TagHandlers\Common\ColorTags.cs" />
+    <Compile Include="TagHandlers\Common\CVarTags.cs" />
+    <Compile Include="TagHandlers\Common\EscapeTags.cs" />
+    <Compile Include="TagHandlers\Common\ListTags.cs" />
+    <Compile Include="TagHandlers\Common\TernaryTags.cs" />
+    <Compile Include="TagHandlers\Common\TextTags.cs" />
+    <Compile Include="TagHandlers\Common\UnescapeTags.cs" />
+    <Compile Include="TagHandlers\Common\UtilTags.cs" />
+    <Compile Include="TagHandlers\Common\VarTags.cs" />
+    <Compile Include="TagHandlers\Objects\ListTag.cs" />
+    <Compile Include="TagHandlers\Objects\TextTag.cs" />
+    <Compile Include="TagHandlers\Objects\TimeTag.cs" />
+    <Compile Include="TagHandlers\TagData.cs" />
+    <Compile Include="TagHandlers\TagParser.cs" />
+    <Compile Include="TagHandlers\TemplateObject.cs" />
+    <Compile Include="TagHandlers\TemplateTags.cs" />
+    <Compile Include="TagHandlers\Variable.cs" />
+    <Compile Include="TextStyle.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
