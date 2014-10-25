@@ -1,4 +1,0 @@
-C:\GitHub\Frenetic\Frenetic\bin\Debug\Frenetic.dll
-C:\GitHub\Frenetic\Frenetic\bin\Debug\Frenetic.pdb
-C:\GitHub\Frenetic\Frenetic\obj\Debug\Frenetic.dll
-C:\GitHub\Frenetic\Frenetic\obj\Debug\Frenetic.pdb
