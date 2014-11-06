@@ -6,6 +6,9 @@ using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem
 {
+    /// <summary>
+    /// The base for a command.
+    /// </summary>
     public abstract class AbstractCommand
     {
         /// <summary>

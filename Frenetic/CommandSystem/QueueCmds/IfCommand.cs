@@ -47,8 +47,12 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Bad("If invalid: No block follows!");
                     return;
                 }
-                string comparison = entry.AllArguments(); // TODO: Rewrite to work arg-by-arg
-                bool success = TryIf(comparison);
+                List<string> parsedargs = new List<string>(entry.Arguments.Count);
+                for (int i = 0; i < entry.Arguments.Count; i++)
+                {
+                    parsedargs.Add(entry.GetArgument(i));
+                }
+                bool success = TryIf(parsedargs);
                 if (success)
                 {
                     entry.Good("If is true, executing...");
@@ -64,69 +68,135 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
         }
 
-        public static bool TryIf(string info)
+        public static bool TryIf(List<string> arguments)
         {
-            info = "(" + info.ToLower().Replace("&&", "&").Replace("||", "|").Replace(" ", "") + ")";
-            int mark = -1;
-            for (int i = 0; i < info.Length; i++)
+            if (arguments.Count == 0)
             {
-                if (info[i] == '(')
+                return false;
+            }
+            if (arguments.Count == 1)
+            {
+                return arguments[0].ToLower() == "true";
+            }
+            for (int i = 0; i < arguments.Count; i++)
+            {
+                if (arguments[i] == "(")
                 {
-                    mark = i;
+                    List<string> subargs = new List<string>();
+                    int count = 0;
+                    bool found = false;
+                    for (int x = i + 1; x < arguments.Count; x++)
+                    {
+                        if (arguments[x] == "(")
+                        {
+                            count++;
+                            subargs.Add("(");
+                        }
+                        else if (arguments[x] == ")")
+                        {
+                            count--;
+                            if (count == -1)
+                            {
+                                bool cfound = TryIf(subargs);
+                                arguments.RemoveRange(i, (x - i) + 1);
+                                arguments.Insert(i, cfound.ToString());
+                                found = true;
+                            }
+                            else
+                            {
+                                subargs.Add(")");
+                            }
+                        }
+                        else
+                        {
+                            subargs.Add(arguments[x]);
+                        }
+                    }
+                    if (!found)
+                    {
+                        return false;
+                    }
                 }
-                if (info[i] == ')' && i != -1 && i - (mark + 1) > 0)
+                else if (arguments[i] == ")")
                 {
-                    info = (mark > 0 ? info.Substring(0, mark): "") +
-                        TryAnds(info.Substring(mark + 1, i - (mark + 1))) +
-                        (i + 1 < info.Length ? info.Substring(i + 1): "");
-                    i = -1;
-                    mark = -1;
-                }
-            }
-            return TextIsTrue(info);
-        }
-
-        static string TryAnds(string info)
-        {
-            if (info.Length == 0)
-            {
-                return "false";
-            }
-            if (TextIsTrue(info))
-            {
-                return "true";
-            }
-            string[] ands = info.Split('&');
-            for (int i = 0; i < ands.Length; i++)
-            {
-                if (!TryOrs(ands[i]))
-                {
-                    return "false";
-                }
-            }
-            return "true";
-        }
-
-        static bool TryOrs(string info)
-        {
-            if (TextIsTrue(info))
-            {
-                return true;
-            }
-            string[] ors = info.Split('|');
-            for (int i = 0; i < ors.Length; i++)
-            {
-                if (TextIsTrue(ors[i]))
-                {
-                    return true;
+                    return false;
                 }
             }
-            return false;
-        }
-
-        static bool TextIsTrue(string info)
-        {
-            return info == "true";
+            if (arguments.Count == 1)
+            {
+                return arguments[0].ToLower() == "true";
+            }
+            for (int i = 0; i < arguments.Count; i++)
+            {
+                if (arguments[i] == "||")
+                {
+                    List<string> beforeargs = new List<string>(i);
+                    for (int x = 0; x < i; x++)
+                    {
+                        beforeargs.Add(arguments[x]);
+                    }
+                    bool before = TryIf(beforeargs);
+                    List<string> afterargs = new List<string>(i);
+                    for (int x = i + 1; x < arguments.Count; x++)
+                    {
+                        afterargs.Add(arguments[x]);
+                    }
+                    bool after = TryIf(afterargs);
+                    return before || after;
+                }
+                else if (arguments[i] == "&&")
+                {
+                    List<string> beforeargs = new List<string>(i);
+                    for (int x = 0; x < i; x++)
+                    {
+                        beforeargs.Add(arguments[x]);
+                    }
+                    bool before = TryIf(beforeargs);
+                    List<string> afterargs = new List<string>(i);
+                    for (int x = i + 1; x < arguments.Count; x++)
+                    {
+                        afterargs.Add(arguments[x]);
+                    }
+                    bool after = TryIf(afterargs);
+                    return before && after;
+                }
+            }
+            if (arguments.Count == 1)
+            {
+                return arguments[0].ToLower() == "true";
+            }
+            if (arguments.Count == 2)
+            {
+                return false;
+            }
+            if (arguments[1] == "==")
+            {
+                return arguments[0] == arguments[2];
+            }
+            else if (arguments[1] == "!=")
+            {
+                return arguments[0] != arguments[2];
+            }
+            else if (arguments[1] == ">=")
+            {
+                return FreneticUtilities.StringToDouble(arguments[0]) >= FreneticUtilities.StringToDouble(arguments[2]);
+            }
+            else if (arguments[1] == "<=")
+            {
+                return FreneticUtilities.StringToDouble(arguments[0]) <= FreneticUtilities.StringToDouble(arguments[2]);
+            }
+            else if (arguments[1] == ">")
+            {
+                return FreneticUtilities.StringToDouble(arguments[0]) > FreneticUtilities.StringToDouble(arguments[2]);
+            }
+            else if (arguments[1] == "<")
+            {
+                return FreneticUtilities.StringToDouble(arguments[0]) < FreneticUtilities.StringToDouble(arguments[2]);
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

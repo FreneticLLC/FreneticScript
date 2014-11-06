@@ -6,6 +6,9 @@ using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem
 {
+    /// <summary>
+    /// Represents a set of commands to be run, and related information.
+    /// </summary>
     public class CommandQueue
     {
         /// <summary>

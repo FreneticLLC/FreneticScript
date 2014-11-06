@@ -6,6 +6,9 @@ using Frenetic.CommandSystem.CommonCmds;
 
 namespace Frenetic.CommandSystem
 {
+    /// <summary>
+    /// All the information for a command being currently run.
+    /// </summary>
     public class CommandEntry
     {
         /// <summary>
@@ -85,6 +88,9 @@ namespace Frenetic.CommandSystem
             return CreateInvalidOutput(BaseCommand, _block, args, _owner, system, command, marker);
         }
 
+        /// <summary>
+        /// Create an entry that represents invalid output.
+        /// </summary>
         public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block,
             List<string> _arguments, CommandEntry _owner, Commands system, string line, int marker)
         {
@@ -108,6 +114,9 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public CommandEntry BlockOwner = null;
 
+        /// <summary>
+        /// Full constructor, recommended.
+        /// </summary>
         public CommandEntry(string _commandline, List<CommandEntry> _block, CommandEntry _owner,
             AbstractCommand _command, List<string> _arguments, string _name, int _marker)
         {

@@ -44,17 +44,13 @@ namespace Frenetic.CommandSystem.QueueCmds
                     {
                         WhileCommandData data = (WhileCommandData)entry.BlockOwner.Data;
                         data.Index++;
-                        StringBuilder comp = new StringBuilder();
+                        List<string> comp = new List<string>();
                         for (int i = 0; i < data.ComparisonArgs.Count; i++)
                         {
-                            comp.Append(entry.Queue.CommandSystem.TagSystem.ParseTags(
+                            comp.Add(entry.Queue.CommandSystem.TagSystem.ParseTags(
                                 data.ComparisonArgs[i], TextStyle.Color_Simple, entry.Queue.Variables, entry.Queue.Debug));
-                            if (i + 1 < data.ComparisonArgs.Count)
-                            {
-                                comp.Append(" ");
-                            }
                         }
-                        if (IfCommand.TryIf(comp.ToString()))
+                        if (IfCommand.TryIf(comp))
                         {
                             entry.Good("While loop at index <{color.emphasis}>" + data.Index + "<{color.base}>...");
                             entry.Queue.SetVariable("while_index", data.Index.ToString());
@@ -129,8 +125,14 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    string target = count + " " + entry.AllArguments(1);
-                    if (!IfCommand.TryIf(target))
+                    List<string> parsedargs = new List<string>(entry.Arguments.Count + 1);
+                    parsedargs.Add(count);
+                    for (int i = 1; i < entry.Arguments.Count; i++)
+                    {
+                        parsedargs.Add(entry.GetArgument(i));
+                    }
+                    bool success = IfCommand.TryIf(parsedargs);
+                    if (!success)
                     {
                         entry.Good("Not looping.");
                         return;

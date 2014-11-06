@@ -56,8 +56,12 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    string comparison = entry.AllArguments(1);
-                    bool success = IfCommand.TryIf(comparison);
+                    List<string> parsedargs = new List<string>(entry.Arguments.Count);
+                    for (int i = 1; i < entry.Arguments.Count; i++)
+                    {
+                        parsedargs.Add(entry.GetArgument(i));
+                    }
+                    bool success = IfCommand.TryIf(parsedargs);
                     if (entry.Block != null)
                     {
                         if (success)
