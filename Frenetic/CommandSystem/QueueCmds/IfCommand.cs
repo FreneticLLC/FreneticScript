@@ -47,7 +47,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Bad("If invalid: No block follows!");
                     return;
                 }
-                string comparison = entry.AllArguments();
+                string comparison = entry.AllArguments(); // TODO: Rewrite to work arg-by-arg
                 bool success = TryIf(comparison);
                 if (success)
                 {
