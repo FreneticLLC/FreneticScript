@@ -66,8 +66,14 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public List<string> Determination = new List<string>();
 
+        /// <summary>
+        /// What function to invoke when output is generated.
+        /// </summary>
         public Commands.OutputFunction Outputsystem = null;
 
+        /// <summary>
+        /// Constructs a new CommandQueue - generally kept to the Frenetic internals.
+        /// </summary>
         public CommandQueue(CommandScript _script, List<CommandEntry> _commands, Commands _system)
         {
             Script = _script;
@@ -76,6 +82,16 @@ namespace Frenetic.CommandSystem
             Variables = new Dictionary<string, string>();
             Debug = DebugMode.FULL;
         }
+
+        /// <summary>
+        /// A complete function is something invoked with a queue finishes.
+        /// </summary>
+        public delegate void CompleteFunction();
+
+        /// <summary>
+        /// What CompleteFunction to invoke when the queue finishes.
+        /// </summary>
+        public CompleteFunction Completefunc = null;
 
         /// <summary>
         /// Starts running the command queue.
@@ -100,6 +116,10 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public void Tick(float Delta)
         {
+            if (Delayable && (LastCommand != null && LastCommand.Marker == 4 && !LastCommand.Finished))
+            {
+                return;
+            }
             if (Delayable && Wait > 0f)
             {
                 Wait -= Delta;
@@ -115,10 +135,14 @@ namespace Frenetic.CommandSystem
                 CommandList.RemoveAt(0);
                 CommandSystem.ExecuteCommand(CurrentCommand, this);
                 LastCommand = CurrentCommand;
-                if (Delayable && Wait > 0f)
+                if (Delayable && ((Wait > 0f) || (LastCommand.Marker == 4 && !LastCommand.Finished)))
                 {
                     return;
                 }
+            }
+            if (Completefunc != null)
+            {
+                Completefunc.Invoke();
             }
             Running = false;
         }
@@ -188,10 +212,41 @@ namespace Frenetic.CommandSystem
         }
     }
 
+    /// <summary>
+    /// An enumerattion of the possible debug modes a queue can have.
+    /// </summary>
     public enum DebugMode : byte
     {
+        /// <summary>
+        /// Debug everything.
+        /// </summary>
         FULL = 1,
+        /// <summary>
+        /// Only debug errors.
+        /// </summary>
         MINIMAL = 2,
+        /// <summary>
+        /// Debug nothing.
+        /// </summary>
         NONE = 3
+    }
+
+    /// <summary>
+    /// A mini-class used for the callback for ~waitable commands.
+    /// </summary>
+    public class EntryFinisher
+    {
+        /// <summary>
+        /// The entry being waited on.
+        /// </summary>
+        public CommandEntry Entry;
+
+        /// <summary>
+        /// Add this function as a callback to complete entry.
+        /// </summary>
+        public void Complete()
+        {
+            Entry.Finished = true;
+        }
     }
 }

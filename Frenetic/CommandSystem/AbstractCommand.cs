@@ -37,6 +37,11 @@ namespace Frenetic.CommandSystem
         public bool IsFlow = false;
 
         /// <summary>
+        /// Whether the command can be ~waited on.
+        /// </summary>
+        public bool Waitable = false;
+
+        /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="entry">Entry to be executed</param>

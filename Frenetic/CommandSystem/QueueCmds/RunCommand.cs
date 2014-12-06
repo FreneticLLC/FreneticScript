@@ -8,6 +8,8 @@ namespace Frenetic.CommandSystem.QueueCmds
 {
     class RunCommand: AbstractCommand
     {
+        // TODO: Docs
+        // @Waitable
         public RunCommand()
         {
             Name = "run";
@@ -15,6 +17,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Description = "Runs a script file.";
             // TODO: DEFINITION ARGS
             IsFlow = true;
+            Waitable = true;
         }
 
         public override void Execute(CommandEntry entry)
@@ -32,6 +35,16 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Good("Running '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>'...");
                     CommandQueue queue;
                     entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
+                    // TODO: Handle determinations (add as a definition?)
+                    if (!queue.Running)
+                    {
+                        entry.Finished = true;
+                    }
+                    else
+                    {
+                        EntryFinisher fin = new EntryFinisher() { Entry = entry };
+                        queue.Completefunc = fin.Complete;
+                    }
                 }
                 else
                 {

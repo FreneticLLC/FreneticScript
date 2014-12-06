@@ -78,6 +78,11 @@ namespace Frenetic.CommandSystem
                 marker = 3;
                 BaseCommand = BaseCommand.Substring(1);
             }
+            else if (BaseCommand.StartsWith("~") && BaseCommand.Length > 1)
+            {
+                marker = 4;
+                BaseCommand = BaseCommand.Substring(1);
+            }
             string BaseCommandLow = BaseCommand.ToLower();
             args.RemoveAt(0);
             AbstractCommand cmd;
@@ -113,6 +118,11 @@ namespace Frenetic.CommandSystem
         /// What command entry object owns this entry, if any.
         /// </summary>
         public CommandEntry BlockOwner = null;
+
+        /// <summary>
+        /// Whether the waitable command entry is finished.
+        /// </summary>
+        public bool Finished = false;
 
         /// <summary>
         /// Full constructor, recommended.

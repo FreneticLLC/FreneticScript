@@ -8,6 +8,9 @@ using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem
 {
+    /// <summary>
+    /// Handles all Frenetic command systems. The entry point to Frenetic.
+    /// </summary>
     public class Commands
     {
         // <--[definition]
@@ -72,8 +75,14 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public Dictionary<string, ScriptEvent> Events;
 
+        /// <summary>
+        /// A placeholder queue, to represent an existent queue object.
+        /// </summary>
         public CommandQueue PlaceholderQueue;
 
+        /// <summary>
+        /// A random number generator.
+        /// </summary>
         public Random random = new Random();
 
         /// <summary>
@@ -81,6 +90,8 @@ namespace Frenetic.CommandSystem
         /// Returns the determined value(s).
         /// </summary>
         /// <param name="script">The script to execute</param>
+        /// <param name="Variables">What variables to add to the commandqueue</param>
+        /// <param name="queue">Outputs the generated queue (already ran or running)</param>
         public List<string> ExecuteScript(CommandScript script, Dictionary<string, string> Variables, out CommandQueue queue)
         {
             queue = script.ToQueue(this);
@@ -136,12 +147,16 @@ namespace Frenetic.CommandSystem
             }
         }
 
+        /// <summary>
+        /// A function to invoke when output is generated.
+        /// </summary>
         public delegate void OutputFunction(string message, MessageType type);
 
         /// <summary>
         /// Executes an arbitrary list of command inputs (separated by newlines, semicolons, ...)
         /// </summary>
         /// <param name="commands">The command string to parse</param>
+        /// <param name="outputter">The output function to call, or null if none</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
             CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this).ToQueue(this);
@@ -179,6 +194,10 @@ namespace Frenetic.CommandSystem
             RegisteredCommandList.Add(command);
         }
 
+        /// <summary>
+        /// Registers a script event to the system.
+        /// </summary>
+        /// <param name="newevent">The event to register</param>
         public void RegisterEvent(ScriptEvent newevent)
         {
             Events.Add(newevent.Name, newevent);
