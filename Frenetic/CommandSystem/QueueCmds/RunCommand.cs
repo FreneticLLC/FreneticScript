@@ -25,6 +25,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             if (entry.Arguments.Count < 1)
             {
                 ShowUsage(entry);
+                entry.Finished = true;
             }
             else
             {
@@ -49,6 +50,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 else
                 {
                     entry.Bad("Cannot run script '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>': file does not exist!");
+                    entry.Finished = true;
                 }
             }
         }
