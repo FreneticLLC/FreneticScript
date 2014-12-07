@@ -91,8 +91,9 @@ namespace Frenetic.TagHandlers
         /// <param name="base_color">The base color for tags to use</param>
         /// <param name="vars">Any variables in this tag's context</param>
         /// <param name="input">The tagged string</param>
+        /// <param name="mode">What debugmode to use</param>
         /// <returns>The string with tags parsed</returns>
-        public string ParseTags(string input, string base_color, Dictionary<string, string> vars, DebugMode mode)
+        public string ParseTags(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode)
         {
             if (input.IndexOf("<{") < 0)
             {

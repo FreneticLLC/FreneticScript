@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
@@ -36,7 +37,6 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Good("Running '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>'...");
                     CommandQueue queue;
                     entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
-                    // TODO: Handle determinations (add as a definition?)
                     if (!queue.Running)
                     {
                         entry.Finished = true;
@@ -46,6 +46,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                         EntryFinisher fin = new EntryFinisher() { Entry = entry };
                         queue.Completefunc = fin.Complete;
                     }
+                    ListTag list = new ListTag(queue.Determination);
+                    entry.Queue.SetVariable("run_determinations", list);
                 }
                 else
                 {

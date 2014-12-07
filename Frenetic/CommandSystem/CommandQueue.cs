@@ -19,7 +19,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// A list of all variables saved in this queue.
         /// </summary>
-        public Dictionary<string, string> Variables;
+        public Dictionary<string, TemplateObject> Variables;
 
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
@@ -79,7 +79,7 @@ namespace Frenetic.CommandSystem
             Script = _script;
             CommandList = _commands;
             CommandSystem = _system;
-            Variables = new Dictionary<string, string>();
+            Variables = new Dictionary<string, TemplateObject>();
             Debug = DebugMode.FULL;
         }
 
@@ -188,7 +188,7 @@ namespace Frenetic.CommandSystem
         /// </summary>
         /// <param name="name">The name of the variable</param>
         /// <param name="value">The value to set on the variable</param>
-        public void SetVariable(string name, string value)
+        public void SetVariable(string name, TemplateObject value)
         {
             string namelow = name.ToLower();
             Variables.Remove(namelow);
@@ -200,10 +200,10 @@ namespace Frenetic.CommandSystem
         /// </summary>
         /// <param name="name">The name of the variable</param>
         /// <returns>The variable's value</returns>
-        public string GetVariable(string name)
+        public TemplateObject GetVariable(string name)
         {
             string namelow = name.ToLower();
-            string value;
+            TemplateObject value;
             if (Variables.TryGetValue(namelow, out value))
             {
                 return value;

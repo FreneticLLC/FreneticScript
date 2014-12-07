@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
@@ -53,7 +54,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         if (IfCommand.TryIf(comp))
                         {
                             entry.Good("While loop at index <{color.emphasis}>" + data.Index + "<{color.base}>...");
-                            entry.Queue.SetVariable("while_index", data.Index.ToString());
+                            entry.Queue.SetVariable("while_index", new TextTag(data.Index.ToString()));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                         }
                         else
@@ -147,7 +148,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         CommandEntry callback = new CommandEntry("while \0CALLBACK", null, entry,
                             this, new List<string> { "\0CALLBACK" }, "while", 0);
                         entry.Block.Add(callback);
-                        entry.Queue.SetVariable("while_index", "1");
+                        entry.Queue.SetVariable("while_index", new TextTag("1"));
                         entry.Queue.AddCommandsNow(entry.Block);
                     }
                     else

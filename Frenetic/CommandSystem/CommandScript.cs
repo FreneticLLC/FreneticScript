@@ -6,6 +6,9 @@ using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem
 {
+    /// <summary>
+    /// Represents a series of commands, not currently being processed.
+    /// </summary>
     public class CommandScript
     {
         /// <summary>
@@ -170,6 +173,9 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public string Name;
 
+        /// <summary>
+        /// The default debugmode for queues running this script.
+        /// </summary>
         public DebugMode Debug = DebugMode.FULL;
 
         /// <summary>
@@ -177,6 +183,11 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public List<CommandEntry> Commands;
 
+        /// <summary>
+        /// Constructs a new command script.
+        /// </summary>
+        /// <param name="_name">The name of the script</param>
+        /// <param name="_commands">All commands in the script</param>
         public CommandScript(string _name, List<CommandEntry> _commands)
         {
             Name = _name.ToLower();
@@ -209,6 +220,9 @@ namespace Frenetic.CommandSystem
             return queue;
         }
 
+        /// <summary>
+        /// Returns the name of the script.
+        /// </summary>
         public override string ToString()
         {
             return Name;

@@ -6,6 +6,9 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
+    /// <summary>
+    /// Returns the various default color objects within the tag system.
+    /// </summary>
     public class ColorTags: TemplateTags
     {
         // <--[tag]
@@ -16,11 +19,18 @@ namespace Frenetic.TagHandlers.Common
         // such as <@link tag ColorTag.emphasis><{color.emphasis}><@/link>.
         // TODO: Link full rundown of text colors.
         // -->
+        /// <summary>
+        /// Construct the ColorTags - for internal use only.
+        /// </summary>
         public ColorTags()
         {
             Name = "color";
         }
 
+        /// <summary>
+        /// Handles a 'color' tag.
+        /// </summary>
+        /// <param name="data">The data to be handled</param>
         public override string Handle(TagData data)
         {
             data.Shrink();

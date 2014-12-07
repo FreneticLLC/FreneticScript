@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
 using Frenetic.TagHandlers;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem.CommonCmds
 {
@@ -24,7 +25,7 @@ namespace Frenetic.CommandSystem.CommonCmds
     // @Example
     // TODO: More examples!
     // @Tags
-    // <{var[<TextTag>]}>
+    // <{var[<TextTag>]}> returns the value of the set definition.
     // -->
     class DefineCommand: AbstractCommand
     {
@@ -46,7 +47,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             {
                 string target = entry.GetArgument(0);
                 string newvalue = entry.GetArgument(1);
-                entry.Queue.SetVariable(target, newvalue);
+                entry.Queue.SetVariable(target, new TextTag(newvalue));
                 entry.Good("Queue variable '<{color.emphasis}>" + TagParser.Escape(target.ToLower()) +
                     "<{color.base}>' set to '<{color.emphasis}>" + TagParser.Escape(newvalue) + "<{color.base}>'.");
             }

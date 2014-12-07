@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem
 {
@@ -42,14 +43,13 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Calls the event. Returns whether it was cancelled.
         /// </summary>
-        /// <param name="Variables">Any variables to add</param>
         /// <returns>Whether to cancel</returns>
         public bool Call()
         {
             for (int i = 0; i < Handlers.Count; i++)
             {
                 CommandScript script = Handlers[i];
-                Dictionary<string, string> Variables = GetVariables();
+                Dictionary<string, TemplateObject> Variables = GetVariables();
                 CommandQueue queue;
                 foreach (string determ in System.ExecuteScript(script, Variables, out queue))
                 {
@@ -67,6 +67,7 @@ namespace Frenetic.CommandSystem
         /// Applies a determination string to the event.
         /// </summary>
         /// <param name="determ">What was determined</param>
+        /// <param name="mode">What debugmode to use</param>
         public virtual void ApplyDetermination(string determ, DebugMode mode)
         {
             if (determ != null && determ.ToLower() == "cancelled")
@@ -83,10 +84,13 @@ namespace Frenetic.CommandSystem
             }
         }
 
-        public virtual Dictionary<string, string> GetVariables()
+        /// <summary>
+        /// Get all variables according the script event's current values.
+        /// </summary>
+        public virtual Dictionary<string, TemplateObject> GetVariables()
         {
-            Dictionary<string, string> vars = new Dictionary<string, string>();
-            vars.Add("cancelled", Cancelled ? "true": "false");
+            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
+            vars.Add("cancelled", new TextTag(Cancelled ? "true": "false"));
             return vars;
         }
 

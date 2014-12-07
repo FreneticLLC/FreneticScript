@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
@@ -108,8 +109,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                         else
                         {
                             entry.Good("Repeating at index <{color.emphasis}>" + data.Index + "/" + data.Total + "<{color.base}>...");
-                            entry.Queue.SetVariable("repeat_index", data.Index.ToString());
-                            entry.Queue.SetVariable("repeat_total", data.Total.ToString());
+                            entry.Queue.SetVariable("repeat_index", new TextTag(data.Index.ToString()));
+                            entry.Queue.SetVariable("repeat_total", new TextTag(data.Total.ToString()));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                         }
                     }
@@ -193,8 +194,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                         CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
                             this, new List<string> { "\0CALLBACK" }, "repeat", 0);
                         entry.Block.Add(callback);
-                        entry.Queue.SetVariable("repeat_index", "1");
-                        entry.Queue.SetVariable("repeat_total", target.ToString());
+                        entry.Queue.SetVariable("repeat_index", new TextTag("1"));
+                        entry.Queue.SetVariable("repeat_total", new TextTag(target.ToString()));
                         entry.Queue.AddCommandsNow(entry.Block);
                     }
                     else

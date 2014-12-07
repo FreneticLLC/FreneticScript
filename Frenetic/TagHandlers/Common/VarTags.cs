@@ -34,13 +34,13 @@ namespace Frenetic.TagHandlers.Common
             string modif = data.GetModifier(0).ToLower();
             if (data.Variables != null)
             {
-                string value;
+                TemplateObject value;
                 if (data.Variables.TryGetValue(modif, out value))
                 {
                     data.Shrink();
                     if (data.Input.Count == 0)
                     {
-                        return value;
+                        return value.ToString();
                     }
                     // <--[tag]
                     // @Name VariableTag.exists
@@ -55,7 +55,7 @@ namespace Frenetic.TagHandlers.Common
                     }
                     else
                     {
-                        return new TextTag(value).Handle(data);
+                        return value.Handle(data);
                     }
                 }
             }

@@ -58,17 +58,18 @@ namespace Frenetic.CommandSystem.QueueCmds
     // @BlockVars
     // foreach_index TextTag
     // foreach_total TextTag
-    // foreach_value TextTag
-    // foreach_list TextTag
+    // foreach_value Dynamic
+    // foreach_list ListTag
     // -->
+    // Note: foreach_value listed as dynamic but can be safely treated as TextTag currently.
     class ForeachCommandData : AbstractCommandEntryData
     {
-        public List<string> List;
+        public List<TemplateObject> List;
         public int Index;
         public override AbstractCommandEntryData Duplicate()
         {
             ForeachCommandData toret = new ForeachCommandData();
-            toret.List = new List<string>(List);
+            toret.List = new List<TemplateObject>(List);
             toret.Index = Index;
             return toret;
         }
@@ -107,10 +108,10 @@ namespace Frenetic.CommandSystem.QueueCmds
                         else
                         {
                             entry.Good("Foreach loop continuing at index <{color.emphasis}>" + data.Index + "/" + data.List.Count + "<{color.base}>...");
-                            entry.Queue.SetVariable("foreach_index", data.Index.ToString());
-                            entry.Queue.SetVariable("foreach_total", data.List.Count.ToString());
-                            entry.Queue.SetVariable("foreach_value", data.List[data.Index - 1].ToString());
-                            entry.Queue.SetVariable("foreach_list", new ListTag(data.List).ToString());
+                            entry.Queue.SetVariable("foreach_index", new TextTag(data.Index.ToString()));
+                            entry.Queue.SetVariable("foreach_total", new TextTag(data.List.Count.ToString()));
+                            entry.Queue.SetVariable("foreach_value", data.List[data.Index - 1]);
+                            entry.Queue.SetVariable("foreach_list", new ListTag(data.List));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                         }
                     }
@@ -187,7 +188,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     ForeachCommandData data = new ForeachCommandData();
                     data.Index = 1;
-                    data.List = list.ToStringList();
+                    data.List = list.ListEntries;
                     entry.Data = data;
                     if (entry.Block != null)
                     {
@@ -195,10 +196,10 @@ namespace Frenetic.CommandSystem.QueueCmds
                         CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
                             this, new List<string> { "\0CALLBACK" }, "foreach", 0);
                         entry.Block.Add(callback);
-                        entry.Queue.SetVariable("foreach_index", "1");
-                        entry.Queue.SetVariable("foreach_total", target.ToString());
-                        entry.Queue.SetVariable("foreach_value", list.ListEntries[0].ToString());
-                        entry.Queue.SetVariable("foreach_list", list.ToString());
+                        entry.Queue.SetVariable("foreach_index", new TextTag("1"));
+                        entry.Queue.SetVariable("foreach_total", new TextTag(target.ToString()));
+                        entry.Queue.SetVariable("foreach_value", list.ListEntries[0]);
+                        entry.Queue.SetVariable("foreach_list", list);
                         entry.Queue.AddCommandsNow(entry.Block);
                     }
                     else

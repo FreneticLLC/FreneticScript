@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem.CommonCmds;
+using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem
 {
@@ -14,7 +15,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Creates a CommandEntry from the given input and queue information.
         /// </summary>
-        /// <param name="_command">The command line text itself</param>
+        /// <param name="command">The command line text itself</param>
         /// <param name="_block">The command block that held this entry</param>
         /// <param name="_owner">The command entry that owns the block that held this entry</param>
         /// <param name="system">The command system to work from</param>
@@ -243,7 +244,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to output requested information.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included</param>
+        /// <param name="text">The text to output, with tags included</param>
         public void Info(string text)
         {
             Output.Good(text, DebugMode.MINIMAL);
@@ -256,7 +257,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to output a success message.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included</param>
+        /// <param name="text">The text to output, with tags included</param>
         public void Good(string text)
         {
             if (Queue.Debug == DebugMode.FULL)
@@ -272,7 +273,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to output a failure message.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included</param>
+        /// <param name="text">The text to output, with tags included</param>
         public void Bad(string text)
         {
             if (Queue.Debug <= DebugMode.MINIMAL)

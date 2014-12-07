@@ -5,17 +5,47 @@ using System.Text;
 
 namespace Frenetic
 {
+    /// <summary>
+    /// The various possible information flags a CVar can hold.
+    /// </summary>
     [Flags]
     public enum CVarFlag
     {
+        /// <summary>
+        /// No information.
+        /// </summary>
         None = 0x0,
+        /// <summary>
+        /// This flag cannot be edited, and exists to represent system information.
+        /// </summary>
         ReadOnly = 0x1,
+        /// <summary>
+        /// This flag should be treated as text.
+        /// </summary>
         Textual = 0x2,
+        /// <summary>
+        /// This tag should be treated as a number.
+        /// </summary>
         Numeric = 0x4,
+        /// <summary>
+        /// This flag should be treated as true/false.
+        /// </summary>
         Boolean = 0x8,
+        /// <summary>
+        /// This flag won't immediately have an effect when edited.
+        /// </summary>
         Delayed = 0x10,
+        /// <summary>
+        /// This flag was made by a user.
+        /// </summary>
         UserMade = 0x20,
+        /// <summary>
+        /// This flag can only be modified during load time.
+        /// </summary>
         InitOnly = 0x40,
+        /// <summary>
+        /// This flag is on a client, but controlled by the server.
+        /// </summary>
         ServerControl = 0x80,
     }
     // <--[explanation]
@@ -24,6 +54,9 @@ namespace Frenetic
     // CVars are global control variables.
     // TODO: Explain better!
     // -->
+    /// <summary>
+    /// Represents a name:value pair within a complex system.
+    /// </summary>
     public class CVar
     {
         /// <summary>
@@ -71,6 +104,13 @@ namespace Frenetic
         /// </summary>
         CVarSystem system;
 
+        /// <summary>
+        /// Construct a CVar.
+        /// </summary>
+        /// <param name="newname">The name of  the CVar</param>
+        /// <param name="newvalue">The value to set the CVar to</param>
+        /// <param name="newflags">The flags the CVar should be locked into</param>
+        /// <param name="_system">The CVarSystem to create this CVar within</param>
         public CVar(string newname, string newvalue, CVarFlag newflags, CVarSystem _system)
         {
             system = _system;
@@ -83,6 +123,7 @@ namespace Frenetic
         /// Sets the CVar to a new value.
         /// </summary>
         /// <param name="newvalue">The value to set the CVar to</param>
+        /// <param name="force">Whether to force the edit (IE, a server has demanded the change)</param>
         public void Set(string newvalue, bool force = false)
         {
             if (newvalue == Value)
@@ -113,7 +154,7 @@ namespace Frenetic
         /// <summary>
         /// Sets the CVar to a new value.
         /// </summary>
-        /// <param name="newvalue">The value to set the CVar to</param>
+        /// <param name="value">The value to set the CVar to</param>
         public void Set(bool value)
         {
             if (Flags.HasFlag(CVarFlag.ReadOnly))

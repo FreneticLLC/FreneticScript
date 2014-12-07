@@ -92,12 +92,12 @@ namespace Frenetic.CommandSystem
         /// <param name="script">The script to execute</param>
         /// <param name="Variables">What variables to add to the commandqueue</param>
         /// <param name="queue">Outputs the generated queue (already ran or running)</param>
-        public List<string> ExecuteScript(CommandScript script, Dictionary<string, string> Variables, out CommandQueue queue)
+        public List<string> ExecuteScript(CommandScript script, Dictionary<string, TemplateObject> Variables, out CommandQueue queue)
         {
             queue = script.ToQueue(this);
             if (Variables != null)
             {
-                foreach (KeyValuePair<string, string> variable in Variables)
+                foreach (KeyValuePair<string, TemplateObject> variable in Variables)
                 {
                     queue.SetVariable(variable.Key, variable.Value);
                 }
