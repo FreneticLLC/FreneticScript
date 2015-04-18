@@ -30,9 +30,10 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to properly handle an unknown command.
         /// </summary>
+        /// <param name="queue">The queue firing this unknown command</param>
         /// <param name="basecommand">The command that wasn't recognized</param>
         /// <param name="arguments">The commands arguments</param>
-        public abstract void UnknownCommand(string basecommand, string[] arguments);
+        public abstract void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments);
 
         /// <summary>
         /// The CVar System used by this command engine.

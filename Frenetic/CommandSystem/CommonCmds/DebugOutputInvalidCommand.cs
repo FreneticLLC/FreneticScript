@@ -27,7 +27,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                 string name = entry.GetArgument(0);
                 List<string> args = new List<string>(entry.Arguments);
                 args.RemoveAt(0);
-                entry.Output.UnknownCommand(name, args.ToArray());
+                entry.Output.UnknownCommand(entry.Queue, name, args.ToArray());
                 if (entry.Queue.Outputsystem != null)
                 {
                     entry.Queue.Outputsystem.Invoke(TextStyle.Color_Error + "Unknown command '" +
