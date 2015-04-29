@@ -44,7 +44,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     else
                     {
                         EntryFinisher fin = new EntryFinisher() { Entry = entry };
-                        queue.Completefunc = fin.Complete;
+                        queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
                     }
                     ListTag list = new ListTag(queue.Determination);
                     entry.Queue.SetVariable("run_determinations", list);

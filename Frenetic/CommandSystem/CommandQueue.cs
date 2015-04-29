@@ -84,15 +84,9 @@ namespace Frenetic.CommandSystem
         }
 
         /// <summary>
-        /// A complete function is something invoked with a queue finishes.
+        /// Called when the queue is completed.
         /// </summary>
-        public delegate void CompleteFunction();
-
-        /// <summary>
-        /// What CompleteFunction to invoke when the queue finishes.
-        /// TODO: Replace me with an event.
-        /// </summary>
-        public CompleteFunction Completefunc = null;
+        public EventHandler<CommandQueueEventArgs> Complete;
 
         /// <summary>
         /// Starts running the command queue.
@@ -141,9 +135,9 @@ namespace Frenetic.CommandSystem
                     return;
                 }
             }
-            if (Completefunc != null)
+            if (Complete != null)
             {
-                Completefunc.Invoke();
+                Complete(this, new CommandQueueEventArgs(this));
             }
             Running = false;
         }
@@ -245,7 +239,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Add this function as a callback to complete entry.
         /// </summary>
-        public void Complete()
+        public void Complete(object sender, CommandQueueEventArgs args)
         {
             Entry.Finished = true;
         }
