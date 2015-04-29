@@ -90,6 +90,7 @@ namespace Frenetic.CommandSystem
 
         /// <summary>
         /// What CompleteFunction to invoke when the queue finishes.
+        /// TODO: Replace me with an event.
         /// </summary>
         public CompleteFunction Completefunc = null;
 

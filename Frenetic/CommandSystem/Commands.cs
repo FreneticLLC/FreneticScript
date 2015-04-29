@@ -175,6 +175,15 @@ namespace Frenetic.CommandSystem
             {
                 entry.Queue = queue;
                 entry.Output = Output;
+                if (entry.Command == DebugInvalidCommand)
+                {
+                    // Last try - perhaps a command was registered after the script was loaded.
+                    AbstractCommand cmd;
+                    if (RegisteredCommands.TryGetValue(entry.Name.ToLower(), out cmd))
+                    {
+                        entry.Command = cmd;
+                    }
+                }
                 entry.Command.Execute(entry);
             }
             catch (Exception ex)
