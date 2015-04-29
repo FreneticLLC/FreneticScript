@@ -6,6 +6,9 @@ using Frenetic.TagHandlers.Common;
 
 namespace Frenetic.TagHandlers.Objects
 {
+    /// <summary>
+    /// Represents a list as a usable tag.
+    /// </summary>
     public class ListTag: TemplateObject
     {
         /// <summary>
@@ -13,16 +16,27 @@ namespace Frenetic.TagHandlers.Objects
         /// </summary>
         public List<TemplateObject> ListEntries;
 
+        /// <summary>
+        /// Constructs a new list tag.
+        /// </summary>
         public ListTag()
         {
             ListEntries = new List<TemplateObject>();
         }
 
+        /// <summary>
+        /// Constructs a list tag from a list of entries.
+        /// </summary>
+        /// <param name="entries">The entries</param>
         public ListTag(List<TemplateObject> entries)
         {
             ListEntries = new List<TemplateObject>(entries);
         }
 
+        /// <summary>
+        /// Constructs a list tag from a list of textual entries.
+        /// </summary>
+        /// <param name="entries">The textual entries</param>
         public ListTag(List<string> entries)
         {
             ListEntries = new List<TemplateObject>();
@@ -32,6 +46,10 @@ namespace Frenetic.TagHandlers.Objects
             }
         }
 
+        /// <summary>
+        /// Constructs a list tag from text input.
+        /// </summary>
+        /// <param name="list">The text input</param>
         public ListTag(string list)
         {
             string[] baselist = list.Split('|');
@@ -42,6 +60,10 @@ namespace Frenetic.TagHandlers.Objects
             }
         }
 
+        /// <summary>
+        /// Parse any direct tag input values.
+        /// </summary>
+        /// <param name="data">The input tag data</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)
@@ -241,6 +263,10 @@ namespace Frenetic.TagHandlers.Objects
             return list;
         }
 
+        /// <summary>
+        /// Converts the list tag to a string.
+        /// </summary>
+        /// <returns>A string representation of the list</returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

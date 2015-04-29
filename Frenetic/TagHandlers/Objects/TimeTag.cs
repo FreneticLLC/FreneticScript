@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Frenetic.TagHandlers.Objects
 {
+    /// <summary>
+    /// Represents a date-time as usable tag.
+    /// </summary>
     public class TimeTag : TemplateObject
     {
         /// <summary>
@@ -12,11 +15,19 @@ namespace Frenetic.TagHandlers.Objects
         /// </summary>
         DateTime Time;
 
+        /// <summary>
+        /// Constructs a time tag.
+        /// </summary>
+        /// <param name="_time">The internal date-time to use</param>
         public TimeTag(DateTime _time)
         {
             Time = _time;
         }
 
+        /// <summary>
+        /// Parse any direct tag input values.
+        /// </summary>
+        /// <param name="data">The input tag data</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)

@@ -6,6 +6,9 @@ using Frenetic.CommandSystem;
 
 namespace Frenetic.TagHandlers
 {
+    /// <summary>
+    /// A tag information container.
+    /// </summary>
     public class TagData
     {
         /// <summary>
@@ -38,6 +41,14 @@ namespace Frenetic.TagHandlers
         /// </summary>
         public string BaseColor = null;
 
+        /// <summary>
+        /// Constructs the tag information container.
+        /// </summary>
+        /// <param name="_system">The command system to use</param>
+        /// <param name="_input">The input tag pieces</param>
+        /// <param name="_basecolor">The default color to use for output</param>
+        /// <param name="_vars">Any variables involved in the queue</param>
+        /// <param name="_mode">What debug mode to use</param>
         public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode)
         {
             TagSystem = _system;

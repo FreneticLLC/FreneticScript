@@ -7,6 +7,9 @@ using Frenetic.CommandSystem;
 
 namespace Frenetic.TagHandlers
 {
+    /// <summary>
+    /// The master class for parsing tags.
+    /// </summary>
     public class TagParser
     {
         // <--[definition]

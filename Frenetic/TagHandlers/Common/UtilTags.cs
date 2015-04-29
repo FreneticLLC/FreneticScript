@@ -6,6 +6,9 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
+    /// <summary>
+    /// Utility tags.
+    /// </summary>
     public class UtilTags: TemplateTags
     {
         // <--[tag]
@@ -15,11 +18,18 @@ namespace Frenetic.TagHandlers.Common
         // @Returns a generic utility class full of specific helpful utility tags,
         // such as <@link tag UtilTag.random_decimal><{util.random_decimal}><@/link>.
         // -->
+        /// <summary>
+        /// Constructs the Utility tags.
+        /// </summary>
         public UtilTags()
         {
             Name = "util";
         }
 
+        /// <summary>
+        /// Parse any direct tag input values.
+        /// </summary>
+        /// <param name="data">The input tag data</param>
         public override string Handle(TagData data)
         {
             data.Shrink();

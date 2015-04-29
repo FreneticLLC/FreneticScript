@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Frenetic.TagHandlers.Objects
 {
+    /// <summary>
+    /// Represents text as a usable tag.
+    /// </summary>
     public class TextTag : TemplateObject
     {
         /// <summary>
@@ -12,36 +15,64 @@ namespace Frenetic.TagHandlers.Objects
         /// </summary>
         string Text = null;
 
+        /// <summary>
+        /// Constructs a text tag.
+        /// </summary>
+        /// <param name="_text">The text to construct it from</param>
         public TextTag(string _text)
         {
             Text = _text;
         }
 
+        /// <summary>
+        /// Constructs a text tag.
+        /// </summary>
+        /// <param name="_text">The text to construct it from</param>
         public TextTag(bool _text)
         {
             Text = _text ? "true" : "false";
         }
 
+        /// <summary>
+        /// Constructs a text tag.
+        /// </summary>
+        /// <param name="_text">The text to construct it from</param>
         public TextTag(int _text)
         {
             Text = _text.ToString();
         }
 
+        /// <summary>
+        /// Constructs a text tag.
+        /// </summary>
+        /// <param name="_text">The text to construct it from</param>
         public TextTag(long _text)
         {
             Text = _text.ToString();
         }
 
+        /// <summary>
+        /// Constructs a text tag.
+        /// </summary>
+        /// <param name="_text">The text to construct it from</param>
         public TextTag(float _text)
         {
             Text = _text.ToString();
         }
 
+        /// <summary>
+        /// Constructs a text tag.
+        /// </summary>
+        /// <param name="_text">The text to construct it from</param>
         public TextTag(double _text)
         {
             Text = _text.ToString();
         }
 
+        /// <summary>
+        /// Parse any direct tag input values.
+        /// </summary>
+        /// <param name="data">The input tag data</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)
@@ -465,6 +496,10 @@ namespace Frenetic.TagHandlers.Objects
             return "&{UNKNOWN_TAG_BIT:" + data.Input[0] + "}";
         }
 
+        /// <summary>
+        /// Converts the text tag to a string by returning the internal text.
+        /// </summary>
+        /// <returns>A string representation of this text tag</returns>
         public override string ToString()
         {
             return Text;

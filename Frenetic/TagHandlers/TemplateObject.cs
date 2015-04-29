@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Frenetic.TagHandlers
 {
+    /// <summary>
+    /// The abstract base for a tag object.
+    /// </summary>
     public abstract class TemplateObject
     {
         /// <summary>
