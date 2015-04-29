@@ -7,8 +7,16 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem
 {
-    public class ScriptEvent
+    /// <summary>
+    /// An abstract class, implementations of this should be used to fire events within the script engine.
+    /// </summary>
+    public abstract class ScriptEvent
     {
+        /// <summary>
+        /// Gets the list of CommandScripts that handle an event currently.
+        /// </summary>
+        /// <param name="_event">The event to get the handlers for</param>
+        /// <returns>The list of handlers</returns>
         public static List<CommandScript> GetHandlers(ScriptEvent _event)
         {
             if (_event == null)
@@ -33,6 +41,13 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public bool Cancelled = false;
 
+        /// <summary>
+        /// Constructs the script event's base data.
+        /// Called only by implementing script events.
+        /// </summary>
+        /// <param name="_system">The command system this event exists within</param>
+        /// <param name="_name">The name of the event</param>
+        /// <param name="_handlers">Any pre-existing handlers for this event</param>
         public ScriptEvent(Commands _system, string _name, List<CommandScript> _handlers)
         {
             Handlers.AddRange(_handlers);

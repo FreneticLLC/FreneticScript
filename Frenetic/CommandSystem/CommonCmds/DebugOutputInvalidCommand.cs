@@ -5,8 +5,14 @@ using System.Text;
 
 namespace Frenetic.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// A non-user-invocable command called when no other command exists.
+    /// </summary>
     public class DebugOutputInvalidCommand: AbstractCommand
     {
+        /// <summary>
+        /// Constructs the command.
+        /// </summary>
         public DebugOutputInvalidCommand()
         {
             Name = "\0DebugOutputInvalidCommand";
@@ -16,6 +22,10 @@ namespace Frenetic.CommandSystem.CommonCmds
             IsFlow = true;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="entry">Entry to be executed</param>
         public override void Execute(CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)

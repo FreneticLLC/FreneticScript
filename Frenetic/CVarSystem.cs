@@ -6,6 +6,9 @@ using Frenetic.CommandSystem;
 
 namespace Frenetic
 {
+    /// <summary>
+    /// A system for handling user controllable data variables.
+    /// </summary>
     public class CVarSystem
     {
         /// <summary>
@@ -23,11 +26,21 @@ namespace Frenetic
         /// </summary>
         public Outputter Output;
 
+        /// <summary>
+        /// Whether the system has been modified or updated since this variable was last set to false.
+        /// This variable is so implementations can save CVars to file only when needed.
+        /// </summary>
         public bool Modified = false;
 
-        // System CVars
+        /// <summary>
+        /// System CVars.
+        /// </summary>
         public CVar s_osversion, s_user, s_dotnetversion, s_totalram, s_culture, s_processors, s_machinename;
 
+        /// <summary>
+        /// Constructs the CVar system.
+        /// </summary>
+        /// <param name="_output">The outputter to use</param>
         public CVarSystem(Outputter _output)
         {
             CVars = new Dictionary<string, CVar>();
@@ -53,6 +66,7 @@ namespace Frenetic
         /// </summary>
         /// <param name="CVar">The name of the CVar</param>
         /// <param name="value">The default value</param>
+        /// <param name="flags">The flags to set on this CVar</param>
         /// <returns>The registered CVar</returns>
         public CVar Register(string CVar, string value, CVarFlag flags)
         {

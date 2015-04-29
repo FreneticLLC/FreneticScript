@@ -16,6 +16,10 @@ namespace Frenetic.CommandSystem.CommonCmds
             Description = "Modifies the value of a specified CVar, or creates a new one.";
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="entry">Entry to be executed</param>
         public override void Execute(CommandEntry entry)
         {
             if (entry.Arguments.Count < 2)

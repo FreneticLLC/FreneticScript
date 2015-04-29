@@ -16,6 +16,10 @@ namespace Frenetic.CommandSystem.CommonCmds
             Description = "Shows information on a specified CVar, or all of them if one isn't specified.";
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="entry">Entry to be executed</param>
         public override void Execute(CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)

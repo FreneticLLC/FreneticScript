@@ -16,6 +16,10 @@ namespace Frenetic.CommandSystem.CommonCmds
             IsDebug = true;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="entry">Entry to be executed</param>
         public override void Execute(CommandEntry entry)
         {
         }

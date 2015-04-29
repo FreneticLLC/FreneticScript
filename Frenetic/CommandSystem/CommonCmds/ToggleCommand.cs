@@ -16,6 +16,10 @@ namespace Frenetic.CommandSystem.CommonCmds
             Description = "Toggles a CVar between true and false.";
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="entry">Entry to be executed</param>
         public override void Execute(CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)

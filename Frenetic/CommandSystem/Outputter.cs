@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Frenetic.CommandSystem
 {
+    /// <summary>
+    /// An abstract class, implementations should provide methods that output to a console or equivalent.
+    /// </summary>
     public abstract class Outputter
     {
         /// <summary>

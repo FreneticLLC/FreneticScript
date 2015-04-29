@@ -38,6 +38,10 @@ namespace Frenetic.TagHandlers.Objects
             }
         }
 
+        /// <summary>
+        /// Returns the a string representation of the date-time internally stored by this time tag.
+        /// </summary>
+        /// <returns>A string representation of the date-time</returns>
         public override string ToString()
         {
             return FreneticUtilities.DateTimeToString(Time);
