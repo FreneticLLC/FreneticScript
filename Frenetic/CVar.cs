@@ -148,7 +148,10 @@ namespace Frenetic
             ValueD = FreneticUtilities.StringToDouble(newvalue);
             ValueF = (float)ValueD;
             ValueB = newvalue.ToLower() == "true" || ValueF > 0f;
-            system.Modified = true;
+            if (!force)
+            {
+                system.Modified = true;
+            }
         }
 
         /// <summary>
