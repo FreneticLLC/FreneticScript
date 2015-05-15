@@ -44,6 +44,15 @@ namespace Frenetic.CommandSystem
         public CVarSystem CVarSys;
 
         /// <summary>
+        /// Used to read a text file, generally a script.
+        /// File format is along the lines of "mymap/myscript.cfg".
+        /// Throw a System.IO.FileNotFoundException if file does not exist.
+        /// </summary>
+        /// <param name="name">The filename to read</param>
+        /// <returns>The read text file</returns>
+        public abstract string ReadTextFile(string name);
+
+        /// <summary>
         /// Whether the game is still setting up currently.
         /// </summary>
         public bool Initializing = false;

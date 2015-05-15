@@ -129,16 +129,12 @@ namespace Frenetic.CommandSystem
         {
             try
             {
-                string fname = "data/scripts/" + filename + ".cfg";
-                if (System.IO.File.Exists(fname)) // TODO: USE OUTPUTTER TO READ FILE DATA
-                {
-                    string text = System.IO.File.ReadAllText(fname);
-                    return SeparateCommands(filename, text, system);
-                }
-                else
-                {
-                    return null;
-                }
+                string fname = filename + ".cfg";
+                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system);
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                return null;
             }
             catch (Exception ex)
             {
