@@ -228,6 +228,7 @@ namespace Frenetic.CommandSystem
             TagSystem.Init(this);
 
             // Common Commands
+            RegisterCommand(new CleanmemCommand());
             RegisterCommand(new CvarinfoCommand());
             RegisterCommand(new EchoCommand());
             RegisterCommand(new NoopCommand());

@@ -50,6 +50,7 @@
     <Compile Include="CommandSystem\CommandQueueEventArgs.cs" />
     <Compile Include="CommandSystem\Commands.cs" />
     <Compile Include="CommandSystem\CommandScript.cs" />
+    <Compile Include="CommandSystem\CommonCmds\CleanmemCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\DebugOutputInvalidCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\EchoCommand.cs" />
