@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
+using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem.CommonCmds
 {
@@ -28,7 +29,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             else
             {
                 string args = entry.AllArguments();
-                entry.Info(TextStyle.Color_Simple + args);
+                entry.Info(TextStyle.Color_Simple + TagParser.Escape(args));
             }
         }
     }

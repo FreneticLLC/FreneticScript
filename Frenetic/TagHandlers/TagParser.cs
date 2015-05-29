@@ -125,6 +125,11 @@ namespace Frenetic.TagHandlers
                     {
                         string value = blockbuilder.ToString();
                         List<string> split = value.Split(dot).ToList();
+                        for (int s = 0; s < split.Count; s++)
+                        {
+                            split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
+                        }
+                        value = value.Replace("&dot", ".").Replace("&amp", "&");
                         TagData data = new TagData(this, split, base_color, vars, mode);
                         TemplateTags handler;
                         bool handled = Handlers.TryGetValue(data.Input[0], out handler);
@@ -135,7 +140,7 @@ namespace Frenetic.TagHandlers
                             if (mode <= DebugMode.FULL)
                             {
                                 CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                                    Escape("<{" + value + "}>") + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res
+                                    Escape("<{" + value + "}>") + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
                                     + TextStyle.Color_Outgood + "\".", mode);
                             }
                         }
