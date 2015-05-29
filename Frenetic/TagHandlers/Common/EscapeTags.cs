@@ -6,9 +6,18 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
-    class EscapeTags : TemplateTags
+    /// <summary>
+    /// Escapes questionable text input.
+    /// </summary>
+    public class EscapeTags : TemplateTags
     {
         // TODO: META
+
+        /// <summary>
+        /// Escapes a string.
+        /// </summary>
+        /// <param name="input">The unescaped string</param>
+        /// <returns>The escaped string</returns>
         public static string Escape(string input)
         {
             return input.Replace("&", "&amp")
@@ -18,14 +27,25 @@ namespace Frenetic.TagHandlers.Common
                 .Replace(" ", "&sp")
                 .Replace(".", "&dot")
                 .Replace("[", "&lb")
-                .Replace("]", "&rb");
+                .Replace("]", "&rb")
+                .Replace("<", "&lt")
+                .Replace(">", "&gt")
+                .Replace("\"", "&quot")
+                .Replace("\'", "&sq"); // TODO: More efficient method
         }
 
+        /// <summary>
+        /// Construct the EscapeTags - for internal use only.
+        /// </summary>
         public EscapeTags()
         {
             Name = "escape";
         }
 
+        /// <summary>
+        /// Handles the escape tag.
+        /// </summary>
+        /// <param name="data">The data to be handled</param>
         public override string Handle(TagData data)
         {
             string modif = data.GetModifier(0);
