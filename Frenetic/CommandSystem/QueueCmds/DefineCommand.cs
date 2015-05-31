@@ -35,6 +35,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Arguments = "<Variable to set> <new value>";
             Description = "Modifies the value of a specified queue variable, or creates a new one.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

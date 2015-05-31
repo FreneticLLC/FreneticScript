@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "full/minimal/none";
             Description = "Modifies the debug mode of the current queue.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

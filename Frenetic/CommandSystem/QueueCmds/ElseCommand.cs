@@ -15,6 +15,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Description = "Executes the following block of commands only if the previous if failed, "
             + "and optionally if additional requirements are met.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

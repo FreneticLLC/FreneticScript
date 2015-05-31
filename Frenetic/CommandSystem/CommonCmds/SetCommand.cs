@@ -57,14 +57,11 @@ namespace Frenetic.CommandSystem.CommonCmds
                     return;
                 }
                 CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue);
-                if (cvar.Flags.HasFlag(CVarFlag.ServerControl))
+                if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
                 {
-                    if (!force)
-                    {
-                        entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name)
-                            + "<{color.base}>' cannot be modified, it is server controlled!");
-                        return;
-                    }
+                    entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name)
+                        + "<{color.base}>' cannot be modified, it is server controlled!");
+                    return;
                 }
                 if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
                 {

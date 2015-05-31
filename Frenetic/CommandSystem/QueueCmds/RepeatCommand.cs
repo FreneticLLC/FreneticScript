@@ -77,6 +77,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "<times to repeat>/stop/next";
             Description = "Executes the following block of commands a specified number of times.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public static int StringToInt(string input)

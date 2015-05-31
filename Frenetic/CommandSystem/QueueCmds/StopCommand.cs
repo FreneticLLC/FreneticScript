@@ -13,6 +13,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "(all)";
             Description = "Stops the current command queue.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

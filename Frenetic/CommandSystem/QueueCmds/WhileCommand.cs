@@ -27,6 +27,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "true/false/stop/next";
             Description = "Executes the following block of commands continuously until the argument is false.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

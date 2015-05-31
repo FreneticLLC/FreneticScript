@@ -13,6 +13,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "<time to wait in seconds>";
             Description = "Delays the current command queue a specified amount of time.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public static float StringToFloat(string input)

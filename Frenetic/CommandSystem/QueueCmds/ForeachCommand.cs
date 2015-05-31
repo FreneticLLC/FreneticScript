@@ -83,6 +83,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "start/stop/next [list to loop through]";
             Description = "Executes the following block of commands once foreach item in the given list.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

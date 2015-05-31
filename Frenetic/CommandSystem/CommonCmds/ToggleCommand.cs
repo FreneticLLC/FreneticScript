@@ -53,6 +53,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                 }
                 else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !entry.Output.Initializing)
                 {
+                    cvar.Set(cvar.ValueB ? "false" : "true");
                     entry.Good("<{color.info}>CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
                         "<{color.info}>' is delayed, and its value will be calculated after the game is reloaded.");
                 }

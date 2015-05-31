@@ -15,6 +15,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Arguments = "<Variable to remove>";
             Description = "Removes the specified queue variable.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

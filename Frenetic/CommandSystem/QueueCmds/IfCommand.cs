@@ -25,6 +25,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "true/false";
             Description = "Executes the following block of commands only if the input is true.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

@@ -15,6 +15,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Arguments = "[value to set on the queue]";
             Description = "Sets the value determined on the queue. If no argument is specified, sets null.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

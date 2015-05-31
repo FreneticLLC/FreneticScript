@@ -35,6 +35,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "[inject/run] <function to call>";
             Description = "Runs a function.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

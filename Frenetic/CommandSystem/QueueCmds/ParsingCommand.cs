@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "on/off";
             Description = "Sets whether the current queue should parse tags.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

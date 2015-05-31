@@ -19,6 +19,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             // TODO: DEFINITION ARGS
             IsFlow = true;
             Waitable = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

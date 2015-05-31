@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "<script to insert>";
             Description = "Inserts a script file to the current command queue.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

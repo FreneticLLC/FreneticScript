@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "add/remove/clear <name of event>/all [name of event handler] (quiet_fail)";
             Description = "Creates a new function of the following command block, and adds it to the specified event's handler.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

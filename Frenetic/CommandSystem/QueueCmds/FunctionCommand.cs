@@ -39,6 +39,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "stop/define [name of function] (quiet_fail)";
             Description = "Creates a new function of the following command block, and adds it to the script cache.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public override void Execute(CommandEntry entry)

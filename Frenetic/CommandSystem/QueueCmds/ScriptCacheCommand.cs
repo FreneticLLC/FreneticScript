@@ -40,6 +40,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Name = "scriptcache";
             Arguments = "removefunction/removescript all/<function>/<script> (quiet_fail)";
             Description = "Modifies the state of the script cache, EG clearing it.";
+            // TODO: Lock() functionality to ensure async-friendliness
         }
 
         public override void Execute(CommandEntry entry)

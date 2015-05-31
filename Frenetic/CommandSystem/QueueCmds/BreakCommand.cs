@@ -48,6 +48,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             Arguments = "[number of layers to break]";
             Description = "Breaks out of a specified number of braced layers.";
             IsFlow = true;
+            Asyncable = true;
         }
 
         public static int StringToInt(string input)

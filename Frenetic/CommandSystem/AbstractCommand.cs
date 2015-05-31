@@ -42,6 +42,11 @@ namespace Frenetic.CommandSystem
         public bool Waitable = false;
 
         /// <summary>
+        /// Whether the command can be run off the primary tick.
+        /// </summary>
+        public bool Asyncable = false;
+
+        /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="entry">Entry to be executed</param>
