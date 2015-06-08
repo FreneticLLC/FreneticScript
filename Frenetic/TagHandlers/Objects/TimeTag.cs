@@ -40,7 +40,8 @@ namespace Frenetic.TagHandlers.Objects
                 // @Name TimeTag.total_milliseconds
                 // @Group Time Parts
                 // @ReturnType TextTag
-                // @Returns the total number of milliseconds since Jan 1st, 0001.
+                // @Returns the total number of milliseconds since Jan 1st, 0001 (UTC).
+                // @Example "0001/01/01 00:00:00:0000 UTC+00:00" .total_milliseconds returns 0.
                 // -->
                 case "total_milliseconds":
                     return new TextTag(Time.Ticks / 10000L).Handle(data.Shrink());
@@ -55,7 +56,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <returns>A string representation of the date-time</returns>
         public override string ToString()
         {
-            return FreneticUtilities.DateTimeToString(Time);
+            return FreneticUtilities.DateTimeToString(Time, true);
         }
     }
 }

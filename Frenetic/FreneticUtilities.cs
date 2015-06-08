@@ -62,8 +62,10 @@ namespace Frenetic
         /// <summary>
         /// Returns a string representation of the specified time.
         /// </summary>
+        /// <param name="dt">The datetime object</param>
+        /// <param name="ms">Whether to include milliseconds</param>
         /// <returns>The time as a string</returns>
-        public static string DateTimeToString(DateTime dt)
+        public static string DateTimeToString(DateTime dt, bool ms)
         {
             string utcoffset = "";
             DateTime UTC = dt.ToUniversalTime();
@@ -79,7 +81,7 @@ namespace Frenetic
             }
             return Pad(dt.Year.ToString(), '0', 4) + "/" + Pad(dt.Month.ToString(), '0', 2) + "/" +
                 Pad(dt.Day.ToString(), '0', 2) + " " + Pad(dt.Hour.ToString(), '0', 2) + ":" +
-                Pad(dt.Minute.ToString(), '0', 2) + ":" + Pad(dt.Second.ToString(), '0', 2) + " UTC" + utcoffset;
+                Pad(dt.Minute.ToString(), '0', 2) + ":" + Pad(dt.Second.ToString(), '0', 2) + (ms ? ":" + Pad(dt.Millisecond.ToString(), '0', 4): "") + " UTC" + utcoffset;
         }
 
         /// <summary>
