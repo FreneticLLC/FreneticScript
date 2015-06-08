@@ -154,6 +154,22 @@ namespace Frenetic.TagHandlers.Objects
                         return new TextTag(Text.Substring(num1, (num2 - num1) + 1)).Handle(data.Shrink());
                     }
                 // <--[tag]
+                // @Name TextTag.append[<TextTag>]
+                // @Group Text Modification
+                // @ReturnType TextTag
+                // @Returns the text with the input text appended.
+                // -->
+                case "append":
+                    return new TextTag(Text + data.GetModifier(0)).Handle(data.Shrink());
+                // <--[tag]
+                // @Name TextTag.prepend[<TextTag>]
+                // @Group Text Modification
+                // @ReturnType TextTag
+                // @Returns the text with the input text prepended.
+                // -->
+                case "prepend":
+                    return new TextTag(data.GetModifier(0) + Text).Handle(data.Shrink());
+                // <--[tag]
                 // @Name TextTag.length
                 // @Group Text Attributes
                 // @ReturnType TextTag
