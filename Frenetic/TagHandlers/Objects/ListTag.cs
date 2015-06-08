@@ -77,6 +77,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the number of entries in the list.
+                // @Example "one|two|three" .size returns "3".
                 // -->
                 case "size":
                     return new TextTag(ListEntries.Count.ToString()).Handle(data.Shrink());
@@ -85,7 +86,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list in a user-friendly comma-separated format.
-                // EG, "one|two|three" becomes "one, two, three".
+                // @Example "one|two|three" .comma_separated returns "one, two, three".
                 // -->
                 case "comma_separated":
                     return new TextTag(ToCSString()).Handle(data.Shrink());
@@ -94,7 +95,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list in a space-separated format.
-                // EG, "one|two|three" becomes "one two three".
+                // @Example "one|two|three" .space_separated returns "one two three".
                 // -->
                 case "space_separated":
                     return new TextTag(ToSpaceString()).Handle(data.Shrink());
@@ -103,7 +104,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list as an unseparated string.
-                // EG, "one|two|three" becomes "onetwothree".
+                // @Example "one|two|three" .unseparated returns "onetwothree".
                 // -->
                 case "unseparated":
                     return new TextTag(ToFlatString()).Handle(data.Shrink());
@@ -112,8 +113,8 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list in a user-friendly format.
-                // EG, "one|two|three" becomes "one, two, and three",
-                // "one|two" becomes "one and two".
+                // @Example "one|two|three" .formatted returns "one, two, and three",
+                // @Example "one|two" .formatted returns "one and two".
                 // -->
                 case "formatted":
                     return new TextTag(Formatted()).Handle(data.Shrink());
@@ -122,7 +123,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType ListTag
                 // @Returns the list entirely backwards.
-                // EG, "one|two|three" becomes "three|two|one".
+                // @Example "one|two|three" .reversed returns "three|two|one".
                 // -->
                 case "reversed":
                     {
@@ -135,7 +136,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType Dynamic
                 // @Returns the first entry in the list.
-                // EG, "one|two|three" gets "one".
+                // @Example "one|two|three" .first returns "one".
                 // -->
                 case "first":
                     if (ListEntries.Count == 0)
@@ -148,7 +149,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType Dynamic
                 // @Returns a random entry from the list
-                // EG, "one|two|three" gets "one", "two", or "three".
+                // @Example "one|two|three" .random returns "one", "two", or "three".
                 // -->
                 case "random":
                     if (ListEntries.Count == 0)
@@ -161,7 +162,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType Dynamic
                 // @Returns the last entry in the list.
-                // EG, "one|two|three" gets "three".
+                // @Example "one|two|three" .last returns "three".
                 // -->
                 case "last":
                     if (ListEntries.Count == 0)
@@ -174,8 +175,8 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType Dynamic
                 // @Returns the specified entry in the list.
-                // Note that indices are one-based.
-                // EG, "one|two|three" .get[2] gets "two".
+                // @Other note that indices are one-based.
+                // @Example "one|two|three" .get[2] returns "two".
                 // -->
                 case "get":
                     {
@@ -199,10 +200,10 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType ListTag<Dynamic>
                 // @Returns the specified set of entries in the list.
-                // Note that indices are one-based.
-                // EG, "one|two|three|four" .range[2,3] gets "two|three".
-                // "one|two|three" .range[2,1] gets an empty list.
-                // "one|two|three" .range[2,2] gets "two".
+                // @Other note that indices are one-based.
+                // @Example "one|two|three|four" .range[2,3] returns "two|three".
+                // @Example "one|two|three" .range[2,1] returns an empty list.
+                // @Example "one|two|three" .range[2,2] returns "two".
                 // -->
                 case "range":
                     {
