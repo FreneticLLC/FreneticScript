@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Arguments = "";
             Description = "Does nothing.";
             IsDebug = true;
+            Asyncable = true;
         }
 
         /// <summary>

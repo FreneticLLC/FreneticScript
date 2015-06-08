@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Name = "toggle";
             Arguments = "<CVar to toggle>";
             Description = "Toggles a CVar between true and false.";
+            // TODO: Make asyncable
         }
 
         /// <summary>

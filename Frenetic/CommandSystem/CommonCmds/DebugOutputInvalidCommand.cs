@@ -20,6 +20,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Description = "Reports that a command is invalid, or submits it to a server.";
             IsDebug = true;
             IsFlow = true;
+            Asyncable = true;
         }
 
         /// <summary>

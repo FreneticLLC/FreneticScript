@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Name = "set";
             Arguments = "<CVar to set> <new value> (force/remove)";
             Description = "Modifies the value of a specified CVar, or creates a new one.";
+            // TODO: make asyncable
         }
 
         /// <summary>

@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Name = "cvarinfo";
             Arguments = "[CVar to get info on]";
             Description = "Shows information on a specified CVar, or all of them if one isn't specified.";
+            // TODO: Make asyncable
         }
 
         /// <summary>

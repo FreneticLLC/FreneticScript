@@ -18,6 +18,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Name = "cleanmem";
             Arguments = "";
             Description = "Forces the system Garbage Collector to run, invoking CPU usage to lower RAM usage.";
+            Asyncable = true;
         }
 
         /// <summary>

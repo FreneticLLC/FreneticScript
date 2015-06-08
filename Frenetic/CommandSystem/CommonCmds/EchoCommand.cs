@@ -14,6 +14,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             Name = "echo";
             Arguments = "<text to echo>";
             Description = "Echoes any input text back to the console.";
+            Asyncable = true;
         }
 
         /// <summary>
