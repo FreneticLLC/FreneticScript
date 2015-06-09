@@ -126,7 +126,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Count; i++)
                     {
-                        if (entry.Queue.GetCommand(i).CommandLine == "foreach \0CALLBACK")
+                        if (entry.Queue.GetCommand(i).Command is ForeachCommand &&
+                            entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -137,7 +138,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                         entry.Good("Stopping foreach loop.");
                         while (entry.Queue.CommandList.Count > 0)
                         {
-                            if (entry.Queue.GetCommand(0).CommandLine == "foreach \0CALLBACK")
+                            if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
+                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
                             {
                                 entry.Queue.RemoveCommand(0);
                                 break;
@@ -155,7 +157,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Count; i++)
                     {
-                        if (entry.Queue.GetCommand(i).CommandLine == "foreach \0CALLBACK")
+                        if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
+                            entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -166,7 +169,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                         entry.Good("Skipping to next foreach entry...");
                         while (entry.Queue.CommandList.Count > 0)
                         {
-                            if (entry.Queue.GetCommand(0).CommandLine == "foreach \0CALLBACK")
+                            if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
+                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
                             {
                                 break;
                             }
