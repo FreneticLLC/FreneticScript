@@ -60,6 +60,7 @@
     <Compile Include="CommandSystem\Outputter.cs" />
     <Compile Include="CommandSystem\QueueCmds\BreakCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\CallCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\GotoCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DebugCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DefineCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DetermineCommand.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="CommandSystem\QueueCmds\FunctionCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\IfCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\InsertCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\MarkCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ParsingCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RegistereventCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RepeatCommand.cs" />
