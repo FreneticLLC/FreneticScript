@@ -48,13 +48,21 @@ namespace Frenetic.TagHandlers.Common
                 case "random_decimal":
                     return new TextTag(data.TagSystem.CommandSystem.random.NextDouble()).Handle(data.Shrink());
                 // <--[tag]
-                // @Name UtilTag.current_time
+                // @Name UtilTag.current_time_utc
                 // @Group Utilities
                 // @ReturnType TimeTag
                 // @Returns the current system time (UTC).
                 // -->
-                case "current_time":
+                case "current_time_utc":
                     return new TimeTag(DateTime.UtcNow).Handle(data.Shrink());
+                // <--[tag]
+                // @Name UtilTag.current_time
+                // @Group Utilities
+                // @ReturnType TimeTag
+                // @Returns the current system time (local).
+                // -->
+                case "current_time":
+                    return new TimeTag(DateTime.Now).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
