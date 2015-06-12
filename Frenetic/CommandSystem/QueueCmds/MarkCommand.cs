@@ -27,6 +27,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             {
                 ShowUsage(entry);
             }
+            entry.Good("Passing mark.");
         }
     }
 }
