@@ -5,6 +5,7 @@ using System.Text;
 using Frenetic.CommandSystem.QueueCmds;
 using Frenetic.CommandSystem.CommonCmds;
 using Frenetic.TagHandlers;
+using Frenetic.CommandSystem.CommandEvents;
 
 namespace Frenetic.CommandSystem
 {
@@ -199,6 +200,7 @@ namespace Frenetic.CommandSystem
         /// <param name="command">The command to register</param>
         public void RegisterCommand(AbstractCommand command)
         {
+            command.CommandSystem = this;
             RegisteredCommands.Add(command.Name, command);
             RegisteredCommandList.Add(command);
         }
@@ -211,6 +213,11 @@ namespace Frenetic.CommandSystem
         {
             Events.Add(newevent.Name, newevent);
         }
+
+        /// <summary>
+        /// The event for when a script is ran (usually via the run command).
+        /// </summary>
+        public ScriptRanScriptEvent ScriptRan;
 
         /// <summary>
         /// Prepares the command system, registering all base commands.
@@ -226,6 +233,9 @@ namespace Frenetic.CommandSystem
             Queues = new List<CommandQueue>(20);
             TagSystem = new TagParser();
             TagSystem.Init(this);
+
+            // Command-Related Events
+            RegisterEvent(ScriptRan = new ScriptRanScriptEvent(this));
 
             // Common Commands
             RegisterCommand(new CleanmemCommand());

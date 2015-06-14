@@ -17,6 +17,11 @@ namespace Frenetic.CommandSystem
         public string Name = "NAME:UNSET";
 
         /// <summary>
+        /// The system that owns this command.
+        /// </summary>
+        public Commands CommandSystem;
+
+        /// <summary>
         /// A short explanation of the arguments of the command.
         /// </summary>
         public string Arguments = "ARGUMENTS:UNSET";

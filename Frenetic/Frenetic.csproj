@@ -46,6 +46,7 @@
     <Compile Include="CommandSystem\AbstractCommand.cs" />
     <Compile Include="CommandSystem\AbstractCommandEntryData.cs" />
     <Compile Include="CommandSystem\CommandEntry.cs" />
+    <Compile Include="CommandSystem\CommandEvents\ScriptRanScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandQueue.cs" />
     <Compile Include="CommandSystem\CommandQueueEventArgs.cs" />
     <Compile Include="CommandSystem\Commands.cs" />

@@ -13,6 +13,11 @@ namespace Frenetic.CommandSystem
     public abstract class ScriptEvent
     {
         /// <summary>
+        /// Whether this event can be cancelled.
+        /// </summary>
+        public bool Cancellable = false;
+
+        /// <summary>
         /// Gets the list of CommandScripts that handle an event currently.
         /// </summary>
         /// <param name="_event">The event to get the handlers for</param>
@@ -47,19 +52,18 @@ namespace Frenetic.CommandSystem
         /// </summary>
         /// <param name="_system">The command system this event exists within</param>
         /// <param name="_name">The name of the event</param>
-        /// <param name="_handlers">Any pre-existing handlers for this event</param>
-        public ScriptEvent(Commands _system, string _name, List<CommandScript> _handlers)
+        /// <param name="cancellable">Whether the event can be cancelled</param>
+        public ScriptEvent(Commands _system, string _name, bool cancellable)
         {
-            Handlers.AddRange(_handlers);
             System = _system;
             Name = _name.ToLower();
+            Cancellable = cancellable;
         }
 
         /// <summary>
-        /// Calls the event. Returns whether it was cancelled.
+        /// Calls the event.
         /// </summary>
-        /// <returns>Whether to cancel</returns>
-        public bool Call()
+        protected void Call()
         {
             for (int i = 0; i < Handlers.Count; i++)
             {
@@ -68,30 +72,38 @@ namespace Frenetic.CommandSystem
                 CommandQueue queue;
                 foreach (string determ in System.ExecuteScript(script, Variables, out queue))
                 {
-                    ApplyDetermination(determ, queue.Debug);
+                    ApplyDetermination(determ, determ.ToLower(), queue.Debug);
                 }
                 if (i >= Handlers.Count || Handlers[i] != script)
                 {
                     i--;
                 }
             }
-            return Cancelled;
         }
 
         /// <summary>
         /// Applies a determination string to the event.
         /// </summary>
         /// <param name="determ">What was determined</param>
+        /// <param name="determLow">A lowercase copy of the determination</param>
         /// <param name="mode">What debugmode to use</param>
-        public virtual void ApplyDetermination(string determ, DebugMode mode)
+        public virtual void ApplyDetermination(string determ, string determLow, DebugMode mode)
         {
-            if (determ != null && determ.ToLower() == "cancelled")
+            if (Cancellable)
             {
-                Cancelled = true;
-            }
-            else if (determ != null && determ.ToLower() == "uncancelled")
-            {
-                Cancelled = false;
+                switch (determLow)
+                {
+                    case "cancelled:true":
+                    case "cancelled":
+                        Cancelled = true;
+                        break;
+                    case "cancelled:false":
+                        Cancelled = false;
+                        break;
+                    default:
+                        System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ) + "<{color.base}>'.", mode);
+                        break;
+                }
             }
             else
             {
@@ -113,5 +125,14 @@ namespace Frenetic.CommandSystem
         /// The name of this event.
         /// </summary>
         public readonly string Name;
+
+        /// <summary>
+        /// Create a copy of this script event, safe to run.
+        /// </summary>
+        /// <returns>The copy</returns>
+        public virtual ScriptEvent Duplicate()
+        {
+            return (ScriptEvent)MemberwiseClone();
+        }
     }
 }
