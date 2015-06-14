@@ -50,16 +50,10 @@ namespace Frenetic.CommandSystem.QueueCmds
     // }
     // @Example
     // TODO: More examples!
-    // @Tags
-    // <{var[foreach_index]}> returns what iteration (numeric) the foreach is on.
-    // <{var[foreach_total]}> returns what iteration (numeric) the foreach is aiming for, and will end on if not stopped early.
-    // <{var[foreach_value]}> returns the current item in the list.
-    // <{var[foreach_list]}> returns the full list being looped through.
-    // @BlockVars
-    // foreach_index TextTag
-    // foreach_total TextTag
-    // foreach_value Dynamic
-    // foreach_list ListTag
+    // @Var foreach_index TextTag returns what iteration (numeric) the foreach is on.
+    // @Var foreach_total TextTag returns what iteration (numeric) the foreach is aiming for, and will end on if not stopped early.
+    // @Var foreach_value Dynamic returns the current item in the list.
+    // @Var foreach_list ListTag returns the full list being looped through.
     // -->
     // Note: foreach_value listed as dynamic but can be safely treated as TextTag currently.
     class ForeachCommandData : AbstractCommandEntryData

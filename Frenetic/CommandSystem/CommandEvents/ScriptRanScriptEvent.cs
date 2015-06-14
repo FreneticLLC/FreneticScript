@@ -17,7 +17,7 @@ namespace Frenetic.CommandSystem.CommandEvents
     // @Description
     // This event will fire whenever a script is ran, which by default is when <@link command run> is used.
     // This event can be used to control other scripts running on the system.
-    // @Var script_name TextTag Returns 
+    // @Var script_name TextTag returns the name of the script about to be ran.
     // -->
     /// <summary>
     /// ScriptRan script event, called by the run command.

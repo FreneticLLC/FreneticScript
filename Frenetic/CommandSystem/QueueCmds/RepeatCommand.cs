@@ -49,12 +49,8 @@ namespace Frenetic.CommandSystem.QueueCmds
     // }
     // @Example
     // TODO: More examples!
-    // @Tags
-    // <{var[repeat_index]}> returns what iteration (numeric) the repeat is on.
-    // <{var[repeat_total]}> returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
-    // @BlockVars
-    // repeat_index TextTag
-    // repeat_total TextTag
+    // @Var repeat_index TextTag returns what iteration (numeric) the repeat is on.
+    // @Var repeat_total TextTag returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
     // -->
     class RepeatCommandData : AbstractCommandEntryData
     {

@@ -24,8 +24,7 @@ namespace Frenetic.CommandSystem.CommonCmds
     // define name value
     // @Example
     // TODO: More examples!
-    // @Tags
-    // <{var[<TextTag>]}> returns the value of the set definition.
+    // Var <Dynamic> TextTag returns the value of the set definition.
     // -->
     class DefineCommand: AbstractCommand
     {
