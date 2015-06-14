@@ -14,7 +14,7 @@ namespace Frenetic.TagHandlers
     {
         // <--[definition]
         // @Word specified
-        // @Set tag
+        // @Group tag
         // @Description The word 'specified', when used in a tag description, refers to the value input after the tag.
         // EG, you might have the tag <@link tag TextTag.equals[<TextTag>]><{text[<TextTag>].equals[<TextTag>]}><@/link>
         // In this tag, the first <TextTag> is referred to as 'the text', and the second <TextTag> as 'specified text'.

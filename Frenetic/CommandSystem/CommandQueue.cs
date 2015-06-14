@@ -23,6 +23,7 @@ namespace Frenetic.CommandSystem
 
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
+        /// Almost always true.
         /// </summary>
         public bool Delayable = true;
 

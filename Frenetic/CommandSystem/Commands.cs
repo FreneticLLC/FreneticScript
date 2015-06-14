@@ -16,7 +16,7 @@ namespace Frenetic.CommandSystem
     {
         // <--[definition]
         // @Word argument
-        // @Set commands
+        // @Group commands
         // @Description The word 'argument', when used in a command description, refers to the any input value
         // outside the command itself.
         // Generally a command is formatted like:
