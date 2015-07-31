@@ -120,10 +120,16 @@ namespace Frenetic
         }
 
         /// <summary>
+        /// This event is called when the CVar is changed.
+        /// </summary>
+        public EventHandler OnChanged;
+
+        /// <summary>
         /// Sets the CVar to a new value.
+        /// A force change will not trigger a system 'modified' save.
         /// </summary>
         /// <param name="newvalue">The value to set the CVar to</param>
-        /// <param name="force">Whether to force the edit (IE, a server has demanded the change)</param>
+        /// <param name="force">Whether to force the edit (EG, a server has demanded the change)</param>
         public void Set(string newvalue, bool force = false)
         {
             if (newvalue == Value)
@@ -151,6 +157,10 @@ namespace Frenetic
             if (!force)
             {
                 system.Modified = true;
+            }
+            if (OnChanged != null)
+            {
+                OnChanged(this, null);
             }
         }
 
@@ -190,6 +200,10 @@ namespace Frenetic
                 ValueD = 0;
             }
             system.Modified = true;
+            if (OnChanged != null)
+            {
+                OnChanged(this, null);
+            }
         }
 
         /// <summary>
