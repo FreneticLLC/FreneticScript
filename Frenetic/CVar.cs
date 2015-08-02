@@ -14,39 +14,39 @@ namespace Frenetic
         /// <summary>
         /// No information.
         /// </summary>
-        None = 0x0,
+        None = 0x0000,
         /// <summary>
         /// This flag cannot be edited, and exists to represent system information.
         /// </summary>
-        ReadOnly = 0x1,
+        ReadOnly = 0x0001,
         /// <summary>
         /// This flag should be treated as text.
         /// </summary>
-        Textual = 0x2,
+        Textual = 0x0002,
         /// <summary>
         /// This tag should be treated as a number.
         /// </summary>
-        Numeric = 0x4,
+        Numeric = 0x0004,
         /// <summary>
         /// This flag should be treated as true/false.
         /// </summary>
-        Boolean = 0x8,
+        Boolean = 0x0008,
         /// <summary>
         /// This flag won't immediately have an effect when edited.
         /// </summary>
-        Delayed = 0x10,
+        Delayed = 0x0010,
         /// <summary>
         /// This flag was made by a user.
         /// </summary>
-        UserMade = 0x20,
+        UserMade = 0x0020,
         /// <summary>
         /// This flag can only be modified during load time.
         /// </summary>
-        InitOnly = 0x40,
+        InitOnly = 0x0040,
         /// <summary>
         /// This flag is on a client, but controlled by the server.
         /// </summary>
-        ServerControl = 0x80,
+        ServerControl = 0x0080,
     }
     // <--[explanation]
     // @Name CVars

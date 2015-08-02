@@ -79,9 +79,10 @@ namespace Frenetic.CommandSystem
                 marker = 3;
                 BaseCommand = BaseCommand.Substring(1);
             }
-            else if (BaseCommand.StartsWith("~") && BaseCommand.Length > 1)
+            bool waitfor = false;
+            if (BaseCommand.StartsWith("&") && BaseCommand.Length > 1)
             {
-                marker = 4;
+                waitfor = true;
                 BaseCommand = BaseCommand.Substring(1);
             }
             string BaseCommandLow = BaseCommand.ToLower();
@@ -89,19 +90,19 @@ namespace Frenetic.CommandSystem
             AbstractCommand cmd;
             if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
             {
-                return new CommandEntry(command, _block, _owner, cmd, args, BaseCommand, marker);
+                return new CommandEntry(command, _block, _owner, cmd, args, BaseCommand, marker) { WaitFor = waitfor };
             }
-            return CreateInvalidOutput(BaseCommand, _block, args, _owner, system, command, marker);
+            return CreateInvalidOutput(BaseCommand, _block, args, _owner, system, command, marker, waitfor);
         }
 
         /// <summary>
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block,
-            List<string> _arguments, CommandEntry _owner, Commands system, string line, int marker)
+            List<string> _arguments, CommandEntry _owner, Commands system, string line, int marker, bool waitfor)
         {
             _arguments.Insert(0, name);
-            return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker);
+            return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker) { WaitFor = waitfor };
                 
         }
 
@@ -121,9 +122,14 @@ namespace Frenetic.CommandSystem
         public CommandEntry BlockOwner = null;
 
         /// <summary>
-        /// Whether the waitable command entry is finished.
+        /// Whether the &amp;waitable command entry is finished.
         /// </summary>
         public bool Finished = false;
+
+        /// <summary>
+        /// Whether the &amp;waitable command entry should be waited for.
+        /// </summary>
+        public bool WaitFor = false;
 
         /// <summary>
         /// Full constructor, recommended.

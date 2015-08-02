@@ -42,7 +42,7 @@ namespace Frenetic.CommandSystem
         public bool IsFlow = false;
 
         /// <summary>
-        /// Whether the command can be ~waited on.
+        /// Whether the command can be &amp;waited on.
         /// </summary>
         public bool Waitable = false;
 

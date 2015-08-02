@@ -112,18 +112,18 @@ namespace Frenetic.CommandSystem
         /// </summary>
         public void Tick(float Delta)
         {
-            if (Delayable && (LastCommand != null && LastCommand.Marker == 4 && !LastCommand.Finished))
+            if (Delayable && (LastCommand != null && LastCommand.Command.Waitable && LastCommand.WaitFor && !LastCommand.Finished))
             {
                 return;
             }
             if (Delayable && Wait > 0f)
             {
                 Wait -= Delta;
-                if (Wait > 0)
+                if (Wait > 0f)
                 {
                     return;
                 }
-                Wait = 0;
+                Wait = 0f;
             }
             while (CommandList.Count > 0)
             {
@@ -131,7 +131,7 @@ namespace Frenetic.CommandSystem
                 CommandList.RemoveAt(0);
                 CommandSystem.ExecuteCommand(CurrentCommand, this);
                 LastCommand = CurrentCommand;
-                if (Delayable && ((Wait > 0f) || (LastCommand.Marker == 4 && !LastCommand.Finished)))
+                if (Delayable && ((Wait > 0f) || (LastCommand.Command.Waitable && LastCommand.WaitFor && !LastCommand.Finished)))
                 {
                     return;
                 }
