@@ -82,13 +82,14 @@ namespace Frenetic
         /// <param name="CVar">The name of the CVar</param>
         /// <param name="value">The value to set it to</param>
         /// <param name="force">Whether to force a server send</param>
+        /// <param name="flags_if_new">What flags to set if the CVar is new</param>
         /// <returns>The set CVar</returns>
-        public CVar AbsoluteSet(string CVar, string value, bool force = false)
+        public CVar AbsoluteSet(string CVar, string value, bool force = false, CVarFlag flags_if_new = CVarFlag.None)
         {
             CVar gotten = Get(CVar);
             if (gotten == null)
             {
-                gotten = Register(CVar, value, CVarFlag.UserMade);
+                gotten = Register(CVar, value, CVarFlag.UserMade | flags_if_new);
             }
             else
             {

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic
 {
@@ -47,13 +45,20 @@ namespace Frenetic
         /// This flag is on a client, but controlled by the server.
         /// </summary>
         ServerControl = 0x0080,
+        /// <summary>
+        /// This flag should not be saved across system restarts.
+        /// Useful for scripts to use when tracking temporary data.
+        /// </summary>
+        DoNotSave = 0x0100,
     }
+
     // <--[explanation]
     // @Name CVars
     // @Description
     // CVars are global control variables.
     // TODO: Explain better!
     // -->
+
     /// <summary>
     /// Represents a name:value pair within a complex system.
     /// </summary>
@@ -216,67 +221,15 @@ namespace Frenetic
             {
                 return "None";
             }
-            string Type = null;
-            if (Flags.HasFlag(CVarFlag.Boolean))
+            ListTag list = new ListTag();
+            foreach (CVarFlag flag in Enum.GetValues(typeof(CVarFlag)))
             {
-                Type = "Boolean";
-            }
-            else if (Flags.HasFlag(CVarFlag.Textual))
-            {
-                Type = "Textual";
-            }
-            else if (Flags.HasFlag(CVarFlag.Numeric))
-            {
-                Type = "Numeric";
-            }
-            else if (Flags.HasFlag(CVarFlag.UserMade))
-            {
-                Type = "User-Made";
-            }
-            if (Flags.HasFlag(CVarFlag.ReadOnly))
-            {
-                if (Type != null)
+                if (flag != CVarFlag.None && Flags.HasFlag(flag))
                 {
-                    return "ReadOnly, " + Type;
-                }
-                else
-                {
-                    return "ReadOnly";
+                    list.ListEntries.Add(new TextTag(flag.ToString()));
                 }
             }
-            else if (Flags.HasFlag(CVarFlag.Delayed))
-            {
-                if (Type != null)
-                {
-                    return "Delayed, " + Type;
-                }
-                else
-                {
-                    return "Delayed";
-                }
-            }
-            else if (Flags.HasFlag(CVarFlag.ServerControl))
-            {
-                if (Type != null)
-                {
-                    return "ServerControlled, " + Type;
-                }
-                else
-                {
-                    return "ServerControlled";
-                }
-            }
-            else
-            {
-                if (Type != null)
-                {
-                    return Type;
-                }
-                else
-                {
-                    return "???UNKNOWN-FLAGS???";
-                }
-            }
+            return list.Formatted();
         }
 
         /// <summary>

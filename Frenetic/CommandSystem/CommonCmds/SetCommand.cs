@@ -12,7 +12,7 @@ namespace Frenetic.CommandSystem.CommonCmds
         public SetCommand()
         {
             Name = "set";
-            Arguments = "<CVar to set> <new value> (force/remove)";
+            Arguments = "<CVar to set> <new value> (force/remove/do_not_save)";
             Description = "Modifies the value of a specified CVar, or creates a new one.";
             // TODO: make asyncable
         }
@@ -34,6 +34,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                 string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(2).ToLower(): "";
                 bool force = a2 == "force";
                 bool remove = a2 == "remove";
+                bool do_not_save = a2 == "do_not_save";
                 if (remove)
                 {
                     CVar Cvar = entry.Output.CVarSys.Get(target);
@@ -57,7 +58,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                     }
                     return;
                 }
-                CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue);
+                CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave: CVarFlag.None);
                 if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
                 {
                     entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name)
