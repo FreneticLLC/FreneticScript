@@ -53,7 +53,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     EntryFinisher fin = new EntryFinisher() { Entry = entry };
                     queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
                 }
-                ListTag list = new ListTag(queue.Determination);
+                ListTag list = new ListTag(queue.Determinations);
                 entry.Queue.SetVariable("run_determinations", list);
             }
             else

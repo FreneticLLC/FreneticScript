@@ -104,7 +104,7 @@ namespace Frenetic.CommandSystem
                 }
             }
             queue.Execute();
-            return queue.Determination;
+            return queue.Determinations;
         }
 
         /// <summary>

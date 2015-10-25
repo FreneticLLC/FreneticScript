@@ -13,6 +13,7 @@ namespace Frenetic.CommandSystem
     {
         /// <summary>
         /// All commands in this queue, as strings.
+        /// TODO: Replace list with more efficient handler (Linked list, perhaps?)
         /// </summary>
         public List<CommandEntry> CommandList;
 
@@ -65,7 +66,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// What was returned by the determine command for this queue.
         /// </summary>
-        public List<string> Determination = new List<string>();
+        public List<string> Determinations = new List<string>();
 
         /// <summary>
         /// What function to invoke when output is generated.
@@ -228,7 +229,7 @@ namespace Frenetic.CommandSystem
     }
 
     /// <summary>
-    /// A mini-class used for the callback for ~waitable commands.
+    /// A mini-class used for the callback for &amp;waitable commands.
     /// </summary>
     public class EntryFinisher
     {

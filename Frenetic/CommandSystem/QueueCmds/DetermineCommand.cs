@@ -25,7 +25,7 @@ namespace Frenetic.CommandSystem.CommonCmds
             {
                 determ = entry.GetArgument(0);
             }
-            entry.Queue.Determination.Add(determ);
+            entry.Queue.Determinations.Add(determ);
             entry.Good("<{color.info}>Determination of the queue set to '<{color.emphasis}>" + TagParser.Escape(determ) + "<{color.info}>'.");
         }
     }
