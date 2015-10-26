@@ -49,15 +49,15 @@ namespace Frenetic
             Output.CVarSys = this;
 
             // System CVars
-            s_osversion = Register("s_osversion", Environment.OSVersion.VersionString, CVarFlag.Textual | CVarFlag.ReadOnly); // The name and version of the operating system the game is being run on.
-            s_user = Register("s_user", Environment.UserName, CVarFlag.Textual | CVarFlag.ReadOnly); // The name of the system user running the game.
-            s_dotnetversion = Register("s_dotnetversion", Environment.Version.ToString(), CVarFlag.Textual | CVarFlag.ReadOnly); // The system's .NET (CLR) version string.
+            s_osversion = Register("s_osversion", Environment.OSVersion.VersionString, CVarFlag.Textual | CVarFlag.ReadOnly, "The name and version of the operating system the engine is being run on.");
+            s_user = Register("s_user", Environment.UserName, CVarFlag.Textual | CVarFlag.ReadOnly, "The name of the system user running the engine.");
+            s_dotnetversion = Register("s_dotnetversion", Environment.Version.ToString(), CVarFlag.Textual | CVarFlag.ReadOnly, "The system's .NET (CLR) version string.");
 #if WINDOWS
-            s_totalram = Register("s_totalram", new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly); // How much RAM the system has.
+            s_totalram = Register("s_totalram", new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly, "How much RAM the system has.");
 #endif
-            s_culture = Register("s_culture", System.Globalization.CultureInfo.CurrentUICulture.EnglishName, CVarFlag.Textual | CVarFlag.ReadOnly); // The system culture (locale).
-            s_processors = Register("s_processors", Environment.ProcessorCount.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly); // The number of processors the system has.
-            s_machinename = Register("s_machinename", Environment.MachineName, CVarFlag.Textual | CVarFlag.ReadOnly); // The name given to the computer.
+            s_culture = Register("s_culture", System.Globalization.CultureInfo.CurrentUICulture.EnglishName, CVarFlag.Textual | CVarFlag.ReadOnly, "The system culture (locale).");
+            s_processors = Register("s_processors", Environment.ProcessorCount.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly, "The number of processors the system the engine is being run on has.");
+            s_machinename = Register("s_machinename", Environment.MachineName, CVarFlag.Textual | CVarFlag.ReadOnly, "The name given to the computer the engine is being run on.");
             // TODO: other system info
         }
 
@@ -67,10 +67,12 @@ namespace Frenetic
         /// <param name="CVar">The name of the CVar</param>
         /// <param name="value">The default value</param>
         /// <param name="flags">The flags to set on this CVar</param>
+        /// <param name="description">An optional description text for a CVar</param>
         /// <returns>The registered CVar</returns>
-        public CVar Register(string CVar, string value, CVarFlag flags)
+        public CVar Register(string CVar, string value, CVarFlag flags, string description = null)
         {
             CVar cvar = new CVar(CVar.ToLower(), value, flags, this);
+            cvar.Description = description;
             CVars.Add(CVar, cvar);
             CVarList.Add(cvar);
             return cvar;

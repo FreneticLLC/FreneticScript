@@ -110,6 +110,16 @@ namespace Frenetic
         CVarSystem system;
 
         /// <summary>
+        /// An implementor can optionally apply a description to a CVar to show in Info() and any implementor-managed code.
+        /// </summary>
+        public string Description;
+
+        /// <summary>
+        /// Any object can be attached to a CVar to mark it for the implementing engine.
+        /// </summary>
+        public Object Tag;
+
+        /// <summary>
         /// Construct a CVar.
         /// </summary>
         /// <param name="newname">The name of  the CVar</param>
@@ -241,7 +251,8 @@ namespace Frenetic
             return TextStyle.Color_Simple + "Name: '" + TextStyle.Color_Separate + Name + TextStyle.Color_Simple + "', value: '" +
                 TextStyle.Color_Separate + Value + TextStyle.Color_Simple + "', numeric value: " + TextStyle.Color_Separate +
                 ValueD + TextStyle.Color_Simple + ", boolean value: " + TextStyle.Color_Separate + (ValueB ? "true" : "false") +
-                TextStyle.Color_Simple + ", flags: " + TextStyle.Color_Separate + FlagInfo();
+                TextStyle.Color_Simple + ", flags: " + TextStyle.Color_Separate + FlagInfo() + TextStyle.Color_Simple
+                + ", description: '" + TextStyle.Color_Separate + Description + TextStyle.Color_Simple + "'";
         }
     }
 }
