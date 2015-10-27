@@ -200,9 +200,26 @@ namespace Frenetic.CommandSystem
         /// <param name="command">The command to register</param>
         public void RegisterCommand(AbstractCommand command)
         {
+            command.Name = command.Name.ToLower(); // Just a quick backup in case somebody messed up.
             command.CommandSystem = this;
             RegisteredCommands.Add(command.Name, command);
             RegisteredCommandList.Add(command);
+        }
+
+        /// <summary>
+        /// Removes a command from the registered command list.
+        /// Silently fails if command is not registered.
+        /// </summary>
+        /// <param name="name">The name of the command to remove</param>
+        public void UnregisterCommand(string name)
+        {
+            string namelow = name.ToLower();
+            AbstractCommand cmd;
+            if (RegisteredCommands.TryGetValue(namelow, out cmd))
+            {
+                RegisteredCommands.Remove(namelow);
+                RegisteredCommandList.Remove(cmd);
+            }
         }
 
         /// <summary>
