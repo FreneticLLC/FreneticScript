@@ -6,7 +6,10 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
-    class CVarTags: TemplateTags
+    /// <summary>
+    /// Returns CVar information.
+    /// </summary>
+    public class CVarTags: TemplateTags
     {
         // <--[tag]
         // @Base cvar[<TextTag>]
@@ -15,11 +18,19 @@ namespace Frenetic.TagHandlers.Common
         // @Returns the specified global control variable.
         // <@link explanation cvars>What are CVars?<@/link>
         // -->
+
+        /// <summary>
+        /// Construct the CVarTags - for internal use only.
+        /// </summary>
         public CVarTags()
         {
             Name = "cvar";
         }
 
+        /// <summary>
+        /// Handles a 'cvar' tag.
+        /// </summary>
+        /// <param name="data">The data to be handled</param>
         public override string Handle(TagData data)
         {
             string modif = data.GetModifier(0).ToLower();
@@ -35,6 +46,7 @@ namespace Frenetic.TagHandlers.Common
                 {
                     return new TextTag(false).Handle(data.Shrink());
                 }
+                // TODO: Separate CVar object?
                 switch (data.Input[0])
                 {
                     // <--[tag]

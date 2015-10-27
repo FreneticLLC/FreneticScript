@@ -6,7 +6,10 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
-    class TernaryTags : TemplateTags
+    /// <summary>
+    /// Handles Ternary calculations.
+    /// </summary>
+    public class TernaryTags : TemplateTags
     {
         // <--[tag]
         // @Base ternary[<TextTag>]
@@ -18,11 +21,19 @@ namespace Frenetic.TagHandlers.Common
         // If the value in ternary[...] is "true", then the contents of .pass[...] will be returned.
         // Otherwise, the contents of .fail[...] will be returned.
         // -->
+
+        /// <summary>
+        /// Construct the TernaryTags - for internal use only.
+        /// </summary>
         public TernaryTags()
         {
             Name = "ternary";
         }
 
+        /// <summary>
+        /// Handles the 'ternary' tag.
+        /// </summary>
+        /// <param name="data">The data to be handled</param>
         public override string Handle(TagData data)
         {
             bool basevalue = data.GetModifier(0).ToLower() == "true";

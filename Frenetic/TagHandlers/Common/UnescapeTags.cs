@@ -43,7 +43,7 @@ namespace Frenetic.TagHandlers.Common
         }
 
         /// <summary>
-        /// Handles the unescape tag.
+        /// Handles the 'unescape' tag.
         /// </summary>
         /// <param name="data">The data to be handled</param>
         public override string Handle(TagData data)

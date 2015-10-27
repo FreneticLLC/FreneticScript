@@ -18,6 +18,7 @@ namespace Frenetic.TagHandlers.Common
         // @Returns a generic utility class full of specific helpful utility tags,
         // such as <@link tag UtilTag.random_decimal><{util.random_decimal}><@/link>.
         // -->
+
         /// <summary>
         /// Constructs the Utility tags.
         /// </summary>
@@ -55,6 +56,7 @@ namespace Frenetic.TagHandlers.Common
                 // -->
                 case "current_time_utc":
                     return new TimeTag(DateTime.UtcNow).Handle(data.Shrink());
+                // TODO: Meta: Link the two current_time's at each other!
                 // <--[tag]
                 // @Name UtilTag.current_time
                 // @Group Utilities

@@ -22,6 +22,7 @@ namespace Frenetic.TagHandlers.Common
         // @Returns the input text as a TextTag.
         // <@link explanation Text Tags>What are text tags?<@/link>
         // -->
+
         public TextTags()
         {
             Name = "text";

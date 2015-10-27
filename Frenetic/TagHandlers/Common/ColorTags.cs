@@ -19,6 +19,7 @@ namespace Frenetic.TagHandlers.Common
         // such as <@link tag ColorTag.emphasis><{color.emphasis}><@/link>.
         // TODO: Link full rundown of text colors.
         // -->
+        
         /// <summary>
         /// Construct the ColorTags - for internal use only.
         /// </summary>
