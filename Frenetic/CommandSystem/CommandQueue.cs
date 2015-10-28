@@ -173,13 +173,7 @@ namespace Frenetic.CommandSystem
         /// <param name="entries">Commands to be run</param>
         public void AddCommandsNow(List<CommandEntry> entries)
         {
-            // TODO: Is duplication necessary?
-            CommandEntry[] dup = new CommandEntry[entries.Count];
-            for (int i = 0; i < entries.Count; i++)
-            {
-                    dup[i] = entries[i] == null ? null : entries[i].Duplicate(entries[i].BlockOwner);
-            }
-            CommandList.Insert(0, dup);
+            CommandList.Insert(0, entries.ToArray());
         }
 
         /// <summary>
