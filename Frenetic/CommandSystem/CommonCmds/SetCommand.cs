@@ -77,13 +77,13 @@ namespace Frenetic.CommandSystem.CommonCmds
                 }
                 else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !entry.Output.Initializing)
                 {
-                    entry.Good("<{color.info}>CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
-                        "<{color.info}>' is delayed, and its value will be calculated after the game is reloaded.");
+                    entry.Good("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
+                        "<{color.base}>' is delayed, and its value will be calculated after the game is reloaded.");
                 }
                 else
                 {
-                    entry.Good("<{color.info}>CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
-                        "<{color.info}>' set to '<{color.emphasis}>" + TagParser.Escape(cvar.Value) + "<{color.info}>'.");
+                    entry.Good("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
+                        "<{color.base}>' set to '<{color.emphasis}>" + TagParser.Escape(cvar.Value) + "<{color.base}>'.");
                 }
             }
         }

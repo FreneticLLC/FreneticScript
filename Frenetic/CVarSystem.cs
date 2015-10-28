@@ -73,7 +73,7 @@ namespace Frenetic
         {
             CVar cvar = new CVar(CVar.ToLower(), value, flags, this);
             cvar.Description = description;
-            CVars.Add(CVar, cvar);
+            CVars.Add(cvar.Name, cvar);
             CVarList.Add(cvar);
             return cvar;
         }

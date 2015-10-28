@@ -71,7 +71,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 return;
             }
             CommandEntry Owner = entry.BlockOwner;
-            while (entry.Queue.CommandList.Count > 0 && count > 0)
+            while (entry.Queue.CommandList.Length > 0 && count > 0)
             {
                 if (Owner == null)
                 {

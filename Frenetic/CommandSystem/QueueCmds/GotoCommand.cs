@@ -30,7 +30,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             string targ = entry.GetArgument(0);
             bool hasnext = false;
-            for (int i = 0; i < entry.Queue.CommandList.Count; i++)
+            for (int i = 0; i < entry.Queue.CommandList.Length; i++)
             {
                 if (entry.Queue.GetCommand(i).Command is MarkCommand
                     && entry.Queue.GetCommand(i).Arguments[0] == targ)
@@ -42,7 +42,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             if (hasnext)
             {
                 entry.Good("Going to mark.");
-                while (entry.Queue.CommandList.Count > 0)
+                while (entry.Queue.CommandList.Length > 0)
                 {
                     if (entry.Queue.GetCommand(0).Command is MarkCommand
                         && entry.Queue.GetCommand(0).Arguments[0] == targ)

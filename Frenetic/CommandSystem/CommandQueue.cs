@@ -15,7 +15,7 @@ namespace Frenetic.CommandSystem
         /// All commands in this queue, as strings.
         /// TODO: Replace list with more efficient handler (Linked list, perhaps?)
         /// </summary>
-        public List<CommandEntry> CommandList;
+        public ListQueue<CommandEntry> CommandList;
 
         /// <summary>
         /// A list of all variables saved in this queue.
@@ -75,11 +75,12 @@ namespace Frenetic.CommandSystem
 
         /// <summary>
         /// Constructs a new CommandQueue - generally kept to the Frenetic internals.
+        /// TODO: IList _commands -> ListQueue?
         /// </summary>
-        public CommandQueue(CommandScript _script, List<CommandEntry> _commands, Commands _system)
+        public CommandQueue(CommandScript _script, IList<CommandEntry> _commands, Commands _system)
         {
             Script = _script;
-            CommandList = _commands;
+            CommandList = new ListQueue<CommandEntry>(_commands);
             CommandSystem = _system;
             Variables = new Dictionary<string, TemplateObject>();
             Debug = DebugMode.FULL;
@@ -126,10 +127,13 @@ namespace Frenetic.CommandSystem
                 }
                 Wait = 0f;
             }
-            while (CommandList.Count > 0)
+            while (CommandList.Length > 0)
             {
-                CommandEntry CurrentCommand = CommandList[0];
-                CommandList.RemoveAt(0);
+                CommandEntry CurrentCommand = CommandList.Pop();
+                if (CurrentCommand == null)
+                {
+                    continue;
+                }
                 CommandSystem.ExecuteCommand(CurrentCommand, this);
                 LastCommand = CurrentCommand;
                 if (Delayable && ((Wait > 0f) || (LastCommand.Command.Waitable && LastCommand.WaitFor && !LastCommand.Finished)))
@@ -160,7 +164,7 @@ namespace Frenetic.CommandSystem
         /// <param name="index">The index of the command</param>
         public void RemoveCommand(int index)
         {
-            CommandList.RemoveAt(index);
+            CommandList[index] = null;
         }
 
         /// <summary>
@@ -169,7 +173,13 @@ namespace Frenetic.CommandSystem
         /// <param name="entries">Commands to be run</param>
         public void AddCommandsNow(List<CommandEntry> entries)
         {
-            CommandList.InsertRange(0, entries);
+            // TODO: Is duplication necessary?
+            CommandEntry[] dup = new CommandEntry[entries.Count];
+            for (int i = 0; i < entries.Count; i++)
+            {
+                    dup[i] = entries[i] == null ? null : entries[i].Duplicate(entries[i].BlockOwner);
+            }
+            CommandList.Insert(0, dup);
         }
 
         /// <summary>

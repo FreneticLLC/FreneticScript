@@ -53,7 +53,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             if (type == "stop")
             {
                 bool hasnext = false;
-                for (int i = 0; i < entry.Queue.CommandList.Count; i++)
+                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
                     if (entry.Queue.GetCommand(i).CommandLine == "call \0CALLBACK")
                     {
@@ -64,7 +64,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 if (hasnext)
                 {
                     entry.Good("Stopping function call.");
-                    while (entry.Queue.CommandList.Count > 0)
+                    while (entry.Queue.CommandList.Length > 0)
                     {
                         if (entry.Queue.GetCommand(0).CommandLine == "call \0CALLBACK")
                         {

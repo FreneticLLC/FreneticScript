@@ -107,7 +107,7 @@ namespace Frenetic.CommandSystem
         }
 
         /// <summary>
-        /// The command itself.
+        /// The original command input.
         /// </summary>
         public string CommandLine;
 

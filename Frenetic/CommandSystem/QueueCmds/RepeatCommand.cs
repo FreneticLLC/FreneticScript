@@ -38,17 +38,17 @@ namespace Frenetic.CommandSystem.QueueCmds
     //     echo "<{var[repeat_index]}>r"
     // }
     // @Example
-    // // This example runs through the list and echos "1", then "2", then stops early back to the console.
+    // // This example runs through the list and echos "1", then "2", then stops early.
     // repeat 3
     // {
-    //     echo "<{var[repeat_index]}>"
     //     if <{var[repeat_index].equals[3]}>
     //     {
     //         repeat stop
     //     }
+    //     echo "<{var[repeat_index]}>"
     // }
     // @Example
-    // TODO: More examples!
+    // // TODO: More examples!
     // @Var repeat_index TextTag returns what iteration (numeric) the repeat is on.
     // @Var repeat_total TextTag returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
     // -->
@@ -119,7 +119,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 else if (count.ToLower() == "stop")
                 {
                     bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Count; i++)
+                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
                             entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
@@ -131,7 +131,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     if (hasnext)
                     {
                         entry.Good("Stopping repeat loop.");
-                        while (entry.Queue.CommandList.Count > 0)
+                        while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
                                 entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
@@ -150,7 +150,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 else if (count.ToLower() == "next")
                 {
                     bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Count; i++)
+                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
                             entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
@@ -162,7 +162,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     if (hasnext)
                     {
                         entry.Good("Skipping to next repeat entry...");
-                        while (entry.Queue.CommandList.Count > 0)
+                        while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
                                 entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")

@@ -71,7 +71,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 else if (count.ToLower() == "stop")
                 {
                     bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Count; i++)
+                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is WhileCommand &&
                             entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
@@ -83,7 +83,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     if (hasnext)
                     {
                         entry.Good("Stopping while loop.");
-                        while (entry.Queue.CommandList.Count > 0)
+                        while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is WhileCommand &&
                                 entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
@@ -102,7 +102,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 else if (count.ToLower() == "next")
                 {
                     bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Count; i++)
+                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is WhileCommand &&
                             entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
@@ -114,7 +114,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     if (hasnext)
                     {
                         entry.Good("Skipping to next repeat entry...");
-                        while (entry.Queue.CommandList.Count > 0)
+                        while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is WhileCommand &&
                                 entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
