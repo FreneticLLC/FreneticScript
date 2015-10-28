@@ -110,7 +110,7 @@ namespace Frenetic.CommandSystem
 
         /// <summary>
         /// Recalculates and advances the command queue.
-        /// <param name="Delta">The time passed this tick</param>
+        /// <param name="Delta">The time passed this tick.</param>
         /// </summary>
         public void Tick(float Delta)
         {
@@ -151,8 +151,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets the command at the specified index.
         /// </summary>
-        /// <param name="index">The index of the command</param>
-        /// <returns>The specified command</returns>
+        /// <param name="index">The index of the command.</param>
+        /// <returns>The specified command.</returns>
         public CommandEntry GetCommand(int index)
         {
             return CommandList[index];
@@ -161,7 +161,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Removes the command at the specified index.
         /// </summary>
-        /// <param name="index">The index of the command</param>
+        /// <param name="index">The index of the command.</param>
         public void RemoveCommand(int index)
         {
             CommandList[index] = null;
@@ -170,7 +170,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Adds a list of entries to be executed next in line.
         /// </summary>
-        /// <param name="entries">Commands to be run</param>
+        /// <param name="entries">Commands to be run.</param>
         public void AddCommandsNow(List<CommandEntry> entries)
         {
             CommandList.Insert(0, entries.ToArray());
@@ -187,8 +187,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Adds or sets a variable for tags in this queue to use.
         /// </summary>
-        /// <param name="name">The name of the variable</param>
-        /// <param name="value">The value to set on the variable</param>
+        /// <param name="name">The name of the variable.</param>
+        /// <param name="value">The value to set on the variable.</param>
         public void SetVariable(string name, TemplateObject value)
         {
             string namelow = name.ToLower();
@@ -199,8 +199,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets the value of a variable saved on the queue.
         /// </summary>
-        /// <param name="name">The name of the variable</param>
-        /// <returns>The variable's value</returns>
+        /// <param name="name">The name of the variable.</param>
+        /// <returns>The variable's value.</returns>
         public TemplateObject GetVariable(string name)
         {
             string namelow = name.ToLower();

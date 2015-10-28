@@ -18,7 +18,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a text tag.
         /// </summary>
-        /// <param name="_text">The text to construct it from</param>
+        /// <param name="_text">The text to construct it from.</param>
         public TextTag(string _text)
         {
             Text = _text;
@@ -27,7 +27,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a text tag.
         /// </summary>
-        /// <param name="_text">The text to construct it from</param>
+        /// <param name="_text">The text to construct it from.</param>
         public TextTag(bool _text)
         {
             Text = _text ? "true" : "false";
@@ -36,7 +36,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a text tag.
         /// </summary>
-        /// <param name="_text">The text to construct it from</param>
+        /// <param name="_text">The text to construct it from.</param>
         public TextTag(int _text)
         {
             Text = _text.ToString();
@@ -45,7 +45,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a text tag.
         /// </summary>
-        /// <param name="_text">The text to construct it from</param>
+        /// <param name="_text">The text to construct it from.</param>
         public TextTag(long _text)
         {
             Text = _text.ToString();
@@ -54,7 +54,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a text tag.
         /// </summary>
-        /// <param name="_text">The text to construct it from</param>
+        /// <param name="_text">The text to construct it from.</param>
         public TextTag(float _text)
         {
             Text = _text.ToString();
@@ -63,7 +63,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a text tag.
         /// </summary>
-        /// <param name="_text">The text to construct it from</param>
+        /// <param name="_text">The text to construct it from.</param>
         public TextTag(double _text)
         {
             Text = _text.ToString();
@@ -72,7 +72,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
-        /// <param name="data">The input tag data</param>
+        /// <param name="data">The input tag data.</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)
@@ -568,7 +568,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Converts the text tag to a string by returning the internal text.
         /// </summary>
-        /// <returns>A string representation of this text tag</returns>
+        /// <returns>A string representation of this text tag.</returns>
         public override string ToString()
         {
             return Text;

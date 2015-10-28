@@ -31,7 +31,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Handles a 'color' tag.
         /// </summary>
-        /// <param name="data">The data to be handled</param>
+        /// <param name="data">The data to be handled.</param>
         public override string Handle(TagData data)
         {
             data.Shrink();

@@ -23,8 +23,8 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Constructs a variable.
         /// </summary>
-        /// <param name="_name">See Variable.Name</param>
-        /// <param name="_value">See Variable.Value</param>
+        /// <param name="_name">See Variable.Name.</param>
+        /// <param name="_value">See Variable.Value.</param>
         public Variable(string _name, string _value)
         {
             Name = _name;

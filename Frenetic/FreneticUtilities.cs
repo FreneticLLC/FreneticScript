@@ -11,8 +11,8 @@ namespace Frenetic
         /// Converts a string value to the long-integer value it represents.
         /// Returns 0 if the string does not represent a long-integer.
         /// </summary>
-        /// <param name="input">The string to get the value from</param>
-        /// <returns>a long-integer value</returns>
+        /// <param name="input">The string to get the value from.</param>
+        /// <returns>a long-integer value.</returns>
         public static long StringToLong(string input)
         {
             long output = 0;
@@ -24,8 +24,8 @@ namespace Frenetic
         /// Converts a string value to the integer value it represents.
         /// Returns 0 if the string does not represent an integer.
         /// </summary>
-        /// <param name="input">The string to get the value from</param>
-        /// <returns>an integer value</returns>
+        /// <param name="input">The string to get the value from.</param>
+        /// <returns>an integer value.</returns>
         public static int StringToInt(string input)
         {
             int output = 0;
@@ -37,8 +37,8 @@ namespace Frenetic
         /// Converts a string value to the double value it represents.
         /// Returns 0 if the string does not represent an double.
         /// </summary>
-        /// <param name="input">The string to get the value from</param>
-        /// <returns>a double value</returns>
+        /// <param name="input">The string to get the value from.</param>
+        /// <returns>a double value.</returns>
         public static double StringToDouble(string input)
         {
             double output = 0;
@@ -50,8 +50,8 @@ namespace Frenetic
         /// Converts a string value to the float value it represents.
         /// Returns 0 if the string does not represent an float.
         /// </summary>
-        /// <param name="input">The string to get the value from</param>
-        /// <returns>a float value</returns>
+        /// <param name="input">The string to get the value from.</param>
+        /// <returns>a float value.</returns>
         public static float StringToFloat(string input)
         {
             float output = 0;
@@ -62,9 +62,9 @@ namespace Frenetic
         /// <summary>
         /// Returns a string representation of the specified time.
         /// </summary>
-        /// <param name="dt">The datetime object</param>
-        /// <param name="ms">Whether to include milliseconds</param>
-        /// <returns>The time as a string</returns>
+        /// <param name="dt">The datetime object.</param>
+        /// <param name="ms">Whether to include milliseconds.</param>
+        /// <returns>The time as a string.</returns>
         public static string DateTimeToString(DateTime dt, bool ms)
         {
             string utcoffset = "";
@@ -87,11 +87,11 @@ namespace Frenetic
         /// <summary>
         /// Pads a string to a specified length with a specified input, on a specified side.
         /// </summary>
-        /// <param name="input">The original string</param>
-        /// <param name="padding">The symbol to pad with</param>
-        /// <param name="length">How far to pad it to</param>
-        /// <param name="left">Whether to pad left (true), or right (false)</param>
-        /// <returns>The padded string</returns>
+        /// <param name="input">The original string.</param>
+        /// <param name="padding">The symbol to pad with.</param>
+        /// <param name="length">How far to pad it to.</param>
+        /// <param name="left">Whether to pad left (true), or right (false).</param>
+        /// <returns>The padded string.</returns>
         public static string Pad(string input, char padding, int length, bool left = true)
         {
             int targetlength = length - input.Length;

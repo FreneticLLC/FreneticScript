@@ -18,7 +18,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a time tag.
         /// </summary>
-        /// <param name="_time">The internal date-time to use</param>
+        /// <param name="_time">The internal date-time to use.</param>
         public TimeTag(DateTime _time)
         {
             Time = _time;
@@ -27,7 +27,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
-        /// <param name="data">The input tag data</param>
+        /// <param name="data">The input tag data.</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)
@@ -53,7 +53,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Returns the a string representation of the date-time internally stored by this time tag.
         /// </summary>
-        /// <returns>A string representation of the date-time</returns>
+        /// <returns>A string representation of the date-time.</returns>
         public override string ToString()
         {
             return FreneticUtilities.DateTimeToString(Time, true);

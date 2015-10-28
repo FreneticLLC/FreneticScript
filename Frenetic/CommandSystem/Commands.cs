@@ -90,9 +90,9 @@ namespace Frenetic.CommandSystem
         /// Executes a command script.
         /// Returns the determined value(s).
         /// </summary>
-        /// <param name="script">The script to execute</param>
-        /// <param name="Variables">What variables to add to the commandqueue</param>
-        /// <param name="queue">Outputs the generated queue (already ran or running)</param>
+        /// <param name="script">The script to execute.</param>
+        /// <param name="Variables">What variables to add to the commandqueue.</param>
+        /// <param name="queue">Outputs the generated queue (already ran or running).</param>
         public List<string> ExecuteScript(CommandScript script, Dictionary<string, TemplateObject> Variables, out CommandQueue queue)
         {
             queue = script.ToQueue(this);
@@ -110,8 +110,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets a script saved in the command system by name, or creates one from file.
         /// </summary>
-        /// <param name="script">The name of the script</param>
-        /// <returns>A script, or null if there's no match</returns>
+        /// <param name="script">The name of the script.</param>
+        /// <returns>A script, or null if there's no match.</returns>
         public CommandScript GetScript(string script)
         {
             CommandScript commandscript;
@@ -133,8 +133,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets a function saved in the command system by name.
         /// </summary>
-        /// <param name="script">The name of the script</param>
-        /// <returns>A script, or null if there's no match</returns>
+        /// <param name="script">The name of the script.</param>
+        /// <returns>A script, or null if there's no match.</returns>
         public CommandScript GetFunction(string script)
         {
             CommandScript commandscript;
@@ -156,8 +156,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Executes an arbitrary list of command inputs (separated by newlines, semicolons, ...)
         /// </summary>
-        /// <param name="commands">The command string to parse</param>
-        /// <param name="outputter">The output function to call, or null if none</param>
+        /// <param name="commands">The command string to parse.</param>
+        /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
             CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this).ToQueue(this);
@@ -168,8 +168,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Executes a single command.
         /// </summary>
-        /// <param name="entry">The command entry to execute</param>
-        /// <param name="queue">The queue that is executing it</param>
+        /// <param name="entry">The command entry to execute.</param>
+        /// <param name="queue">The queue that is executing it.</param>
         public void ExecuteCommand(CommandEntry entry, CommandQueue queue)
         {
             try
@@ -197,7 +197,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Adds a command to the registered command list.
         /// </summary>
-        /// <param name="command">The command to register</param>
+        /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
             command.Name = command.Name.ToLower(); // Just a quick backup in case somebody messed up.
@@ -210,7 +210,7 @@ namespace Frenetic.CommandSystem
         /// Removes a command from the registered command list.
         /// Silently fails if command is not registered.
         /// </summary>
-        /// <param name="name">The name of the command to remove</param>
+        /// <param name="name">The name of the command to remove.</param>
         public void UnregisterCommand(string name)
         {
             string namelow = name.ToLower();
@@ -225,7 +225,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Registers a script event to the system.
         /// </summary>
-        /// <param name="newevent">The event to register</param>
+        /// <param name="newevent">The event to register.</param>
         public void RegisterEvent(ScriptEvent newevent)
         {
             Events.Add(newevent.Name, newevent);
@@ -292,7 +292,7 @@ namespace Frenetic.CommandSystem
 
         /// <summary>
         /// Advances any running command queues.
-        /// <param name="Delta">The time passed this tick</param>
+        /// <param name="Delta">The time passed this tick.</param>
         /// </summary>
         public void Tick(float Delta)
         {

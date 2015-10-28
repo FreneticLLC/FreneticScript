@@ -27,7 +27,7 @@ namespace Frenetic.CommandSystem.CommandEvents
         /// <summary>
         /// Constructs the ScriptRan script event.
         /// </summary>
-        /// <param name="system">The relevant command system</param>
+        /// <param name="system">The relevant command system.</param>
         public ScriptRanScriptEvent(Commands system)
             : base(system, "scriptran", true)
         {
@@ -36,8 +36,8 @@ namespace Frenetic.CommandSystem.CommandEvents
         /// <summary>
         /// Runs the script event with the given input.
         /// </summary>
-        /// <param name="scrName">The name of the script to run</param>
-        /// <returns>The event details after firing</returns>
+        /// <param name="scrName">The name of the script to run.</param>
+        /// <returns>The event details after firing.</returns>
         public ScriptRanScriptEvent Run(string scrName)
         {
             ScriptRanScriptEvent evt = (ScriptRanScriptEvent)Duplicate();
@@ -64,9 +64,9 @@ namespace Frenetic.CommandSystem.CommandEvents
         /// <summary>
         /// Applies a determination string to the event.
         /// </summary>
-        /// <param name="determ">What was determined</param>
-        /// <param name="determLow">A lowercase copy of the determination</param>
-        /// <param name="mode">What debugmode to use</param>
+        /// <param name="determ">What was determined.</param>
+        /// <param name="determLow">A lowercase copy of the determination.</param>
+        /// <param name="mode">What debugmode to use.</param>
         public override void ApplyDetermination(string determ, string determLow, DebugMode mode)
         {
             base.ApplyDetermination(determ, determLow, mode);

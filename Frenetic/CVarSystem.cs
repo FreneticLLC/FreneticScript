@@ -40,7 +40,7 @@ namespace Frenetic
         /// <summary>
         /// Constructs the CVar system.
         /// </summary>
-        /// <param name="_output">The outputter to use</param>
+        /// <param name="_output">The outputter to use.</param>
         public CVarSystem(Outputter _output)
         {
             CVars = new Dictionary<string, CVar>();
@@ -64,11 +64,11 @@ namespace Frenetic
         /// <summary>
         /// Registers a new CVar.
         /// </summary>
-        /// <param name="CVar">The name of the CVar</param>
-        /// <param name="value">The default value</param>
-        /// <param name="flags">The flags to set on this CVar</param>
-        /// <param name="description">An optional description text for a CVar</param>
-        /// <returns>The registered CVar</returns>
+        /// <param name="CVar">The name of the CVar.</param>
+        /// <param name="value">The default value.</param>
+        /// <param name="flags">The flags to set on this CVar.</param>
+        /// <param name="description">An optional description text for a CVar.</param>
+        /// <returns>The registered CVar.</returns>
         public CVar Register(string CVar, string value, CVarFlag flags, string description = null)
         {
             CVar cvar = new CVar(CVar.ToLower(), value, flags, this);
@@ -81,11 +81,11 @@ namespace Frenetic
         /// <summary>
         /// Sets the value of an existing CVar, or generates a new one.
         /// </summary>
-        /// <param name="CVar">The name of the CVar</param>
-        /// <param name="value">The value to set it to</param>
-        /// <param name="force">Whether to force a server send</param>
-        /// <param name="flags_if_new">What flags to set if the CVar is new</param>
-        /// <returns>The set CVar</returns>
+        /// <param name="CVar">The name of the CVar.</param>
+        /// <param name="value">The value to set it to.</param>
+        /// <param name="force">Whether to force a server send.</param>
+        /// <param name="flags_if_new">What flags to set if the CVar is new.</param>
+        /// <returns>The set CVar.</returns>
         public CVar AbsoluteSet(string CVar, string value, bool force = false, CVarFlag flags_if_new = CVarFlag.None)
         {
             CVar gotten = Get(CVar);
@@ -103,9 +103,9 @@ namespace Frenetic
         /// <summary>
         /// Gets an existing CVar, or generates a new one with a specific default value.
         /// </summary>
-        /// <param name="CVar">The name of the CVar</param>
-        /// <param name="value">The default value if it doesn't exist</param>
-        /// <returns>The found CVar</returns>
+        /// <param name="CVar">The name of the CVar.</param>
+        /// <param name="value">The default value if it doesn't exist.</param>
+        /// <returns>The found CVar.</returns>
         public CVar AbsoluteGet(string CVar, string value)
         {
             CVar gotten = Get(CVar);
@@ -119,8 +119,8 @@ namespace Frenetic
         /// <summary>
         /// Gets the CVar that matches a specified name.
         /// </summary>
-        /// <param name="CVar">The name of the CVar</param>
-        /// <returns>The found CVar, or null if none</returns>
+        /// <param name="CVar">The name of the CVar.</param>
+        /// <returns>The found CVar, or null if none.</returns>
         public CVar Get(string CVar)
         {
             string cvlow = CVar.ToLower();

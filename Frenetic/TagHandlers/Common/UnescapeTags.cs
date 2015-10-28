@@ -16,8 +16,8 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Unescapes a string.
         /// </summary>
-        /// <param name="input">The escaped string</param>
-        /// <returns>The unescaped string</returns>
+        /// <param name="input">The escaped string.</param>
+        /// <returns>The unescaped string.</returns>
         public static string Unescape(string input)
         {
             return input.Replace("&sq", "\'")
@@ -45,7 +45,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Handles the 'unescape' tag.
         /// </summary>
-        /// <param name="data">The data to be handled</param>
+        /// <param name="data">The data to be handled.</param>
         public override string Handle(TagData data)
         {
             string modif = data.GetModifier(0);

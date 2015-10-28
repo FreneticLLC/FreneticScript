@@ -29,8 +29,8 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Escapes any tags inside a string.
         /// </summary>
-        /// <param name="input">The string that may have tags</param>
-        /// <returns>An escaped string</returns>
+        /// <param name="input">The string that may have tags.</param>
+        /// <returns>An escaped string.</returns>
         public static string Escape(string input)
         {
             if (input == null)
@@ -43,8 +43,8 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Reverses any tag escaping inside a string.
         /// </summary>
-        /// <param name="input">The string that was escaped</param>
-        /// <returns>An unescaped string that may have tags</returns>
+        /// <param name="input">The string that was escaped.</param>
+        /// <returns>An unescaped string that may have tags.</returns>
         public static string Unescape(string input)
         {
             if (input == null)
@@ -62,7 +62,7 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Registers a handler object for later usage by tags.
         /// </summary>
-        /// <param name="handler">The handler object to register.</param>
+        /// <param name="handler">The handler object to register..</param>
         public void Register(TemplateTags handler)
         {
             Handlers.Add(handler.Name, handler);
@@ -91,11 +91,11 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Reads and parses all tags inside a string.
         /// </summary>
-        /// <param name="base_color">The base color for tags to use</param>
-        /// <param name="vars">Any variables in this tag's context</param>
-        /// <param name="input">The tagged string</param>
-        /// <param name="mode">What debugmode to use</param>
-        /// <returns>The string with tags parsed</returns>
+        /// <param name="base_color">The base color for tags to use.</param>
+        /// <param name="vars">Any variables in this tag's context.</param>
+        /// <param name="input">The tagged string.</param>
+        /// <param name="mode">What debugmode to use.</param>
+        /// <returns>The string with tags parsed.</returns>
         public string ParseTags(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode)
         {
             if (input.IndexOf("<{") < 0)

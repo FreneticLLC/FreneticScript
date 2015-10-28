@@ -13,7 +13,7 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
-        /// <param name="data">The input tag data</param>
+        /// <param name="data">The input tag data.</param>
         public abstract string Handle(TagData data);
     }
 }

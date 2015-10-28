@@ -122,10 +122,10 @@ namespace Frenetic
         /// <summary>
         /// Construct a CVar.
         /// </summary>
-        /// <param name="newname">The name of  the CVar</param>
-        /// <param name="newvalue">The value to set the CVar to</param>
-        /// <param name="newflags">The flags the CVar should be locked into</param>
-        /// <param name="_system">The CVarSystem to create this CVar within</param>
+        /// <param name="newname">The name of  the CVar.</param>
+        /// <param name="newvalue">The value to set the CVar to.</param>
+        /// <param name="newflags">The flags the CVar should be locked into.</param>
+        /// <param name="_system">The CVarSystem to create this CVar within.</param>
         public CVar(string newname, string newvalue, CVarFlag newflags, CVarSystem _system)
         {
             system = _system;
@@ -143,8 +143,8 @@ namespace Frenetic
         /// Sets the CVar to a new value.
         /// A force change will not trigger a system 'modified' save.
         /// </summary>
-        /// <param name="newvalue">The value to set the CVar to</param>
-        /// <param name="force">Whether to force the edit (EG, a server has demanded the change)</param>
+        /// <param name="newvalue">The value to set the CVar to.</param>
+        /// <param name="force">Whether to force the edit (EG, a server has demanded the change).</param>
         public void Set(string newvalue, bool force = false)
         {
             if (newvalue == Value)
@@ -182,7 +182,7 @@ namespace Frenetic
         /// <summary>
         /// Sets the CVar to a new value.
         /// </summary>
-        /// <param name="value">The value to set the CVar to</param>
+        /// <param name="value">The value to set the CVar to.</param>
         public void Set(bool value)
         {
             if (Flags.HasFlag(CVarFlag.ReadOnly))
@@ -224,7 +224,7 @@ namespace Frenetic
         /// <summary>
         /// Returns a human-readable list of flags.
         /// </summary>
-        /// <returns>The flag list</returns>
+        /// <returns>The flag list.</returns>
         public string FlagInfo()
         {
             if (Flags == CVarFlag.None)
@@ -245,7 +245,7 @@ namespace Frenetic
         /// <summary>
         /// Returns a human-readable colored information line from this CVar.
         /// </summary>
-        /// <returns>The information</returns>
+        /// <returns>The information.</returns>
         public string Info()
         {
             return TextStyle.Color_Simple + "Name: '" + TextStyle.Color_Separate + Name + TextStyle.Color_Simple + "', value: '" +

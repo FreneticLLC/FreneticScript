@@ -15,11 +15,11 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Creates a CommandEntry from the given input and queue information.
         /// </summary>
-        /// <param name="command">The command line text itself</param>
-        /// <param name="_block">The command block that held this entry</param>
-        /// <param name="_owner">The command entry that owns the block that held this entry</param>
-        /// <param name="system">The command system to work from</param>
-        /// <returns>The command system</returns>
+        /// <param name="command">The command line text itself.</param>
+        /// <param name="_block">The command block that held this entry.</param>
+        /// <param name="_owner">The command entry that owns the block that held this entry.</param>
+        /// <param name="system">The command system to work from.</param>
+        /// <returns>The command system.</returns>
         public static CommandEntry FromInput(string command, List<CommandEntry> _block, CommandEntry _owner, Commands system)
         {
             if (command.StartsWith("//"))
@@ -191,8 +191,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets an argument at a specified place, handling any tags.
         /// </summary>
-        /// <param name="place">The argument place number</param>
-        /// <returns>The parsed argument</returns>
+        /// <param name="place">The argument place number.</param>
+        /// <returns>The parsed argument.</returns>
         public string GetArgument(int place)
         {
             if (place >= Arguments.Count || place < 0)
@@ -212,8 +212,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets all arguments piled together into a string.
         /// </summary>
-        /// <param name="index">The index to start at</param>
-        /// <returns>The combined string</returns>
+        /// <param name="index">The index to start at.</param>
+        /// <returns>The combined string.</returns>
         public string AllArguments(int index = 0)
         {
             StringBuilder result = new StringBuilder(CommandLine.Length);
@@ -231,8 +231,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets all arguments (without parsing) piled together into a string.
         /// </summary>
-        /// <param name="index">The index to start at</param>
-        /// <returns>The combined string</returns>
+        /// <param name="index">The index to start at.</param>
+        /// <returns>The combined string.</returns>
         public string AllOriginalArguments(int index = 0)
         {
             StringBuilder result = new StringBuilder(CommandLine.Length);
@@ -250,7 +250,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to output requested information.
         /// </summary>
-        /// <param name="text">The text to output, with tags included</param>
+        /// <param name="text">The text to output, with tags included.</param>
         public void Info(string text)
         {
             Output.Good(text, DebugMode.MINIMAL);
@@ -263,7 +263,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to output a success message.
         /// </summary>
-        /// <param name="text">The text to output, with tags included</param>
+        /// <param name="text">The text to output, with tags included.</param>
         public void Good(string text)
         {
             if (Queue.Debug == DebugMode.FULL)
@@ -279,7 +279,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Used to output a failure message.
         /// </summary>
-        /// <param name="text">The text to output, with tags included</param>
+        /// <param name="text">The text to output, with tags included.</param>
         public void Bad(string text)
         {
             if (Queue.Debug <= DebugMode.MINIMAL)
@@ -295,8 +295,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Returns a duplicate of this command entry.
         /// </summary>
-        /// <param name="NewOwner">The new owner of the command entry</param>
-        /// <returns>The duplicate entry</returns>
+        /// <param name="NewOwner">The new owner of the command entry.</param>
+        /// <returns>The duplicate entry.</returns>
         public CommandEntry Duplicate(CommandEntry NewOwner = null)
         {
             CommandEntry entry = new CommandEntry();

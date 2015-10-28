@@ -33,7 +33,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Handles the 'ternary' tag.
         /// </summary>
-        /// <param name="data">The data to be handled</param>
+        /// <param name="data">The data to be handled.</param>
         public override string Handle(TagData data)
         {
             bool basevalue = data.GetModifier(0).ToLower() == "true";

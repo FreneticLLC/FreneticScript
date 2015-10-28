@@ -54,13 +54,13 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Executes the command.
         /// </summary>
-        /// <param name="entry">Entry to be executed</param>
+        /// <param name="entry">Entry to be executed.</param>
         public abstract void Execute(CommandEntry entry);
 
         /// <summary>
         /// Displays the usage information on a command to the console.
         /// </summary>
-        /// <param name="entry">The CommandEntry data to get usage help from.</param>
+        /// <param name="entry">The CommandEntry data to get usage help from..</param>
         public static void ShowUsage(CommandEntry entry)
         {
             entry.Bad("<{color.emphasis}>" + TagParser.Escape(entry.Command.Name) + "<{color.base}>: " + TagParser.Escape(entry.Command.Description));

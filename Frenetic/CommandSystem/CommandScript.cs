@@ -15,10 +15,10 @@ namespace Frenetic.CommandSystem
         /// Separates a string list of command inputs (separated by newlines, semicolons, ...)
         /// and returns a queue object containing all the input commands
         /// </summary>
-        /// <param name="name">The name of the script</param>
-        /// <param name="commands">The command string to parse</param>
-        /// <param name="system">The command system to create the script within</param>
-        /// <returns>A list of command strings</returns>
+        /// <param name="name">The name of the script.</param>
+        /// <param name="commands">The command string to parse.</param>
+        /// <param name="system">The command system to create the script within.</param>
+        /// <returns>A list of command strings.</returns>
         public static CommandScript SeparateCommands(string name, string commands, Commands system)
         {
             List<string> CommandList = new List<string>();
@@ -50,10 +50,10 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.
         /// </summary>
-        /// <param name="from">The command strings</param>
-        /// <param name="entry">The entry that owns this block</param>
-        /// <param name="system">The command system to create this block inside</param>
-        /// <returns>A list of entries with blocks separated</returns>
+        /// <param name="from">The command strings.</param>
+        /// <param name="entry">The entry that owns this block.</param>
+        /// <param name="system">The command system to create this block inside.</param>
+        /// <returns>A list of entries with blocks separated.</returns>
         public static List<CommandEntry> CreateBlock(List<string> from, CommandEntry entry, Commands system)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
@@ -122,9 +122,9 @@ namespace Frenetic.CommandSystem
         /// Creates a script by file name.
         /// File is /scripts/filename.cfg
         /// </summary>
-        /// <param name="filename">The name of the file to execute</param>
-        /// <param name="system">The command system to get the script for</param>
-        /// <returns>A command script, or null of the file does not exist</returns>
+        /// <param name="filename">The name of the file to execute.</param>
+        /// <param name="system">The command system to get the script for.</param>
+        /// <returns>A command script, or null of the file does not exist.</returns>
         public static CommandScript GetByFileName(string filename, Commands system)
         {
             try
@@ -147,9 +147,9 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Removes an entry's ownership over the list of entries, and returns them in a new list of duplicates.
         /// </summary>
-        /// <param name="entries">The list of entries</param>
-        /// <param name="baseentry">The entry that is no longer an owner</param>
-        /// <returns>The new entry list</returns>
+        /// <param name="entries">The list of entries.</param>
+        /// <param name="baseentry">The entry that is no longer an owner.</param>
+        /// <returns>The new entry list.</returns>
         public static List<CommandEntry> DisOwn(List<CommandEntry> entries, CommandEntry baseentry)
         {
             List<CommandEntry> newentries = new List<CommandEntry>();
@@ -182,8 +182,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Constructs a new command script.
         /// </summary>
-        /// <param name="_name">The name of the script</param>
-        /// <param name="_commands">All commands in the script</param>
+        /// <param name="_name">The name of the script.</param>
+        /// <param name="_commands">All commands in the script.</param>
         public CommandScript(string _name, List<CommandEntry> _commands)
         {
             Name = _name.ToLower();
@@ -193,7 +193,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Returns a duplicate of the script's entry list.
         /// </summary>
-        /// <returns>The entry list</returns>
+        /// <returns>The entry list.</returns>
         public List<CommandEntry> GetEntries()
         {
             List<CommandEntry> entries = new List<CommandEntry>(Commands.Count);
@@ -207,8 +207,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Creates a new queue for this script.
         /// </summary>
-        /// <param name="system">The command system to make the queue in</param>
-        /// <returns>The created queue</returns>
+        /// <param name="system">The command system to make the queue in.</param>
+        /// <returns>The created queue.</returns>
         public CommandQueue ToQueue(Commands system)
         {
             CommandQueue queue = new CommandQueue(this, GetEntries(), system);
@@ -227,7 +227,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets the full command string that represents this script.
         /// </summary>
-        /// <returns>The full command string</returns>
+        /// <returns>The full command string.</returns>
         public string FullString()
         {
             StringBuilder sb = new StringBuilder();

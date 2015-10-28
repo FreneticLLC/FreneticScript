@@ -13,29 +13,29 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Writes a line of text to the console.
         /// </summary>
-        /// <param name="text">The line of text</param>
+        /// <param name="text">The line of text.</param>
         public abstract void WriteLine(string text);
 
         /// <summary>
         /// Used to output a failure message.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included</param>
-        /// <param name="mode">What debug mode is currently in use</param>
+        /// <param name="tagged_text">The text to output, with tags included.</param>
+        /// <param name="mode">What debug mode is currently in use.</param>
         public abstract void Bad(string tagged_text, DebugMode mode);
 
         /// <summary>
         /// Used to output a success message.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included</param>
-        /// <param name="mode">What debug mode is currently in use</param>
+        /// <param name="tagged_text">The text to output, with tags included.</param>
+        /// <param name="mode">What debug mode is currently in use.</param>
         public abstract void Good(string tagged_text, DebugMode mode);
 
         /// <summary>
         /// Used to properly handle an unknown command.
         /// </summary>
-        /// <param name="queue">The queue firing this unknown command</param>
-        /// <param name="basecommand">The command that wasn't recognized</param>
-        /// <param name="arguments">The commands arguments</param>
+        /// <param name="queue">The queue firing this unknown command.</param>
+        /// <param name="basecommand">The command that wasn't recognized.</param>
+        /// <param name="arguments">The commands arguments.</param>
         public abstract void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments);
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace Frenetic.CommandSystem
         /// File format is along the lines of "mymap/myscript.cfg".
         /// Throw a System.IO.FileNotFoundException if file does not exist.
         /// </summary>
-        /// <param name="name">The filename to read</param>
-        /// <returns>The read text file</returns>
+        /// <param name="name">The filename to read.</param>
+        /// <returns>The read text file.</returns>
         public abstract string ReadTextFile(string name);
 
         /// <summary>

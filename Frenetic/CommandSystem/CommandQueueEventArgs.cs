@@ -18,7 +18,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Constructs the event args.
         /// </summary>
-        /// <param name="queue">The relevant queue</param>
+        /// <param name="queue">The relevant queue.</param>
         public CommandQueueEventArgs(CommandQueue queue)
         {
             Queue = queue;

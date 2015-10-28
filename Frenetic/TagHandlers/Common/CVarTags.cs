@@ -30,7 +30,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Handles a 'cvar' tag.
         /// </summary>
-        /// <param name="data">The data to be handled</param>
+        /// <param name="data">The data to be handled.</param>
         public override string Handle(TagData data)
         {
             string modif = data.GetModifier(0).ToLower();

@@ -16,8 +16,8 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Escapes a string.
         /// </summary>
-        /// <param name="input">The unescaped string</param>
-        /// <returns>The escaped string</returns>
+        /// <param name="input">The unescaped string.</param>
+        /// <returns>The escaped string.</returns>
         public static string Escape(string input)
         {
             return input.Replace("&", "&amp")
@@ -45,7 +45,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Handles the escape tag.
         /// </summary>
-        /// <param name="data">The data to be handled</param>
+        /// <param name="data">The data to be handled.</param>
         public override string Handle(TagData data)
         {
             string modif = data.GetModifier(0);

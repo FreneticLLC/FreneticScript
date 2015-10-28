@@ -36,8 +36,8 @@ namespace Frenetic
         /// <summary>
         /// Access a member of the <see cref="ListQueue{T}"/>
         /// </summary>
-        /// <param name="index">The position in the public side of the list to read from</param>
-        /// <returns>The read object</returns>
+        /// <param name="index">The position in the public side of the list to read from.</param>
+        /// <returns>The read object.</returns>
         public T this[int index]
         {
             get
@@ -61,7 +61,7 @@ namespace Frenetic
         /// <summary>
         /// Initializes the <see cref="ListQueue{T}"/> with specified initial entries.
         /// </summary>
-        /// <param name="entries"></param>
+        /// <param name="entries">.</param>
         public ListQueue(IList<T> entries)
         {
             Objects = new T[entries.Count];
@@ -77,7 +77,7 @@ namespace Frenetic
         /// <summary>
         /// Initializes the <see cref="ListQueue{T}"/> with a specified capacity.
         /// </summary>
-        /// <param name="capacity">The number of items to be expect to hold, is non-definite</param>
+        /// <param name="capacity">The number of items to be expect to hold, is non-definite.</param>
         public ListQueue(int capacity = 100)
         {
             Objects = new T[capacity];
@@ -88,7 +88,7 @@ namespace Frenetic
         /// <summary>
         /// Returns the item at head of the queue, without removing it, if it has one.
         /// </summary>
-        /// <returns>The item found</returns>
+        /// <returns>The item found.</returns>
         public T Peek()
         {
             if (Length <= 0)
@@ -102,7 +102,7 @@ namespace Frenetic
         /// Takes the first object off the queue and removes it, if it has one.
         /// On rare occasions, expensive (if head reaches the max).
         /// </summary>
-        /// <returns>The head object</returns>
+        /// <returns>The head object.</returns>
         public T Pop()
         {
             T obj = Peek();
@@ -123,7 +123,7 @@ namespace Frenetic
         /// Adds an object to the end of the queue.
         /// On rare occasions, expensive (if internal buffer must expand).
         /// </summary>
-        /// M<param name="obj">The object to push onto the queue</param>
+        /// M<param name="obj">The object to push onto the queue.</param>
         public void Push(T obj)
         {
             int target = Head + Length;
@@ -151,7 +151,7 @@ namespace Frenetic
         /// Expands the <see cref="ListQueue{T}"/>'s internal buffer.
         /// Expensive.
         /// </summary>
-        /// <param name="amount">The amount to expand it by</param>
+        /// <param name="amount">The amount to expand it by.</param>
         public void Expand(int amount)
         {
             if (amount <= 0)
@@ -179,8 +179,8 @@ namespace Frenetic
         /// Inserts entries to the buffer.
         /// Expensive.
         /// </summary>
-        /// <param name="index">The place to start inserting at</param>
-        /// <param name="entries">The entries to insert</param>
+        /// <param name="index">The place to start inserting at.</param>
+        /// <param name="entries">The entries to insert.</param>
         public void Insert(int index, T[] entries)
         {
             if (index < 0 || index > Length)

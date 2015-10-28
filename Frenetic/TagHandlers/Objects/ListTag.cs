@@ -27,7 +27,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a list tag from a list of entries.
         /// </summary>
-        /// <param name="entries">The entries</param>
+        /// <param name="entries">The entries.</param>
         public ListTag(List<TemplateObject> entries)
         {
             ListEntries = new List<TemplateObject>(entries);
@@ -36,7 +36,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a list tag from a list of textual entries.
         /// </summary>
-        /// <param name="entries">The textual entries</param>
+        /// <param name="entries">The textual entries.</param>
         public ListTag(List<string> entries)
         {
             ListEntries = new List<TemplateObject>();
@@ -49,7 +49,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Constructs a list tag from text input.
         /// </summary>
-        /// <param name="list">The text input</param>
+        /// <param name="list">The text input.</param>
         public ListTag(string list)
         {
             string[] baselist = list.Split('|');
@@ -63,7 +63,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
-        /// <param name="data">The input tag data</param>
+        /// <param name="data">The input tag data.</param>
         public override string Handle(TagData data)
         {
             if (data.Input.Count == 0)
@@ -253,7 +253,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Converts the ListTag to a list of strings.
         /// </summary>
-        /// <returns>A list of strings</returns>
+        /// <returns>A list of strings.</returns>
         public List<string> ToStringList()
         {
             List<string> list = new List<string>(ListEntries.Count);
@@ -267,7 +267,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <summary>
         /// Converts the list tag to a string.
         /// </summary>
-        /// <returns>A string representation of the list</returns>
+        /// <returns>A string representation of the list.</returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

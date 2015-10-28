@@ -20,8 +20,8 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets the list of CommandScripts that handle an event currently.
         /// </summary>
-        /// <param name="_event">The event to get the handlers for</param>
-        /// <returns>The list of handlers</returns>
+        /// <param name="_event">The event to get the handlers for.</param>
+        /// <returns>The list of handlers.</returns>
         public static List<CommandScript> GetHandlers(ScriptEvent _event)
         {
             if (_event == null)
@@ -50,9 +50,9 @@ namespace Frenetic.CommandSystem
         /// Constructs the script event's base data.
         /// Called only by implementing script events.
         /// </summary>
-        /// <param name="_system">The command system this event exists within</param>
-        /// <param name="_name">The name of the event</param>
-        /// <param name="cancellable">Whether the event can be cancelled</param>
+        /// <param name="_system">The command system this event exists within.</param>
+        /// <param name="_name">The name of the event.</param>
+        /// <param name="cancellable">Whether the event can be cancelled.</param>
         public ScriptEvent(Commands _system, string _name, bool cancellable)
         {
             System = _system;
@@ -84,9 +84,9 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Applies a determination string to the event.
         /// </summary>
-        /// <param name="determ">What was determined</param>
-        /// <param name="determLow">A lowercase copy of the determination</param>
-        /// <param name="mode">What debugmode to use</param>
+        /// <param name="determ">What was determined.</param>
+        /// <param name="determLow">A lowercase copy of the determination.</param>
+        /// <param name="mode">What debugmode to use.</param>
         public virtual void ApplyDetermination(string determ, string determLow, DebugMode mode)
         {
             if (Cancellable)
@@ -129,7 +129,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Create a copy of this script event, safe to run.
         /// </summary>
-        /// <returns>The copy</returns>
+        /// <returns>The copy.</returns>
         public virtual ScriptEvent Duplicate()
         {
             return (ScriptEvent)MemberwiseClone();

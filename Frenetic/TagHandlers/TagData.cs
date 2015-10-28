@@ -44,11 +44,11 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Constructs the tag information container.
         /// </summary>
-        /// <param name="_system">The command system to use</param>
-        /// <param name="_input">The input tag pieces</param>
-        /// <param name="_basecolor">The default color to use for output</param>
-        /// <param name="_vars">Any variables involved in the queue</param>
-        /// <param name="_mode">What debug mode to use</param>
+        /// <param name="_system">The command system to use.</param>
+        /// <param name="_input">The input tag pieces.</param>
+        /// <param name="_basecolor">The default color to use for output.</param>
+        /// <param name="_vars">Any variables involved in the queue.</param>
+        /// <param name="_mode">What debug mode to use.</param>
         public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode)
         {
             TagSystem = _system;
@@ -77,7 +77,7 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Shrinks the data amount by one at the start, and returns itself.
         /// </summary>
-        /// <returns>This object</returns>
+        /// <returns>This object.</returns>
         public TagData Shrink()
         {
             if (Input.Count > 0)
@@ -94,8 +94,8 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// Gets the modifier at a specified place, handling any tags within.
         /// </summary>
-        /// <param name="place">What place to get a modifier from</param>
-        /// <returns>The tag-parsed modifier</returns>
+        /// <param name="place">What place to get a modifier from.</param>
+        /// <returns>The tag-parsed modifier.</returns>
         public string GetModifier(int place)
         {
             if (place < 0 || place >= Modifiers.Count)
