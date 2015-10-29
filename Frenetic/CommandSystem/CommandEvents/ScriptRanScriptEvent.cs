@@ -31,7 +31,7 @@ namespace Frenetic.CommandSystem.CommandEvents
         public ScriptRanScriptEvent(Commands system)
             : base(system, "scriptranevent", true)
         {
-            system.TheRunCommand.OnScriptRanEvent += (o, e) => { e.Cancelled = Run(e.Script.Name).Cancelled; }; // TODO: Allow determining script
+            system.TheRunCommand.OnScriptRanEvent += (e) => { e.Cancelled = Run(e.Script.Name).Cancelled; }; // TODO: Allow determining script
         }
 
         /// <summary>

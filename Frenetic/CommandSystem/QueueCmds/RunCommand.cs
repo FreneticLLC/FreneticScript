@@ -31,43 +31,30 @@ namespace Frenetic.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// The first event fired in a sequence of four.
+        /// The first event fired in a sequence of three.
         /// <para/>Fires when a a script is going to be ran, cancellable.
         /// <para/>Contains the name of the script only.
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
-        /// Third: <see cref="OnScriptRanMonitorEvent"/>.
-        /// Fourth: <see cref="OnScriptRanPostEvent"/>
+        /// Third: <see cref="OnScriptRanPostEvent"/>
         /// </summary>
-        public EventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent;
+        public FreneticEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent;
 
         /// <summary>
-        /// The second event fired in a sequence of four.
+        /// The second event fired in a sequence of three.
         /// <para/>Fires when a a script is about to be ran, cancellable.
         /// <para/>Contains a validly constructed <see cref="CommandScript"/> object.
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
-        /// Third: <see cref="OnScriptRanMonitorEvent"/>.
-        /// Fourth: <see cref="OnScriptRanPostEvent"/>.
+        /// Third: <see cref="OnScriptRanPostEvent"/>.
         /// </summary>
-        public EventHandler<ScriptRanEventArgs> OnScriptRanEvent;
-
+        public FreneticEventHandler<ScriptRanEventArgs> OnScriptRanEvent;
+        
         /// <summary>
-        /// The third event fired in a sequence of four.
-        /// <para/>Fires when a a script is about to be ran, monitor-only.
-        /// <para/>Contains a validly constructed <see cref="CommandScript"/> object.
-        /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
-        /// Second: <see cref="OnScriptRanEvent"/>.
-        /// Fourth: <see cref="OnScriptRanPostEvent"/>.
-        /// </summary>
-        public EventHandler<ScriptRanMonitorEventArgs> OnScriptRanMonitorEvent;
-
-        /// <summary>
-        /// The four event fired in a sequence of four.
+        /// The third event fired in a sequence of three.
         /// <para/>Fires when a a script has been ran, monitor-only.
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
         /// Second: <see cref="OnScriptRanEvent"/>.
-        /// Third: <see cref="OnScriptRanMonitorEvent"/>.
         /// </summary>
-        public EventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent;
+        public FreneticEventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent;
 
         /// <summary>
         /// Executes the run command.
@@ -86,7 +73,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             args.ScriptName = fname;
             if (OnScriptRanPreEvent != null)
             {
-                OnScriptRanPreEvent(this, args);
+                OnScriptRanPreEvent.Fire(args);
             }
             if (args.Cancelled)
             {
@@ -100,7 +87,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 args2.Script = script;
                 if (OnScriptRanEvent != null)
                 {
-                    OnScriptRanEvent(this, args2);
+                    OnScriptRanEvent.Fire(args2);
                 }
                 if (args2.Cancelled)
                 {
@@ -113,12 +100,6 @@ namespace Frenetic.CommandSystem.QueueCmds
                     return;
                 }
                 script = args2.Script;
-                ScriptRanMonitorEventArgs args3 = new ScriptRanMonitorEventArgs();
-                args3.Script = script;
-                if (OnScriptRanMonitorEvent != null)
-                {
-                    OnScriptRanMonitorEvent(this, args3);
-                }
                 entry.Good("Running '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>'...");
                 CommandQueue queue;
                 entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
@@ -136,7 +117,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 args4.Determinations = new List<string>(queue.Determinations);
                 if (OnScriptRanPostEvent != null)
                 {
-                    OnScriptRanPostEvent(this, args4);
+                    OnScriptRanPostEvent.Fire(args4);
                 }
                 ListTag list = new ListTag(queue.Determinations);
                 entry.Queue.SetVariable("run_determinations", list);
@@ -181,19 +162,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         /// </summary>
         public bool Cancelled = false;
     }
-
-    /// <summary>
-    /// Fires when a a script is about to be ran, monitor-only.
-    /// </summary>
-    public class ScriptRanMonitorEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The script that will be run.
-        /// Do not edit.
-        /// </summary>
-        public CommandScript Script;
-    }
-
+    
     /// <summary>
     /// Fires when a a script has been ran, monitor-only.
     /// </summary>

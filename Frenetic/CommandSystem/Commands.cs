@@ -283,7 +283,6 @@ namespace Frenetic.CommandSystem
             // Command-Related Events
             RegisterEvent(new ScriptRanPreScriptEvent(this));
             RegisterEvent(new ScriptRanScriptEvent(this));
-            RegisterEvent(new ScriptRanMonitorScriptEvent(this));
             RegisterEvent(new ScriptRanPostScriptEvent(this));
 
         }

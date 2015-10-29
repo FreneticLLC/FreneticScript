@@ -31,7 +31,7 @@ namespace Frenetic.CommandSystem.CommandEvents
         public ScriptRanPostScriptEvent(Commands system)
             : base(system, "scriptranpostevent", false)
         {
-            system.TheRunCommand.OnScriptRanPostEvent += (o, e) => { Run(e.Script.Name); };
+            system.TheRunCommand.OnScriptRanPostEvent += (e) => { Run(e.Script.Name); };
         }
 
         /// <summary>

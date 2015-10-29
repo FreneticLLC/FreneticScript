@@ -47,7 +47,6 @@
     <Compile Include="CommandSystem\AbstractCommandEntryData.cs" />
     <Compile Include="CommandSystem\CommandEntry.cs" />
     <Compile Include="CommandSystem\CommandEvents\ScriptRanPreScriptEvent.cs" />
-    <Compile Include="CommandSystem\CommandEvents\ScriptRanMonitorScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandEvents\ScriptRanPostScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandEvents\ScriptRanScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandQueue.cs" />
@@ -88,6 +87,7 @@
     <Compile Include="CommandSystem\ScriptEvent.cs" />
     <Compile Include="CVar.cs" />
     <Compile Include="CVarSystem.cs" />
+    <Compile Include="FreneticEventHandler.cs" />
     <Compile Include="FreneticUtilities.cs" />
     <Compile Include="ListQueue.cs" />
     <Compile Include="MessageType.cs" />
