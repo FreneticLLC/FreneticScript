@@ -6,12 +6,15 @@ using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
+    // TODO: public, docs
     class EventCommand : AbstractCommand
     {
+        // TODO: Meta
+
         public EventCommand()
         {
             Name = "event";
-            Arguments = "add/remove/clear <name of event>/all [name of event handler] (quiet_fail)";
+            Arguments = "add/remove/clear <name of event>/all [name of event handler] [priority] (quiet_fail)";
             Description = "Creates a new function of the following command block, and adds it to the specified event's handler.";
             IsFlow = true;
             Asyncable = true;
@@ -58,7 +61,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 bool success = false;
                 for (int i = 0; i < theEvent.Handlers.Count; i++)
                 {
-                    if (theEvent.Handlers[i].Name == "eventhandler_" + theEvent.Name + "_" + name)
+                    if (theEvent.Handlers[i].Value.Name == "eventhandler_" + theEvent.Name + "_" + name)
                     {
                         theEvent.Handlers.RemoveAt(i);
                         success = true;
@@ -97,16 +100,21 @@ namespace Frenetic.CommandSystem.QueueCmds
                 bool success = false;
                 for (int i = 0; i < theEvent.Handlers.Count; i++)
                 {
-                    if (theEvent.Handlers[i].Name == "eventhandler_" + theEvent.Name + "_" + name)
+                    if (theEvent.Handlers[i].Value.Name == "eventhandler_" + theEvent.Name + "_" + name)
                     {
                         theEvent.Handlers.RemoveAt(i);
                         success = true;
                         break;
                     }
                 }
+                int priority = 0;
+                if (entry.Arguments.Count > 3)
+                {
+                    priority = FreneticUtilities.StringToInt(entry.GetArgument(3));
+                }
                 if (success)
                 {
-                    if (entry.Arguments.Count > 1 && entry.GetArgument(1).ToLower() == "quiet_fail")
+                    if (entry.Arguments.Count > 4 && entry.GetArgument(4).ToLower() == "quiet_fail")
                     {
                         entry.Good("Handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>' already exists!");
                     }
@@ -117,10 +125,11 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
+                    theEvent.Handlers.Add(new KeyValuePair<int, CommandScript>(priority, new CommandScript("eventhandler_" +
+                        theEvent.Name + "_" + name, CommandScript.DisOwn(entry.Block, entry)) { Debug = DebugMode.MINIMAL }));
+                    theEvent.Sort();
                     entry.Good("Handler '<{color.emphasis}>" + TagParser.Escape(name) +
                         "<{color.base}>' defined for event '<{color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{color.base}>'.");
-                    theEvent.Handlers.Add(new CommandScript("eventhandler_" +
-                        theEvent.Name + "_" + name, CommandScript.DisOwn(entry.Block, entry)) { Debug = DebugMode.MINIMAL });
                 }
             }
             else

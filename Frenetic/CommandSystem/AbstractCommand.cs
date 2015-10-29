@@ -48,6 +48,7 @@ namespace Frenetic.CommandSystem
 
         /// <summary>
         /// Whether the command can be run off the primary tick.
+        /// NOTE: These mostly have yet to be confirmed! They are purely theoretical!
         /// </summary>
         public bool Asyncable = false;
 

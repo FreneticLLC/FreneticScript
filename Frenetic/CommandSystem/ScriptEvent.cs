@@ -22,11 +22,11 @@ namespace Frenetic.CommandSystem
         /// </summary>
         /// <param name="_event">The event to get the handlers for.</param>
         /// <returns>The list of handlers.</returns>
-        public static List<CommandScript> GetHandlers(ScriptEvent _event)
+        public static List<KeyValuePair<int, CommandScript>> GetHandlers(ScriptEvent _event)
         {
             if (_event == null)
             {
-                return new List<CommandScript>();
+                return new List<KeyValuePair<int, CommandScript>>();
             }
             return _event.Handlers;
         }
@@ -34,7 +34,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// All scripts that handle this event.
         /// </summary>
-        public List<CommandScript> Handlers = new List<CommandScript>();
+        public List<KeyValuePair<int, CommandScript>> Handlers = new List<KeyValuePair<int, CommandScript>>();
 
         /// <summary>
         /// The command system in use.
@@ -61,20 +61,29 @@ namespace Frenetic.CommandSystem
         }
 
         /// <summary>
+        /// Quickly sorts the event handlers.
+        /// </summary>
+        public void Sort()
+        {
+            IOrderedEnumerable<KeyValuePair<int, CommandScript>> ordered = Handlers.OrderBy((o) => o.Key);
+            Handlers = ordered.ToList();
+        }
+
+        /// <summary>
         /// Calls the event.
         /// </summary>
         protected void Call()
         {
             for (int i = 0; i < Handlers.Count; i++)
             {
-                CommandScript script = Handlers[i];
+                CommandScript script = Handlers[i].Value;
                 Dictionary<string, TemplateObject> Variables = GetVariables();
                 CommandQueue queue;
                 foreach (string determ in System.ExecuteScript(script, Variables, out queue))
                 {
                     ApplyDetermination(determ, determ.ToLower(), queue.Debug);
                 }
-                if (i >= Handlers.Count || Handlers[i] != script)
+                if (i >= Handlers.Count || Handlers[i].Value != script)
                 {
                     i--;
                 }

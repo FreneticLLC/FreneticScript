@@ -9,7 +9,7 @@ namespace Frenetic.CommandSystem.CommandEvents
 {
     // <--[event]
     // @Name ScriptRanPreEvent
-    // @Fired When a script is ran (usually via the run command).
+    // @Fired When a script will be ran (usually via the run command).
     // @Updated 2015/10/28
     // @Authors mcmonkey
     // @Group Command
