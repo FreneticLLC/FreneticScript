@@ -46,6 +46,9 @@
     <Compile Include="CommandSystem\AbstractCommand.cs" />
     <Compile Include="CommandSystem\AbstractCommandEntryData.cs" />
     <Compile Include="CommandSystem\CommandEntry.cs" />
+    <Compile Include="CommandSystem\CommandEvents\ScriptRanPreScriptEvent.cs" />
+    <Compile Include="CommandSystem\CommandEvents\ScriptRanMonitorScriptEvent.cs" />
+    <Compile Include="CommandSystem\CommandEvents\ScriptRanPostScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandEvents\ScriptRanScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandQueue.cs" />
     <Compile Include="CommandSystem\CommandQueueEventArgs.cs" />

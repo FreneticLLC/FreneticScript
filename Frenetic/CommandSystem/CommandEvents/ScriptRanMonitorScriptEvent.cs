@@ -13,25 +13,25 @@ namespace Frenetic.CommandSystem.CommandEvents
     // @Updated 2015/10/28
     // @Authors mcmonkey
     // @Group Command
-    // @Cancellable true
+    // @Cancellable false
     // @Description
     // This event will fire whenever a script is ran, which by default is when <@link command run> is used.
     // This event can be used to control other scripts running on the system.
     // @Var script_name TextTag returns the name of the script about to be ran. // TODO: SCRIPT OBJECT!
     // -->
     /// <summary>
-    /// ScriptRanPreEvent, called by the run command.
+    /// ScriptRanMonitorEvent, called by the run command.
     /// </summary>
-    public class ScriptRanScriptEvent : ScriptEvent
+    public class ScriptRanMonitorScriptEvent : ScriptEvent
     {
         /// <summary>
         /// Constructs the ScriptRan script event.
         /// </summary>
         /// <param name="system">The relevant command system.</param>
-        public ScriptRanScriptEvent(Commands system)
-            : base(system, "scriptranevent", true)
+        public ScriptRanMonitorScriptEvent(Commands system)
+            : base(system, "scriptranmonitorevent", false)
         {
-            system.TheRunCommand.OnScriptRanEvent += (o, e) => { e.Cancelled = Run(e.Script.Name).Cancelled; }; // TODO: Allow determining script
+            system.TheRunCommand.OnScriptRanMonitorEvent += (o, e) => { Run(e.Script.Name); };
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Frenetic.CommandSystem.CommandEvents
         /// </summary>
         /// <param name="scrName">The name of the script to run.</param>
         /// <returns>The event details after firing.</returns>
-        public ScriptRanScriptEvent Run(string scrName)
+        public ScriptRanMonitorScriptEvent Run(string scrName)
         {
-            ScriptRanScriptEvent evt = (ScriptRanScriptEvent)Duplicate();
+            ScriptRanMonitorScriptEvent evt = (ScriptRanMonitorScriptEvent)Duplicate();
             evt.ScriptName = new TextTag(scrName);
             evt.Call();
             return evt;

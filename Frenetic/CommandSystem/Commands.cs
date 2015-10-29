@@ -230,12 +230,7 @@ namespace Frenetic.CommandSystem
         {
             Events.Add(newevent.Name, newevent);
         }
-
-        /// <summary>
-        /// The event for when a script is ran (usually via the run command).
-        /// </summary>
-        public ScriptRanScriptEvent ScriptRan;
-
+        
         /// <summary>
         /// Prepares the command system, registering all base commands.
         /// </summary>
@@ -250,9 +245,6 @@ namespace Frenetic.CommandSystem
             Queues = new List<CommandQueue>(20);
             TagSystem = new TagParser();
             TagSystem.Init(this);
-
-            // Command-Related Events
-            RegisterEvent(ScriptRan = new ScriptRanScriptEvent(this));
 
             // Common Commands
             RegisterCommand(new CleanmemCommand());
@@ -278,7 +270,7 @@ namespace Frenetic.CommandSystem
             RegisterCommand(new MarkCommand());
             RegisterCommand(new ParsingCommand());
             RegisterCommand(new RepeatCommand());
-            RegisterCommand(new RunCommand());
+            RegisterCommand(TheRunCommand = new RunCommand());
             RegisterCommand(new ScriptCacheCommand());
             RegisterCommand(new StopCommand());
             RegisterCommand(new UndefineCommand());
@@ -286,9 +278,20 @@ namespace Frenetic.CommandSystem
             RegisterCommand(new WhileCommand());
 
             // Register debug command
-            DebugInvalidCommand = new DebugOutputInvalidCommand();
-            RegisterCommand(DebugInvalidCommand);
+            RegisterCommand(DebugInvalidCommand = new DebugOutputInvalidCommand());
+
+            // Command-Related Events
+            RegisterEvent(new ScriptRanPreScriptEvent(this));
+            RegisterEvent(new ScriptRanScriptEvent(this));
+            RegisterEvent(new ScriptRanMonitorScriptEvent(this));
+            RegisterEvent(new ScriptRanPostScriptEvent(this));
+
         }
+
+        /// <summary>
+        /// The registered RunCommand instance.
+        /// </summary>
+        public RunCommand TheRunCommand;
 
         /// <summary>
         /// Advances any running command queues.

@@ -8,7 +8,7 @@ using Frenetic.TagHandlers;
 namespace Frenetic.CommandSystem.CommandEvents
 {
     // <--[event]
-    // @Name ScriptRanEvent
+    // @Name ScriptRanPreEvent
     // @Fired When a script is ran (usually via the run command).
     // @Updated 2015/10/28
     // @Authors mcmonkey
@@ -17,21 +17,21 @@ namespace Frenetic.CommandSystem.CommandEvents
     // @Description
     // This event will fire whenever a script is ran, which by default is when <@link command run> is used.
     // This event can be used to control other scripts running on the system.
-    // @Var script_name TextTag returns the name of the script about to be ran. // TODO: SCRIPT OBJECT!
+    // @Var script_name TextTag returns the name of the script about to be ran.
     // -->
     /// <summary>
     /// ScriptRanPreEvent, called by the run command.
     /// </summary>
-    public class ScriptRanScriptEvent : ScriptEvent
+    public class ScriptRanPreScriptEvent : ScriptEvent
     {
         /// <summary>
         /// Constructs the ScriptRan script event.
         /// </summary>
         /// <param name="system">The relevant command system.</param>
-        public ScriptRanScriptEvent(Commands system)
-            : base(system, "scriptranevent", true)
+        public ScriptRanPreScriptEvent(Commands system)
+            : base(system, "scriptranpreevent", true)
         {
-            system.TheRunCommand.OnScriptRanEvent += (o, e) => { e.Cancelled = Run(e.Script.Name).Cancelled; }; // TODO: Allow determining script
+            system.TheRunCommand.OnScriptRanPreEvent += (o, e) => { e.Cancelled = Run(e.ScriptName).Cancelled; }; // TODO: Allow determing script name
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Frenetic.CommandSystem.CommandEvents
         /// </summary>
         /// <param name="scrName">The name of the script to run.</param>
         /// <returns>The event details after firing.</returns>
-        public ScriptRanScriptEvent Run(string scrName)
+        public ScriptRanPreScriptEvent Run(string scrName) // TODO: SCRIPT OBJECT!
         {
-            ScriptRanScriptEvent evt = (ScriptRanScriptEvent)Duplicate();
+            ScriptRanPreScriptEvent evt = (ScriptRanPreScriptEvent)Duplicate();
             evt.ScriptName = new TextTag(scrName);
             evt.Call();
             return evt;
