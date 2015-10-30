@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="CommandSystem\AbstractCommand.cs" />
     <Compile Include="CommandSystem\AbstractCommandEntryData.cs" />
+    <Compile Include="CommandSystem\Arguments\Argument.cs" />
+    <Compile Include="CommandSystem\Arguments\ArgumentBit.cs" />
+    <Compile Include="CommandSystem\Arguments\TagArgumentBit.cs" />
     <Compile Include="CommandSystem\CommandEntry.cs" />
     <Compile Include="CommandSystem\CommandEvents\ScriptRanPreScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandEvents\ScriptRanPostScriptEvent.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="CommandSystem\QueueCmds\WaitCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />
     <Compile Include="CommandSystem\ScriptEvent.cs" />
+    <Compile Include="CommandSystem\Arguments\TextArgumentBit.cs" />
     <Compile Include="CVar.cs" />
     <Compile Include="CVarSystem.cs" />
     <Compile Include="FreneticEventHandler.cs" />
@@ -104,6 +108,7 @@
     <Compile Include="TagHandlers\Objects\ListTag.cs" />
     <Compile Include="TagHandlers\Objects\TextTag.cs" />
     <Compile Include="TagHandlers\Objects\TimeTag.cs" />
+    <Compile Include="TagHandlers\TagBit.cs" />
     <Compile Include="TagHandlers\TagData.cs" />
     <Compile Include="TagHandlers\TagParser.cs" />
     <Compile Include="TagHandlers\TemplateObject.cs" />

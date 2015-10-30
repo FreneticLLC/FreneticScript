@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem.CommonCmds
 {
@@ -35,9 +36,12 @@ namespace Frenetic.CommandSystem.CommonCmds
             }
             else
             {
-                string name = entry.GetArgument(0);
-                List<string> args = new List<string>(entry.Arguments);
-                args.RemoveAt(0);
+                string name = entry.Arguments[0].ToString();
+                List<string> args = new List<string>(entry.Arguments.Count);
+                for (int i = 1; i < entry.Arguments.Count; i++)
+                {
+                    args.Add(entry.Arguments[i].ToString());
+                }
                 entry.Output.UnknownCommand(entry.Queue, name, args.ToArray());
             }
         }

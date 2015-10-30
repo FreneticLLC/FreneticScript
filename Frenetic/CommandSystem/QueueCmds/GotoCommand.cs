@@ -33,7 +33,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             for (int i = 0; i < entry.Queue.CommandList.Length; i++)
             {
                 if (entry.Queue.GetCommand(i).Command is MarkCommand
-                    && entry.Queue.GetCommand(i).Arguments[0] == targ)
+                    && entry.Queue.GetCommand(i).Arguments[0].ToString() == targ)
                 {
                     hasnext = true;
                     break;
@@ -45,7 +45,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 while (entry.Queue.CommandList.Length > 0)
                 {
                     if (entry.Queue.GetCommand(0).Command is MarkCommand
-                        && entry.Queue.GetCommand(0).Arguments[0] == targ)
+                        && entry.Queue.GetCommand(0).Arguments[0].ToString() == targ)
                     {
                         entry.Queue.RemoveCommand(0);
                         break;

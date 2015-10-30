@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
@@ -22,7 +23,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         public IfCommand()
         {
             Name = "if";
-            Arguments = "true/false";
+            Arguments = "<if calculations>";
             Description = "Executes the following block of commands only if the input is true.";
             IsFlow = true;
             Asyncable = true;
@@ -39,7 +40,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             else
             {
-                if (entry.Arguments[0] == "\0CALLBACK")
+                if (entry.Arguments[0].ToString() == "\0CALLBACK")
                 {
                     return;
                 }
@@ -59,7 +60,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Good("If is true, executing...");
                     data.Result = 1;
                     entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
-                        this, new List<string> { "\0CALLBACK" }, "if", 0));
+                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "if", 0));
                     entry.Queue.AddCommandsNow(entry.Block);
                 }
                 else

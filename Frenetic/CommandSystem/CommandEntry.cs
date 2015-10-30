@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem.CommonCmds;
-using Frenetic.TagHandlers;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem
 {
@@ -31,7 +29,7 @@ namespace Frenetic.CommandSystem
                 command = command.Substring(1);
             }
             command = command.Replace('\0', ' ');
-            List<string> args = new List<string>();
+            List<Argument> args = new List<Argument>();
             int start = 0;
             bool quoted = false;
             for (int i = 0; i < command.Length; i++)
@@ -45,7 +43,7 @@ namespace Frenetic.CommandSystem
                     string arg = command.Substring(start, i - start).Trim().Replace("\"", "");
                     if (arg.Length > 0)
                     {
-                        args.Add(arg);
+                        args.Add(system.TagSystem.SplitToArgument(arg));
                     }
                     start = i + 1;
                 }
@@ -55,7 +53,7 @@ namespace Frenetic.CommandSystem
                 string arg = command.Substring(start, command.Length - start).Trim().Replace("\"", "");
                 if (arg.Length > 0)
                 {
-                    args.Add(arg);
+                    args.Add(system.TagSystem.SplitToArgument(arg));
                 }
             }
             if (args.Count == 0)
@@ -63,7 +61,7 @@ namespace Frenetic.CommandSystem
                 return null;
             }
             int marker = 0;
-            string BaseCommand = args[0];
+            string BaseCommand = args[0].ToString();
             if (BaseCommand.StartsWith("+") && BaseCommand.Length > 1)
             {
                 marker = 1;
@@ -99,9 +97,9 @@ namespace Frenetic.CommandSystem
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block,
-            List<string> _arguments, CommandEntry _owner, Commands system, string line, int marker, bool waitfor)
+            List<Argument> _arguments, CommandEntry _owner, Commands system, string line, int marker, bool waitfor)
         {
-            _arguments.Insert(0, name);
+            _arguments.Insert(0, system.TagSystem.SplitToArgument(name));
             return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker) { WaitFor = waitfor };
                 
         }
@@ -135,7 +133,7 @@ namespace Frenetic.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, List<CommandEntry> _block, CommandEntry _owner,
-            AbstractCommand _command, List<string> _arguments, string _name, int _marker)
+            AbstractCommand _command, List<Argument> _arguments, string _name, int _marker)
         {
             CommandLine = _commandline;
             Block = _block;
@@ -166,7 +164,7 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// The arguments input by the user.
         /// </summary>
-        public List<string> Arguments;
+        public List<Argument> Arguments;
 
         /// <summary>
         /// The command queue this command is running inside.
@@ -197,15 +195,15 @@ namespace Frenetic.CommandSystem
         {
             if (place >= Arguments.Count || place < 0)
             {
-                throw new ArgumentOutOfRangeException("Value must be greater than 0 and less than command input argument count");
+                throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
             }
             if (Queue.ParseTags)
             {
-                return Queue.CommandSystem.TagSystem.ParseTags(Arguments[place], TextStyle.Color_Simple, Queue.Variables, Queue.Debug);
+                return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug);
             }
             else
             {
-                return Arguments[place];
+                return Arguments[place].ToString();
             }
         }
 
@@ -300,7 +298,7 @@ namespace Frenetic.CommandSystem
         public CommandEntry Duplicate(CommandEntry NewOwner = null)
         {
             CommandEntry entry = new CommandEntry();
-            entry.Arguments = new List<string>(Arguments);
+            entry.Arguments = new List<Argument>(Arguments);
             if (Block == null)
             {
                 entry.Block = null;

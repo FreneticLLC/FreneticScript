@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.TagHandlers
 {
@@ -24,7 +25,7 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// All 'modifier' data (EG, input[modifier].input[modifer]).
         /// </summary>
-        public List<string> Modifiers = null;
+        public List<Argument> Modifiers = null;
 
         /// <summary>
         /// All variables waiting in this tag's context.
@@ -49,6 +50,30 @@ namespace Frenetic.TagHandlers
         /// <param name="_basecolor">The default color to use for output.</param>
         /// <param name="_vars">Any variables involved in the queue.</param>
         /// <param name="_mode">What debug mode to use.</param>
+        public TagData(TagParser _system, List<TagBit> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode)
+        {
+            TagSystem = _system;
+            BaseColor = _basecolor;
+            Variables = _vars;
+            mode = _mode;
+            // TODO: Store TagBit list directly?
+            Input = new List<string>(_input.Count);
+            Modifiers = new List<Argument>(_input.Count);
+            for (int i = 0; i < _input.Count; i++)
+            {
+                Input.Add(_input[i].Key);
+                Modifiers.Add(_input[i].Variable ?? new Argument());
+            }
+        }
+
+        /// <summary>
+        /// Constructs the tag information container.
+        /// </summary>
+        /// <param name="_system">The command system to use.</param>
+        /// <param name="_input">The input tag pieces.</param>
+        /// <param name="_basecolor">The default color to use for output.</param>
+        /// <param name="_vars">Any variables involved in the queue.</param>
+        /// <param name="_mode">What debug mode to use.</param>
         public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode)
         {
             TagSystem = _system;
@@ -56,20 +81,19 @@ namespace Frenetic.TagHandlers
             BaseColor = _basecolor;
             Variables = _vars;
             mode = _mode;
-            Modifiers = new List<string>();
+            Modifiers = new List<Argument>();
             for (int x = 0; x < Input.Count; x++)
             {
-                Input[x] = Input[x].Replace("&dot", ".").Replace("&amp", "&");
                 if (Input[x].Length > 1 && Input[x].Contains('[') && Input[x][Input[x].Length - 1] == ']')
                 {
                     int index = Input[x].IndexOf('[');
-                    Modifiers.Add(Input[x].Substring(index + 1, Input[x].Length - (index + 2)));
+                    Modifiers.Add(TagSystem.SplitToArgument(Input[x].Substring(index + 1, Input[x].Length - (index + 2))));
                     Input[x] = Input[x].Substring(0, index).ToLower();
                 }
                 else
                 {
                     Input[x] = Input[x].ToLower();
-                    Modifiers.Add("");
+                    Modifiers.Add(new Argument());
                 }
             }
         }
@@ -100,9 +124,9 @@ namespace Frenetic.TagHandlers
         {
             if (place < 0 || place >= Modifiers.Count)
             {
-                return "";
+                throw new ArgumentOutOfRangeException("place");
             }
-            return TagSystem.ParseTags(Modifiers[place], TextStyle.Color_Simple, Variables, mode);
+            return Modifiers[place].Parse(BaseColor, Variables, mode) ?? "";
         }
     }
 }

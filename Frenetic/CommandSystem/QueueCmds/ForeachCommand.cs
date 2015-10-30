@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers.Objects;
 using Frenetic.TagHandlers;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
@@ -121,7 +122,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is ForeachCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
+                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -133,7 +134,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                             {
                                 entry.Queue.RemoveCommand(0);
                                 break;
@@ -152,7 +153,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
-                            entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -164,7 +165,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                             {
                                 break;
                             }
@@ -193,7 +194,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     {
                         entry.Good("Foreach looping <{color.emphasis}>" + target + "<{color.base}> times...");
                         CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
-                            this, new List<string> { "\0CALLBACK" }, "foreach", 0);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "foreach", 0);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("foreach_index", new TextTag("1"));
                         entry.Queue.SetVariable("foreach_total", new TextTag(target.ToString()));

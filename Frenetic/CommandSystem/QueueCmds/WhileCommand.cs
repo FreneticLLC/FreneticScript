@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers.Objects;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
     class WhileCommandData : AbstractCommandEntryData
     {
-        public List<string> ComparisonArgs;
+        public List<Argument> ComparisonArgs;
         public int Index;
         public override AbstractCommandEntryData Duplicate()
         {
             WhileCommandData toret = new WhileCommandData();
-            toret.ComparisonArgs = new List<string>(ComparisonArgs);
+            toret.ComparisonArgs = new List<Argument>(ComparisonArgs);
             toret.Index = Index;
             return toret;
         }
@@ -24,7 +25,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         public WhileCommand()
         {
             Name = "while";
-            Arguments = "true/false/stop/next";
+            Arguments = "stop/next/<if calculations>";
             Description = "Executes the following block of commands continuously until the argument is false.";
             IsFlow = true;
             Asyncable = true;
@@ -49,8 +50,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         List<string> comp = new List<string>();
                         for (int i = 0; i < data.ComparisonArgs.Count; i++)
                         {
-                            comp.Add(entry.Queue.CommandSystem.TagSystem.ParseTags(
-                                data.ComparisonArgs[i], TextStyle.Color_Simple, entry.Queue.Variables, entry.Queue.Debug));
+                            comp.Add(data.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug));
                         }
                         if (IfCommand.TryIf(comp))
                         {
@@ -74,7 +74,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is WhileCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
+                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -86,7 +86,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is WhileCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                             {
                                 entry.Queue.RemoveCommand(0);
                                 break;
@@ -105,7 +105,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is WhileCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
+                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -117,7 +117,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is WhileCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                             {
                                 break;
                             }
@@ -145,13 +145,13 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     WhileCommandData data = new WhileCommandData();
                     data.Index = 1;
-                    data.ComparisonArgs = new List<string>(entry.Arguments);
+                    data.ComparisonArgs = new List<Argument>(entry.Arguments);
                     entry.Data = data;
                     if (entry.Block != null)
                     {
                         entry.Good("While looping...");
                         CommandEntry callback = new CommandEntry("while \0CALLBACK", null, entry,
-                            this, new List<string> { "\0CALLBACK" }, "while", 0);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "while", 0);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("while_index", new TextTag("1"));
                         entry.Queue.AddCommandsNow(entry.Block);

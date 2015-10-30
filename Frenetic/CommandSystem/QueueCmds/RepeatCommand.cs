@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers.Objects;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name repeat
-    // @Arguments <times to repeat>/stop/next
+    // @Arguments [times to repeat]/stop/next
     // @Short Executes the following block of commands a specified number of times.
     // @Updated 2014/06/23
     // @Authors mcmonkey
@@ -70,7 +71,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         public RepeatCommand()
         {
             Name = "repeat";
-            Arguments = "<times to repeat>/stop/next";
+            Arguments = "[times to repeat]/stop/next";
             Description = "Executes the following block of commands a specified number of times.";
             IsFlow = true;
             Asyncable = true;
@@ -122,7 +123,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
+                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -134,7 +135,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                             {
                                 entry.Queue.RemoveCommand(0);
                                 break;
@@ -153,7 +154,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                     {
                         if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0] == "\0CALLBACK")
+                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                         {
                             hasnext = true;
                             break;
@@ -165,7 +166,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0] == "\0CALLBACK")
+                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                             {
                                 break;
                             }
@@ -193,7 +194,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     {
                         entry.Good("Repeating <{color.emphasis}>" + target + "<{color.base}> times...");
                         CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
-                            this, new List<string> { "\0CALLBACK" }, "repeat", 0);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "repeat", 0);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("repeat_index", new TextTag("1"));
                         entry.Queue.SetVariable("repeat_total", new TextTag(target.ToString()));

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Objects;
+using Frenetic.CommandSystem.Arguments;
 
 namespace Frenetic.CommandSystem.QueueCmds
 {
@@ -73,7 +74,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Good("Calling '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>' (" + (run ? "run": "inject") + ")...");
                     List<CommandEntry> block = script.GetEntries();
                     block.Add(new CommandEntry("call \0CALLBACK", null, entry,
-                            this, new List<string> { "\0CALLBACK" }, "call", 0));
+                            this, new List<Argument> { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "call", 0));
                     if (run)
                     {
                         CommandQueue queue;
