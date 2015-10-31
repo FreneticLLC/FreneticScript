@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers.Objects;
 using Frenetic.TagHandlers;
+using Frenetic.CommandSystem.QueueCmds;
 
 namespace Frenetic.CommandSystem.CommandEvents
 {
@@ -31,20 +32,34 @@ namespace Frenetic.CommandSystem.CommandEvents
         public ScriptRanScriptEvent(Commands system)
             : base(system, "scriptranevent", true)
         {
-            system.TheRunCommand.OnScriptRanEvent += (e) => { e.Cancelled = Run(e.Script.Name).Cancelled; }; // TODO: Allow determining script
+        }
+
+        /// <summary>
+        /// Init the script event, registers it with the Run command.
+        /// </summary>
+        public override void Init()
+        {
+            System.TheRunCommand.OnScriptRanEvent += Run;
+        }
+
+        /// <summary>
+        /// Destroys the script event, unregisters it with the run command.
+        /// </summary>
+        public override void Destroy()
+        {
+            System.TheRunCommand.OnScriptRanEvent -= Run;
         }
 
         /// <summary>
         /// Runs the script event with the given input.
         /// </summary>
-        /// <param name="scrName">The name of the script to run.</param>
+        /// <param name="oevt">The details of the script to be ran.</param>
         /// <returns>The event details after firing.</returns>
-        public ScriptRanScriptEvent Run(string scrName)
+        public void Run(ScriptRanEventArgs oevt)
         {
             ScriptRanScriptEvent evt = (ScriptRanScriptEvent)Duplicate();
-            evt.ScriptName = new TextTag(scrName);
+            evt.ScriptName = new TextTag(oevt.Script.Name);
             evt.Call();
-            return evt;
         }
 
         /// <summary>

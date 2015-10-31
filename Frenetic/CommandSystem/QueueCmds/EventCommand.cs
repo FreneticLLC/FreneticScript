@@ -58,16 +58,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     return;
                 }
                 string name = entry.GetArgument(2).ToLower();
-                bool success = false;
-                for (int i = 0; i < theEvent.Handlers.Count; i++)
-                {
-                    if (theEvent.Handlers[i].Value.Name == "eventhandler_" + theEvent.Name + "_" + name)
-                    {
-                        theEvent.Handlers.RemoveAt(i);
-                        success = true;
-                        break;
-                    }
-                }
+                bool success = theEvent.RemoveEventHandler("eventhandler_" + theEvent.Name + "_" + name);
                 if (success)
                 {
                     entry.Good("Removed event handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>'.");
@@ -102,7 +93,6 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     if (theEvent.Handlers[i].Value.Name == "eventhandler_" + theEvent.Name + "_" + name)
                     {
-                        theEvent.Handlers.RemoveAt(i);
                         success = true;
                         break;
                     }
@@ -125,9 +115,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    theEvent.Handlers.Add(new KeyValuePair<int, CommandScript>(priority, new CommandScript("eventhandler_" +
-                        theEvent.Name + "_" + name, CommandScript.DisOwn(entry.Block, entry)) { Debug = DebugMode.MINIMAL }));
-                    theEvent.Sort();
+                    theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, CommandScript.DisOwn(entry.Block, entry)) { Debug = DebugMode.MINIMAL });
                     entry.Good("Handler '<{color.emphasis}>" + TagParser.Escape(name) +
                         "<{color.base}>' defined for event '<{color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{color.base}>'.");
                 }

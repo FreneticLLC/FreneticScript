@@ -32,9 +32,75 @@ namespace Frenetic.CommandSystem
         }
 
         /// <summary>
+        /// Set up the script event. For use by the event system itself.
+        /// </summary>
+        public virtual void Init()
+        {
+            // Do Nothing
+        }
+
+        /// <summary>
+        /// Shut down the script event. For use by the event system itself.
+        /// </summary>
+        public virtual void Destroy()
+        {
+            // Do Nothing
+        }
+
+        /// <summary>
         /// All scripts that handle this event.
         /// </summary>
         public List<KeyValuePair<int, CommandScript>> Handlers = new List<KeyValuePair<int, CommandScript>>();
+
+        /// <summary>
+        /// Register a new event handler to this script event.
+        /// </summary>
+        /// <param name="prio">The priority to use.</param>
+        /// <param name="script">The script to register to the handler</param>
+        public void RegisterEventHandler(int prio, CommandScript script)
+        {
+            Handlers.Add(new KeyValuePair<int, CommandScript>(prio, script));
+            Sort();
+            if (Handlers.Count == 1)
+            {
+                Init();
+            }
+        }
+
+        /// <summary>
+        /// Removes an event handler by name.
+        /// </summary>
+        /// <param name="name">The name of the handler to remove.</param>
+        /// <returns>Whether there was a removal.</returns>
+        public bool RemoveEventHandler(string name)
+        {
+            for (int i = 0; i < Handlers.Count; i++)
+            {
+                if (Handlers[i].Value.Name == name)
+                {
+                    Handlers.RemoveAt(i);
+                    if (Handlers.Count == 0)
+                    {
+                        Destroy();
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Clears away all event handlers.
+        /// </summary>
+        public void Clear()
+        {
+            if (Handlers.Count == 0)
+            {
+                return;
+            }
+            Handlers.Clear();
+            Destroy();
+        }
 
         /// <summary>
         /// The command system in use.
