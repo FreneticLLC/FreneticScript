@@ -227,21 +227,15 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Gets the full command string that represents this script.
         /// </summary>
+        /// <param name="tabulation">How much space to include in front of the commands.</param>
         /// <returns>The full command string.</returns>
-        public string FullString()
+        public string FullString(string tabulation = "")
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < Commands.Count; i++)
             {
-                sb.Append(Commands[i].CommandLine);
-                if (i + 1 < Commands.Count)
-                {
-                    sb.Append("; ");
-                }
-                else
-                {
-                    sb.Append(";");
-                }
+                sb.Append(Commands[i].FullString(tabulation));
+                sb.Append("\n");
             }
             return sb.ToString();
         }

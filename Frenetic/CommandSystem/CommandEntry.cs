@@ -150,6 +150,31 @@ namespace Frenetic.CommandSystem
         public CommandEntry()
         {
         }
+        
+        /// <summary>
+        /// Gets the full command string that represents this command.
+        /// </summary>
+        /// <param name="tabulation">How much space to include in front of the commands.</param>
+        /// <returns>The full command string.</returns>
+        public string FullString(string tabulation = "")
+        {
+            if (Block == null)
+            {
+                return tabulation + CommandLine + ";";
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(tabulation + CommandLine + "\n");
+                sb.Append("{\n");
+                foreach (CommandEntry entry in Block)
+                {
+                    sb.Append(entry.FullString(tabulation + "\t") + "\n");
+                }
+                sb.Append("}\n");
+                return sb.ToString();
+            }
+        }
 
         /// <summary>
         /// The command name input by the user.
