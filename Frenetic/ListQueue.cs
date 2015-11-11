@@ -77,7 +77,7 @@ namespace Frenetic
         /// <summary>
         /// Initializes the <see cref="ListQueue{T}"/> with a specified capacity.
         /// </summary>
-        /// <param name="capacity">The number of items to be expect to hold, is non-definite.</param>
+        /// <param name="capacity">The number of items to expect to hold, is non-definite.</param>
         public ListQueue(int capacity = 100)
         {
             Objects = new T[capacity];
@@ -130,6 +130,7 @@ namespace Frenetic
             if (target >= Objects.Length)
             {
                 Expand(Objects.Length); // Double in size
+                target = Head + Length;
             }
             Objects[target] = obj;
             Length++;
