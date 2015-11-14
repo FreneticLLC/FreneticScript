@@ -275,6 +275,7 @@ namespace Frenetic.CommandSystem
             RegisterCommand(new ScriptCacheCommand());
             RegisterCommand(new StopCommand());
             RegisterCommand(new UndefineCommand());
+            RegisterCommand(new VarCommand());
             RegisterCommand(new WaitCommand());
             RegisterCommand(new WhileCommand());
 

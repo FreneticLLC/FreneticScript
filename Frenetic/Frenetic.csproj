@@ -86,6 +86,7 @@
     <Compile Include="CommandSystem\QueueCmds\ScriptCacheCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\StopCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\UndefineCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\VarCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\WaitCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />
     <Compile Include="CommandSystem\ScriptEvent.cs" />
