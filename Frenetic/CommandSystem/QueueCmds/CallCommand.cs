@@ -10,17 +10,22 @@ namespace Frenetic.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name call
-    // @Arguments [inject/run] <function to call>
+    // @Arguments [inject/run] <function to call> [<variable>:<value> ...]
     // @Short Runs a function.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
     // @Description
     // Activates a function created by the <@link command function>function<@/link> command.
+    // Note that 'injected' function calls do not take variable inputs (they use the current queue's variables),
+    // and do not output detemrinations!
     // TODO: Explain more!
     // @Example
     // // This example calls the function 'helloworld'.
     // call helloworld
+    // @Example
+    // // This example calls the function 'outputme' with variable 'text' set to 'hello world'.
+    // call outputme "text:hello world"
     // @Example
     // TODO: More examples!
     // @Tags
@@ -33,7 +38,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         public CallCommand()
         {
             Name = "call";
-            Arguments = "[inject/run] <function to call>";
+            Arguments = "[inject/run] <function to call> [<variable>:<value> ...]";
             Description = "Runs a function.";
             IsFlow = true;
             Asyncable = true;
@@ -78,7 +83,19 @@ namespace Frenetic.CommandSystem.QueueCmds
                     if (run)
                     {
                         CommandQueue queue;
-                        entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
+                        Dictionary<string, TemplateObject> variables = new Dictionary<string, TemplateObject>();
+                        for (int i = 2; i < entry.Arguments.Count; i++)
+                        {
+                            string str = entry.GetArgument(i);
+                            if (!str.Contains(':'))
+                            {
+                                entry.Bad("Invalid variable input!");
+                                return;
+                            }
+                            string[] split = str.Split(new char[] { ':' }, 2);
+                            variables.Add(split[0], new TextTag(split[1]));
+                        }
+                        entry.Queue.CommandSystem.ExecuteScript(script, variables, out queue);
                         if (!queue.Running)
                         {
                             entry.Finished = true;

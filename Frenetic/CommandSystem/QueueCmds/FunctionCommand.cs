@@ -21,12 +21,19 @@ namespace Frenetic.CommandSystem.QueueCmds
     // Use "function stop" inside a function to end the function call without killing the queue that started it.
     // TODO: Explain more!
     // @Example
-    // // This example creates function "helloworld" which, when called, echos "hello world", then stops before it echos a "!"
+    // // This example creates function "helloworld" which, when called, outputs "hello world", then stops before it can output a "!"
     // function define helloworld
     // {
     //     echo "hello world"
     //     function stop
     //     echo "!"
+    // }
+    // @Example
+    // // This example creates function "outputme" which, when called with variable 'text', outputs the specified text.
+    // function define outputme
+    // {
+    //     require text
+    //     echo <{var[text]}>
     // }
     // @Example
     // TODO: More examples!
