@@ -81,6 +81,7 @@
     <Compile Include="CommandSystem\QueueCmds\ParsingCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RegistereventCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RepeatCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\RequireCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RunCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ScriptCacheCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\StopCommand.cs" />

@@ -9,7 +9,7 @@ namespace Frenetic.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name repeat
-    // @Arguments [times to repeat]/stop/next
+    // @Arguments <times to repeat>/stop/next
     // @Short Executes the following block of commands a specified number of times.
     // @Updated 2014/06/23
     // @Authors mcmonkey
@@ -71,7 +71,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         public RepeatCommand()
         {
             Name = "repeat";
-            Arguments = "[times to repeat]/stop/next";
+            Arguments = "<times to repeat>/stop/next";
             Description = "Executes the following block of commands a specified number of times.";
             IsFlow = true;
             Asyncable = true;

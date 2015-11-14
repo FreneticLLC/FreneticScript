@@ -270,6 +270,7 @@ namespace Frenetic.CommandSystem
             RegisterCommand(new MarkCommand());
             RegisterCommand(new ParsingCommand());
             RegisterCommand(new RepeatCommand());
+            RegisterCommand(new RequireCommand());
             RegisterCommand(TheRunCommand = new RunCommand());
             RegisterCommand(new ScriptCacheCommand());
             RegisterCommand(new StopCommand());

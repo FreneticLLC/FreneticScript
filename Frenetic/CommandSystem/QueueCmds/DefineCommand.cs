@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Frenetic.CommandSystem;
-using Frenetic.TagHandlers;
+﻿using Frenetic.TagHandlers;
 using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem.CommonCmds
@@ -26,12 +21,12 @@ namespace Frenetic.CommandSystem.CommonCmds
     // TODO: More examples!
     // Var <Dynamic> TextTag returns the value of the set definition.
     // -->
-    class DefineCommand: AbstractCommand
+    class DefineCommand: AbstractCommand // TODO: Public!
     {
         public DefineCommand()
         {
             Name = "define";
-            Arguments = "<Variable to set> <new value>";
+            Arguments = "<variable to set> <new value>";
             Description = "Modifies the value of a specified queue variable, or creates a new one.";
             IsFlow = true;
             Asyncable = true;
