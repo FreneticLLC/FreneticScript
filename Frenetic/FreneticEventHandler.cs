@@ -8,25 +8,15 @@ namespace Frenetic
     /// <summary>
     /// Handles events, with a simple priority system.
     /// Not particularly asyncable.
-    /// Fires in the event added, can be fired in an alternately order by directly adding to <see cref="First"/> or <see cref="Last"/>.
+    /// Fires in priority order.
     /// </summary>
     /// <typeparam name="T">The event arguments type to use.</typeparam>
     public class FreneticEventHandler<T> where T: EventArgs
     {
         /// <summary>
-        /// The handlers that are fired earliest.
+        /// All handlers in the event.
         /// </summary>
-        public List<Action<T>> First = new List<Action<T>>();
-
-        /// <summary>
-        /// The handlers that are fired after the early handlers.
-        /// </summary>
-        public List<Action<T>> Normal = new List<Action<T>>();
-
-        /// <summary>
-        /// The handlers that are fired last.
-        /// </summary>
-        public List<Action<T>> Last = new List<Action<T>>();
+        public SortedSet<FreneticEventEntry<T>> InternalActions = new SortedSet<FreneticEventEntry<T>>();
         
         /// <summary>
         /// Fires the event handlers.
@@ -34,22 +24,24 @@ namespace Frenetic
         /// <param name="args">The arguments to fire with.</param>
         public void Fire(T args)
         {
-            foreach (Action<T> a in First)
+            foreach (FreneticEventEntry<T> a in InternalActions)
             {
-                a(args);
-            }
-            foreach (Action<T> a in Normal)
-            {
-                a(args);
-            }
-            foreach (Action<T> a in Last)
-            {
-                a(args);
+                a.Act(args);
             }
         }
 
         /// <summary>
-        /// Adds an action to an event.
+        /// Adds an event entry with a specific priority.
+        /// </summary>
+        /// <param name="act">The action to run.</param>
+        /// <param name="priority">The priority of the action.</param>
+        public void Add(Action<T> act, int priority)
+        {
+            InternalActions.Add(new FreneticEventEntry<T>(act) { Priority = priority });
+        }
+
+        /// <summary>
+        /// Adds an action to an event, with a default priority of exactly zero (0).
         /// </summary>
         /// <param name="evt">The original event.</param>
         /// <param name="act">The action to add.</param>
@@ -60,7 +52,7 @@ namespace Frenetic
             {
                 evt = new FreneticEventHandler<T>();
             }
-            evt.Normal.Add(act);
+            evt.Add(act, 0);
             return evt;
         }
 
@@ -72,8 +64,107 @@ namespace Frenetic
         /// <returns>The input event.</returns>
         public static FreneticEventHandler<T> operator -(FreneticEventHandler<T> evt, Action<T> act)
         {
-            evt.Normal.Remove(act);
+            evt.InternalActions.Remove(new FreneticEventEntry<T>(act));
             return evt;
+        }
+    }
+
+    /// <summary>
+    /// Represents a prioritized event entry.
+    /// </summary>
+    /// <typeparam name="T">The type of the event arguments.</typeparam>
+    public class FreneticEventEntry<T>: IComparable<FreneticEventEntry<T>>, IEquatable<FreneticEventEntry<T>>
+    {
+        /// <summary>
+        /// Constructs a prioritized event entry.
+        /// </summary>
+        /// <param name="a">The action to use.</param>
+        public FreneticEventEntry(Action<T> a)
+        {
+            Act = a;
+        }
+
+        /// <summary>
+        /// The priority by which the action is run.
+        /// </summary>
+        public int Priority;
+
+        /// <summary>
+        /// The action used.
+        /// </summary>
+        public Action<T> Act;
+
+        /// <summary>
+        /// Compares this event entry to another.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>The relative priority.</returns>
+        public int CompareTo(FreneticEventEntry<T> other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return -1;
+            }
+            return other.Priority == Priority ? 0 : (other.Priority < Priority ? 1 : -1);
+        }
+
+        /// <summary>
+        /// Returns whether this event entry is equal to another.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns>Whether they are equal.</returns>
+        public bool Equals(FreneticEventEntry<T> other)
+        {
+            return other.Act == Act;
+        }
+
+        /// <summary>
+        /// Returns whether this event entry is equal to another.
+        /// </summary>
+        /// <param name="obj">The other.</param>
+        /// <returns>Whether they are equal.</returns>
+        public override bool Equals(object obj)
+        {
+            return obj is FreneticEventEntry<T> && Act == ((FreneticEventEntry<T>)obj).Act;
+        }
+
+        /// <summary>
+        /// Returns the hash code (merely the priority) of this event enty.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return Priority;
+        }
+
+        /// <summary>
+        /// Returns whether two event entries are equal.
+        /// </summary>
+        /// <param name="x">The first entry.</param>
+        /// <param name="y">The second entry.</param>
+        /// <returns>Whether they are equal.</returns>
+        public static bool operator ==(FreneticEventEntry<T> x, FreneticEventEntry<T> y)
+        {
+            if (ReferenceEquals(x, null))
+            {
+                return ReferenceEquals(y, null);
+            }
+            return x.Equals(y);
+        }
+
+        /// <summary>
+        /// Returns whether two event entries are NOT equal.
+        /// </summary>
+        /// <param name="x">The first entry.</param>
+        /// <param name="y">The second entry.</param>
+        /// <returns>Whether they are NOT equal.</returns>
+        public static bool operator !=(FreneticEventEntry<T> x, FreneticEventEntry<T> y)
+        {
+            if (ReferenceEquals(x, null))
+            {
+                return !ReferenceEquals(y, null);
+            }
+            return !x.Equals(y);
         }
     }
 }
