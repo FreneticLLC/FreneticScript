@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Frenetic.CommandSystem.QueueCmds;
 
 namespace Frenetic
 {
@@ -26,7 +27,7 @@ namespace Frenetic
         {
             foreach (FreneticEventEntry<T> a in InternalActions)
             {
-                a.Act(args);
+                a.Act(a.Priority, args);
             }
         }
 
@@ -35,9 +36,30 @@ namespace Frenetic
         /// </summary>
         /// <param name="act">The action to run.</param>
         /// <param name="priority">The priority of the action.</param>
-        public void Add(Action<T> act, int priority)
+        public void Add(Action<int, T> act, int priority)
         {
             InternalActions.Add(new FreneticEventEntry<T>(act) { Priority = priority });
+        }
+        
+        /// <summary>
+        /// Returns whether the given action is contained with the given priority.
+        /// </summary>
+        /// <param name="act">The action to test for.</param>
+        /// <param name="priority">The priority of the action.</param>
+        /// <returns></returns>
+        public bool Contains(Action<int, T> act, int priority)
+        {
+            return InternalActions.Contains(new FreneticEventEntry<T>(act) { Priority = priority });
+        }
+
+        /// <summary>
+        /// Remove an event entry with a specific priority.
+        /// </summary>
+        /// <param name="act">The action to no longer run.</param>
+        /// <param name="priority">The priority of the action.</param>
+        public void Remove(Action<int, T> act, int priority)
+        {
+            InternalActions.Remove(new FreneticEventEntry<T>(act) { Priority = priority });
         }
 
         /// <summary>
@@ -46,7 +68,7 @@ namespace Frenetic
         /// <param name="evt">The original event.</param>
         /// <param name="act">The action to add.</param>
         /// <returns>The input event.</returns>
-        public static FreneticEventHandler<T> operator +(FreneticEventHandler<T> evt, Action<T> act)
+        public static FreneticEventHandler<T> operator +(FreneticEventHandler<T> evt, Action<int, T> act)
         {
             if (evt == null)
             {
@@ -62,13 +84,13 @@ namespace Frenetic
         /// <param name="evt">The original event.</param>
         /// <param name="act">The action to remove.</param>
         /// <returns>The input event.</returns>
-        public static FreneticEventHandler<T> operator -(FreneticEventHandler<T> evt, Action<T> act)
+        public static FreneticEventHandler<T> operator -(FreneticEventHandler<T> evt, Action<int, T> act)
         {
-            evt.InternalActions.Remove(new FreneticEventEntry<T>(act));
+            evt.InternalActions.Remove(new FreneticEventEntry<T>(act) { Priority = 0 });
             return evt;
         }
     }
-
+    
     /// <summary>
     /// Represents a prioritized event entry.
     /// </summary>
@@ -79,7 +101,7 @@ namespace Frenetic
         /// Constructs a prioritized event entry.
         /// </summary>
         /// <param name="a">The action to use.</param>
-        public FreneticEventEntry(Action<T> a)
+        public FreneticEventEntry(Action<int, T> a)
         {
             Act = a;
         }
@@ -92,7 +114,7 @@ namespace Frenetic
         /// <summary>
         /// The action used.
         /// </summary>
-        public Action<T> Act;
+        public Action<int, T> Act;
 
         /// <summary>
         /// Compares this event entry to another.
@@ -115,7 +137,11 @@ namespace Frenetic
         /// <returns>Whether they are equal.</returns>
         public bool Equals(FreneticEventEntry<T> other)
         {
-            return other.Act == Act;
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            return other.Act == Act && other.Priority == Priority;
         }
 
         /// <summary>
@@ -125,7 +151,7 @@ namespace Frenetic
         /// <returns>Whether they are equal.</returns>
         public override bool Equals(object obj)
         {
-            return obj is FreneticEventEntry<T> && Act == ((FreneticEventEntry<T>)obj).Act;
+            return obj is FreneticEventEntry<T> && Act == ((FreneticEventEntry<T>)obj).Act && Priority == ((FreneticEventEntry<T>)obj).Priority;
         }
 
         /// <summary>

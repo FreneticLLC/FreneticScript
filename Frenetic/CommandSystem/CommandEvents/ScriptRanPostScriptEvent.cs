@@ -35,31 +35,40 @@ namespace Frenetic.CommandSystem.CommandEvents
         }
 
         /// <summary>
-        /// Init the script event, registers it with the Run command.
+        /// Register a specific priority with the underlying event.
         /// </summary>
-        public override void Init()
+        /// <param name="prio">The priority.</param>
+        public override void RegisterPriority(int prio)
         {
-            System.TheRunCommand.OnScriptRanPostEvent += Run;
+            if (!System.TheRunCommand.OnScriptRanPostEvent.Contains(Run, prio))
+            {
+                System.TheRunCommand.OnScriptRanPostEvent.Add(Run, prio);
+            }
         }
 
         /// <summary>
-        /// Destroys the script event, unregisters it with the run command.
+        /// Deregister a specific priority with the underlying event.
         /// </summary>
-        public override void Destroy()
+        /// <param name="prio">The priority.</param>
+        public override void DeregisterPriority(int prio)
         {
-            System.TheRunCommand.OnScriptRanPostEvent -= Run;
+            if (System.TheRunCommand.OnScriptRanPostEvent.Contains(Run, prio))
+            {
+                System.TheRunCommand.OnScriptRanPostEvent.Remove(Run, prio);
+            }
         }
 
         /// <summary>
         /// Runs the script event with the given input.
         /// </summary>
+        /// <param name="prio">The priority to run with.</param>
         /// <param name="oevt">The details to the script that was ran.</param>
         /// <returns>The event details after firing.</returns>
-        public void Run(ScriptRanPostEventArgs oevt)
+        public void Run(int prio, ScriptRanPostEventArgs oevt)
         {
             ScriptRanPostScriptEvent evt = (ScriptRanPostScriptEvent)Duplicate();
             evt.ScriptName = new TextTag(oevt.Script.Name);
-            evt.Call();
+            evt.Call(prio);
         }
 
         /// <summary>

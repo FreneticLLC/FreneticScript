@@ -35,26 +35,26 @@ namespace Frenetic.CommandSystem.QueueCmds
         /// <para/>Fires when a a script is going to be ran, cancellable.
         /// <para/>Contains the name of the script only.
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
-        /// Third: <see cref="OnScriptRanPostEvent"/>
+        /// <para/>Third: <see cref="OnScriptRanPostEvent"/>
         /// </summary>
-        public FreneticEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent;
+        public FreneticEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent = new FreneticEventHandler<ScriptRanPreEventArgs>();
 
         /// <summary>
         /// The second event fired in a sequence of three.
         /// <para/>Fires when a a script is about to be ran, cancellable.
         /// <para/>Contains a validly constructed <see cref="CommandScript"/> object.
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
-        /// Third: <see cref="OnScriptRanPostEvent"/>.
+        /// <para/>Third: <see cref="OnScriptRanPostEvent"/>.
         /// </summary>
-        public FreneticEventHandler<ScriptRanEventArgs> OnScriptRanEvent;
-        
+        public FreneticEventHandler<ScriptRanEventArgs> OnScriptRanEvent = new FreneticEventHandler<ScriptRanEventArgs>();
+
         /// <summary>
         /// The third event fired in a sequence of three.
         /// <para/>Fires when a a script has been ran, monitor-only.
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
-        /// Second: <see cref="OnScriptRanEvent"/>.
+        /// <para/>Second: <see cref="OnScriptRanEvent"/>.
         /// </summary>
-        public FreneticEventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent;
+        public FreneticEventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent = new FreneticEventHandler<ScriptRanPostEventArgs>();
 
         /// <summary>
         /// Executes the run command.

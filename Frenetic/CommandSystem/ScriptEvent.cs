@@ -46,11 +46,30 @@ namespace Frenetic.CommandSystem
         {
             // Do Nothing
         }
-
+        
         /// <summary>
         /// All scripts that handle this event.
+        /// TODO: SortedSet?
         /// </summary>
         public List<KeyValuePair<int, CommandScript>> Handlers = new List<KeyValuePair<int, CommandScript>>();
+
+        /// <summary>
+        /// Register a specific priority with the underlying event.
+        /// </summary>
+        /// <param name="prio">The priority.</param>
+        public virtual void RegisterPriority(int prio)
+        {
+            // Do Nothing
+        }
+
+        /// <summary>
+        /// Deregister a specific priority with the underlying event.
+        /// </summary>
+        /// <param name="prio">The priority.</param>
+        public virtual void DeregisterPriority(int prio)
+        {
+            // Do Nothing
+        }
 
         /// <summary>
         /// Register a new event handler to this script event.
@@ -65,6 +84,7 @@ namespace Frenetic.CommandSystem
             {
                 Init();
             }
+            RegisterPriority(prio);
         }
 
         /// <summary>
@@ -78,10 +98,22 @@ namespace Frenetic.CommandSystem
             {
                 if (Handlers[i].Value.Name == name)
                 {
+                    int prio = Handlers[i].Key;
                     Handlers.RemoveAt(i);
                     if (Handlers.Count == 0)
                     {
                         Destroy();
+                    }
+                    else
+                    {
+                        for (int x = 0; x < Handlers.Count; x++)
+                        {
+                            if (Handlers[x].Key == prio)
+                            {
+                                return true;
+                            }
+                        }
+                        DeregisterPriority(prio);
                     }
                     return true;
                 }
@@ -138,20 +170,23 @@ namespace Frenetic.CommandSystem
         /// <summary>
         /// Calls the event.
         /// </summary>
-        protected void Call()
+        protected void Call(int prio = int.MinValue)
         {
             for (int i = 0; i < Handlers.Count; i++)
             {
-                CommandScript script = Handlers[i].Value;
-                Dictionary<string, TemplateObject> Variables = GetVariables();
-                CommandQueue queue;
-                foreach (string determ in System.ExecuteScript(script, Variables, out queue))
+                if (prio == int.MinValue || Handlers[i].Key == prio)
                 {
-                    ApplyDetermination(determ, determ.ToLower(), queue.Debug);
-                }
-                if (i >= Handlers.Count || Handlers[i].Value != script)
-                {
-                    i--;
+                    CommandScript script = Handlers[i].Value;
+                    Dictionary<string, TemplateObject> Variables = GetVariables();
+                    CommandQueue queue;
+                    foreach (string determ in System.ExecuteScript(script, Variables, out queue))
+                    {
+                        ApplyDetermination(determ, determ.ToLower(), queue.Debug);
+                    }
+                    if (i >= Handlers.Count || Handlers[i].Value != script)
+                    {
+                        i--;
+                    }
                 }
             }
         }

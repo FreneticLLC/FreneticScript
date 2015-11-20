@@ -10,7 +10,7 @@ namespace Frenetic.CommandSystem.CommandEvents
 {
     // <--[event]
     // @Name ScriptRanEvent
-    // @Fired When a script has ran (usually via the run command).
+    // @Fired When a script is soon to be ran (usually via the run command).
     // @Updated 2015/10/28
     // @Authors mcmonkey
     // @Group Command
@@ -35,31 +35,40 @@ namespace Frenetic.CommandSystem.CommandEvents
         }
 
         /// <summary>
-        /// Init the script event, registers it with the Run command.
+        /// Register a specific priority with the underlying event.
         /// </summary>
-        public override void Init()
+        /// <param name="prio">The priority.</param>
+        public override void RegisterPriority(int prio)
         {
-            System.TheRunCommand.OnScriptRanEvent += Run;
+            if (!System.TheRunCommand.OnScriptRanEvent.Contains(Run, prio))
+            {
+                System.TheRunCommand.OnScriptRanEvent.Add(Run, prio);
+            }
         }
 
         /// <summary>
-        /// Destroys the script event, unregisters it with the run command.
+        /// Deregister a specific priority with the underlying event.
         /// </summary>
-        public override void Destroy()
+        /// <param name="prio">The priority.</param>
+        public override void DeregisterPriority(int prio)
         {
-            System.TheRunCommand.OnScriptRanEvent -= Run;
+            if (System.TheRunCommand.OnScriptRanEvent.Contains(Run, prio))
+            {
+                System.TheRunCommand.OnScriptRanEvent.Remove(Run, prio);
+            }
         }
 
         /// <summary>
         /// Runs the script event with the given input.
         /// </summary>
+        /// <param name="prio">The priority to run with.</param>
         /// <param name="oevt">The details of the script to be ran.</param>
         /// <returns>The event details after firing.</returns>
-        public void Run(ScriptRanEventArgs oevt)
+        public void Run(int prio, ScriptRanEventArgs oevt)
         {
             ScriptRanScriptEvent evt = (ScriptRanScriptEvent)Duplicate();
             evt.ScriptName = new TextTag(oevt.Script.Name);
-            evt.Call();
+            evt.Call(prio);
         }
 
         /// <summary>
