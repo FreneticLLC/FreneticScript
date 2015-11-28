@@ -4,6 +4,23 @@ using Frenetic.TagHandlers.Objects;
 namespace Frenetic
 {
     /// <summary>
+    /// Adds HasFlag to the CVarFlag enum, for .NET 3.5 usage of a .NET 4.0 trick.
+    /// </summary>
+    public static class EnumExtensions
+    {
+        /// <summary>
+        /// Returns whether the Flag set has a specific flag.
+        /// </summary>
+        /// <param name="tenum">The flag set.</param>
+        /// <param name="val">The specific flag.</param>
+        /// <returns>Whether it is had.</returns>
+        public static bool HasFlag(this CVarFlag tenum, CVarFlag val)
+        {
+            return (tenum & val) != 0;
+        }
+    }
+
+    /// <summary>
     /// The various possible information flags a CVar can hold.
     /// </summary>
     [Flags]

@@ -130,7 +130,7 @@ namespace Frenetic.TagHandlers
                         if (tbuilder.Length > 0)
                         {
                             arg.Bits.Add(new TextArgumentBit(tbuilder.ToString()) { CommandSystem = CommandSystem });
-                            tbuilder.Clear();
+                            tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
                         List<string> split = value.Split(dot).ToList();
@@ -157,7 +157,7 @@ namespace Frenetic.TagHandlers
                             tab.Bits.Add(bit);
                         }
                         arg.Bits.Add(tab);
-                        blockbuilder.Clear();
+                        blockbuilder = new StringBuilder();
                         i++;
                         continue;
                     }
@@ -309,7 +309,7 @@ namespace Frenetic.TagHandlers
                             }
                             final.Append("{UNKNOWN_TAG:" + data.Input[0] + "}");
                         }
-                        blockbuilder.Clear();
+                        blockbuilder = new StringBuilder();
                         i++;
                         continue;
                     }

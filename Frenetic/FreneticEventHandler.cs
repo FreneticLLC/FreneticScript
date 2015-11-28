@@ -17,7 +17,7 @@ namespace Frenetic
         /// <summary>
         /// All handlers in the event.
         /// </summary>
-        public SortedSet<FreneticEventEntry<T>> InternalActions = new SortedSet<FreneticEventEntry<T>>();
+        public SortedDictionary<FreneticEventEntry<T>, FreneticEventEntry<T>> InternalActions = new SortedDictionary<FreneticEventEntry<T>, FreneticEventEntry<T>>();
         
         /// <summary>
         /// Fires the event handlers.
@@ -25,7 +25,7 @@ namespace Frenetic
         /// <param name="args">The arguments to fire with.</param>
         public void Fire(T args)
         {
-            foreach (FreneticEventEntry<T> a in InternalActions)
+            foreach (FreneticEventEntry<T> a in InternalActions.Keys)
             {
                 a.Act(a.Priority, args);
             }
@@ -38,7 +38,8 @@ namespace Frenetic
         /// <param name="priority">The priority of the action.</param>
         public void Add(Action<int, T> act, int priority)
         {
-            InternalActions.Add(new FreneticEventEntry<T>(act) { Priority = priority });
+            FreneticEventEntry<T> fee = new FreneticEventEntry<T>(act) { Priority = priority };
+            InternalActions.Add(fee, fee);
         }
         
         /// <summary>
@@ -49,7 +50,8 @@ namespace Frenetic
         /// <returns></returns>
         public bool Contains(Action<int, T> act, int priority)
         {
-            return InternalActions.Contains(new FreneticEventEntry<T>(act) { Priority = priority });
+            FreneticEventEntry<T> fee = new FreneticEventEntry<T>(act) { Priority = priority };
+            return InternalActions.ContainsKey(fee);
         }
 
         /// <summary>
