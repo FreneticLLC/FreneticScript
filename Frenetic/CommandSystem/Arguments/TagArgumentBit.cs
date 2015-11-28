@@ -39,6 +39,10 @@ namespace Frenetic.CommandSystem.Arguments
             for (int i = 0; i < Bits.Count; i++)
             {
                 sb.Append(Bits[i].ToString());
+                if (i + 1 < Bits.Count)
+                {
+                    sb.Append(".");
+                }
             }
             sb.Append("}>");
             return sb.ToString();

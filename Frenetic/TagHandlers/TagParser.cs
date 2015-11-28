@@ -227,7 +227,7 @@ namespace Frenetic.TagHandlers
                 if (mode <= DebugMode.FULL)
                 {
                     CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                        Escape("<{" + bits.ToString() + "}>") + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
+                        Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
                         + TextStyle.Color_Outgood + "\".", mode);
                 }
                 return res;
@@ -237,7 +237,7 @@ namespace Frenetic.TagHandlers
                 if (mode <= DebugMode.MINIMAL)
                 {
                     CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
-                        Escape("<{" + bits.ToString() + "}>") + TextStyle.Color_Outbad + "!", mode);
+                        Escape(bits.ToString()) + TextStyle.Color_Outbad + "!", mode);
                 }
                 return null;
             }
@@ -295,7 +295,7 @@ namespace Frenetic.TagHandlers
                             {
                                 value = value.Replace("&dot", ".").Replace("&amp", "&");
                                 CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                                    Escape("<{" + value + "}>") + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
+                                    Escape(value) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
                                     + TextStyle.Color_Outgood + "\".", mode);
                             }
                         }
@@ -305,7 +305,7 @@ namespace Frenetic.TagHandlers
                             {
                                 value = value.Replace("&dot", ".").Replace("&amp", "&");
                                 CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
-                                    Escape("<{" + value + "}>") + TextStyle.Color_Outbad + "!", mode);
+                                    Escape(value) + TextStyle.Color_Outbad + "!", mode);
                             }
                             final.Append("{UNKNOWN_TAG:" + data.Input[0] + "}");
                         }

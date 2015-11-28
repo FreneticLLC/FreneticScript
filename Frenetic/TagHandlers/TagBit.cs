@@ -27,7 +27,7 @@ namespace Frenetic.TagHandlers
         /// <returns>The tag input text.</returns>
         public override string ToString()
         {
-            if (Variable == null)
+            if (Variable == null || Variable.Bits.Count == 0)
             {
                 return Key;
             }
