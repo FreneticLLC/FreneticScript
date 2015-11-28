@@ -276,7 +276,7 @@ namespace Frenetic.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Info(string text)
         {
-            Output.Good(text, DebugMode.MINIMAL);
+            Output.Good(text, DebugMode.FULL);
             if (Queue.Outputsystem != null)
             {
                 Queue.Outputsystem.Invoke(text, MessageType.INFO);
