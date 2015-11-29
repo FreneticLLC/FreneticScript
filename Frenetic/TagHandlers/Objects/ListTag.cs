@@ -121,7 +121,7 @@ namespace Frenetic.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.reversed
                 // @Group List Attributes
-                // @ReturnType ListTag
+                // @ReturnType ListTag<Dynamic>
                 // @Returns the list entirely backwards.
                 // @Example "one|two|three" .reversed returns "three|two|one".
                 // -->
@@ -132,8 +132,49 @@ namespace Frenetic.TagHandlers.Objects
                         return newlist.Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name ListTag.first
+                // @Name ListTag.filter[<TextTag>]
                 // @Group List Attributes
+                // @ReturnType ListTag<Dynamic>
+                // @Returns the list modified such that each entry is only included if the input modifier would return true for it.
+                // @Example "one|two|three" .filter[true] returns "one|two|three".
+                // @Example "1|2|3" .filter[<{var[value].equals[2]}>] returns "2".
+                // -->
+                case "filter":
+                    {
+                        ListTag newlist = new ListTag();
+                        for (int i = 0; i < ListEntries.Count; i++)
+                        {
+                            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
+                            vars.Add("value", ListEntries[i]);
+                            if (data.Modifiers[0].Parse(data.BaseColor, vars, data.mode).ToLower() == "true")
+                            {
+                                newlist.ListEntries.Add(ListEntries[i]);
+                            }
+                        }
+                        return newlist.Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ListTag.parse[<TextTag>]
+                // @Group List Attributes
+                // @ReturnType ListTag<Dynamic>
+                // @Returns the list modified such that each entry is modified to be what the input modifier would return for it.
+                // @Example "one|two|three" .filter[<{def[value].to_upper}>] returns "ONE|TWO|THREE".
+                // @Note by current implementation, the contents will be all text tags. This may change in the future.
+                // -->
+                case "parse":
+                    {
+                        ListTag newlist = new ListTag();
+                        for (int i = 0; i < ListEntries.Count; i++)
+                        {
+                            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
+                            vars.Add("value", ListEntries[i]);
+                            newlist.ListEntries.Add(new TextTag(data.Modifiers[0].Parse(data.BaseColor, vars, data.mode)));
+                        }
+                        return newlist.Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ListTag.first
+                // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns the first entry in the list.
                 // @Example "one|two|three" .first returns "one".
@@ -146,7 +187,7 @@ namespace Frenetic.TagHandlers.Objects
                     return ListEntries[0].Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.random
-                // @Group List Attributes
+                // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns a random entry from the list
                 // @Example "one|two|three" .random returns "one", "two", or "three".
@@ -159,7 +200,7 @@ namespace Frenetic.TagHandlers.Objects
                     return ListEntries[data.TagSystem.CommandSystem.random.Next(ListEntries.Count)].Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.last
-                // @Group List Attributes
+                // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns the last entry in the list.
                 // @Example "one|two|three" .last returns "three".
@@ -172,7 +213,7 @@ namespace Frenetic.TagHandlers.Objects
                     return ListEntries[ListEntries.Count - 1].Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.get[<TextTag>]
-                // @Group List Attributes
+                // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns the specified entry in the list.
                 // @Other note that indices are one-based.
@@ -197,7 +238,7 @@ namespace Frenetic.TagHandlers.Objects
                     }
                 // <--[tag]
                 // @Name ListTag.range[<TextTag>,<TextTag>]
-                // @Group List Attributes
+                // @Group List Entries
                 // @ReturnType ListTag<Dynamic>
                 // @Returns the specified set of entries in the list.
                 // @Other note that indices are one-based.

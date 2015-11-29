@@ -191,7 +191,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "true" .not returns "false".
                 // -->
                 case "not":
-                    return new TextTag(Text.ToLower() == "false").Handle(data.Shrink());
+                    return new TextTag(Text.ToLower() != "true").Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.equals[<TextTag>]
                 // @Group Text Comparison
