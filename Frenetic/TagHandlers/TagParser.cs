@@ -220,24 +220,36 @@ namespace Frenetic.TagHandlers
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode);
             TemplateTags handler;
-            bool handled = Handlers.TryGetValue(data.Input[0], out handler);
-            if (handled)
+            try
             {
-                string res = handler.Handle(data);
-                if (mode <= DebugMode.FULL)
+                bool handled = Handlers.TryGetValue(data.Input[0], out handler);
+                if (handled)
                 {
-                    CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                        Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
-                        + TextStyle.Color_Outgood + "\".", mode);
+                    string res = handler.Handle(data);
+                    if (mode <= DebugMode.FULL)
+                    {
+                        CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
+                            Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
+                            + TextStyle.Color_Outgood + "\".", mode);
+                    }
+                    return res;
                 }
-                return res;
+                else
+                {
+                    if (mode <= DebugMode.MINIMAL)
+                    {
+                        CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
+                            Escape(bits.ToString()) + TextStyle.Color_Outbad + "!", mode);
+                    }
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
                 if (mode <= DebugMode.MINIMAL)
                 {
                     CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
-                        Escape(bits.ToString()) + TextStyle.Color_Outbad + "!", mode);
+                        Escape(bits.ToString()) + TextStyle.Color_Outbad + ": " + ex.ToString(), mode);
                 }
                 return null;
             }
