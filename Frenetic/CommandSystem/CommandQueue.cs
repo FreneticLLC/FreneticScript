@@ -134,7 +134,14 @@ namespace Frenetic.CommandSystem
                 {
                     continue;
                 }
-                CommandSystem.ExecuteCommand(CurrentCommand, this);
+                try
+                {
+                    CommandSystem.ExecuteCommand(CurrentCommand, this);
+                }
+                catch (Exception ex)
+                {
+                    CommandSystem.Output.Bad("ERROR RUNNING COMMAND: " + ex.ToString(), Debug);
+                }
                 LastCommand = CurrentCommand;
                 if (Delayable && ((Wait > 0f) || (LastCommand.Command.Waitable && LastCommand.WaitFor && !LastCommand.Finished)))
                 {
