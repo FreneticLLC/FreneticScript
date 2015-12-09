@@ -100,7 +100,7 @@
     <Compile Include="ListQueue.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TagHandlers\Common\ColorTags.cs" />
+    <Compile Include="TagHandlers\Common\TextColorTags.cs" />
     <Compile Include="TagHandlers\Common\CVarTags.cs" />
     <Compile Include="TagHandlers\Common\EscapeTags.cs" />
     <Compile Include="TagHandlers\Common\ListTags.cs" />

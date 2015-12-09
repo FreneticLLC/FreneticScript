@@ -7,25 +7,25 @@ using Frenetic.TagHandlers.Objects;
 namespace Frenetic.TagHandlers.Common
 {
     /// <summary>
-    /// Returns the various default color objects within the tag system.
+    /// Returns the various default colors within the tag system.
     /// </summary>
-    public class ColorTags: TemplateTags
+    public class TextColorTags: TemplateTags
     {
         // <--[tag]
-        // @Base color
+        // @Base text_color
         // @Group Text Helpers
-        // @ReturnType ColorTag
+        // @ReturnType TextColorTag
         // @Returns a generic color class full of specific helpful color tags,
-        // such as <@link tag ColorTag.emphasis><{color.emphasis}><@/link>.
+        // such as <@link tag TextColorTag.emphasis><{text_color.emphasis}><@/link>.
         // TODO: Link full rundown of text colors.
         // -->
         
         /// <summary>
         /// Construct the ColorTags - for internal use only.
         /// </summary>
-        public ColorTags()
+        public TextColorTags()
         {
-            Name = "color";
+            Name = "text_color";
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Frenetic.TagHandlers.Common
             switch (data.Input[0])
             {
                 // <--[tag]
-                // @Name ColorTag.emphasis
+                // @Name TextColorTag.emphasis
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the color codes for 'emphasis' (default: ^r^5).
@@ -51,7 +51,7 @@ namespace Frenetic.TagHandlers.Common
                 case "emphasis":
                     return new TextTag(TextStyle.Color_Separate).Handle(data.Shrink());
                 // <--[tag]
-                // @Name ColorTag.cmdhelp
+                // @Name TextColorTag.cmdhelp
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the color codes for 'command help' (default: ^r^0^h^1).
@@ -60,7 +60,7 @@ namespace Frenetic.TagHandlers.Common
                 case "cmdhelp":
                     return new TextTag(TextStyle.Color_Commandhelp).Handle(data.Shrink());
                 // <--[tag]
-                // @Name ColorTag.simple
+                // @Name TextColorTag.simple
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the 'simple default' color code (default: ^r^7).
@@ -69,7 +69,7 @@ namespace Frenetic.TagHandlers.Common
                 case "simple":
                     return new TextTag(TextStyle.Color_Simple).Handle(data.Shrink());
                 // <--[tag]
-                // @Name ColorTag.info
+                // @Name TextColorTag.info
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the 'important information' color code (default: ^r^3).
@@ -78,7 +78,7 @@ namespace Frenetic.TagHandlers.Common
                 case "info":
                     return new TextTag(TextStyle.Color_Importantinfo).Handle(data.Shrink());
                 // <--[tag]
-                // @Name ColorTag.standout
+                // @Name TextColorTag.standout
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the 'standout' color code (default: ^r^0^h^5).
@@ -87,7 +87,7 @@ namespace Frenetic.TagHandlers.Common
                 case "standout":
                     return new TextTag(TextStyle.Color_Standout).Handle(data.Shrink());
                 // <--[tag]
-                // @Name ColorTag.warning
+                // @Name TextColorTag.warning
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the 'warning' color code (default: ^r^0^h^1).
@@ -96,7 +96,7 @@ namespace Frenetic.TagHandlers.Common
                 case "warning":
                     return new TextTag(TextStyle.Color_Warning).Handle(data.Shrink());
                 // <--[tag]
-                // @Name ColorTag.base
+                // @Name TextColorTag.base
                 // @Group Colors
                 // @ReturnType TextTag
                 // @Returns the base/default color code (depends on situation where tag is called).
