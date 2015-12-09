@@ -103,7 +103,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         }
                         else
                         {
-                            entry.Good("Foreach loop continuing at index <{color.emphasis}>" + data.Index + "/" + data.List.Count + "<{color.base}>...");
+                            entry.Good("Foreach loop continuing at index <{text_color.emphasis}>" + data.Index + "/" + data.List.Count + "<{text_color.base}>...");
                             entry.Queue.SetVariable("foreach_index", new TextTag(data.Index.ToString()));
                             entry.Queue.SetVariable("foreach_total", new TextTag(data.List.Count.ToString()));
                             entry.Queue.SetVariable("foreach_value", data.List[data.Index - 1]);
@@ -192,7 +192,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Data = data;
                     if (entry.Block != null)
                     {
-                        entry.Good("Foreach looping <{color.emphasis}>" + target + "<{color.base}> times...");
+                        entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                         CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
                             this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "foreach", 0);
                         entry.Block.Add(callback);

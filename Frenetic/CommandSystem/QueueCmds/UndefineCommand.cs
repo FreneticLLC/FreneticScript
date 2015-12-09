@@ -30,11 +30,11 @@ namespace Frenetic.CommandSystem.CommonCmds
                 if (entry.Queue.Variables.ContainsKey(target.ToLower()))
                 {
                     entry.Queue.Variables.Remove(target.ToLower());
-                    entry.Good("Queue variable '<{color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{color.base}>' removed'.");
+                    entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{text_color.base}>' removed'.");
                 }
                 else
                 {
-                    entry.Bad("Unknown queue variable '<{color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{color.base}>'.");
+                    entry.Bad("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{text_color.base}>'.");
                 }
             }
         }

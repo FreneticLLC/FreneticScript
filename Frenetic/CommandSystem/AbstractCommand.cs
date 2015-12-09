@@ -64,8 +64,8 @@ namespace Frenetic.CommandSystem
         /// <param name="entry">The CommandEntry data to get usage help from..</param>
         public static void ShowUsage(CommandEntry entry)
         {
-            entry.Bad("<{color.emphasis}>" + TagParser.Escape(entry.Command.Name) + "<{color.base}>: " + TagParser.Escape(entry.Command.Description));
-            entry.Bad("<{color.cmdhelp}>Usage: /" + TagParser.Escape(entry.Name) + " " + TagParser.Escape(entry.Command.Arguments));
+            entry.Bad("<{text_color.emphasis}>" + TagParser.Escape(entry.Command.Name) + "<{text_color.base}>: " + TagParser.Escape(entry.Command.Description));
+            entry.Bad("<{text_color.cmdhelp}>Usage: /" + TagParser.Escape(entry.Name) + " " + TagParser.Escape(entry.Command.Arguments));
             if (entry.Command.IsDebug)
             {
                 entry.Bad("Note: This command is intended for debugging purposes.");

@@ -63,27 +63,27 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     int count = entry.Queue.CommandSystem.Scripts.Count;
                     entry.Queue.CommandSystem.Scripts.Clear();
-                    entry.Good("Script cache cleared of <{color.emphasis}>" +
-                        count + "<{color.base}> script" + (count == 1 ? ".": "s."));
+                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
+                        count + "<{text_color.base}> script" + (count == 1 ? ".": "s."));
                 }
                 else
                 {
                     if (entry.Queue.CommandSystem.Scripts.Remove(target))
                     {
-                        entry.Good("Script '<{color.emphasis}>" +
-                            TagParser.Escape(target) + "<{color.base}>' removed from the script cache.");
+                        entry.Good("Script '<{text_color.emphasis}>" +
+                            TagParser.Escape(target) + "<{text_color.base}>' removed from the script cache.");
                     }
                     else
                     {
                         if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLower() == "quiet_fail")
                         {
-                            entry.Good("Script '<{color.emphasis}>" +
-                                TagParser.Escape(target) + "<{color.base}>' does not exist in the script cache!");
+                            entry.Good("Script '<{text_color.emphasis}>" +
+                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                         else
                         {
-                            entry.Bad("Script '<{color.emphasis}>" +
-                                TagParser.Escape(target) + "<{color.base}>' does not exist in the script cache!");
+                            entry.Bad("Script '<{text_color.emphasis}>" +
+                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                     }
                 }
@@ -100,27 +100,27 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     int count = entry.Queue.CommandSystem.Functions.Count;
                     entry.Queue.CommandSystem.Functions.Clear();
-                    entry.Good("Script cache cleared of <{color.emphasis}>" +
-                        count + "<{color.base}> function" + (count == 1 ? "." : "s."));
+                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
+                        count + "<{text_color.base}> function" + (count == 1 ? "." : "s."));
                 }
                 else
                 {
                     if (entry.Queue.CommandSystem.Functions.Remove(target))
                     {
-                        entry.Good("Function '<{color.emphasis}>" +
-                            TagParser.Escape(target) + "<{color.base}>' removed from the script cache.");
+                        entry.Good("Function '<{text_color.emphasis}>" +
+                            TagParser.Escape(target) + "<{text_color.base}>' removed from the script cache.");
                     }
                     else
                     {
                         if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLower() == "quiet_fail")
                         {
-                            entry.Good("Function '<{color.emphasis}>" +
-                                TagParser.Escape(target) + "<{color.base}>' does not exist in the script cache!");
+                            entry.Good("Function '<{text_color.emphasis}>" +
+                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                         else
                         {
-                            entry.Bad("Function '<{color.emphasis}>" +
-                                TagParser.Escape(target) + "<{color.base}>' does not exist in the script cache!");
+                            entry.Bad("Function '<{text_color.emphasis}>" +
+                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                     }
                 }
@@ -138,8 +138,8 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     int count = entry.Queue.CommandSystem.Functions.Count;
                     entry.Queue.CommandSystem.Functions.Clear();
-                    entry.Good("Script cache cleared of <{color.emphasis}>" +
-                        count + "<{color.base}> function" + (count == 1 ? "." : "s."));
+                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
+                        count + "<{text_color.base}> function" + (count == 1 ? "." : "s."));
                 }
                 else if (target == "all")
                 {
@@ -147,9 +147,9 @@ namespace Frenetic.CommandSystem.QueueCmds
                     int countFunctions = entry.Queue.CommandSystem.Functions.Count;
                     entry.Queue.CommandSystem.Scripts.Clear();
                     entry.Queue.CommandSystem.Functions.Clear();
-                    entry.Good("Script cache cleared of <{color.emphasis}>" +
-                        countScripts + "<{color.base}> script" + (countScripts == 1 ? "," : "s,")
-                        + " and <{color.emphasis}>" + countFunctions + "<{color.base}> function" +
+                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
+                        countScripts + "<{text_color.base}> script" + (countScripts == 1 ? "," : "s,")
+                        + " and <{text_color.emphasis}>" + countFunctions + "<{text_color.base}> function" +
                         (countFunctions == 1 ? ".": "s."));
                 }
 */

@@ -25,11 +25,11 @@ namespace Frenetic.CommandSystem.CommonCmds
         {
             if (entry.Arguments.Count < 1)
             {
-                entry.Info("Listing <{color.emphasis}>" + entry.Output.CVarSys.CVars.Count + "<{color.base}> CVars...");
+                entry.Info("Listing <{text_color.emphasis}>" + entry.Output.CVarSys.CVars.Count + "<{text_color.base}> CVars...");
                 for (int i = 0; i < entry.Output.CVarSys.CVars.Count; i++)
                 {
                     CVar cvar = entry.Output.CVarSys.CVarList[i];
-                    entry.Info("<{color.emphasis}>" + (i + 1).ToString() + "<{color.simple}>)<{color.emphasis}> " + TagParser.Escape(cvar.Info()));
+                    entry.Info("<{text_color.emphasis}>" + (i + 1).ToString() + "<{text_color.simple}>)<{text_color.emphasis}> " + TagParser.Escape(cvar.Info()));
                 }
             }
             else
@@ -45,15 +45,15 @@ namespace Frenetic.CommandSystem.CommonCmds
                 }
                 if (cvars.Count == 0)
                 {
-                    entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(target) + "<{color.base}>' does not exist!");
+                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist!");
                 }
                 else
                 {
-                    entry.Info("Listing <{color.emphasis}>" + cvars.Count + "<{color.base}> CVars...");
+                    entry.Info("Listing <{text_color.emphasis}>" + cvars.Count + "<{text_color.base}> CVars...");
                     for (int i = 0; i < cvars.Count; i++)
                     {
                         CVar cvar = cvars[i];
-                        entry.Info("<{color.emphasis}>" + (i + 1).ToString() + "<{color.simple}>)<{color.emphasis}> " + TagParser.Escape(cvar.Info()));
+                        entry.Info("<{text_color.emphasis}>" + (i + 1).ToString() + "<{text_color.simple}>)<{text_color.emphasis}> " + TagParser.Escape(cvar.Info()));
                     }
                 }
             }

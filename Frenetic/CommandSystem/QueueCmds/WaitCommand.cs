@@ -35,7 +35,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 float seconds = StringToFloat(delay);
                 if (entry.Queue.Delayable)
                 {
-                    entry.Good("Delaying for <{color.emphasis}>" + seconds + "<{color.base}> seconds.");
+                    entry.Good("Delaying for <{text_color.emphasis}>" + seconds + "<{text_color.base}> seconds.");
                     entry.Queue.Wait = seconds;
                 }
                 else

@@ -43,8 +43,8 @@ namespace Frenetic.CommandSystem.CommonCmds
                 string target = entry.GetArgument(0);
                 string newvalue = entry.GetArgument(1);
                 entry.Queue.SetVariable(target, new TextTag(newvalue));
-                entry.Good("Queue variable '<{color.emphasis}>" + TagParser.Escape(target.ToLower()) +
-                    "<{color.base}>' set to '<{color.emphasis}>" + TagParser.Escape(newvalue) + "<{color.base}>'.");
+                entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) +
+                    "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue) + "<{text_color.base}>'.");
             }
         }
     }

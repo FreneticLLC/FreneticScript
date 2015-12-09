@@ -29,12 +29,12 @@ namespace Frenetic.CommandSystem.QueueCmds
                 CommandScript script = entry.Queue.CommandSystem.GetScript(fname);
                 if (script != null)
                 {
-                    entry.Good("Inserting '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>'...");
+                    entry.Good("Inserting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
                     entry.Queue.AddCommandsNow(script.GetEntries());
                 }
                 else
                 {
-                    entry.Bad("Cannot insert script '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>': file does not exist!");
+                    entry.Bad("Cannot insert script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
                 }
             }
         }

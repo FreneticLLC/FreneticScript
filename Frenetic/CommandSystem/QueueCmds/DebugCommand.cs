@@ -30,18 +30,18 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     case "full":
                         entry.Queue.Debug = DebugMode.FULL;
-                        entry.Good("Queue debug mode set to <{color.emphasis}>full<{color.base}>.");
+                        entry.Good("Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
                         break;
                     case "minimal":
                         entry.Queue.Debug = DebugMode.MINIMAL;
-                        entry.Good("Queue debug mode set to <{color.emphasis}>minimal<{color.base}>.");
+                        entry.Good("Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
                         break;
                     case "none":
                         entry.Queue.Debug = DebugMode.NONE;
-                        entry.Good("Queue debug mode set to <{color.emphasis}>none<{color.base}>.");
+                        entry.Good("Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
                         break;
                     default:
-                        entry.Bad("Unknown debug mode '<{color.emphasis}>" + modechoice + "<{color.base}>'.");
+                        entry.Bad("Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
                         break;
                 }
             }

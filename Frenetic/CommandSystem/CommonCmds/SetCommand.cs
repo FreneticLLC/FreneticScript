@@ -40,50 +40,50 @@ namespace Frenetic.CommandSystem.CommonCmds
                     CVar Cvar = entry.Output.CVarSys.Get(target);
                     if (Cvar == null)
                     {
-                        entry.Good("CVar '<{color.emphasis}>" + TagParser.Escape(target)
-                            + "<{color.base}>' cannot be removed, it doesn't exist!");
+                        entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(target)
+                            + "<{text_color.base}>' cannot be removed, it doesn't exist!");
                     }
                     else if (!Cvar.Flags.HasFlag(CVarFlag.UserMade))
                     {
-                        entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(Cvar.Name)
-                            + "<{color.base}>' cannot be removed, it wasn't user made!");
+                        entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name)
+                            + "<{text_color.base}>' cannot be removed, it wasn't user made!");
                     }
                     else
                     {
                         Cvar.Set("");
                         entry.Output.CVarSys.CVars.Remove(Cvar.Name);
                         entry.Output.CVarSys.CVarList.Remove(Cvar);
-                        entry.Good("<{color.info}>CVar '<{color.emphasis}>" + TagParser.Escape(Cvar.Name) +
-                            "<{color.info}>' removed.");
+                        entry.Good("<{text_color.info}>CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name) +
+                            "<{text_color.info}>' removed.");
                     }
                     return;
                 }
                 CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave: CVarFlag.None);
                 if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
                 {
-                    entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name)
-                        + "<{color.base}>' cannot be modified, it is server controlled!");
+                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
+                        + "<{text_color.base}>' cannot be modified, it is server controlled!");
                     return;
                 }
                 if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
                 {
-                    entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name)
-                        + "<{color.base}>' cannot be modified, it is a read-only system variable!");
+                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
+                        + "<{text_color.base}>' cannot be modified, it is a read-only system variable!");
                 }
                 else if (cvar.Flags.HasFlag(CVarFlag.InitOnly) && !entry.Output.Initializing)
                 {
-                    entry.Bad("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name)
-                        + "<{color.base}>' cannot be modified after game initialization.");
+                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
+                        + "<{text_color.base}>' cannot be modified after game initialization.");
                 }
                 else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !entry.Output.Initializing)
                 {
-                    entry.Good("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
-                        "<{color.base}>' is delayed, and its value will be calculated after the game is reloaded.");
+                    entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) +
+                        "<{text_color.base}>' is delayed, and its value will be calculated after the game is reloaded.");
                 }
                 else
                 {
-                    entry.Good("CVar '<{color.emphasis}>" + TagParser.Escape(cvar.Name) +
-                        "<{color.base}>' set to '<{color.emphasis}>" + TagParser.Escape(cvar.Value) + "<{color.base}>'.");
+                    entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) +
+                        "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(cvar.Value) + "<{text_color.base}>'.");
                 }
             }
         }

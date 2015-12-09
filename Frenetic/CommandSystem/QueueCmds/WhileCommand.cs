@@ -54,7 +54,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         }
                         if (IfCommand.TryIf(comp))
                         {
-                            entry.Good("While loop at index <{color.emphasis}>" + data.Index + "<{color.base}>...");
+                            entry.Good("While loop at index <{text_color.emphasis}>" + data.Index + "<{text_color.base}>...");
                             entry.Queue.SetVariable("while_index", new TextTag(data.Index.ToString()));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                         }

@@ -25,7 +25,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     qCount++;
                 }
-                entry.Good("Stopping <{color.emphasis}>" + qCount + "<{color.base}> queue" + (qCount == 1 ? "." : "s."));
+                entry.Good("Stopping <{text_color.emphasis}>" + qCount + "<{text_color.base}> queue" + (qCount == 1 ? "." : "s."));
                 foreach (CommandQueue queue in entry.Queue.CommandSystem.Queues)
                 {
                     queue.Stop();

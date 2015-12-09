@@ -104,17 +104,17 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLower() == "quiet_fail")
                     {
-                        entry.Good("Function '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>' already exists!");
+                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                     else
                     {
-                        entry.Bad("Function '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>' already exists!");
+                        entry.Bad("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else
                 {
                     entry.Queue.CommandSystem.Functions.Add(name, new CommandScript(name, CommandScript.DisOwn(entry.Block, entry)));
-                    entry.Good("Function '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>' defined.");
+                    entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
                 }
             }
             else

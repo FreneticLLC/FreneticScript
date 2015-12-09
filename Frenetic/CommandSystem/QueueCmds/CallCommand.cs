@@ -76,7 +76,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
                 if (script != null)
                 {
-                    entry.Good("Calling '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>' (" + (run ? "run": "inject") + ")...");
+                    entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>' (" + (run ? "run": "inject") + ")...");
                     List<CommandEntry> block = script.GetEntries();
                     block.Add(new CommandEntry("call \0CALLBACK", null, entry,
                             this, new List<Argument> { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "call", 0));
@@ -115,7 +115,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    entry.Bad("Cannot call function '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>': it does not exist!");
+                    entry.Bad("Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
                 }
             }
         }

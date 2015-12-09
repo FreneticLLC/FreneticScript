@@ -106,7 +106,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         }
                         else
                         {
-                            entry.Good("Repeating at index <{color.emphasis}>" + data.Index + "/" + data.Total + "<{color.base}>...");
+                            entry.Good("Repeating at index <{text_color.emphasis}>" + data.Index + "/" + data.Total + "<{text_color.base}>...");
                             entry.Queue.SetVariable("repeat_index", new TextTag(data.Index.ToString()));
                             entry.Queue.SetVariable("repeat_total", new TextTag(data.Total.ToString()));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
@@ -192,7 +192,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Data = data;
                     if (entry.Block != null)
                     {
-                        entry.Good("Repeating <{color.emphasis}>" + target + "<{color.base}> times...");
+                        entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                         CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
                             this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "repeat", 0);
                         entry.Block.Add(callback);

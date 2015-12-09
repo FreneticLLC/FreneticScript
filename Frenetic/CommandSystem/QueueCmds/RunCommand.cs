@@ -100,7 +100,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     return;
                 }
                 script = args2.Script;
-                entry.Good("Running '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>'...");
+                entry.Good("Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
                 CommandQueue queue;
                 entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
                 if (!queue.Running)
@@ -124,7 +124,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             else
             {
-                entry.Bad("Cannot run script '<{color.emphasis}>" + TagParser.Escape(fname) + "<{color.base}>': file does not exist!");
+                entry.Bad("Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
                 entry.Finished = true;
             }
         }

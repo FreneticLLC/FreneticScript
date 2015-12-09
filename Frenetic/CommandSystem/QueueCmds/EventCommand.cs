@@ -41,14 +41,14 @@ namespace Frenetic.CommandSystem.QueueCmds
             ScriptEvent theEvent;
             if (!entry.Queue.CommandSystem.Events.TryGetValue(eventname, out theEvent))
             {
-                entry.Bad("Unknown event '<{color.emphasis}>" + TagParser.Escape(eventname) + "<{color.base}>'.");
+                entry.Bad("Unknown event '<{text_color.emphasis}>" + TagParser.Escape(eventname) + "<{text_color.base}>'.");
                 return;
             }
             if (type == "clear")
             {
                 int count = theEvent.Handlers.Count;
                 theEvent.Handlers.Clear();
-                entry.Good("Cleared <{color.emphasis}>" + count + "<{color.base}> event handler" + (count == 1 ? "." : "s."));
+                entry.Good("Cleared <{text_color.emphasis}>" + count + "<{text_color.base}> event handler" + (count == 1 ? "." : "s."));
             }
             else if (type == "remove")
             {
@@ -61,17 +61,17 @@ namespace Frenetic.CommandSystem.QueueCmds
                 bool success = theEvent.RemoveEventHandler("eventhandler_" + theEvent.Name + "_" + name);
                 if (success)
                 {
-                    entry.Good("Removed event handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>'.");
+                    entry.Good("Removed event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
                 }
                 else
                 {
                     if (entry.Arguments.Count > 3 && entry.GetArgument(3).ToLower() == "quiet_fail")
                     {
-                        entry.Good("Unknown event handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>'.");
+                        entry.Good("Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
                     }
                     else
                     {
-                        entry.Bad("Unknown event handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>'.");
+                        entry.Bad("Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
                     }
                 }
             }
@@ -106,18 +106,18 @@ namespace Frenetic.CommandSystem.QueueCmds
                 {
                     if (entry.Arguments.Count > 4 && entry.GetArgument(4).ToLower() == "quiet_fail")
                     {
-                        entry.Good("Handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>' already exists!");
+                        entry.Good("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                     else
                     {
-                        entry.Bad("Handler '<{color.emphasis}>" + TagParser.Escape(name) + "<{color.base}>' already exists!");
+                        entry.Bad("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else
                 {
                     theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, CommandScript.DisOwn(entry.Block, entry)) { Debug = DebugMode.MINIMAL });
-                    entry.Good("Handler '<{color.emphasis}>" + TagParser.Escape(name) +
-                        "<{color.base}>' defined for event '<{color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{color.base}>'.");
+                    entry.Good("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) +
+                        "<{text_color.base}>' defined for event '<{text_color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{text_color.base}>'.");
                 }
             }
             else
