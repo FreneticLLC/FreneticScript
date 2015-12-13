@@ -40,7 +40,7 @@ namespace Frenetic.TagHandlers.Common
             data.Shrink();
             if (data.Input.Count == 0)
             {
-                return "&null";
+                return "&{NULL}";
             }
             // <--[tag]
             // @Name TernaryPassTag.pass[<TextTag>]
@@ -51,7 +51,7 @@ namespace Frenetic.TagHandlers.Common
             // -->
             if (data.Input[0] != "pass")
             {
-                return new TextTag("&null").Handle(data);
+                return new TextTag("&{NULL}").Handle(data);
             }
             string result = "";
             if (basevalue)
@@ -72,7 +72,7 @@ namespace Frenetic.TagHandlers.Common
             // -->
             if (data.Input[0] != "fail")
             {
-                return new TextTag("&null").Handle(data);
+                return new TextTag("&{NULL}").Handle(data);
             }
             if (!basevalue)
             {
