@@ -11,6 +11,13 @@ namespace Frenetic.TagHandlers.Objects
     /// </summary>
     public class ListTag: TemplateObject
     {
+        // <--[object]
+        // @Type ListTag
+        // @SubType TextTag
+        // @Group Mathematics
+        // @Description Represents a list of objects.
+        // -->
+
         /// <summary>
         /// The list this ListTag represents.
         /// </summary>

@@ -11,7 +11,7 @@ namespace Frenetic.TagHandlers.Common
     /// </summary>
     public class TernaryTags : TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base ternary[<TextTag>]
         // @Group Text Comparison
         // @ReturnType TernaryPassTag

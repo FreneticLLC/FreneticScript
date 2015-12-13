@@ -11,7 +11,7 @@ namespace Frenetic.TagHandlers.Common
     /// </summary>
     public class TextColorTags: TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base text_color
         // @Group Text Helpers
         // @ReturnType TextColorTag
@@ -19,7 +19,7 @@ namespace Frenetic.TagHandlers.Common
         // such as <@link tag TextColorTag.emphasis><{text_color.emphasis}><@/link>.
         // TODO: Link full rundown of text colors.
         // -->
-        
+
         /// <summary>
         /// Construct the ColorTags - for internal use only.
         /// </summary>

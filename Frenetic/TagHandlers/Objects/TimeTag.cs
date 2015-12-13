@@ -10,6 +10,13 @@ namespace Frenetic.TagHandlers.Objects
     /// </summary>
     public class TimeTag : TemplateObject
     {
+        // <--[object]
+        // @Type TimeTag
+        // @SubType TextTag
+        // @Group Mathematics
+        // @Description Represents a point in time.
+        // -->
+
         /// <summary>
         /// The text this TextTag represents.
         /// </summary>

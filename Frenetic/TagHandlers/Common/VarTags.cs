@@ -17,7 +17,7 @@ namespace Frenetic.TagHandlers.Common
     // -->
     class VarTags: TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base var[<TextTag>]
         // @Group Variables
         // @ReturnType VariableTag

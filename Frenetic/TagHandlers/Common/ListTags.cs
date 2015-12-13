@@ -14,9 +14,9 @@ namespace Frenetic.TagHandlers.Common
     // -->
     class ListTags : TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base list[<TextTag>]
-        // @Group Text Comparison
+        // @Group Mathematics
         // @ReturnType ListTag<TextTag>
         // @Returns the specified text as a list.
         // <@link explanation lists>What are lists?<@/link>

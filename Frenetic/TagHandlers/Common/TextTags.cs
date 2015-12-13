@@ -15,7 +15,7 @@ namespace Frenetic.TagHandlers.Common
     // -->
     class TextTags : TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base text[<TextTag>]
         // @Group Common Base Types
         // @ReturnType TextTag

@@ -11,7 +11,7 @@ namespace Frenetic.TagHandlers.Common
     /// </summary>
     public class UtilTags: TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base util
         // @Group Utilities
         // @ReturnType UtilTag

@@ -11,7 +11,7 @@ namespace Frenetic.TagHandlers.Common
     /// </summary>
     public class CVarTags: TemplateTags
     {
-        // <--[tag]
+        // <--[tagbase]
         // @Base cvar[<TextTag>]
         // @Group Variables
         // @ReturnType CVarTag

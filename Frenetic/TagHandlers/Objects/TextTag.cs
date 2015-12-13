@@ -10,6 +10,13 @@ namespace Frenetic.TagHandlers.Objects
     /// </summary>
     public class TextTag : TemplateObject
     {
+        // <--[object]
+        // @Type TextTag
+        // @SubType NONE
+        // @Group Mathematics
+        // @Description Represents any text.
+        // -->
+
         /// <summary>
         /// The text this TextTag represents.
         /// </summary>

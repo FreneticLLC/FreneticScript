@@ -11,7 +11,12 @@ namespace Frenetic.TagHandlers.Common
     /// </summary>
     public class UnescapeTags : TemplateTags
     {
-        // TODO: META
+        // <--[tagbase]
+        // @Base unescape[<TextTag>]
+        // @Group Mathematics
+        // @ReturnType TextTag
+        // @Returns an unescaped textual copy of the input escaped text.
+        // -->
 
         /// <summary>
         /// Unescapes a string.
