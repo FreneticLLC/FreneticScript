@@ -202,6 +202,11 @@ namespace Frenetic.CommandSystem
         {
             command.Name = command.Name.ToLower(); // Just a quick backup in case somebody messed up.
             command.CommandSystem = this;
+            if (RegisteredCommands.ContainsKey(command.Name))
+            {
+                Output.Bad("Multiply registered command: " + TagParser.Escape(command.Name) + "!", DebugMode.FULL);
+                return;
+            }
             RegisteredCommands.Add(command.Name, command);
             RegisteredCommandList.Add(command);
         }
