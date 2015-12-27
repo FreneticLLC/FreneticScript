@@ -166,7 +166,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @ReturnType ListTag<Dynamic>
                 // @Returns the list modified such that each entry is modified to be what the input modifier would return for it.
                 // @Example "one|two|three" .parse[<{var[value].to_upper}>] returns "ONE|TWO|THREE".
-                // @Note by current implementation, the contents of the result will be all text tags. This may change in the future.
+                // @Other by current implementation, the contents of the result will be all text tags. This may change in the future.
                 // -->
                 case "parse":
                     {

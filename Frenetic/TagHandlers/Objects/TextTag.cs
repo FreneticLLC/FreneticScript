@@ -112,7 +112,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @ReturnType ListTag
                 // @Returns the text as a list of characters.
                 // @Other can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
-                // @Example "alpha" .to_upper returns "a|l|p|h|a".
+                // @Example "alpha" .to_list returns "a|l|p|h|a".
                 // -->
                 case "to_list":
                     {
@@ -562,7 +562,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Group Mathematics
                 // @ReturnType TextTag
                 // @Returns the truncated version of the number - essentially, rounding towards zero.
-                // @Example "-1.7" .hyperbolic_sine returns "-1".
+                // @Example "-1.7" .truncate returns "-1".
                 // -->
                 case "truncate":
                     return new TextTag(Math.Truncate(FreneticUtilities.StringToDouble(Text))).Handle(data.Shrink());
