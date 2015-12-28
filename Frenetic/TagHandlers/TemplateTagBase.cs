@@ -8,10 +8,10 @@ namespace Frenetic.TagHandlers
     /// <summary>
     /// An abstract class, implementations are used as tag bases.
     /// </summary>
-    public abstract class TemplateTags // TODO: Tags -> TagBase
+    public abstract class TemplateTagBase
     {
         /// <summary>
-        /// The name of the tag set.
+        /// The name of the tag base.
         /// </summary>
         public string Name = null;
 

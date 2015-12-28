@@ -6,7 +6,7 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
-    class NumberTagBase : TemplateTags
+    class NumberTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base number[<NumberTag>]

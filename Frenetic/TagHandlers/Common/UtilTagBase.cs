@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Utility tags.
     /// </summary>
-    public class UtilTags: TemplateTags // TODO: Tags -> TagBase
+    public class UtilTagBase: TemplateTagBase
     {
         // <--[tagbase]
         // @Base util
@@ -23,7 +23,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Constructs the Utility tags.
         /// </summary>
-        public UtilTags()
+        public UtilTagBase()
         {
             Name = "util";
         }

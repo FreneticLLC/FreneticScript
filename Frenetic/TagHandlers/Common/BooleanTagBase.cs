@@ -6,7 +6,7 @@ using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers.Common
 {
-    class BooleanTagBase : TemplateTags
+    class BooleanTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base boolean[<BooleanTag>]

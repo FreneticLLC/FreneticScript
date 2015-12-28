@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Handles Ternary calculations.
     /// </summary>
-    public class TernaryTags : TemplateTags // TODO: Tags -> TagBase
+    public class TernaryTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base ternary[<BooleanTag>]
@@ -25,7 +25,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Construct the TernaryTags - for internal use only.
         /// </summary>
-        public TernaryTags()
+        public TernaryTagBase()
         {
             Name = "ternary";
         }

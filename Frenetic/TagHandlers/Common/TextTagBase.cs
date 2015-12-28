@@ -13,7 +13,7 @@ namespace Frenetic.TagHandlers.Common
     // TODO: Explain better
     // TODO: Link tag system explanation
     // -->
-    class TextTags : TemplateTags // TODO: Tags -> TagBase
+    class TextTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base text[<TextTag>]
@@ -23,7 +23,7 @@ namespace Frenetic.TagHandlers.Common
         // <@link explanation Text Tags>What are text tags?<@/link>
         // -->
 
-        public TextTags()
+        public TextTagBase()
         {
             Name = "text";
         }

@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Returns the various default colors within the tag system.
     /// </summary>
-    public class TextColorTags: TemplateTags // TODO: Tags -> TagBase
+    public class TextColorTags: TemplateTagBase
     {
         // <--[tagbase]
         // @Base text_color

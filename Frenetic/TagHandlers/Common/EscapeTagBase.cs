@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Escapes questionable text input.
     /// </summary>
-    public class EscapeTags : TemplateTags // TODO: Tags -> TagBase
+    public class EscapeTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base escape[<TextTag>]
@@ -44,7 +44,7 @@ namespace Frenetic.TagHandlers.Common
         /// <summary>
         /// Construct the EscapeTags - for internal use only.
         /// </summary>
-        public EscapeTags()
+        public EscapeTagBase()
         {
             Name = "escape";
         }

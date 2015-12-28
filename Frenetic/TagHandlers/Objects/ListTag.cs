@@ -64,7 +64,7 @@ namespace Frenetic.TagHandlers.Objects
             ListTag tlist = new ListTag();
             for (int i = 0; i < baselist.Length; i++)
             {
-                tlist.ListEntries.Add(new TextTag(UnescapeTags.Unescape(baselist[i])));
+                tlist.ListEntries.Add(new TextTag(UnescapeTagBase.Unescape(baselist[i])));
             }
             return tlist;
         }
@@ -325,7 +325,7 @@ namespace Frenetic.TagHandlers.Objects
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ListEntries.Count; i++)
             {
-                sb.Append(EscapeTags.Escape(ListEntries[i].ToString()));
+                sb.Append(EscapeTagBase.Escape(ListEntries[i].ToString()));
                 if (i + 1 < ListEntries.Count)
                 {
                     sb.Append("|");

@@ -58,13 +58,13 @@ namespace Frenetic.TagHandlers
         /// <summary>
         /// All tag handler objects currently registered.
         /// </summary>
-        public Dictionary<string, TemplateTags> Handlers = new Dictionary<string, TemplateTags>();
+        public Dictionary<string, TemplateTagBase> Handlers = new Dictionary<string, TemplateTagBase>();
 
         /// <summary>
         /// Registers a handler object for later usage by tags.
         /// </summary>
         /// <param name="handler">The handler object to register..</param>
-        public void Register(TemplateTags handler)
+        public void Register(TemplateTagBase handler)
         {
             Handlers.Add(handler.Name, handler);
         }
@@ -76,16 +76,16 @@ namespace Frenetic.TagHandlers
         {
             CommandSystem = _system;
             Register(new BooleanTagBase());
-            Register(new CVarTags());
-            Register(new EscapeTags());
-            Register(new ListTags());
+            Register(new CVarTagBase());
+            Register(new EscapeTagBase());
+            Register(new ListTagBase());
             Register(new NumberTagBase());
-            Register(new TernaryTags());
+            Register(new TernaryTagBase());
             Register(new TextColorTags());
-            Register(new TextTags());
-            Register(new UnescapeTags());
-            Register(new UtilTags());
-            Register(new VarTags());
+            Register(new TextTagBase());
+            Register(new UnescapeTagBase());
+            Register(new UtilTagBase());
+            Register(new VarTagBase());
         }
 
         static char[] dot = new char[] { '.' };
@@ -221,7 +221,7 @@ namespace Frenetic.TagHandlers
                 return "";
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode);
-            TemplateTags handler;
+            TemplateTagBase handler;
             try
             {
                 bool handled = Handlers.TryGetValue(data.Input[0], out handler);
@@ -299,7 +299,7 @@ namespace Frenetic.TagHandlers
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                         }
                         TagData data = new TagData(this, split, base_color, vars, mode);
-                        TemplateTags handler;
+                        TemplateTagBase handler;
                         bool handled = Handlers.TryGetValue(data.Input[0], out handler);
                         if (handled)
                         {

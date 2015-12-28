@@ -12,7 +12,7 @@ namespace Frenetic.TagHandlers.Common
     // A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
     // TODO: Explain better!
     // -->
-    class ListTags : TemplateTags // TODO: Tags -> TagBase
+    class ListTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base list[<TextTag>]
@@ -21,7 +21,7 @@ namespace Frenetic.TagHandlers.Common
         // @Returns the specified text as a list.
         // <@link explanation lists>What are lists?<@/link>
         // -->
-        public ListTags()
+        public ListTagBase()
         {
             Name = "list";
         }
