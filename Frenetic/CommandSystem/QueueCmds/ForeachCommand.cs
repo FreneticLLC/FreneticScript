@@ -179,7 +179,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else if (type.ToLower() == "start" && entry.Arguments.Count > 1)
                 {
-                    ListTag list = new ListTag(entry.GetArgument(1));
+                    ListTag list = ListTag.For(entry.GetArgument(1));
                     int target = list.ListEntries.Count;
                     if (target <= 0)
                     {

@@ -75,11 +75,13 @@ namespace Frenetic.TagHandlers
         public void Init(Commands _system)
         {
             CommandSystem = _system;
-            Register(new TextColorTags());
+            Register(new BooleanTagBase());
             Register(new CVarTags());
             Register(new EscapeTags());
             Register(new ListTags());
+            Register(new NumberTagBase());
             Register(new TernaryTags());
+            Register(new TextColorTags());
             Register(new TextTags());
             Register(new UnescapeTags());
             Register(new UtilTags());

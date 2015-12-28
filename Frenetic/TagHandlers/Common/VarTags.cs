@@ -15,7 +15,7 @@ namespace Frenetic.TagHandlers.Common
     // To use a queue variable in a tag, simply use the tag <@link tag var[<TextTag>]><{var[<TextTag>]}><@/link>.
     // TODO: Explain better!
     // -->
-    class VarTags: TemplateTags
+    class VarTags: TemplateTags // TODO: Tags -> TagBase
     {
         // <--[tagbase]
         // @Base var[<TextTag>]
@@ -45,13 +45,13 @@ namespace Frenetic.TagHandlers.Common
                     // <--[tag]
                     // @Name VariableTag.exists
                     // @Group Variables
-                    // @ReturnType TextTag
+                    // @ReturnType BooleanTag
                     // @Returns whether the specified variable exists.
                     // Specifically for the tag <@link tag var[<TextTag>]><{var[<TextTag>]}><@/link>.
                     // -->
                     if (data.Input[0] == "exists")
                     {
-                        return new TextTag(true).Handle(data.Shrink());
+                        return new BooleanTag(true).Handle(data.Shrink());
                     }
                     else
                     {
@@ -62,7 +62,7 @@ namespace Frenetic.TagHandlers.Common
             data.Shrink();
             if (data.Input.Count > 0 && data.Input[0] == "exists")
             {
-                return new TextTag(false).Handle(data.Shrink());
+                return new BooleanTag(false).Handle(data.Shrink());
             }
             else
             {

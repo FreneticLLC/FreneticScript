@@ -57,16 +57,18 @@ namespace Frenetic.TagHandlers.Objects
         /// Constructs a list tag from text input.
         /// </summary>
         /// <param name="list">The text input.</param>
-        public ListTag(string list)
+        /// <returns>A valid list.</returns>
+        public static ListTag For(string list)
         {
             string[] baselist = list.Split('|');
-            ListEntries = new List<TemplateObject>();
+            ListTag tlist = new ListTag();
             for (int i = 0; i < baselist.Length; i++)
             {
-                ListEntries.Add(new TextTag(UnescapeTags.Unescape(baselist[i])));
+                tlist.ListEntries.Add(new TextTag(UnescapeTags.Unescape(baselist[i])));
             }
+            return tlist;
         }
-
+        
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -82,12 +84,12 @@ namespace Frenetic.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.size
                 // @Group List Attributes
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns the number of entries in the list.
                 // @Example "one|two|three" .size returns "3".
                 // -->
                 case "size":
-                    return new TextTag(ListEntries.Count.ToString()).Handle(data.Shrink());
+                    return new NumberTag(ListEntries.Count).Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.comma_separated
                 // @Group List Attributes
@@ -139,7 +141,7 @@ namespace Frenetic.TagHandlers.Objects
                         return newlist.Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name ListTag.filter[<TextTag>]
+                // @Name ListTag.filter[<BooleanTag>]
                 // @Group List Attributes
                 // @ReturnType ListTag<Dynamic>
                 // @Returns the list modified such that each entry is only included if the input modifier would return true for it.
@@ -153,7 +155,7 @@ namespace Frenetic.TagHandlers.Objects
                         {
                             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
                             vars.Add("value", ListEntries[i]);
-                            if (data.Modifiers[0].Parse(data.BaseColor, vars, data.mode).ToLower() == "true")
+                            if (BooleanTag.For(data, data.Modifiers[0].Parse(data.BaseColor, vars, data.mode)).Internal)
                             {
                                 newlist.ListEntries.Add(ListEntries[i]);
                             }
@@ -250,7 +252,6 @@ namespace Frenetic.TagHandlers.Objects
                 // @Returns the specified set of entries in the list.
                 // @Other note that indices are one-based.
                 // @Example "one|two|three|four" .range[2,3] returns "two|three".
-                // @Example "one|two|three" .range[2,1] returns an empty list.
                 // @Example "one|two|three" .range[2,2] returns "two".
                 // -->
                 case "range":
@@ -276,15 +277,18 @@ namespace Frenetic.TagHandlers.Objects
                         }
                         if (number >= ListEntries.Count)
                         {
+                            // TODO: Queue level error!
                             number = ListEntries.Count - 1;
                         }
                         if (number2 >= ListEntries.Count)
                         {
+                            // TODO: Queue level error!
                             number2 = ListEntries.Count - 1;
                         }
                         if (number2 < number)
                         {
-                            return new ListTag("").Handle(data.Shrink());
+                            // TODO: Queue level error!
+                            return new ListTag().Handle(data.Shrink());
                         }
                         List<TemplateObject> Entries = new List<TemplateObject>();
                         for (int i = number; i <= number2; i++)

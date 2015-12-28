@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Unescapes questionable text input.
     /// </summary>
-    public class UnescapeTags : TemplateTags
+    public class UnescapeTags : TemplateTags // TODO: Tags -> TagBase
     {
         // <--[tagbase]
         // @Base unescape[<TextTag>]

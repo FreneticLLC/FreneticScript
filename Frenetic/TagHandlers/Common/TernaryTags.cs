@@ -9,10 +9,10 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Handles Ternary calculations.
     /// </summary>
-    public class TernaryTags : TemplateTags
+    public class TernaryTags : TemplateTags // TODO: Tags -> TagBase
     {
         // <--[tagbase]
-        // @Base ternary[<TextTag>]
+        // @Base ternary[<BooleanTag>]
         // @Group Text Comparison
         // @ReturnType TernaryPassTag
         // @Returns the specified pass or fail value.

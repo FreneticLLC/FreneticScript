@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Utility tags.
     /// </summary>
-    public class UtilTags: TemplateTags
+    public class UtilTags: TemplateTags // TODO: Tags -> TagBase
     {
         // <--[tagbase]
         // @Base util
@@ -17,6 +17,7 @@ namespace Frenetic.TagHandlers.Common
         // @ReturnType UtilTag
         // @Returns a generic utility class full of specific helpful utility tags,
         // such as <@link tag UtilTag.random_decimal><{util.random_decimal}><@/link>.
+        // @TODO util->Utilities?
         // -->
 
         /// <summary>
@@ -43,16 +44,17 @@ namespace Frenetic.TagHandlers.Common
                 // <--[tag]
                 // @Name UtilTag.random_decimal
                 // @Group Utilities
-                // @ReturnType TextTag
+                // @ReturnType NumberTag
                 // @Returns a random decimal number between zero and one.
                 // -->
                 case "random_decimal":
-                    return new TextTag(data.TagSystem.CommandSystem.random.NextDouble()).Handle(data.Shrink());
+                    return new NumberTag(data.TagSystem.CommandSystem.random.NextDouble()).Handle(data.Shrink());
                 // <--[tag]
                 // @Name UtilTag.current_time_utc
                 // @Group Utilities
                 // @ReturnType TimeTag
                 // @Returns the current system time (UTC).
+                // @TODO move to System.
                 // -->
                 case "current_time_utc":
                     return new TimeTag(DateTime.UtcNow).Handle(data.Shrink());
@@ -62,6 +64,7 @@ namespace Frenetic.TagHandlers.Common
                 // @Group Utilities
                 // @ReturnType TimeTag
                 // @Returns the current system time (local).
+                // @TODO move to System.
                 // -->
                 case "current_time":
                     return new TimeTag(DateTime.Now).Handle(data.Shrink());
