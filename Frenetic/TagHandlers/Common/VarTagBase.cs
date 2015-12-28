@@ -15,7 +15,7 @@ namespace Frenetic.TagHandlers.Common
     // To use a queue variable in a tag, simply use the tag <@link tag var[<TextTag>]><{var[<TextTag>]}><@/link>.
     // TODO: Explain better!
     // -->
-    class VarTagBase: TemplateTagBase
+    class VarTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base var[<TextTag>]

@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Returns CVar information.
     /// </summary>
-    public class CVarTagBase: TemplateTagBase
+    public class CVarTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base cvar[<TextTag>]

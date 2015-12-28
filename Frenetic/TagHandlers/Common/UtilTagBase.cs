@@ -9,7 +9,7 @@ namespace Frenetic.TagHandlers.Common
     /// <summary>
     /// Utility tags.
     /// </summary>
-    public class UtilTagBase: TemplateTagBase
+    public class UtilTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base util
