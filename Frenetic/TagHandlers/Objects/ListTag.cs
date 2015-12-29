@@ -155,7 +155,7 @@ namespace Frenetic.TagHandlers.Objects
                         {
                             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
                             vars.Add("value", ListEntries[i]);
-                            if (BooleanTag.For(data, data.Modifiers[0].Parse(data.BaseColor, vars, data.mode)).Internal)
+                            if (BooleanTag.For(data, data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error)).Internal)
                             {
                                 newlist.ListEntries.Add(ListEntries[i]);
                             }
@@ -177,7 +177,7 @@ namespace Frenetic.TagHandlers.Objects
                         {
                             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
                             vars.Add("value", ListEntries[i]);
-                            newlist.ListEntries.Add(new TextTag(data.Modifiers[0].Parse(data.BaseColor, vars, data.mode)));
+                            newlist.ListEntries.Add(new TextTag(data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error)));
                         }
                         return newlist.Handle(data.Shrink());
                     }

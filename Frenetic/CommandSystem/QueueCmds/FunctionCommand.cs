@@ -83,7 +83,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    entry.Bad("Cannot stop function call: not in one!");
+                    entry.Error("Cannot stop function call: not in one!");
                 }
                 return;
             }
@@ -97,7 +97,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 string name = entry.GetArgument(1).ToLower();
                 if (entry.Block == null)
                 {
-                    entry.Bad("Function invalid: No block follows!");
+                    entry.Error("Function invalid: No block follows!");
                     return;
                 }
                 if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
@@ -108,7 +108,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else

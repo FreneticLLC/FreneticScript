@@ -8,7 +8,7 @@ namespace Frenetic.CommandSystem.QueueCmds
 {
     class InsertCommand: AbstractCommand
     {
-        public InsertCommand()
+        public InsertCommand() // TODO: Possibly merge with run command?
         {
             Name = "insert";
             Arguments = "<script to insert>";
@@ -25,6 +25,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             else
             {
+                // TODO: Events?
                 string fname = entry.GetArgument(0);
                 CommandScript script = entry.Queue.CommandSystem.GetScript(fname);
                 if (script != null)
@@ -34,7 +35,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    entry.Bad("Cannot insert script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
+                    entry.Error("Cannot insert script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
                 }
             }
         }

@@ -50,7 +50,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         List<string> comp = new List<string>();
                         for (int i = 0; i < data.ComparisonArgs.Count; i++)
                         {
-                            comp.Add(data.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug));
+                            comp.Add(data.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error));
                         }
                         if (IfCommand.TryIf(comp))
                         {
@@ -65,7 +65,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("While CALLBACK invalid: not a real callback!");
+                        entry.Error("While CALLBACK invalid: not a real callback!");
                     }
                 }
                 else if (count.ToLower() == "stop")
@@ -96,7 +96,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Cannot stop while: not in one!");
+                        entry.Error("Cannot stop while: not in one!");
                     }
                 }
                 else if (count.ToLower() == "next")
@@ -126,7 +126,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Cannot stop while: not in one!");
+                        entry.Error("Cannot stop while: not in one!");
                     }
                 }
                 else
@@ -151,14 +151,14 @@ namespace Frenetic.CommandSystem.QueueCmds
                     {
                         entry.Good("While looping...");
                         CommandEntry callback = new CommandEntry("while \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "while", 0);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "while", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("while_index", new TextTag("1"));
                         entry.Queue.AddCommandsNow(entry.Block);
                     }
                     else
                     {
-                        entry.Bad("While invalid: No block follows!");
+                        entry.Error("While invalid: No block follows!");
                     }
                 }
             }

@@ -75,7 +75,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             {
                 if (Owner == null)
                 {
-                    entry.Bad("Tried to break <{text_color.emphasis}>" + count +
+                    entry.Error("Tried to break <{text_color.emphasis}>" + count +
                         "<{text_color.base}> more brace" + (count == 1 ? "" : "s") + " than there are!");
                     return;
                 }
@@ -93,8 +93,8 @@ namespace Frenetic.CommandSystem.QueueCmds
             count--;
             if (count > 0)
             {
-                entry.Bad("Tried to break <{text_color.emphasis}>" + count +
-                    "<{text_color.base}> more brace" + (count == 1 ? "": "s") + " than there are!");
+                entry.Error("Tried to break <{text_color.emphasis}>" + count +
+                    "<{text_color.base}> more brace" + (count == 1 ? "": "s") + " than there " + (count == 1 ? "is": "are") + "!");
             }
             else
             {

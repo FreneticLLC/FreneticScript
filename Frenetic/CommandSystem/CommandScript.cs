@@ -22,8 +22,10 @@ namespace Frenetic.CommandSystem
         public static CommandScript SeparateCommands(string name, string commands, Commands system)
         {
             List<string> CommandList = new List<string>();
+            List<int> Lines = new List<int>();
             int start = 0;
             bool quoted = false;
+            int line = 0;
             for (int i = 0; i < commands.Length; i++)
             {
                 if (commands[i] == '"')
@@ -34,30 +36,39 @@ namespace Frenetic.CommandSystem
                 {
                     if (start < i)
                     {
+                        Lines.Add(line);
                         CommandList.Add(commands.Substring(start, i - start).Trim());
                     }
                     start = i + 1;
                     quoted = false;
                 }
+                if (commands[i] == '\n')
+                {
+                    line++;
+                }
             }
             if (start < commands.Length)
             {
+                Lines.Add(line);
                 CommandList.Add(commands.Substring(start).Trim());
             }
-            return new CommandScript(name, CreateBlock(CommandList, null, system));
+            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system));
         }
 
         /// <summary>
         /// Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.
         /// </summary>
+        /// <param name="name">The name of the script.</param>
+        /// <param name="lines">The file line numbers for the corresponding command strings.</param>
         /// <param name="from">The command strings.</param>
         /// <param name="entry">The entry that owns this block.</param>
         /// <param name="system">The command system to create this block inside.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(List<string> from, CommandEntry entry, Commands system)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
             List<string> Temp = null;
+            List<int> Temp2 = null;
             int blocks = 0;
             for (int i = 0; i < from.Count; i++)
             {
@@ -67,10 +78,12 @@ namespace Frenetic.CommandSystem
                     if (blocks == 1)
                     {
                         Temp = new List<string>();
+                        Temp2 = new List<int>();
                     }
                     else
                     {
                         Temp.Add("{");
+                        Temp2.Add(lines[i]);
                     }
                 }
                 else if (from[i] == "}")
@@ -80,12 +93,12 @@ namespace Frenetic.CommandSystem
                     {
                         if (toret.Count == 0)
                         {
-                            List<CommandEntry> block = CreateBlock(Temp, entry, system);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system);
                             toret.AddRange(block);
                         }
                         else
                         {
-                            List<CommandEntry> block = CreateBlock(Temp, toret[toret.Count - 1], system);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, toret[toret.Count - 1], system);
                             toret[toret.Count - 1].Block = block;
                         }
                     }
@@ -96,15 +109,17 @@ namespace Frenetic.CommandSystem
                     else
                     {
                         Temp.Add("}");
+                        Temp2.Add(lines[i]);
                     }
                 }
                 else if (blocks > 0)
                 {
                     Temp.Add(from[i]);
+                    Temp2.Add(lines[i]);
                 }
                 else
                 {
-                    CommandEntry centry = CommandEntry.FromInput(from[i], null, entry, system);
+                    CommandEntry centry = CommandEntry.FromInput(from[i], null, entry, system, name, lines[i]);
                     if (centry != null)
                     {
                         toret.Add(centry);

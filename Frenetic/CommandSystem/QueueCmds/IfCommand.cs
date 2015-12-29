@@ -46,7 +46,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 if (entry.Block == null)
                 {
-                    entry.Bad("If invalid: No block follows!");
+                    entry.Error("If invalid: No block follows!");
                     return;
                 }
                 List<string> parsedargs = new List<string>(entry.Arguments.Count);
@@ -60,7 +60,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Good("If is true, executing...");
                     data.Result = 1;
                     entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
-                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "if", 0));
+                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "if", 0, entry.ScriptName, entry.ScriptLine));
                     entry.Queue.AddCommandsNow(entry.Block);
                 }
                 else

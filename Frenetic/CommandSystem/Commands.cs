@@ -172,26 +172,18 @@ namespace Frenetic.CommandSystem
         /// <param name="queue">The queue that is executing it.</param>
         public void ExecuteCommand(CommandEntry entry, CommandQueue queue)
         {
-            try
+            entry.Queue = queue;
+            entry.Output = Output;
+            if (entry.Command == DebugInvalidCommand)
             {
-                entry.Queue = queue;
-                entry.Output = Output;
-                if (entry.Command == DebugInvalidCommand)
+                // Last try - perhaps a command was registered after the script was loaded.
+                AbstractCommand cmd;
+                if (RegisteredCommands.TryGetValue(entry.Name.ToLower(), out cmd))
                 {
-                    // Last try - perhaps a command was registered after the script was loaded.
-                    AbstractCommand cmd;
-                    if (RegisteredCommands.TryGetValue(entry.Name.ToLower(), out cmd))
-                    {
-                        entry.Command = cmd;
-                    }
+                    entry.Command = cmd;
                 }
-                entry.Command.Execute(entry);
             }
-            catch (Exception ex)
-            {
-                Output.Bad("Command '" + TextStyle.Color_Standout + TagParser.Escape(entry.CommandLine) +
-                    TextStyle.Color_Error + "' threw an error: " + TagParser.Escape(ex.ToString()), DebugMode.NONE);
-            }
+            entry.Command.Execute(entry);
         }
 
         /// <summary>
@@ -262,6 +254,7 @@ namespace Frenetic.CommandSystem
             // Queue-related Commands
             RegisterCommand(new BreakCommand());
             RegisterCommand(new CallCommand());
+            RegisterCommand(new CatchCommand());
             RegisterCommand(new DebugCommand());
             RegisterCommand(new DefineCommand());
             RegisterCommand(new DetermineCommand());
@@ -279,6 +272,7 @@ namespace Frenetic.CommandSystem
             RegisterCommand(TheRunCommand = new RunCommand());
             RegisterCommand(new ScriptCacheCommand());
             RegisterCommand(new StopCommand());
+            RegisterCommand(new TryCommand());
             RegisterCommand(new UndefineCommand());
             RegisterCommand(new VarCommand());
             RegisterCommand(new WaitCommand());

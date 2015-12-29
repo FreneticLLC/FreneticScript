@@ -53,7 +53,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Queue.SetVariable(variable, new TextTag(combined.ToString()));
                     break;
                 default:
-                    entry.Bad("Invalid setter!");
+                    entry.Error("Invalid setter!");
                     return;
             }
             entry.Good("Variable updated!");

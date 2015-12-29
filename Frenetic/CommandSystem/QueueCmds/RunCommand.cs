@@ -124,7 +124,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             else
             {
-                entry.Bad("Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
+                entry.Error("Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
                 entry.Finished = true;
             }
         }

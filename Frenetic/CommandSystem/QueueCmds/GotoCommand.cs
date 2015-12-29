@@ -55,7 +55,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             else
             {
-                entry.Bad("Cannot goto marked location: unknown marker!");
+                entry.Error("Cannot goto marked location: unknown marker!");
             }
         }
     }

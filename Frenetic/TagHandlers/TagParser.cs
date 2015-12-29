@@ -213,14 +213,15 @@ namespace Frenetic.TagHandlers
         /// <param name="vars">Any variables in this tag's context.</param>
         /// <param name="bits">The tag data.</param>
         /// <param name="mode">What debugmode to use.</param>
+        /// <param name="error">What to invoke if there's an error.</param>
         /// <returns>The string with tags parsed.</returns>
-        public string ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode)
+        public string ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
             if (bits.Bits.Count == 0)
             {
                 return "";
             }
-            TagData data = new TagData(this, bits.Bits, base_color, vars, mode);
+            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error);
             TemplateTagBase handler;
             try
             {
@@ -240,19 +241,18 @@ namespace Frenetic.TagHandlers
                 {
                     if (mode <= DebugMode.MINIMAL)
                     {
-                        CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
-                            Escape(bits.ToString()) + TextStyle.Color_Outbad + "!", mode);
+                        error("Failed to fill tag tag " + Escape(bits.ToString()) + "!");
                     }
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                if (mode <= DebugMode.MINIMAL)
+                if (ex is ErrorInducedException)
                 {
-                    CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
-                        Escape(bits.ToString()) + TextStyle.Color_Outbad + ": " + ex.ToString(), mode);
+                    throw ex;
                 }
+                error("Failed to fill tag tag " + Escape(bits.ToString()) + ": " + ex.ToString());
                 return null;
             }
         }
@@ -264,106 +264,115 @@ namespace Frenetic.TagHandlers
         /// <param name="vars">Any variables in this tag's context.</param>
         /// <param name="input">The tagged string.</param>
         /// <param name="mode">What debugmode to use.</param>
+        /// <param name="error">What to invoke if there's an error.</param>
         /// <returns>The string with tags parsed.</returns>
-        public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode)
+        public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
-            if (input.IndexOf("<{") < 0)
+            try
             {
-                return Unescape(input);
-            }
-            int len = input.Length;
-            int blocks = 0;
-            int brackets = 0;
-            StringBuilder blockbuilder = new StringBuilder();
-            StringBuilder final = new StringBuilder(len);
-            for (int i = 0; i < len; i++)
-            {
-                if (i + 1 < len && input[i] == '<' && input[i + 1] == '{')
+                if (input.IndexOf("<{") < 0)
                 {
-                    blocks++;
-                    if (blocks == 1)
+                    return Unescape(input);
+                }
+                int len = input.Length;
+                int blocks = 0;
+                int brackets = 0;
+                StringBuilder blockbuilder = new StringBuilder();
+                StringBuilder final = new StringBuilder(len);
+                for (int i = 0; i < len; i++)
+                {
+                    if (i + 1 < len && input[i] == '<' && input[i + 1] == '{')
                     {
-                        i++;
-                        continue;
+                        blocks++;
+                        if (blocks == 1)
+                        {
+                            i++;
+                            continue;
+                        }
                     }
-                }
-                else if (i + 1 < len && input[i] == '}' && input[i + 1] == '>')
-                {
-                    blocks--;
-                    if (blocks == 0)
+                    else if (i + 1 < len && input[i] == '}' && input[i + 1] == '>')
                     {
-                        string value = blockbuilder.ToString();
-                        List<string> split = value.Split(dot).ToList();
-                        for (int s = 0; s < split.Count; s++)
+                        blocks--;
+                        if (blocks == 0)
                         {
-                            split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
-                        }
-                        TagData data = new TagData(this, split, base_color, vars, mode);
-                        TemplateTagBase handler;
-                        bool handled = Handlers.TryGetValue(data.Input[0], out handler);
-                        if (handled)
-                        {
-                            string res = handler.Handle(data);
-                            final.Append(res);
-                            if (mode <= DebugMode.FULL)
+                            string value = blockbuilder.ToString();
+                            List<string> split = value.Split(dot).ToList();
+                            for (int s = 0; s < split.Count; s++)
                             {
-                                value = value.Replace("&dot", ".").Replace("&amp", "&");
-                                CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                                    Escape(value) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
-                                    + TextStyle.Color_Outgood + "\".", mode);
+                                split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                             }
-                        }
-                        else
-                        {
-                            if (mode <= DebugMode.MINIMAL)
+                            TagData data = new TagData(this, split, base_color, vars, mode, error);
+                            TemplateTagBase handler;
+                            bool handled = Handlers.TryGetValue(data.Input[0], out handler);
+                            if (handled)
                             {
-                                value = value.Replace("&dot", ".").Replace("&amp", "&");
-                                CommandSystem.Output.Bad("Failed to fill tag tag " + TextStyle.Color_Separate +
-                                    Escape(value) + TextStyle.Color_Outbad + "!", mode);
-                            }
-                            final.Append("{UNKNOWN_TAG:" + data.Input[0] + "}");
-                        }
-                        blockbuilder = new StringBuilder();
-                        i++;
-                        continue;
-                    }
-                }
-                else if (blocks == 1 && input[i] == '[')
-                {
-                    brackets++;
-                }
-                else if (blocks == 1 && input[i] == ']')
-                {
-                    brackets--;
-                }
-                if (blocks > 0)
-                {
-                    switch (input[i])
-                    {
-                        case '.':
-                            if (blocks > 1 || brackets > 0)
-                            {
-                                blockbuilder.Append("&dot");
+                                string res = handler.Handle(data);
+                                final.Append(res);
+                                if (mode <= DebugMode.FULL)
+                                {
+                                    value = value.Replace("&dot", ".").Replace("&amp", "&");
+                                    CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
+                                        Escape(value) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
+                                        + TextStyle.Color_Outgood + "\".", mode);
+                                }
                             }
                             else
                             {
-                                blockbuilder.Append(".");
+                                value = value.Replace("&dot", ".").Replace("&amp", "&");
+                                error("Error filling tag: " + TextStyle.Color_Separate + Escape(value) + TextStyle.Color_Outbad + "!");
+                                final.Append("{UNKNOWN_TAG:" + data.Input[0] + "}");
                             }
-                            break;
-                        case '&':
-                            blockbuilder.Append("&amp");
-                            break;
-                        default:
-                            blockbuilder.Append(input[i]);
-                            break;
+                            blockbuilder = new StringBuilder();
+                            i++;
+                            continue;
+                        }
+                    }
+                    else if (blocks == 1 && input[i] == '[')
+                    {
+                        brackets++;
+                    }
+                    else if (blocks == 1 && input[i] == ']')
+                    {
+                        brackets--;
+                    }
+                    if (blocks > 0)
+                    {
+                        switch (input[i])
+                        {
+                            case '.':
+                                if (blocks > 1 || brackets > 0)
+                                {
+                                    blockbuilder.Append("&dot");
+                                }
+                                else
+                                {
+                                    blockbuilder.Append(".");
+                                }
+                                break;
+                            case '&':
+                                blockbuilder.Append("&amp");
+                                break;
+                            default:
+                                blockbuilder.Append(input[i]);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        final.Append(input[i]);
                     }
                 }
-                else
-                {
-                    final.Append(input[i]);
-                }
+                return Unescape(final.ToString());
             }
-            return Unescape(final.ToString());
+            catch (Exception ex)
+            {
+                if (ex is ErrorInducedException)
+                {
+                    throw ex;
+                }
+                error("Failed to fill tag tag " + Escape(input) + ": " + ex.ToString());
+                return null;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Frenetic.CommandSystem.Arguments;
+using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem
 {
@@ -17,8 +18,10 @@ namespace Frenetic.CommandSystem
         /// <param name="_block">The command block that held this entry.</param>
         /// <param name="_owner">The command entry that owns the block that held this entry.</param>
         /// <param name="system">The command system to work from.</param>
+        /// <param name="script">The name of the creating script.</param>
+        /// <param name="line">The line in the creating script.</param>
         /// <returns>The command system.</returns>
-        public static CommandEntry FromInput(string command, List<CommandEntry> _block, CommandEntry _owner, Commands system)
+        public static CommandEntry FromInput(string command, List<CommandEntry> _block, CommandEntry _owner, Commands system, string script, int line)
         {
             if (command.StartsWith("//"))
             {
@@ -88,19 +91,19 @@ namespace Frenetic.CommandSystem
             AbstractCommand cmd;
             if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
             {
-                return new CommandEntry(command, _block, _owner, cmd, args, BaseCommand, marker) { WaitFor = waitfor };
+                return new CommandEntry(command, _block, _owner, cmd, args, BaseCommand, marker, script, line) { WaitFor = waitfor };
             }
-            return CreateInvalidOutput(BaseCommand, _block, args, _owner, system, command, marker, waitfor);
+            return CreateInvalidOutput(BaseCommand, _block, args, _owner, system, command, marker, waitfor, script, line);
         }
 
         /// <summary>
         /// Create an entry that represents invalid output.
         /// </summary>
-        public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block,
-            List<Argument> _arguments, CommandEntry _owner, Commands system, string line, int marker, bool waitfor)
+        public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block, List<Argument> _arguments,
+            CommandEntry _owner, Commands system, string line, int marker, bool waitfor, string script, int linen)
         {
             _arguments.Insert(0, system.TagSystem.SplitToArgument(name));
-            return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker) { WaitFor = waitfor };
+            return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker, script, linen) { WaitFor = waitfor };
                 
         }
 
@@ -130,10 +133,20 @@ namespace Frenetic.CommandSystem
         public bool WaitFor = false;
 
         /// <summary>
+        /// The name of the creating script.
+        /// </summary>
+        public string ScriptName;
+
+        /// <summary>
+        /// The line number in the creating script.
+        /// </summary>
+        public int ScriptLine;
+
+        /// <summary>
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, List<CommandEntry> _block, CommandEntry _owner,
-            AbstractCommand _command, List<Argument> _arguments, string _name, int _marker)
+            AbstractCommand _command, List<Argument> _arguments, string _name, int _marker, string _script, int _line)
         {
             CommandLine = _commandline;
             Block = _block;
@@ -142,6 +155,12 @@ namespace Frenetic.CommandSystem
             Arguments = _arguments;
             Name = _name;
             Marker = _marker;
+            ScriptName = _script;
+            ScriptLine = _line;
+            if (Command == null)
+            {
+                throw new Exception("Invalid Command (null!)");
+            }
         }
 
         /// <summary>
@@ -224,7 +243,7 @@ namespace Frenetic.CommandSystem
             }
             if (Queue.ParseTags)
             {
-                return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug);
+                return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error);
             }
             else
             {
@@ -300,11 +319,12 @@ namespace Frenetic.CommandSystem
         }
 
         /// <summary>
-        /// Used to output a failure message.
+        /// Used to output a failure message. This is considered a 'warning' and will not induce an error.
         /// </summary>
         /// <param name="text">The text to output, with tags included.</param>
         public void Bad(string text)
         {
+            text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + ScriptLine + ": " + text;
             if (Queue.Debug <= DebugMode.MINIMAL)
             {
                 Output.Bad(text, DebugMode.MINIMAL);
@@ -313,6 +333,18 @@ namespace Frenetic.CommandSystem
                     Queue.Outputsystem.Invoke(text, MessageType.BAD);
                 }
             }
+        }
+
+        /// <summary>
+        /// Used to indicate an error has occured, and have the system react accordingly.
+        /// It is recommended you "return;" immediately after invoking this.
+        /// </summary>
+        /// <param name="EMsg">The error message.</param>
+        public void Error(string EMsg)
+        {
+            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + ScriptLine + ": " + EMsg;
+            Queue.HandleError(this, EMsg);
+            throw new ErrorInducedException();
         }
 
         /// <summary>
@@ -342,6 +374,8 @@ namespace Frenetic.CommandSystem
             entry.Name = Name;
             entry.Output = Output;
             entry.Queue = Queue;
+            entry.ScriptName = ScriptName;
+            entry.ScriptLine = ScriptLine;
             if (Data != null)
             {
                 entry.Data = Data.Duplicate();

@@ -34,7 +34,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                 }
                 else
                 {
-                    entry.Bad("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{text_color.base}>'.");
+                    entry.Error("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{text_color.base}>'.");
                 }
             }
         }

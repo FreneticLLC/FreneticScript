@@ -40,6 +40,7 @@ namespace Frenetic.TagHandlers.Common
             data.Shrink();
             if (data.Input.Count == 0)
             {
+                data.Error("Invalid ternary tag!");
                 return "&{NULL}";
             }
             // <--[tag]
@@ -51,7 +52,8 @@ namespace Frenetic.TagHandlers.Common
             // -->
             if (data.Input[0] != "pass")
             {
-                return new TextTag("&{NULL}").Handle(data);
+                data.Error("Invalid ternary tag!");
+                return "&{NULL}";
             }
             string result = "";
             if (basevalue)
@@ -72,7 +74,8 @@ namespace Frenetic.TagHandlers.Common
             // -->
             if (data.Input[0] != "fail")
             {
-                return new TextTag("&{NULL}").Handle(data);
+                data.Error("Invalid ternary tag!");
+                return "&{NULL}";
             }
             if (!basevalue)
             {

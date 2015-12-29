@@ -40,7 +40,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    entry.Bad("Cannot delay, inside an instant queue!");
+                    entry.Error("Cannot delay, inside an instant queue!");
                 }
             }
         }

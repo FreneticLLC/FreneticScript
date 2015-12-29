@@ -70,6 +70,7 @@ namespace Frenetic.CommandSystem
             {
                 entry.Bad("Note: This command is intended for debugging purposes.");
             }
+            entry.Error("Invalid arguments or not enough arguments!");
         }
     }
 }

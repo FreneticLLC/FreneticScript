@@ -41,7 +41,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             ScriptEvent theEvent;
             if (!entry.Queue.CommandSystem.Events.TryGetValue(eventname, out theEvent))
             {
-                entry.Bad("Unknown event '<{text_color.emphasis}>" + TagParser.Escape(eventname) + "<{text_color.base}>'.");
+                entry.Error("Unknown event '<{text_color.emphasis}>" + TagParser.Escape(eventname) + "<{text_color.base}>'.");
                 return;
             }
             if (type == "clear")
@@ -71,7 +71,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                        entry.Error("Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 string name = entry.GetArgument(2).ToLower();
                 if (entry.Block == null)
                 {
-                    entry.Bad("Event command invalid: No block follows!");
+                    entry.Error("Event command invalid: No block follows!");
                     return;
                 }
                 bool success = false;
@@ -110,7 +110,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        entry.Error("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else

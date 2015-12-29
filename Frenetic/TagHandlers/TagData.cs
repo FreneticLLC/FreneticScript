@@ -43,6 +43,11 @@ namespace Frenetic.TagHandlers
         public string BaseColor = null;
 
         /// <summary>
+        /// What to invoke if there is an error.
+        /// </summary>
+        public Action<string> Error;
+
+        /// <summary>
         /// Constructs the tag information container.
         /// </summary>
         /// <param name="_system">The command system to use.</param>
@@ -50,12 +55,14 @@ namespace Frenetic.TagHandlers
         /// <param name="_basecolor">The default color to use for output.</param>
         /// <param name="_vars">Any variables involved in the queue.</param>
         /// <param name="_mode">What debug mode to use.</param>
-        public TagData(TagParser _system, List<TagBit> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode)
+        /// <param name="_error">What to invoke if there is an error.</param>
+        public TagData(TagParser _system, List<TagBit> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error)
         {
             TagSystem = _system;
             BaseColor = _basecolor;
             Variables = _vars;
             mode = _mode;
+            Error = _error;
             // TODO: Store TagBit list directly?
             Input = new List<string>(_input.Count);
             Modifiers = new List<Argument>(_input.Count);
@@ -74,13 +81,15 @@ namespace Frenetic.TagHandlers
         /// <param name="_basecolor">The default color to use for output.</param>
         /// <param name="_vars">Any variables involved in the queue.</param>
         /// <param name="_mode">What debug mode to use.</param>
-        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode)
+        /// <param name="_error">What to invoke if there is an error.</param>
+        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error)
         {
             TagSystem = _system;
             Input = _input;
             BaseColor = _basecolor;
             Variables = _vars;
             mode = _mode;
+            Error = _error;
             Modifiers = new List<Argument>();
             for (int x = 0; x < Input.Count; x++)
             {
@@ -126,7 +135,7 @@ namespace Frenetic.TagHandlers
             {
                 throw new ArgumentOutOfRangeException("place");
             }
-            return Modifiers[place].Parse(BaseColor, Variables, mode) ?? "";
+            return Modifiers[place].Parse(BaseColor, Variables, mode, Error) ?? "";
         }
     }
 }

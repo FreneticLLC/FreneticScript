@@ -114,7 +114,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Repeat CALLBACK invalid: not a real callback!");
+                        entry.Error("Repeat CALLBACK invalid: not a real callback!");
                     }
                 }
                 else if (count.ToLower() == "stop")
@@ -145,7 +145,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Cannot stop repeat: not in one!");
+                        entry.Error("Cannot stop repeat: not in one!");
                     }
                 }
                 else if (count.ToLower() == "next")
@@ -175,7 +175,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Cannot stop repeat: not in one!");
+                        entry.Error("Cannot stop repeat: not in one!");
                     }
                 }
                 else
@@ -194,7 +194,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     {
                         entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                         CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "repeat", 0);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "repeat", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("repeat_index", new TextTag("1"));
                         entry.Queue.SetVariable("repeat_total", new TextTag(target.ToString()));
@@ -202,7 +202,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Repeat invalid: No block follows!");
+                        entry.Error("Repeat invalid: No block follows!");
                     }
                 }
             }

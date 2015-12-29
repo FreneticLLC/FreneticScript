@@ -9,7 +9,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         {
             Name = "require";
             Arguments = "Loud/Quiet <variable to require> [...]";
-            Description = "Stops a script queue if the relevant variables are not available.";
+            Description = "Stops a command queue entirely if the relevant variables are not available.";
             IsFlow = true;
         }
 

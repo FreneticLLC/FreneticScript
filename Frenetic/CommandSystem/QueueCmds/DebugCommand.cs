@@ -41,7 +41,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         entry.Good("Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
                         break;
                     default:
-                        entry.Bad("Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
+                        entry.Error("Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
                         break;
                 }
             }

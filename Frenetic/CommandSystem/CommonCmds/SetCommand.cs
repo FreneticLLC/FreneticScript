@@ -45,7 +45,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                     }
                     else if (!Cvar.Flags.HasFlag(CVarFlag.UserMade))
                     {
-                        entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name)
+                        entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name)
                             + "<{text_color.base}>' cannot be removed, it wasn't user made!");
                     }
                     else
@@ -61,18 +61,18 @@ namespace Frenetic.CommandSystem.CommonCmds
                 CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave: CVarFlag.None);
                 if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
                 {
-                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
+                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
                         + "<{text_color.base}>' cannot be modified, it is server controlled!");
                     return;
                 }
                 if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
                 {
-                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
+                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
                         + "<{text_color.base}>' cannot be modified, it is a read-only system variable!");
                 }
                 else if (cvar.Flags.HasFlag(CVarFlag.InitOnly) && !entry.Output.Initializing)
                 {
-                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
+                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name)
                         + "<{text_color.base}>' cannot be modified after game initialization.");
                 }
                 else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !entry.Output.Initializing)

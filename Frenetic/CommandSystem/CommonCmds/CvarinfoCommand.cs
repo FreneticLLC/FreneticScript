@@ -45,7 +45,7 @@ namespace Frenetic.CommandSystem.CommonCmds
                 }
                 if (cvars.Count == 0)
                 {
-                    entry.Bad("CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist!");
+                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist!");
                 }
                 else
                 {

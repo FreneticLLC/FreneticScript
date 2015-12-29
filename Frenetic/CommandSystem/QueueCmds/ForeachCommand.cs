@@ -113,7 +113,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Foreach CALLBACK invalid: not a real callback!");
+                        entry.Error("Foreach CALLBACK invalid: not a real callback!");
                     }
                 }
                 else if (type.ToLower() == "stop")
@@ -144,7 +144,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Cannot stop foreach: not in one!");
+                        entry.Error("Cannot stop foreach: not in one!");
                     }
                 }
                 else if (type.ToLower() == "next")
@@ -174,7 +174,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Cannot stop foreach: not in one!");
+                        entry.Error("Cannot stop foreach: not in one!");
                     }
                 }
                 else if (type.ToLower() == "start" && entry.Arguments.Count > 1)
@@ -194,7 +194,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     {
                         entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                         CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "foreach", 0);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "foreach", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("foreach_index", new TextTag("1"));
                         entry.Queue.SetVariable("foreach_total", new TextTag(target.ToString()));
@@ -204,7 +204,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Bad("Foreach invalid: No block follows!");
+                        entry.Error("Foreach invalid: No block follows!");
                     }
                 }
                 else

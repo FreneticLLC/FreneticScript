@@ -82,7 +82,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         }
                         else
                         {
-                            entry.Bad("Script '<{text_color.emphasis}>" +
+                            entry.Error("Script '<{text_color.emphasis}>" +
                                 TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                     }
@@ -119,7 +119,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         }
                         else
                         {
-                            entry.Bad("Function '<{text_color.emphasis}>" +
+                            entry.Error("Function '<{text_color.emphasis}>" +
                                 TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                     }

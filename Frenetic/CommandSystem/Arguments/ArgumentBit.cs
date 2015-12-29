@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Frenetic.TagHandlers;
 
 namespace Frenetic.CommandSystem.Arguments
@@ -19,7 +20,8 @@ namespace Frenetic.CommandSystem.Arguments
         /// <param name="base_color">The base color for color tags.</param>
         /// <param name="vars">The variables for var tags.</param>
         /// <param name="mode">The debug mode to use when parsing tags.</param>
+        /// <param name="error">What to invoke if there is an error.</param>
         /// <returns>The parsed final text.</returns>
-        public abstract string Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode);
+        public abstract string Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error);
     }
 }

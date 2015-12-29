@@ -39,7 +39,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             if (IfEntry == null)
             {
-                entry.Bad("Else invalid: IF command did not preceed!");
+                entry.Error("Else invalid: IF command did not preceed!");
                 return;
             }
             if (((IfCommandData)IfEntry.Data).Result == 1)
@@ -88,7 +88,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    entry.Bad("Else invalid: No block follows!");
+                    entry.Error("Else invalid: No block follows!");
                 }
             }
         }
