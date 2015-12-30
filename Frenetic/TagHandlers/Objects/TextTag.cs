@@ -44,6 +44,38 @@ namespace Frenetic.TagHandlers.Objects
             switch (data.Input[0])
             {
                 // <--[tag]
+                // @Name TextTag.to_number
+                // @Group Text Modification
+                // @ReturnType NumberTag
+                // @Returns the text parsed as a number.
+                // @Example "1" .to_number returns "1".
+                // -->
+                case "to_number":
+                    {
+                        NumberTag numtag = NumberTag.For(data, Text);
+                        if (numtag == null)
+                        {
+                            return "&{NULL}";
+                        }
+                        return numtag.Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name TextTag.to_boolean
+                // @Group Text Modification
+                // @ReturnType BooleanTag
+                // @Returns the text parsed as a boolean.
+                // @Example "true" .to_boolean returns "true".
+                // -->
+                case "to_boolean":
+                    {
+                        BooleanTag booltag = BooleanTag.For(data, Text);
+                        if (booltag == null)
+                        {
+                            return "&{NULL}";
+                        }
+                        return booltag.Handle(data.Shrink());
+                    }
+                // <--[tag]
                 // @Name TextTag.to_upper
                 // @Group Text Modification
                 // @ReturnType TextTag
@@ -62,14 +94,14 @@ namespace Frenetic.TagHandlers.Objects
                 case "to_lower":
                     return new TextTag(Text.ToLower()).Handle(data.Shrink());
                 // <--[tag]
-                // @Name TextTag.to_list
+                // @Name TextTag.to_list_of_characters
                 // @Group Text Modification
                 // @ReturnType ListTag
                 // @Returns the text as a list of characters.
                 // @Other can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
-                // @Example "alpha" .to_list returns "a|l|p|h|a".
+                // @Example "alpha" .to_list_of_characters returns "a|l|p|h|a".
                 // -->
-                case "to_list":
+                case "to_list_of_characters":
                     {
                         List<TemplateObject> list = new List<TemplateObject>(Text.Length);
                         for (int i = 0; i < Text.Length; i++)
@@ -186,8 +218,7 @@ namespace Frenetic.TagHandlers.Objects
                 default:
                     break;
             }
-            // TODO: Queue level error!
-            data.TagSystem.CommandSystem.Output.Bad("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!", data.mode);
+            data.Error("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!");
             return "&{UNKNOWN_TAG_BIT:" + data.Input[0] + "}";
         }
 
