@@ -41,10 +41,10 @@ namespace Frenetic.CommandSystem.CommonCmds
             else
             {
                 string target = entry.GetArgument(0);
-                string newvalue = entry.GetArgument(1);
-                entry.Queue.SetVariable(target, new TextTag(newvalue));
+                TemplateObject newvalue = entry.GetArgumentObject(1);
+                entry.Queue.SetVariable(target, newvalue);
                 entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) +
-                    "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue) + "<{text_color.base}>'.");
+                    "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue.ToString()) + "<{text_color.base}>'.");
             }
         }
     }
