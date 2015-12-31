@@ -45,6 +45,7 @@ namespace Frenetic.CommandSystem.QueueCmds
             if (((IfCommandData)IfEntry.Data).Result == 1)
             {
                 entry.Good("Else continuing, IF passed.");
+                data.Result = 1;
                 return;
             }
             if (entry.Arguments.Count >= 1)
