@@ -76,6 +76,24 @@ namespace Frenetic.TagHandlers.Objects
                         return booltag.Handle(data.Shrink());
                     }
                 // <--[tag]
+                // @Name TextTag.is_number
+                // @Group Text Modification
+                // @ReturnType BooleanTag
+                // @Returns whether the text represents a valid number.
+                // @Example "1" .is_number returns "true".
+                // -->
+                case "is_number":
+                    return new BooleanTag(NumberTag.For(data, Text) != null).Handle(data.Shrink());
+                // <--[tag]
+                // @Name TextTag.is_boolean
+                // @Group Text Modification
+                // @ReturnType BooleanTag
+                // @Returns whether the text represents a valid boolean.
+                // @Example "true" .is_boolean returns "true".
+                // -->
+                case "is_boolean":
+                    return new BooleanTag(BooleanTag.For(data, Text) != null).Handle(data.Shrink());
+                // <--[tag]
                 // @Name TextTag.to_upper
                 // @Group Text Modification
                 // @ReturnType TextTag
