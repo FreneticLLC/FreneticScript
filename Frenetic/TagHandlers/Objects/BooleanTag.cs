@@ -45,6 +45,18 @@ namespace Frenetic.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
+        /// Never null!
+        /// </summary>
+        /// <param name="dat">The TagData used to construct this BooleanTag.</param>
+        /// <param name="input">The input to create or get a boolean from.</param>
+        /// <returns>The boolean tag.</returns>
+        public static BooleanTag For(TagData dat, TemplateObject input)
+        {
+            return input is BooleanTag ? (BooleanTag)input : For(dat, input.ToString());
+        }
+
+        /// <summary>
         /// Constructs a boolean tag.
         /// </summary>
         /// <param name="_val">The internal boolean to use.</param>
@@ -82,7 +94,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "true" .and[true] returns "true".
                 // -->
                 case "and":
-                    return new BooleanTag(Internal && For(data, data.GetModifier(0).ToLower()).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal && For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name BooleanTag.or[<BooleanTag>]
                 // @Group Boolean Logic
@@ -91,7 +103,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "true" .or[false] returns "true".
                 // -->
                 case "or":
-                    return new BooleanTag(Internal | For(data, data.GetModifier(0).ToLower()).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal | For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name BooleanTag.xor[<BooleanTag>]
                 // @Group Boolean Logic
@@ -100,7 +112,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Examplre "true" .xor[true] returns "false".
                 // -->
                 case "xor":
-                    return new BooleanTag(Internal != For(data, data.GetModifier(0).ToLower()).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal != For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

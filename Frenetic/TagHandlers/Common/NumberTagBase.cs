@@ -22,8 +22,7 @@ namespace Frenetic.TagHandlers.Common
 
         public override TemplateObject Handle(TagData data)
         {
-            string modif = data.GetModifier(0);
-            return NumberTag.For(data, modif).Handle(data.Shrink());
+            return NumberTag.For(data, data.GetModifierObject(0)).Handle(data.Shrink());
         }
     }
 }

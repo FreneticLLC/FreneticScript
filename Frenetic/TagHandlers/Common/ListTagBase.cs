@@ -28,8 +28,8 @@ namespace Frenetic.TagHandlers.Common
 
         public override TemplateObject Handle(TagData data)
         {
-            string modif = data.GetModifier(0);
-            return ListTag.For(modif).Handle(data.Shrink());
+            TemplateObject modif = data.GetModifierObject(0);
+            return (modif is ListTag ? modif: ListTag.For(modif.ToString())).Handle(data.Shrink());
         }
     }
 }

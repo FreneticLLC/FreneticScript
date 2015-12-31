@@ -70,6 +70,16 @@ namespace Frenetic.TagHandlers.Objects
         }
         
         /// <summary>
+        /// Constructs a list tag from text input.
+        /// </summary>
+        /// <param name="list">The text input.</param>
+        /// <returns>A valid list.</returns>
+        public static ListTag For(TemplateObject list)
+        {
+            return list is ListTag ? (ListTag)list : For(list.ToString());
+        }
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
@@ -191,7 +201,8 @@ namespace Frenetic.TagHandlers.Objects
                 case "first":
                     if (ListEntries.Count == 0)
                     {
-                        return new TextTag("&null").Handle(data.Shrink());
+                        data.Error("Read 'first' tag on empty list!");
+                        return new TextTag("&{NULL}");
                     }
                     return ListEntries[0].Handle(data.Shrink());
                 // <--[tag]
@@ -204,7 +215,8 @@ namespace Frenetic.TagHandlers.Objects
                 case "random":
                     if (ListEntries.Count == 0)
                     {
-                        return new TextTag("&null").Handle(data.Shrink());
+                        data.Error("Read 'random' tag on empty list!");
+                        return new TextTag("&{NULL}");
                     }
                     return ListEntries[data.TagSystem.CommandSystem.random.Next(ListEntries.Count)].Handle(data.Shrink());
                 // <--[tag]
@@ -217,7 +229,8 @@ namespace Frenetic.TagHandlers.Objects
                 case "last":
                     if (ListEntries.Count == 0)
                     {
-                        return new TextTag("&null").Handle(data.Shrink());
+                        data.Error("Read 'last' tag on empty list!");
+                        return new TextTag("&{NULL}");
                     }
                     return ListEntries[ListEntries.Count - 1].Handle(data.Shrink());
                 // <--[tag]
@@ -230,11 +243,20 @@ namespace Frenetic.TagHandlers.Objects
                 // -->
                 case "get":
                     {
-                        int number = FreneticUtilities.StringToInt(data.GetModifier(0)) - 1;
+                        // TODO: Integer tag
+                        string modif = data.GetModifier(0);
+                        NumberTag num = NumberTag.For(data, modif);
                         if (ListEntries.Count == 0)
                         {
-                            return new TextTag("&null").Handle(data.Shrink());
+                            data.Error("Read 'get' tag on empty list!");
+                            return new TextTag("&{NULL}");
                         }
+                        if (num == null)
+                        {
+                            data.Error("Invalid number input: '" + modif + "'!");
+                            return new TextTag("&{NULL}");
+                        }
+                        int number = (int)num.Internal - 1;
                         if (number < 0)
                         {
                             number = 0;
@@ -256,17 +278,27 @@ namespace Frenetic.TagHandlers.Objects
                 // -->
                 case "range":
                     {
-                        string[] split = data.GetModifier(0).Split(',');
+                        string modif = data.GetModifier(0);
+                        string[] split = modif.Split(',');
                         if (split.Length != 2)
                         {
-                            return new TextTag("&null").Handle(data.Shrink());
+                            data.Error("Invalid comma-separated-twin-number input: '" + modif + "'!");
+                            return new TextTag("&{NULL}");
                         }
+                        NumberTag num1 = NumberTag.For(data, split[0]);
+                        NumberTag num2 = NumberTag.For(data, split[1]);
                         if (ListEntries.Count == 0)
                         {
-                            return new TextTag("&null").Handle(data.Shrink());
+                            data.Error("Read 'range' tag on empty list!");
+                            return new TextTag("&{NULL}");
                         }
-                        int number = FreneticUtilities.StringToInt(split[0]) - 1;
-                        int number2 = FreneticUtilities.StringToInt(split[1]) - 1;
+                        if (num1 == null || num2 == null)
+                        {
+                            data.Error("Invalid number input: '" + modif + "'!");
+                            return new TextTag("&{NULL}");
+                        }
+                        int number = (int)num1.Internal - 1;
+                        int number2 = (int)num1.Internal - 1;
                         if (number < 0)
                         {
                             number = 0;

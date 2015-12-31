@@ -126,10 +126,10 @@ namespace Frenetic.TagHandlers
         }
 
         /// <summary>
-        /// Gets the modifier at a specified place, handling any tags within.
+        /// Gets the modifier at a specified place, handling any tags within - returning a string.
         /// </summary>
         /// <param name="place">What place to get a modifier from.</param>
-        /// <returns>The tag-parsed modifier.</returns>
+        /// <returns>The tag-parsed modifier as a string.</returns>
         public string GetModifier(int place)
         {
             if (place < 0 || place >= Modifiers.Count)
@@ -137,6 +137,20 @@ namespace Frenetic.TagHandlers
                 throw new ArgumentOutOfRangeException("place");
             }
             return (Modifiers[place].Parse(BaseColor, Variables, mode, Error) ?? new TextTag("")).ToString();
+        }
+
+        /// <summary>
+        /// Gets the modifier at a specified place, handling any tags within.
+        /// </summary>
+        /// <param name="place">What place to get a modifier from.</param>
+        /// <returns>The tag-parsed modifier.</returns>
+        public TemplateObject GetModifierObject(int place)
+        {
+            if (place < 0 || place >= Modifiers.Count)
+            {
+                throw new ArgumentOutOfRangeException("place");
+            }
+            return (Modifiers[place].Parse(BaseColor, Variables, mode, Error) ?? new TextTag(""));
         }
     }
 }

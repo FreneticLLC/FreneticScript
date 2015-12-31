@@ -253,10 +253,10 @@ namespace Frenetic.CommandSystem
         }
 
         /// <summary>
-        /// Gets an argument at a specified place, handling any tags.
+        /// Gets an argument at a specified place, handling any tags - returning a string.
         /// </summary>
         /// <param name="place">The argument place number.</param>
-        /// <returns>The parsed argument.</returns>
+        /// <returns>The parsed argument as a string.</returns>
         public string GetArgument(int place)
         {
             if (place >= Arguments.Count || place < 0)

@@ -42,6 +42,18 @@ namespace Frenetic.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Get a number tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
+        /// Never null!
+        /// </summary>
+        /// <param name="dat">The TagData used to construct this NumberTag.</param>
+        /// <param name="input">The input text to create a number from.</param>
+        /// <returns>The number tag.</returns>
+        public static NumberTag For(TagData dat, TemplateObject input)
+        {
+            return input is NumberTag ? (NumberTag)input : For(dat, input.ToString());
+        }
+
+        /// <summary>
         /// Constructs a number tag.
         /// </summary>
         /// <param name="_val">The internal number to use.</param>
@@ -71,7 +83,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "1" .is_greater_than[0] returns "true".
                 // -->
                 case "is_greater_than":
-                    return new BooleanTag(Internal >= For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.is_greater_than_or_equal_to[<NumberTag>]
                 // @Group Number Comparison
@@ -81,7 +93,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "1" .is_greater_than_or_equal_to[0] returns "true".
                 // -->
                 case "is_greater_than_or_equal_to":
-                    return new BooleanTag(Internal >= For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.is_less_than[<NumberTag>]
                 // @Group Number Comparison
@@ -91,7 +103,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "1" .is_less_than[0] returns "false".
                 // -->
                 case "is_less_than":
-                    return new BooleanTag(Internal < For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.is_less_than_or_equal_to[<NumberTag>]
                 // @Group Number Comparison
@@ -101,7 +113,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "1" .is_less_than_or_equal_to[0] returns "false".
                 // -->
                 case "is_less_than_or_equal_to":
-                    return new BooleanTag(Internal <= For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new BooleanTag(Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.add[<NumberTag>]
                 // @Group Mathematics
@@ -111,7 +123,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "1" .add[1] returns "2".
                 // -->
                 case "add":
-                    return new NumberTag(Internal + For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new NumberTag(Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.subtract[<NumberTag>]
                 // @Group Mathematics
@@ -121,7 +133,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "1" .subtract[1] returns "0".
                 // -->
                 case "subtract":
-                    return new NumberTag(Internal - For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new NumberTag(Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.multiply[<NumberTag>]
                 // @Group Mathematics
@@ -131,7 +143,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "2" .multiply[2] returns "4".
                 // -->
                 case "multiply":
-                    return new NumberTag(Internal * For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new NumberTag(Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.divide[<NumberTag>]
                 // @Group Mathematics
@@ -141,7 +153,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "4" .divide[2] returns "2".
                 // -->
                 case "divide":
-                    return new NumberTag(Internal / For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new NumberTag(Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.modulo[<NumberTag>]
                 // @Group Mathematics
@@ -151,7 +163,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "10" .modulo[3] returns "1".
                 // -->
                 case "modulo":
-                    return new NumberTag(Internal % For(data, data.GetModifier(0)).Internal).Handle(data.Shrink());
+                    return new NumberTag(Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.round
                 // @Group Mathematics
@@ -232,7 +244,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "0" .atan2[1] returns "0".
                 // -->
                 case "atan2":
-                    return new NumberTag(Math.Atan2(Internal, For(data, data.GetModifier(0)).Internal)).Handle(data.Shrink());
+                    return new NumberTag(Math.Atan2(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.round_up
                 // @Group Mathematics
@@ -268,7 +280,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "2" .log[2] returns "1".
                 // -->
                 case "log":
-                    return new NumberTag(Math.Log(Internal, For(data, data.GetModifier(0)).Internal)).Handle(data.Shrink());
+                    return new NumberTag(Math.Log(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.maximum[<NumberTag>]
                 // @Group Mathematics
@@ -277,7 +289,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "10" .maximum[12] returns "12".
                 // -->
                 case "maximum":
-                    return new NumberTag(Math.Max(Internal, For(data, data.GetModifier(0)).Internal)).Handle(data.Shrink());
+                    return new NumberTag(Math.Max(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.minimum[<NumberTag>]
                 // @Group Mathematics
@@ -286,7 +298,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "10" .minimum[12] returns "10".
                 // -->
                 case "minimum":
-                    return new NumberTag(Math.Min(Internal, For(data, data.GetModifier(0)).Internal)).Handle(data.Shrink());
+                    return new NumberTag(Math.Min(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.to_the_power_of[<NumberTag>]
                 // @Group Mathematics
@@ -295,7 +307,7 @@ namespace Frenetic.TagHandlers.Objects
                 // @Example "2" .to_the_power_of[2] returns "4".
                 // -->
                 case "to_the_power_of":
-                    return new NumberTag(Math.Pow(Internal, For(data, data.GetModifier(0)).Internal)).Handle(data.Shrink());
+                    return new NumberTag(Math.Pow(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.sign
                 // @Group Mathematics
