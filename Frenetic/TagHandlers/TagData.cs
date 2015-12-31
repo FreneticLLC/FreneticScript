@@ -60,17 +60,25 @@ namespace Frenetic.TagHandlers
         public TagData(TagParser _system, List<TagBit> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error)
         {
             TagSystem = _system;
-            BaseColor = _basecolor;
-            Variables = _vars;
+            BaseColor = _basecolor ?? "^r^7";
+            Variables = _vars ?? new Dictionary<string, TemplateObject>();
             mode = _mode;
             Error = _error;
             // TODO: Store TagBit list directly?
-            Input = new List<string>(_input.Count);
-            Modifiers = new List<Argument>(_input.Count);
-            for (int i = 0; i < _input.Count; i++)
+            if (_input == null)
             {
-                Input.Add(_input[i].Key);
-                Modifiers.Add(_input[i].Variable ?? new Argument());
+                Input = new List<string>();
+                Modifiers = new List<Argument>();
+            }
+            else
+            {
+                Input = new List<string>(_input.Count);
+                Modifiers = new List<Argument>(_input.Count);
+                for (int i = 0; i < _input.Count; i++)
+                {
+                    Input.Add(_input[i].Key);
+                    Modifiers.Add(_input[i].Variable ?? new Argument());
+                }
             }
         }
 
