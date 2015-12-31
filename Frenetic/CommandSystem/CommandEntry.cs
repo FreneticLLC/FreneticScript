@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Frenetic.CommandSystem.Arguments;
 using Frenetic.TagHandlers;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem
 {
@@ -235,7 +236,7 @@ namespace Frenetic.CommandSystem
         /// </summary>
         /// <param name="place">The argument place number.</param>
         /// <returns>The parsed argument.</returns>
-        public string GetArgument(int place)
+        public TemplateObject GetArgumentObject(int place)
         {
             if (place >= Arguments.Count || place < 0)
             {
@@ -244,6 +245,27 @@ namespace Frenetic.CommandSystem
             if (Queue.ParseTags)
             {
                 return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error);
+            }
+            else
+            {
+                return new TextTag(Arguments[place].ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets an argument at a specified place, handling any tags.
+        /// </summary>
+        /// <param name="place">The argument place number.</param>
+        /// <returns>The parsed argument.</returns>
+        public string GetArgument(int place)
+        {
+            if (place >= Arguments.Count || place < 0)
+            {
+                throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
+            }
+            if (Queue.ParseTags)
+            {
+                return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error).ToString();
             }
             else
             {

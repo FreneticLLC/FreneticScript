@@ -53,7 +53,7 @@ namespace Frenetic.TagHandlers.Common
         /// Handles the escape tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string modif = data.GetModifier(0);
             return new TextTag(Escape(modif)).Handle(data.Shrink());

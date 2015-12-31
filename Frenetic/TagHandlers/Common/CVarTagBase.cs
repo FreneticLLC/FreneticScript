@@ -31,7 +31,7 @@ namespace Frenetic.TagHandlers.Common
         /// Handles a 'cvar' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string modif = data.GetModifier(0).ToLower();
             CVar cvar = data.TagSystem.CommandSystem.Output.CVarSys.Get(modif);
@@ -40,7 +40,7 @@ namespace Frenetic.TagHandlers.Common
                 data.Shrink();
                 if (data.Input.Count == 0)
                 {
-                    return cvar.Value;
+                    return new TextTag(cvar.Value);
                 }
                 if (data.Input.Count > 0 && data.Input[0] == "exists")
                 {

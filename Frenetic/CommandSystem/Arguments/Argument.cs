@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Frenetic.TagHandlers;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.CommandSystem.Arguments
 {
@@ -24,14 +25,18 @@ namespace Frenetic.CommandSystem.Arguments
         /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
         /// <returns>The parsed final text.</returns>
-        public string Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
+        public TemplateObject Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
+            if (Bits.Count == 1)
+            {
+                return Bits[0].Parse(base_color, vars, mode, error);
+            }
             StringBuilder built = new StringBuilder();
             for (int i = 0; i < Bits.Count; i++)
             {
-                built.Append(Bits[i].Parse(base_color, vars, mode, error));
+                built.Append(Bits[i].Parse(base_color, vars, mode, error).ToString());
             }
-            return built.ToString();
+            return new TextTag(built.ToString());
         }
 
         /// <summary>

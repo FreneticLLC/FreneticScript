@@ -28,7 +28,7 @@ namespace Frenetic.TagHandlers.Common
             Name = "text";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string modif = data.GetModifier(0);
             return new TextTag(modif).Handle(data.Shrink());

@@ -5,6 +5,7 @@ using System.Text;
 using Frenetic.TagHandlers.Common;
 using Frenetic.CommandSystem;
 using Frenetic.CommandSystem.Arguments;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers
 {
@@ -215,11 +216,11 @@ namespace Frenetic.TagHandlers
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
         /// <returns>The string with tags parsed.</returns>
-        public string ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
             if (bits.Bits.Count == 0)
             {
-                return "";
+                return new TextTag("");
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error);
             TemplateTagBase handler;
@@ -228,11 +229,11 @@ namespace Frenetic.TagHandlers
                 bool handled = Handlers.TryGetValue(data.Input[0], out handler);
                 if (handled)
                 {
-                    string res = handler.Handle(data);
+                    TemplateObject res = handler.Handle(data) ?? new TextTag("");
                     if (mode <= DebugMode.FULL)
                     {
                         CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                            Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
+                            Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res.ToString())
                             + TextStyle.Color_Outgood + "\".", mode);
                     }
                     return res;
@@ -306,7 +307,7 @@ namespace Frenetic.TagHandlers
                             bool handled = Handlers.TryGetValue(data.Input[0], out handler);
                             if (handled)
                             {
-                                string res = handler.Handle(data);
+                                string res = (handler.Handle(data) ?? new TextTag("&{NULL}")).ToString();
                                 final.Append(res);
                                 if (mode <= DebugMode.FULL)
                                 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Frenetic.CommandSystem;
 using Frenetic.CommandSystem.Arguments;
+using Frenetic.TagHandlers.Objects;
 
 namespace Frenetic.TagHandlers
 {
@@ -135,7 +136,7 @@ namespace Frenetic.TagHandlers
             {
                 throw new ArgumentOutOfRangeException("place");
             }
-            return Modifiers[place].Parse(BaseColor, Variables, mode, Error) ?? "";
+            return (Modifiers[place].Parse(BaseColor, Variables, mode, Error) ?? new TextTag("")).ToString();
         }
     }
 }

@@ -50,7 +50,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                         List<string> comp = new List<string>();
                         for (int i = 0; i < data.ComparisonArgs.Count; i++)
                         {
-                            comp.Add(data.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error));
+                            comp.Add(data.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error).ToString());
                         }
                         if (IfCommand.TryIf(comp))
                         {

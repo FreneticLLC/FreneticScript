@@ -73,11 +73,11 @@ namespace Frenetic.TagHandlers.Objects
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             if (data.Input.Count == 0)
             {
-                return ToString();
+                return this;
             }
             switch (data.Input[0])
             {
@@ -155,7 +155,8 @@ namespace Frenetic.TagHandlers.Objects
                         {
                             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
                             vars.Add("value", ListEntries[i]);
-                            if (BooleanTag.For(data, data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error)).Internal)
+                            TemplateObject tobj = data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error);
+                            if ((tobj is BooleanTag ? (BooleanTag)tobj: BooleanTag.For(data, tobj.ToString())).Internal)
                             {
                                 newlist.ListEntries.Add(ListEntries[i]);
                             }
@@ -168,7 +169,6 @@ namespace Frenetic.TagHandlers.Objects
                 // @ReturnType ListTag<Dynamic>
                 // @Returns the list modified such that each entry is modified to be what the input modifier would return for it.
                 // @Example "one|two|three" .parse[<{var[value].to_upper}>] returns "ONE|TWO|THREE".
-                // @Other by current implementation, the contents of the result will be all text tags. This may change in the future.
                 // -->
                 case "parse":
                     {
@@ -177,7 +177,7 @@ namespace Frenetic.TagHandlers.Objects
                         {
                             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
                             vars.Add("value", ListEntries[i]);
-                            newlist.ListEntries.Add(new TextTag(data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error)));
+                            newlist.ListEntries.Add(data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error));
                         }
                         return newlist.Handle(data.Shrink());
                     }

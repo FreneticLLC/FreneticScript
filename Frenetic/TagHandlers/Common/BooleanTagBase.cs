@@ -20,7 +20,7 @@ namespace Frenetic.TagHandlers.Common
             Name = "boolean";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string modif = data.GetModifier(0);
             return BooleanTag.For(data, modif).Handle(data.Shrink());

@@ -29,7 +29,7 @@ namespace Frenetic.TagHandlers.Common
             Name = "var";
         }
 
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             string modif = data.GetModifier(0).ToLower();
             if (data.Variables != null)
@@ -40,7 +40,7 @@ namespace Frenetic.TagHandlers.Common
                     data.Shrink();
                     if (data.Input.Count == 0)
                     {
-                        return value.ToString();
+                        return value;
                     }
                     // <--[tag]
                     // @Name VariableTag.exists

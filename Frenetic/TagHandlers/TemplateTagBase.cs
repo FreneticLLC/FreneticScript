@@ -19,7 +19,7 @@ namespace Frenetic.TagHandlers
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
-        public abstract string Handle(TagData data);
+        public abstract TemplateObject Handle(TagData data);
 
         /// <summary>
         /// Usually returns the name of this tag base.

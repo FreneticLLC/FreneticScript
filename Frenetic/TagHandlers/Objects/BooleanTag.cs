@@ -57,11 +57,11 @@ namespace Frenetic.TagHandlers.Objects
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             if (data.Input.Count == 0)
             {
-                return ToString();
+                return this;
             }
             switch (data.Input[0])
             {

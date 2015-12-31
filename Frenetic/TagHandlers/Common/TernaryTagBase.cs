@@ -34,14 +34,14 @@ namespace Frenetic.TagHandlers.Common
         /// Handles the 'ternary' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             bool basevalue = data.GetModifier(0).ToLower() == "true";
             data.Shrink();
             if (data.Input.Count == 0)
             {
                 data.Error("Invalid ternary tag!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
             // <--[tag]
             // @Name TernaryPassTag.pass[<TextTag>]
@@ -53,7 +53,7 @@ namespace Frenetic.TagHandlers.Common
             if (data.Input[0] != "pass")
             {
                 data.Error("Invalid ternary tag!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
             string result = "";
             if (basevalue)
@@ -63,7 +63,8 @@ namespace Frenetic.TagHandlers.Common
             data.Shrink();
             if (data.Input.Count == 0)
             {
-                return "&null";
+                data.Error("Invalid ternary tag!");
+                return new TextTag("&{NULL}");
             }
             // <--[tag]
             // @Name TernaryFailTag.fail[<TextTag>]
@@ -75,7 +76,7 @@ namespace Frenetic.TagHandlers.Common
             if (data.Input[0] != "fail")
             {
                 data.Error("Invalid ternary tag!");
-                return "&{NULL}";
+                return new TextTag("&{NULL}");
             }
             if (!basevalue)
             {

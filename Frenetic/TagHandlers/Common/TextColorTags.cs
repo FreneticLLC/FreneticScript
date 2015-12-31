@@ -32,12 +32,12 @@ namespace Frenetic.TagHandlers.Common
         /// Handles a 'color' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             data.Shrink();
             if (data.Input.Count == 0)
             {
-                return ToString();
+                return new TextTag(ToString());
             }
             switch (data.Input[0])
             {

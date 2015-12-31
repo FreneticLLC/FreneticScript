@@ -35,11 +35,11 @@ namespace Frenetic.TagHandlers.Objects
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
-        public override string Handle(TagData data)
+        public override TemplateObject Handle(TagData data)
         {
             if (data.Input.Count == 0)
             {
-                return ToString();
+                return this;
             }
             switch (data.Input[0])
             {
@@ -55,7 +55,7 @@ namespace Frenetic.TagHandlers.Objects
                         NumberTag numtag = NumberTag.For(data, Text);
                         if (numtag == null)
                         {
-                            return "&{NULL}";
+                            return new TextTag("&{NULL}"); // TODO: NullTag?
                         }
                         return numtag.Handle(data.Shrink());
                     }
@@ -71,7 +71,7 @@ namespace Frenetic.TagHandlers.Objects
                         BooleanTag booltag = BooleanTag.For(data, Text);
                         if (booltag == null)
                         {
-                            return "&{NULL}";
+                            return new TextTag("&{NULL}");
                         }
                         return booltag.Handle(data.Shrink());
                     }
@@ -237,7 +237,7 @@ namespace Frenetic.TagHandlers.Objects
                     break;
             }
             data.Error("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!");
-            return "&{UNKNOWN_TAG_BIT:" + data.Input[0] + "}";
+            return new TextTag("&{UNKNOWN_TAG_BIT:" + data.Input[0] + "}");
         }
 
         /// <summary>
