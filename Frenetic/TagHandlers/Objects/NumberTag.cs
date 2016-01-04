@@ -12,7 +12,7 @@ namespace Frenetic.TagHandlers.Objects
     {
         // <--[object]
         // @Type NumberTag
-        // @SubType NumberTag
+        // @SubType TextTag
         // @Group Mathematics
         // @Description Represents a number.
         // @Other note that the number is internally stored as a 64-bit signed floating point number (a 'double').
@@ -37,7 +37,7 @@ namespace Frenetic.TagHandlers.Objects
             {
                 return new NumberTag(tval);
             }
-            dat.TagSystem.CommandSystem.Output.Bad("Invalid number: '" + TagParser.Escape(input) + "'!", dat.mode); // TODO: Queue-level error!
+            dat.Error("Invalid number: '" + TagParser.Escape(input) + "'!");
             return new NumberTag(0);
         }
 
@@ -311,12 +311,12 @@ namespace Frenetic.TagHandlers.Objects
                 // <--[tag]
                 // @Name NumberTag.sign
                 // @Group Mathematics
-                // @ReturnType NumberTag
+                // @ReturnType IntegerTag
                 // @Returns the sign of the number, which can be -1, 0, or 1.
                 // @Example "-5" .sign returns "-1".
                 // -->
                 case "sign":
-                    return new NumberTag(Math.Sign(Internal)).Handle(data.Shrink());
+                    return new IntegerTag(Math.Sign(Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.hyperbolic_sine
                 // @Group Mathematics

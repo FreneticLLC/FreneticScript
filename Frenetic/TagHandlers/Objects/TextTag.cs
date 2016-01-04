@@ -60,6 +60,22 @@ namespace Frenetic.TagHandlers.Objects
                         return numtag.Handle(data.Shrink());
                     }
                 // <--[tag]
+                // @Name TextTag.to_integer
+                // @Group Text Modification
+                // @ReturnType NumberTag
+                // @Returns the text parsed as an integer.
+                // @Example "1" .to_integer returns "1".
+                // -->
+                case "to_integer":
+                    {
+                        IntegerTag numtag = IntegerTag.For(data, Text);
+                        if (numtag == null)
+                        {
+                            return new TextTag("&{NULL}"); // TODO: NullTag?
+                        }
+                        return numtag.Handle(data.Shrink());
+                    }
+                // <--[tag]
                 // @Name TextTag.to_boolean
                 // @Group Text Modification
                 // @ReturnType BooleanTag
@@ -84,6 +100,15 @@ namespace Frenetic.TagHandlers.Objects
                 // -->
                 case "is_number":
                     return new BooleanTag(NumberTag.For(data, Text) != null).Handle(data.Shrink());
+                // <--[tag]
+                // @Name TextTag.is_integer
+                // @Group Text Modification
+                // @ReturnType BooleanTag
+                // @Returns whether the text represents a valid integer.
+                // @Example "1" .is_integer returns "true".
+                // -->
+                case "is_integer":
+                    return new BooleanTag(IntegerTag.For(data, Text) != null).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.is_boolean
                 // @Group Text Modification

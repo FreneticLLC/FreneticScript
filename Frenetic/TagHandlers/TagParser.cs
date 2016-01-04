@@ -79,6 +79,7 @@ namespace Frenetic.TagHandlers
             Register(new BooleanTagBase());
             Register(new CVarTagBase());
             Register(new EscapeTagBase());
+            Register(new IntegerTagBase());
             Register(new ListTagBase());
             Register(new NumberTagBase());
             Register(new TernaryTagBase());

@@ -75,22 +75,21 @@ namespace Frenetic.TagHandlers.Common
                     case "value_boolean":
                         return new BooleanTag(cvar.ValueB).Handle(data.Shrink());
                     // <--[tag]
-                    // @Name CVarTag.value_decimal
+                    // @Name CVarTag.value_integer
                     // @Group Variables
-                    // @ReturnType NumberTag
-                    // @Returns the decimal number value of the CVar.
+                    // @ReturnType IntegerTag
+                    // @Returns the integer number value of the CVar.
                     // -->
-                    case "value_decimal":
-                        return new NumberTag(cvar.ValueD).Handle(data.Shrink());
+                    case "value_integer":
+                        return new IntegerTag(cvar.ValueL).Handle(data.Shrink());
                     // <--[tag]
                     // @Name CVarTag.value_number
                     // @Group Variables
                     // @ReturnType NumberTag
-                    // @Returns the integer number value of the CVar.
-                    // @TODO make an integer-typed tag?
+                    // @Returns the decimal number value of the CVar.
                     // -->
                     case "value_number":
-                        return new NumberTag(cvar.ValueL).Handle(data.Shrink());
+                        return new NumberTag(cvar.ValueD).Handle(data.Shrink());
                     // <--[tag]
                     // @Name CVarTag.name
                     // @Group Variables
