@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem.Arguments;
+using FreneticScript.CommandSystem.Arguments;
 
-namespace Frenetic.TagHandlers
+namespace FreneticScript.TagHandlers
 {
     /// <summary>
     /// Part of a tag.

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers;
-using Frenetic.CommandSystem.QueueCmds;
-using Frenetic.TagHandlers.Objects;
-using Frenetic.CommandSystem.Arguments;
+using FreneticScript.TagHandlers;
+using FreneticScript.CommandSystem.QueueCmds;
+using FreneticScript.TagHandlers.Objects;
+using FreneticScript.CommandSystem.Arguments;
 
-namespace Frenetic.CommandSystem
+namespace FreneticScript.CommandSystem
 {
     /// <summary>
     /// Represents a set of commands to be run, and related information.
@@ -77,7 +77,7 @@ namespace Frenetic.CommandSystem
         public Commands.OutputFunction Outputsystem = null;
 
         /// <summary>
-        /// Constructs a new CommandQueue - generally kept to the Frenetic internals.
+        /// Constructs a new CommandQueue - generally kept to the FreneticScript internals.
         /// TODO: IList _commands -> ListQueue?
         /// </summary>
         public CommandQueue(CommandScript _script, IList<CommandEntry> _commands, Commands _system)

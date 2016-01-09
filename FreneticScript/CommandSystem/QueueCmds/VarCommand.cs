@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds
 {
     class VarCommand : AbstractCommand // TODO: Public
     {
@@ -33,19 +33,19 @@ namespace Frenetic.CommandSystem.QueueCmds
                     entry.Queue.SetVariable(variable, new TextTag(value));
                     break;
                 case "+=":
-                    double added = FreneticUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) + FreneticUtilities.StringToDouble(value);
+                    double added = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) + FreneticScriptUtilities.StringToDouble(value);
                     entry.Queue.SetVariable(variable, new TextTag(added.ToString()));
                     break;
                 case "-=":
-                    double subbed = FreneticUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) - FreneticUtilities.StringToDouble(value);
+                    double subbed = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) - FreneticScriptUtilities.StringToDouble(value);
                     entry.Queue.SetVariable(variable, new TextTag(subbed.ToString()));
                     break;
                 case "/=":
-                    double divd = FreneticUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) / FreneticUtilities.StringToDouble(value);
+                    double divd = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) / FreneticScriptUtilities.StringToDouble(value);
                     entry.Queue.SetVariable(variable, new TextTag(divd.ToString()));
                     break;
                 case "*=":
-                    double multd = FreneticUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) + FreneticUtilities.StringToDouble(value);
+                    double multd = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) + FreneticScriptUtilities.StringToDouble(value);
                     entry.Queue.SetVariable(variable, new TextTag(multd.ToString()));
                     break;
                 case ".=":

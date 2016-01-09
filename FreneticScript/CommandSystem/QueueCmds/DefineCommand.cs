@@ -1,7 +1,7 @@
-﻿using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
+﻿using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds
 {
     // <--[command]
     // @Name define

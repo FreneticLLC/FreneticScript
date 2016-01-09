@@ -1,7 +1,7 @@
 ﻿using System;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic
+namespace FreneticScript
 {
     /// <summary>
     /// Adds HasFlag to the CVarFlag enum, for .NET 3.5 usage of a .NET 4.0 trick.
@@ -181,9 +181,9 @@ namespace Frenetic
                 return;
             }
             Value = newvalue;
-            ValueL = FreneticUtilities.StringToLong(newvalue);
+            ValueL = FreneticScriptUtilities.StringToLong(newvalue);
             ValueI = (int)ValueL;
-            ValueD = FreneticUtilities.StringToDouble(newvalue);
+            ValueD = FreneticScriptUtilities.StringToDouble(newvalue);
             ValueF = (float)ValueD;
             ValueB = newvalue.ToLower() == "true" || ValueF > 0f;
             if (!force)

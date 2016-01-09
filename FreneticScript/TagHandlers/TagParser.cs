@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers.Common;
-using Frenetic.CommandSystem;
-using Frenetic.CommandSystem.Arguments;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers.Common;
+using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic.TagHandlers
+namespace FreneticScript.TagHandlers
 {
     /// <summary>
     /// The master class for parsing tags.

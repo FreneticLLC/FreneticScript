@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers;
+using FreneticScript.TagHandlers;
 
-namespace Frenetic.CommandSystem
+namespace FreneticScript.CommandSystem
 {
     /// <summary>
     /// Represents a series of commands, not currently being processed.

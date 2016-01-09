@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Frenetic.TagHandlers.Objects
+namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
     /// Represents a date-time as a usable tag.
@@ -75,7 +75,7 @@ namespace Frenetic.TagHandlers.Objects
         /// <returns>A string representation of the date-time.</returns>
         public override string ToString()
         {
-            return FreneticUtilities.DateTimeToString(Internal, true);
+            return FreneticScriptUtilities.DateTimeToString(Internal, true);
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Frenetic
+namespace FreneticScript
 {
-    class FreneticUtilities
+    class FreneticScriptUtilities
     {
         /// <summary>
         /// Converts a string value to the long-integer value it represents.

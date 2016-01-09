@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem.Arguments;
+using FreneticScript.CommandSystem.Arguments;
 
-namespace Frenetic.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds
 {
     class IfCommandData : AbstractCommandEntryData
     {
@@ -181,19 +181,19 @@ namespace Frenetic.CommandSystem.QueueCmds
             }
             else if (arguments[1] == ">=")
             {
-                return FreneticUtilities.StringToDouble(arguments[0]) >= FreneticUtilities.StringToDouble(arguments[2]);
+                return FreneticScriptUtilities.StringToDouble(arguments[0]) >= FreneticScriptUtilities.StringToDouble(arguments[2]);
             }
             else if (arguments[1] == "<=")
             {
-                return FreneticUtilities.StringToDouble(arguments[0]) <= FreneticUtilities.StringToDouble(arguments[2]);
+                return FreneticScriptUtilities.StringToDouble(arguments[0]) <= FreneticScriptUtilities.StringToDouble(arguments[2]);
             }
             else if (arguments[1] == ">")
             {
-                return FreneticUtilities.StringToDouble(arguments[0]) > FreneticUtilities.StringToDouble(arguments[2]);
+                return FreneticScriptUtilities.StringToDouble(arguments[0]) > FreneticScriptUtilities.StringToDouble(arguments[2]);
             }
             else if (arguments[1] == "<")
             {
-                return FreneticUtilities.StringToDouble(arguments[0]) < FreneticUtilities.StringToDouble(arguments[2]);
+                return FreneticScriptUtilities.StringToDouble(arguments[0]) < FreneticScriptUtilities.StringToDouble(arguments[2]);
             }
             else
             {

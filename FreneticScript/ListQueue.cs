@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Frenetic
+namespace FreneticScript
 {
     /// <summary>
     /// Holds an array, managing it both like a list and like a queue depending on need.

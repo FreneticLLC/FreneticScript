@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic.TagHandlers.Common
+namespace FreneticScript.TagHandlers.Common
 {
     // <--[explanation]
     // @Name Queue Variables

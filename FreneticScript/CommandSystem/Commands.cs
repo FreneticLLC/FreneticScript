@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem.QueueCmds;
-using Frenetic.CommandSystem.CommonCmds;
-using Frenetic.TagHandlers;
-using Frenetic.CommandSystem.CommandEvents;
+using FreneticScript.CommandSystem.QueueCmds;
+using FreneticScript.CommandSystem.CommonCmds;
+using FreneticScript.TagHandlers;
+using FreneticScript.CommandSystem.CommandEvents;
 
-namespace Frenetic.CommandSystem
+namespace FreneticScript.CommandSystem
 {
     /// <summary>
-    /// Handles all Frenetic command systems. The entry point to Frenetic.
+    /// Handles all FreneticScript command systems. The entry point to FreneticScript.
     /// </summary>
     public class Commands
     {

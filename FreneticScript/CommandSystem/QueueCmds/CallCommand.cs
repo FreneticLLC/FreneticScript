@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
-using Frenetic.CommandSystem.Arguments;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
+using FreneticScript.CommandSystem.Arguments;
 
-namespace Frenetic.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name call

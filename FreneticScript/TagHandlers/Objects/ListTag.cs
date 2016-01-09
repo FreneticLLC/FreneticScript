@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers.Common;
+using FreneticScript.TagHandlers.Common;
 
-namespace Frenetic.TagHandlers.Objects
+namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
     /// Represents a list as a usable tag.

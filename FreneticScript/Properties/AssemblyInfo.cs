@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Frenetic")]
+[assembly: AssemblyTitle("FreneticScript")]
 [assembly: AssemblyDescription("A C# powered scripting engine.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("mcmonkey studios")]
-[assembly: AssemblyProduct("Frenetic")]
+[assembly: AssemblyProduct("FreneticScript")]
 [assembly: AssemblyCopyright("Copyright © mcmonkey studios 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

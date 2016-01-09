@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers;
+using FreneticScript.TagHandlers;
 
-namespace Frenetic.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds
 {
     // TODO: public, docs
     class EventCommand : AbstractCommand
@@ -100,7 +100,7 @@ namespace Frenetic.CommandSystem.QueueCmds
                 int priority = 0;
                 if (entry.Arguments.Count > 3)
                 {
-                    priority = FreneticUtilities.StringToInt(entry.GetArgument(3));
+                    priority = FreneticScriptUtilities.StringToInt(entry.GetArgument(3));
                 }
                 if (success)
                 {

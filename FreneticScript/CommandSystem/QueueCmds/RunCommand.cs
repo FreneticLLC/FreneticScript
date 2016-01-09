@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
-using Frenetic.CommandSystem.CommandEvents;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
+using FreneticScript.CommandSystem.CommandEvents;
 
-namespace Frenetic.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds
 {
     /// <summary>
     /// A command to allow running scripts from the script folder.
@@ -37,7 +37,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
         /// <para/>Third: <see cref="OnScriptRanPostEvent"/>
         /// </summary>
-        public FreneticEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent = new FreneticEventHandler<ScriptRanPreEventArgs>();
+        public FreneticScriptEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent = new FreneticScriptEventHandler<ScriptRanPreEventArgs>();
 
         /// <summary>
         /// The second event fired in a sequence of three.
@@ -46,7 +46,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
         /// <para/>Third: <see cref="OnScriptRanPostEvent"/>.
         /// </summary>
-        public FreneticEventHandler<ScriptRanEventArgs> OnScriptRanEvent = new FreneticEventHandler<ScriptRanEventArgs>();
+        public FreneticScriptEventHandler<ScriptRanEventArgs> OnScriptRanEvent = new FreneticScriptEventHandler<ScriptRanEventArgs>();
 
         /// <summary>
         /// The third event fired in a sequence of three.
@@ -54,7 +54,7 @@ namespace Frenetic.CommandSystem.QueueCmds
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
         /// </summary>
-        public FreneticEventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent = new FreneticEventHandler<ScriptRanPostEventArgs>();
+        public FreneticScriptEventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent = new FreneticScriptEventHandler<ScriptRanPostEventArgs>();
 
         /// <summary>
         /// Executes the run command.

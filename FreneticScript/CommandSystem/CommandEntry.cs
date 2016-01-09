@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Frenetic.CommandSystem.Arguments;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic.CommandSystem
+namespace FreneticScript.CommandSystem
 {
     /// <summary>
     /// All the information for a command being currently run.

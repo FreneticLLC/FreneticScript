@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem;
+using FreneticScript.CommandSystem;
 
-namespace Frenetic.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds
 {
     class NoopCommand: AbstractCommand
     {

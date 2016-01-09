@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Frenetic.TagHandlers
+namespace FreneticScript.TagHandlers
 {
     /// <summary>
     /// An abstract class, implementations are used as tag bases.

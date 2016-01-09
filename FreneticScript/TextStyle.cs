@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Frenetic
+namespace FreneticScript
 {
     /// <summary>
     /// Holds all text styles to be used... replace these with your engine's color tag system.
-    /// The Frenetic core uses these where needed, particularly in the ColorTags class.
+    /// The FreneticScript core uses these where needed, particularly in the ColorTags class.
     /// </summary>
     public class TextStyle
     {

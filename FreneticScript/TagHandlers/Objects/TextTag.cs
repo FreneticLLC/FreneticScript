@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Frenetic.TagHandlers.Objects
+namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
     /// Represents text as a usable tag.

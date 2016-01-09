@@ -1,6 +1,6 @@
-﻿using Frenetic.TagHandlers;
+﻿using FreneticScript.TagHandlers;
 
-namespace Frenetic.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds
 {
     class RequireCommand : AbstractCommand // TODO: Public!
     {

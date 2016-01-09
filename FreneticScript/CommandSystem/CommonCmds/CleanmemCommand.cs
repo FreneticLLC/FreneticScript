@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Frenetic.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds
 {
     /// <summary>
     /// A command to interact with the system garbage collector.

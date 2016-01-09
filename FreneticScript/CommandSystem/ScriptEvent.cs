@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers;
-using Frenetic.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
-namespace Frenetic.CommandSystem
+namespace FreneticScript.CommandSystem
 {
     /// <summary>
     /// An abstract class, implementations of this should be used to fire events within the script engine.

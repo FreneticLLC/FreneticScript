@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Frenetic.TagHandlers;
+using FreneticScript.TagHandlers;
 
-namespace Frenetic.CommandSystem.Arguments
+namespace FreneticScript.CommandSystem.Arguments
 {
     /// <summary>
     /// Part of an Argument, abstract.

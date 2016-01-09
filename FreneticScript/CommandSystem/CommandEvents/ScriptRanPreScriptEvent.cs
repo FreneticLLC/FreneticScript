@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.TagHandlers.Objects;
-using Frenetic.TagHandlers;
-using Frenetic.CommandSystem.QueueCmds;
+using FreneticScript.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
+using FreneticScript.CommandSystem.QueueCmds;
 
-namespace Frenetic.CommandSystem.CommandEvents
+namespace FreneticScript.CommandSystem.CommandEvents
 {
     // <--[event]
     // @Name ScriptRanPreEvent

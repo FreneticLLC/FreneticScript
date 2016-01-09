@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Frenetic.CommandSystem.Arguments;
+using FreneticScript.CommandSystem.Arguments;
 
-namespace Frenetic.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds
 {
     /// <summary>
     /// A non-user-invocable command called when no other command exists.
