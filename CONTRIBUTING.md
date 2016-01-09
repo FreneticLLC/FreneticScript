@@ -1,5 +1,5 @@
-Contribution to Frenetic
-------------------------
+Contribution to FreneticScript
+------------------------------
 
 
 ## Mini-license pre-warning

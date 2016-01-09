@@ -1,5 +1,5 @@
-Frenetic
-========
+FreneticScript
+==============
 
 The Frenetic Scripting Engine (dll)
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenetic", "Frenetic\Frenetic.csproj", "{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreneticScript", "FreneticScript\FreneticScript.csproj", "{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
