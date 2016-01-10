@@ -8,8 +8,8 @@
     <ProjectGuid>{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Frenetic</RootNamespace>
-    <AssemblyName>Frenetic</AssemblyName>
+    <RootNamespace>FreneticScript</RootNamespace>
+    <AssemblyName>FreneticScript</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -29,11 +29,12 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>frenetic.xml</DocumentationFile>
+    <DocumentationFile>FreneticScript.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
