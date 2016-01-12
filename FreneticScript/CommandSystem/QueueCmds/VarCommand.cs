@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -25,32 +26,35 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return;
             }
             string variable = entry.GetArgument(0);
+            TemplateObject varb = entry.Queue.GetVariable(variable);
             string setter = entry.GetArgument(1);
-            string value = entry.GetArgument(2);
+            TemplateObject value = entry.GetArgumentObject(2);
+            // TODO: Fix the below
+            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, (List<TagBit>)null, "^r^7", entry.Queue.Variables, entry.Queue.Debug, (o) => { throw new Exception("Tag Exception:" + o); });
             switch (setter)
             {
                 case "=":
-                    entry.Queue.SetVariable(variable, new TextTag(value));
+                    entry.Queue.SetVariable(variable, value);
                     break;
                 case "+=":
-                    double added = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) + FreneticScriptUtilities.StringToDouble(value);
-                    entry.Queue.SetVariable(variable, new TextTag(added.ToString()));
+                    double added = NumberTag.For(dat, varb).Internal + NumberTag.For(dat, value).Internal;
+                    entry.Queue.SetVariable(variable, new NumberTag(added));
                     break;
                 case "-=":
-                    double subbed = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) - FreneticScriptUtilities.StringToDouble(value);
-                    entry.Queue.SetVariable(variable, new TextTag(subbed.ToString()));
+                    double subbed = NumberTag.For(dat, varb).Internal - NumberTag.For(dat, value).Internal;
+                    entry.Queue.SetVariable(variable, new NumberTag(subbed));
                     break;
                 case "/=":
-                    double divd = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) / FreneticScriptUtilities.StringToDouble(value);
-                    entry.Queue.SetVariable(variable, new TextTag(divd.ToString()));
+                    double divd = NumberTag.For(dat, varb).Internal / NumberTag.For(dat, value).Internal;
+                    entry.Queue.SetVariable(variable, new NumberTag(divd));
                     break;
                 case "*=":
-                    double multd = FreneticScriptUtilities.StringToDouble(entry.Queue.GetVariable(variable).ToString()) + FreneticScriptUtilities.StringToDouble(value);
-                    entry.Queue.SetVariable(variable, new TextTag(multd.ToString()));
+                    double multd = NumberTag.For(dat, varb).Internal + NumberTag.For(dat, value).Internal;
+                    entry.Queue.SetVariable(variable, new NumberTag(multd));
                     break;
                 case ".=":
-                    string combined = entry.Queue.GetVariable(variable).ToString() + value;
-                    entry.Queue.SetVariable(variable, new TextTag(combined.ToString()));
+                    string combined = varb.ToString() + value.ToString();
+                    entry.Queue.SetVariable(variable, new TextTag(combined));
                     break;
                 default:
                     entry.Error("Invalid setter!");
