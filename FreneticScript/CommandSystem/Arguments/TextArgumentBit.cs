@@ -19,12 +19,29 @@ namespace FreneticScript.CommandSystem.Arguments
         public TextArgumentBit(string _text)
         {
             Text = _text;
+            if (Text == "true")
+            {
+                BoolTag = new BooleanTag(true);
+            }
+            if (Text == "false")
+            {
+                BoolTag = new BooleanTag(true);
+            }
+            double tn;
+            if (double.TryParse(Text, out tn) && tn.ToString() == Text)
+            {
+                NumTag = new NumberTag(tn);
+            }
         }
 
         /// <summary>
         /// The input text.
         /// </summary>
         public string Text = null;
+
+        BooleanTag BoolTag = null;
+
+        NumberTag NumTag = null;
 
         /// <summary>
         /// Returns the input text.
@@ -36,6 +53,14 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The parsed final text.</returns>
         public override TemplateObject Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
+            if (NumTag != null)
+            {
+                return NumTag;
+            }
+            if (BoolTag != null)
+            {
+                return BoolTag;
+            }
             return new TextTag(Text);
         }
 
