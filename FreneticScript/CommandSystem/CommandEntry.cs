@@ -346,7 +346,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Bad(string text)
         {
-            text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + ScriptLine + ": " + text;
+            text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + text;
             if (Queue.Debug <= DebugMode.MINIMAL)
             {
                 Output.Bad(text, DebugMode.MINIMAL);
@@ -364,7 +364,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="EMsg">The error message.</param>
         public void Error(string EMsg)
         {
-            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + ScriptLine + ": " + EMsg;
+            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + EMsg;
             Queue.HandleError(this, EMsg);
             throw new ErrorInducedException();
         }
