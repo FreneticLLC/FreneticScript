@@ -259,6 +259,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new DefineCommand());
             RegisterCommand(new DetermineCommand());
             RegisterCommand(new ElseCommand());
+            RegisterCommand(new ErrorCommand());
             RegisterCommand(new EventCommand());
             RegisterCommand(new ForeachCommand());
             RegisterCommand(new FunctionCommand());
