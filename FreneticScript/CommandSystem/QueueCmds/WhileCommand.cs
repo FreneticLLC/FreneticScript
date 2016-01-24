@@ -151,7 +151,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("While looping...");
                         CommandEntry callback = new CommandEntry("while \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "while", 0, entry.ScriptName, entry.ScriptLine);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "while", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("while_index", new TextTag("1"));
                         entry.Queue.AddCommandsNow(entry.Block);

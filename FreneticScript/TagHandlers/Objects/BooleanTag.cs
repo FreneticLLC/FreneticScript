@@ -40,7 +40,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new BooleanTag(false);
             }
-            dat.TagSystem.CommandSystem.Output.Bad("Invalid boolean: '" + TagParser.Escape(input) + "'!", dat.mode); // TODO: Queue-level error!
+            dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
             return new BooleanTag(false);
         }
 

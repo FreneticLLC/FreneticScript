@@ -55,7 +55,7 @@ namespace FreneticScript.TagHandlers.Objects
                         NumberTag numtag = NumberTag.For(data, Text);
                         if (numtag == null)
                         {
-                            return new TextTag("&{NULL}"); // TODO: NullTag?
+                            return new NullTag();
                         }
                         return numtag.Handle(data.Shrink());
                     }
@@ -71,7 +71,7 @@ namespace FreneticScript.TagHandlers.Objects
                         IntegerTag numtag = IntegerTag.For(data, Text);
                         if (numtag == null)
                         {
-                            return new TextTag("&{NULL}"); // TODO: NullTag?
+                            return new NullTag();
                         }
                         return numtag.Handle(data.Shrink());
                     }
@@ -87,7 +87,7 @@ namespace FreneticScript.TagHandlers.Objects
                         BooleanTag booltag = BooleanTag.For(data, Text);
                         if (booltag == null)
                         {
-                            return new TextTag("&{NULL}");
+                            return new NullTag();
                         }
                         return booltag.Handle(data.Shrink());
                     }

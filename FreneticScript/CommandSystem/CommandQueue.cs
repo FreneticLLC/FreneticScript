@@ -210,7 +210,7 @@ namespace FreneticScript.CommandSystem
                         {
                             ce.Good("Trying block...");
                             CommandEntry callback = new CommandEntry("catch \0CALLBACK", null, ce,
-                                ce.Command, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "catch", 0, ce.ScriptName, ce.ScriptLine);
+                                ce.Command, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "catch", 0, ce.ScriptName, ce.ScriptLine);
                             ce.Block.Add(callback);
                             AddCommandsNow(ce.Block);
                         }

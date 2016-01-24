@@ -44,7 +44,7 @@ namespace FreneticScript.TagHandlers
         public string BaseColor = null;
 
         /// <summary>
-        /// What to invoke if there is an error.
+        /// What to invoke if there is an error. Given string contains valid tags - any user input should be escaped!
         /// </summary>
         public Action<string> Error;
 
@@ -90,8 +90,9 @@ namespace FreneticScript.TagHandlers
         /// <param name="_basecolor">The default color to use for output.</param>
         /// <param name="_vars">Any variables involved in the queue.</param>
         /// <param name="_mode">What debug mode to use.</param>
+        /// <param name="wasquoted">Whether the input was quoted.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
-        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error)
+        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, bool wasquoted)
         {
             TagSystem = _system;
             Input = _input;
@@ -105,7 +106,7 @@ namespace FreneticScript.TagHandlers
                 if (Input[x].Length > 1 && Input[x].Contains('[') && Input[x][Input[x].Length - 1] == ']')
                 {
                     int index = Input[x].IndexOf('[');
-                    Modifiers.Add(TagSystem.SplitToArgument(Input[x].Substring(index + 1, Input[x].Length - (index + 2))));
+                    Modifiers.Add(TagSystem.SplitToArgument(Input[x].Substring(index + 1, Input[x].Length - (index + 2)), wasquoted));
                     Input[x] = Input[x].Substring(0, index).ToLower();
                 }
                 else

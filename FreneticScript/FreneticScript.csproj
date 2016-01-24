@@ -118,6 +118,7 @@
     <Compile Include="TagHandlers\Common\UtilTagBase.cs" />
     <Compile Include="TagHandlers\Common\VarTagBase.cs" />
     <Compile Include="TagHandlers\Objects\IntegerTag.cs" />
+    <Compile Include="TagHandlers\Objects\NullTag.cs" />
     <Compile Include="TagHandlers\Objects\NumberTag.cs" />
     <Compile Include="TagHandlers\Objects\ListTag.cs" />
     <Compile Include="TagHandlers\Objects\TextTag.cs" />

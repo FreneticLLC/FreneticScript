@@ -194,7 +194,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                         CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "repeat", 0, entry.ScriptName, entry.ScriptLine);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "repeat", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("repeat_index", new TextTag("1"));
                         entry.Queue.SetVariable("repeat_total", new TextTag(target.ToString()));

@@ -29,7 +29,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good("Trying block...");
                     CommandEntry callback = new CommandEntry("try \0CALLBACK", null, entry,
-                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "try", 0, entry.ScriptName, entry.ScriptLine);
+                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "try", 0, entry.ScriptName, entry.ScriptLine);
                     entry.Block.Add(callback);
                     entry.Queue.AddCommandsNow(entry.Block);
                 }

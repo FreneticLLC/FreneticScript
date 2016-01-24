@@ -79,7 +79,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>' (" + (run ? "run": "inject") + ")...");
                     List<CommandEntry> block = script.GetEntries();
                     block.Add(new CommandEntry("call \0CALLBACK", null, entry,
-                            this, new List<Argument> { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "call", 0, entry.ScriptName, entry.ScriptLine));
+                            this, new List<Argument> { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "call", 0, entry.ScriptName, entry.ScriptLine));
                     if (run)
                     {
                         CommandQueue queue;

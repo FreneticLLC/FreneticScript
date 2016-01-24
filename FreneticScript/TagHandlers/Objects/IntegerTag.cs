@@ -74,12 +74,16 @@ namespace FreneticScript.TagHandlers.Objects
             }
             switch (data.Input[0])
             {
+                // Documented in NumberTag.
                 case "is_greater_than":
                     return new BooleanTag(Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
+                // Documented in NumberTag.
                 case "is_greater_than_or_equal_to":
                     return new BooleanTag(Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
+                // Documented in NumberTag.
                 case "is_less_than":
                     return new BooleanTag(Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
+                // Documented in NumberTag.
                 case "is_less_than_or_equal_to":
                     return new BooleanTag(Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
@@ -159,6 +163,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "minimum_int":
                     return new IntegerTag(Math.Min(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
+                // Documented in NumberTag.
                 case "sign":
                     return new IntegerTag(Math.Sign(Internal)).Handle(data.Shrink());
                 default:

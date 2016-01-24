@@ -60,7 +60,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good("If is true, executing...");
                     data.Result = 1;
                     entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
-                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "if", 0, entry.ScriptName, entry.ScriptLine));
+                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "if", 0, entry.ScriptName, entry.ScriptLine));
                     entry.Queue.AddCommandsNow(entry.Block);
                 }
                 else

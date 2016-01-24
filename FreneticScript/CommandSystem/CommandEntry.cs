@@ -47,7 +47,7 @@ namespace FreneticScript.CommandSystem
                     string arg = command.Substring(start, i - start).Trim().Replace("\"", "");
                     if (arg.Length > 0)
                     {
-                        args.Add(system.TagSystem.SplitToArgument(arg));
+                        args.Add(system.TagSystem.SplitToArgument(arg, quoted));
                     }
                     start = i + 1;
                 }
@@ -57,7 +57,7 @@ namespace FreneticScript.CommandSystem
                 string arg = command.Substring(start, command.Length - start).Trim().Replace("\"", "");
                 if (arg.Length > 0)
                 {
-                    args.Add(system.TagSystem.SplitToArgument(arg));
+                    args.Add(system.TagSystem.SplitToArgument(arg, quoted));
                 }
             }
             if (args.Count == 0)
@@ -103,7 +103,7 @@ namespace FreneticScript.CommandSystem
         public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block, List<Argument> _arguments,
             CommandEntry _owner, Commands system, string line, int marker, bool waitfor, string script, int linen)
         {
-            _arguments.Insert(0, system.TagSystem.SplitToArgument(name));
+            _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false));
             return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker, script, linen) { WaitFor = waitfor };
                 
         }

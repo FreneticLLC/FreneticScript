@@ -194,7 +194,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                         CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK") }, "foreach", 0, entry.ScriptName, entry.ScriptLine);
+                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "foreach", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
                         entry.Queue.SetVariable("foreach_index", new TextTag("1"));
                         entry.Queue.SetVariable("foreach_total", new TextTag(target.ToString()));

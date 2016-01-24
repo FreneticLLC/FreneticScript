@@ -202,7 +202,7 @@ namespace FreneticScript.TagHandlers.Objects
                     if (ListEntries.Count == 0)
                     {
                         data.Error("Read 'first' tag on empty list!");
-                        return new TextTag("&{NULL}");
+                        return new NullTag();
                     }
                     return ListEntries[0].Handle(data.Shrink());
                 // <--[tag]
@@ -216,7 +216,7 @@ namespace FreneticScript.TagHandlers.Objects
                     if (ListEntries.Count == 0)
                     {
                         data.Error("Read 'random' tag on empty list!");
-                        return new TextTag("&{NULL}");
+                        return new NullTag();
                     }
                     return ListEntries[data.TagSystem.CommandSystem.random.Next(ListEntries.Count)].Handle(data.Shrink());
                 // <--[tag]
@@ -230,7 +230,7 @@ namespace FreneticScript.TagHandlers.Objects
                     if (ListEntries.Count == 0)
                     {
                         data.Error("Read 'last' tag on empty list!");
-                        return new TextTag("&{NULL}");
+                        return new NullTag();
                     }
                     return ListEntries[ListEntries.Count - 1].Handle(data.Shrink());
                 // <--[tag]
@@ -249,12 +249,12 @@ namespace FreneticScript.TagHandlers.Objects
                         if (ListEntries.Count == 0)
                         {
                             data.Error("Read 'get' tag on empty list!");
-                            return new TextTag("&{NULL}");
+                            return new NullTag();
                         }
                         if (num == null)
                         {
                             data.Error("Invalid number input: '" + modif + "'!");
-                            return new TextTag("&{NULL}");
+                            return new NullTag();
                         }
                         int number = (int)num.Internal - 1;
                         if (number < 0)
@@ -283,19 +283,19 @@ namespace FreneticScript.TagHandlers.Objects
                         if (split.Length != 2)
                         {
                             data.Error("Invalid comma-separated-twin-number input: '" + modif + "'!");
-                            return new TextTag("&{NULL}");
+                            return new NullTag();
                         }
                         NumberTag num1 = NumberTag.For(data, split[0]);
                         NumberTag num2 = NumberTag.For(data, split[1]);
                         if (ListEntries.Count == 0)
                         {
                             data.Error("Read 'range' tag on empty list!");
-                            return new TextTag("&{NULL}");
+                            return new NullTag();
                         }
                         if (num1 == null || num2 == null)
                         {
                             data.Error("Invalid number input: '" + modif + "'!");
-                            return new TextTag("&{NULL}");
+                            return new NullTag();
                         }
                         int number = (int)num1.Internal - 1;
                         int number2 = (int)num1.Internal - 1;

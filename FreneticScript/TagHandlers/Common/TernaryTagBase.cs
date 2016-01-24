@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers.Common
             if (data.Input.Count == 0)
             {
                 data.Error("Invalid ternary tag!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
             // <--[tag]
             // @Name TernaryPassTag.pass[<TextTag>]
@@ -53,7 +53,7 @@ namespace FreneticScript.TagHandlers.Common
             if (data.Input[0] != "pass")
             {
                 data.Error("Invalid ternary tag!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
             string result = "";
             if (basevalue)
@@ -64,7 +64,7 @@ namespace FreneticScript.TagHandlers.Common
             if (data.Input.Count == 0)
             {
                 data.Error("Invalid ternary tag!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
             // <--[tag]
             // @Name TernaryFailTag.fail[<TextTag>]
@@ -76,7 +76,7 @@ namespace FreneticScript.TagHandlers.Common
             if (data.Input[0] != "fail")
             {
                 data.Error("Invalid ternary tag!");
-                return new TextTag("&{NULL}");
+                return new NullTag();
             }
             if (!basevalue)
             {

@@ -18,6 +18,11 @@ namespace FreneticScript.CommandSystem.Arguments
         public List<ArgumentBit> Bits = new List<ArgumentBit>();
 
         /// <summary>
+        /// Whether the argument was input with "quotes" around it.
+        /// </summary>
+        public bool WasQuoted = true;
+
+        /// <summary>
         /// Parse the argument, reading any tags or other special data.
         /// </summary>
         /// <param name="base_color">The base color for color tags.</param>

@@ -16,32 +16,36 @@ namespace FreneticScript.CommandSystem.Arguments
         /// Constructs the argument with input text.
         /// </summary>
         /// <param name="_text">The input text.</param>
-        public TextArgumentBit(string _text)
+        /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
+        public TextArgumentBit(string _text, bool wasquoted)
         {
-            Text = _text;
-            if (Text == "true")
-            {
-                BoolTag = new BooleanTag(true);
-            }
-            if (Text == "false")
-            {
-                BoolTag = new BooleanTag(true);
-            }
             double tn;
-            if (double.TryParse(Text, out tn) && tn.ToString() == Text)
+            if (_text == "true")
             {
-                NumTag = new NumberTag(tn);
+                InputValue = new BooleanTag(true);
+            }
+            else if (_text == "false")
+            {
+                InputValue = new BooleanTag(true);
+            }
+            else if (_text == "null" && !wasquoted)
+            {
+                InputValue = new NullTag();
+            }
+            else if (double.TryParse(_text, out tn) && tn.ToString() == _text)
+            {
+                InputValue = new NumberTag(tn);
+            }
+            else
+            {
+                InputValue = new TextTag(_text);
             }
         }
 
         /// <summary>
         /// The input text.
         /// </summary>
-        public string Text = null;
-
-        BooleanTag BoolTag = null;
-
-        NumberTag NumTag = null;
+        public TemplateObject InputValue;
 
         /// <summary>
         /// Returns the input text.
@@ -53,15 +57,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The parsed final text.</returns>
         public override TemplateObject Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
-            if (NumTag != null)
-            {
-                return NumTag;
-            }
-            if (BoolTag != null)
-            {
-                return BoolTag;
-            }
-            return new TextTag(Text);
+            return InputValue;
         }
 
         /// <summary>
@@ -70,7 +66,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The input text.</returns>
         public override string ToString()
         {
-            return Text;
+            return InputValue.ToString();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Registers a handler object for later usage by tags.
         /// </summary>
-        /// <param name="handler">The handler object to register..</param>
+        /// <param name="handler">The handler object to register.</param>
         public void Register(TemplateTagBase handler)
         {
             Handlers.Add(handler.Name, handler);
@@ -96,8 +96,9 @@ namespace FreneticScript.TagHandlers
         /// Splits text into an Argument, for preparsing.
         /// </summary>
         /// <param name="input">The original text.</param>
+        /// <param name="wasquoted">Whether the argument was input with "quotes".</param>
         /// <returns>The parsed Argument.</returns>
-        public Argument SplitToArgument(string input)
+        public Argument SplitToArgument(string input, bool wasquoted)
         {
             if (input.Length == 0)
             {
@@ -106,10 +107,12 @@ namespace FreneticScript.TagHandlers
             if (input.IndexOf("<{") < 0)
             {
                 Argument a = new Argument();
-                a.Bits.Add(new TextArgumentBit(input) { CommandSystem = CommandSystem });
+                a.WasQuoted = wasquoted;
+                a.Bits.Add(new TextArgumentBit(input, wasquoted) { CommandSystem = CommandSystem });
                 return a;
             }
             Argument arg = new Argument();
+            arg.WasQuoted = wasquoted;
             int len = input.Length;
             int blocks = 0;
             int brackets = 0;
@@ -133,7 +136,7 @@ namespace FreneticScript.TagHandlers
                     {
                         if (tbuilder.Length > 0)
                         {
-                            arg.Bits.Add(new TextArgumentBit(tbuilder.ToString()) { CommandSystem = CommandSystem });
+                            arg.Bits.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
                             tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
@@ -149,7 +152,7 @@ namespace FreneticScript.TagHandlers
                             if (split[x].Length > 1 && split[x].Contains('[') && split[x][split[x].Length - 1] == ']')
                             {
                                 int index = split[x].IndexOf('[');
-                                bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)));
+                                bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
                                 split[x] = split[x].Substring(0, index).ToLower();
                             }
                             else
@@ -203,7 +206,7 @@ namespace FreneticScript.TagHandlers
             }
             if (tbuilder.Length > 0)
             {
-                arg.Bits.Add(new TextArgumentBit(tbuilder.ToString()) { CommandSystem = CommandSystem });
+                arg.Bits.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
             }
             return arg;
         }
@@ -267,8 +270,9 @@ namespace FreneticScript.TagHandlers
         /// <param name="input">The tagged string.</param>
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
+        /// <param name="wasquoted">Whether the input had "quotes".</param>
         /// <returns>The string with tags parsed.</returns>
-        public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
+        public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, bool wasquoted)
         {
             try
             {
@@ -303,12 +307,12 @@ namespace FreneticScript.TagHandlers
                             {
                                 split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                             }
-                            TagData data = new TagData(this, split, base_color, vars, mode, error);
+                            TagData data = new TagData(this, split, base_color, vars, mode, error, wasquoted);
                             TemplateTagBase handler;
                             bool handled = Handlers.TryGetValue(data.Input[0], out handler);
                             if (handled)
                             {
-                                string res = (handler.Handle(data) ?? new TextTag("&{NULL}")).ToString();
+                                string res = (handler.Handle(data) ?? new NullTag()).ToString();
                                 final.Append(res);
                                 if (mode <= DebugMode.FULL)
                                 {
