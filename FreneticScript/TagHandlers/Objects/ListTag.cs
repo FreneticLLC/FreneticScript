@@ -72,11 +72,11 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// Constructs a list tag from text input.
         /// </summary>
-        /// <param name="list">The text input.</param>
+        /// <param name="list">The list input.</param>
         /// <returns>A valid list.</returns>
         public static ListTag For(TemplateObject list)
         {
-            return list is ListTag ? (ListTag)list : For(list.ToString());
+            return list is ListTag ? (ListTag)list : (list is TextTag ? For(list.ToString()): new ListTag(new List<TemplateObject>() { list }));
         }
 
         /// <summary>
