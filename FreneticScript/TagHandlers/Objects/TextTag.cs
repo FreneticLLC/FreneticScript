@@ -262,7 +262,7 @@ namespace FreneticScript.TagHandlers.Objects
                     break;
             }
             data.Error("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!");
-            return new TextTag("&{UNKNOWN_TAG_BIT:" + data.Input[0] + "}");
+            return new NullTag();
         }
 
         /// <summary>
