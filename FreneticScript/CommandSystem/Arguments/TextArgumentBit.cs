@@ -20,13 +20,17 @@ namespace FreneticScript.CommandSystem.Arguments
         public TextArgumentBit(string _text, bool wasquoted)
         {
             double tn;
-            if (_text == "true")
+            if (wasquoted)
+            {
+                InputValue = new TextTag(_text);
+            }
+            else if (_text == "true")
             {
                 InputValue = new BooleanTag(true);
             }
             else if (_text == "false")
             {
-                InputValue = new BooleanTag(true);
+                InputValue = new BooleanTag(false);
             }
             else if (_text == "null" && !wasquoted)
             {
