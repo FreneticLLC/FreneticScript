@@ -35,7 +35,7 @@ namespace FreneticScript
 
         /// <summary>
         /// Converts a string value to the double value it represents.
-        /// Returns 0 if the string does not represent an double.
+        /// Returns 0 if the string does not represent a double.
         /// </summary>
         /// <param name="input">The string to get the value from.</param>
         /// <returns>a double value.</returns>
@@ -48,7 +48,7 @@ namespace FreneticScript
 
         /// <summary>
         /// Converts a string value to the float value it represents.
-        /// Returns 0 if the string does not represent an float.
+        /// Returns 0 if the string does not represent a float.
         /// </summary>
         /// <param name="input">The string to get the value from.</param>
         /// <returns>a float value.</returns>

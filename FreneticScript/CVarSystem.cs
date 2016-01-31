@@ -52,7 +52,7 @@ namespace FreneticScript
             s_osversion = Register("s_osversion", Environment.OSVersion.VersionString, CVarFlag.Textual | CVarFlag.ReadOnly, "The name and version of the operating system the engine is being run on.");
             s_user = Register("s_user", Environment.UserName, CVarFlag.Textual | CVarFlag.ReadOnly, "The name of the system user running the engine.");
             s_dotnetversion = Register("s_dotnetversion", Environment.Version.ToString(), CVarFlag.Textual | CVarFlag.ReadOnly, "The system's .NET (CLR) version string.");
-#if WINDOWS
+#if WINDOWS // TODO: Replace me!
             s_totalram = Register("s_totalram", new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly, "How much RAM the system has.");
 #endif
             s_culture = Register("s_culture", System.Globalization.CultureInfo.CurrentUICulture.EnglishName, CVarFlag.Textual | CVarFlag.ReadOnly, "The system culture (locale).");

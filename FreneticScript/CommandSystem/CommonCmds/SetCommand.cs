@@ -14,7 +14,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Name = "set";
             Arguments = "<CVar to set> <new value> (force/remove/do_not_save)";
             Description = "Modifies the value of a specified CVar, or creates a new one.";
-            // TODO: make asyncable
+            // TODO: make asyncable?
         }
 
         /// <summary>
