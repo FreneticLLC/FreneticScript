@@ -140,12 +140,32 @@ namespace FreneticScript.TagHandlers
                             tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
+                        string fallback = null;
+                        int brack = 0;
+                        for (int fb = 1; fb < value.Length; fb++)
+                        {
+                            if (value[fb] == '[')
+                            {
+                                brack++;
+                            }
+                            if (value[fb] == ']')
+                            {
+                                brack--;
+                            }
+                            if (brack == 0 && value[fb] == '|' && value[fb - 1] == '|')
+                            {
+                                fallback = value.Substring(fb + 1);
+                                value = value.Substring(0, fb);
+                                break;
+                            }
+                        }
                         List<string> split = value.Split(dot).ToList();
                         for (int s = 0; s < split.Count; s++)
                         {
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                         }
                         TagArgumentBit tab = new TagArgumentBit() { CommandSystem = CommandSystem };
+                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
                         for (int x = 0; x < split.Count; x++)
                         {
                             TagBit bit = new TagBit();
@@ -226,7 +246,7 @@ namespace FreneticScript.TagHandlers
             {
                 return new TextTag("");
             }
-            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error);
+            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback);
             TemplateTagBase handler;
             try
             {
@@ -241,6 +261,10 @@ namespace FreneticScript.TagHandlers
                             + TextStyle.Color_Outgood + "\".", mode);
                     }
                     return res;
+                }
+                else if (data.HasFallback)
+                {
+                    return data.Fallback.Parse(base_color, vars, mode, error);
                 }
                 else
                 {
@@ -274,111 +298,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The string with tags parsed.</returns>
         public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, bool wasquoted)
         {
-            try
-            {
-                if (input.IndexOf("<{") < 0)
-                {
-                    return Unescape(input);
-                }
-                int len = input.Length;
-                int blocks = 0;
-                int brackets = 0;
-                StringBuilder blockbuilder = new StringBuilder();
-                StringBuilder final = new StringBuilder(len);
-                for (int i = 0; i < len; i++)
-                {
-                    if (i + 1 < len && input[i] == '<' && input[i + 1] == '{')
-                    {
-                        blocks++;
-                        if (blocks == 1)
-                        {
-                            i++;
-                            continue;
-                        }
-                    }
-                    else if (i + 1 < len && input[i] == '}' && input[i + 1] == '>')
-                    {
-                        blocks--;
-                        if (blocks == 0)
-                        {
-                            string value = blockbuilder.ToString();
-                            List<string> split = value.Split(dot).ToList();
-                            for (int s = 0; s < split.Count; s++)
-                            {
-                                split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
-                            }
-                            TagData data = new TagData(this, split, base_color, vars, mode, error, wasquoted);
-                            TemplateTagBase handler;
-                            bool handled = Handlers.TryGetValue(data.Input[0], out handler);
-                            if (handled)
-                            {
-                                string res = (handler.Handle(data) ?? new NullTag()).ToString();
-                                final.Append(res);
-                                if (mode <= DebugMode.FULL)
-                                {
-                                    value = value.Replace("&dot", ".").Replace("&amp", "&");
-                                    CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                                        Escape(value) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res)
-                                        + TextStyle.Color_Outgood + "\".", mode);
-                                }
-                            }
-                            else
-                            {
-                                value = value.Replace("&dot", ".").Replace("&amp", "&");
-                                error("Error filling tag: " + TextStyle.Color_Separate + Escape(value) + TextStyle.Color_Outbad + "!");
-                                final.Append("{UNKNOWN_TAG:" + data.Input[0] + "}");
-                            }
-                            blockbuilder = new StringBuilder();
-                            i++;
-                            continue;
-                        }
-                    }
-                    else if (blocks == 1 && input[i] == '[')
-                    {
-                        brackets++;
-                    }
-                    else if (blocks == 1 && input[i] == ']')
-                    {
-                        brackets--;
-                    }
-                    if (blocks > 0)
-                    {
-                        switch (input[i])
-                        {
-                            case '.':
-                                if (blocks > 1 || brackets > 0)
-                                {
-                                    blockbuilder.Append("&dot");
-                                }
-                                else
-                                {
-                                    blockbuilder.Append(".");
-                                }
-                                break;
-                            case '&':
-                                blockbuilder.Append("&amp");
-                                break;
-                            default:
-                                blockbuilder.Append(input[i]);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        final.Append(input[i]);
-                    }
-                }
-                return Unescape(final.ToString());
-            }
-            catch (Exception ex)
-            {
-                if (ex is ErrorInducedException)
-                {
-                    throw ex;
-                }
-                error("Failed to fill tag tag " + Escape(input) + ": " + ex.ToString());
-                return null;
-            }
+            return Unescape((SplitToArgument(input, wasquoted).Parse(base_color, vars, mode, error) ?? new TextTag("&{NULL}")).ToString());
         }
     }
 }

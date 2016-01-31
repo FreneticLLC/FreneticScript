@@ -261,7 +261,10 @@ namespace FreneticScript.TagHandlers.Objects
                 default:
                     break;
             }
-            data.Error("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!");
+            if (!data.HasFallback)
+            {
+                data.Error("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!");
+            }
             return new NullTag();
         }
 

@@ -17,6 +17,11 @@ namespace FreneticScript.CommandSystem.Arguments
         public List<TagBit> Bits = new List<TagBit>();
 
         /// <summary>
+        /// The tag to fall back on if this tag fails.
+        /// </summary>
+        public Argument Fallback;
+
+        /// <summary>
         /// Parse the argument part, reading any tags.
         /// </summary>
         /// <param name="base_color">The base color for color tags.</param>

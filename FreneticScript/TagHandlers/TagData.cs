@@ -29,6 +29,22 @@ namespace FreneticScript.TagHandlers
         public List<Argument> Modifiers = null;
 
         /// <summary>
+        /// What to be returned if the tag fills null.
+        /// </summary>
+        public Argument Fallback = null;
+
+        /// <summary>
+        /// Whether this tag has an alternate response if it fills null.
+        /// </summary>
+        public bool HasFallback
+        {
+            get
+            {
+                return Fallback != null;
+            }
+        }
+
+        /// <summary>
         /// All variables waiting in this tag's context.
         /// </summary>
         public Dictionary<string, TemplateObject> Variables = null;
@@ -57,13 +73,15 @@ namespace FreneticScript.TagHandlers
         /// <param name="_vars">Any variables involved in the queue.</param>
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
-        public TagData(TagParser _system, List<TagBit> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error)
+        /// <param name="fallback">What to fall back to if the tag returns null.</param>
+        public TagData(TagParser _system, List<TagBit> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, Argument fallback)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? "^r^7";
             Variables = _vars ?? new Dictionary<string, TemplateObject>();
             mode = _mode;
             Error = _error;
+            Fallback = fallback;
             // TODO: Store TagBit list directly?
             if (_input == null)
             {
@@ -92,7 +110,8 @@ namespace FreneticScript.TagHandlers
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="wasquoted">Whether the input was quoted.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
-        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, bool wasquoted)
+        /// <param name="fallback">What to fall back to if the tag returns null.</param>
+        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, bool wasquoted, Argument fallback)
         {
             TagSystem = _system;
             Input = _input;
@@ -100,6 +119,7 @@ namespace FreneticScript.TagHandlers
             Variables = _vars;
             mode = _mode;
             Error = _error;
+            Fallback = fallback;
             Modifiers = new List<Argument>();
             for (int x = 0; x < Input.Count; x++)
             {
