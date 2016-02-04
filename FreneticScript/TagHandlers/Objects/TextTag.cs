@@ -258,6 +258,15 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "does_not_equal_ignore_case":
                     return new BooleanTag(Text.ToLower() != data.GetModifier(0).ToLower()).Handle(data.Shrink());
+                // <--[tag]
+                // @Name TextTag.to_utf8_binary
+                // @Group Text Attributes
+                // @ReturnType BinaryTag
+                // @Returns UTF-8 encoded binary data of the included text.
+                // @Example "hi" .to_utf8_binary returns "6869".
+                // -->
+                case "to_utf8_binary":
+                    return new BinaryTag(new UTF8Encoding(false).GetBytes(Text)).Handle(data.Shrink());
                 default:
                     break;
             }

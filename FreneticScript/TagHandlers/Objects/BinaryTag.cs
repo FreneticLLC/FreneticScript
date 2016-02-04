@@ -101,7 +101,7 @@ namespace FreneticScript.TagHandlers.Objects
             switch (data.Input[0])
             {
                 // <--[tag]
-                // @Name BooleanTag.byte_at[<IntegerTag>]
+                // @Name BinaryTag.byte_at[<IntegerTag>]
                 // @Group Binary Attributes
                 // @ReturnType IntegerTag
                 // @Returns the integer version of the byte at a specific 1-based index.
@@ -121,7 +121,7 @@ namespace FreneticScript.TagHandlers.Objects
                         return new IntegerTag(Internal[ind - 1]).Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name BooleanTag.byte_list
+                // @Name BinaryTag.byte_list
                 // @Group Binary Attributes
                 // @ReturnType ListTag<IntegerTag>
                 // @Returns a list of integer versions of the bytes in this binary tag.
@@ -137,7 +137,7 @@ namespace FreneticScript.TagHandlers.Objects
                         return new ListTag(objs).Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name BooleanTag.to_integer
+                // @Name BinaryTag.to_integer
                 // @Group Binary Attributes
                 // @ReturnType IntegerTag
                 // @Returns the internal data converted to an integer value.
@@ -165,7 +165,7 @@ namespace FreneticScript.TagHandlers.Objects
                         }
                     }
                 // <--[tag]
-                // @Name BooleanTag.to_number
+                // @Name BinaryTag.to_number
                 // @Group Binary Attributes
                 // @ReturnType NumberTag
                 // @Returns the internal data converted to an floating-point number value.
@@ -188,6 +188,15 @@ namespace FreneticScript.TagHandlers.Objects
                                 return new NullTag();
                         }
                     }
+                // <--[tag]
+                // @Name BinaryTag.from_utf8
+                // @Group Binary Attributes
+                // @ReturnType TextTag
+                // @Returns the text that is represented by this UTF8 binary data.
+                // @Example "6869" .to_number returns "hi".
+                // -->
+                case "from_utf8":
+                    return new TextTag(new UTF8Encoding(false).GetString(Internal)).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
