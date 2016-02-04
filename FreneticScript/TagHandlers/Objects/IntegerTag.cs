@@ -169,6 +169,15 @@ namespace FreneticScript.TagHandlers.Objects
                 // Documented in NumberTag.
                 case "sign":
                     return new IntegerTag(Math.Sign(Internal)).Handle(data.Shrink());
+                // <--[tag]
+                // @Name IntegerTag.to_binary
+                // @Group Mathematics
+                // @ReturnType BinaryTag
+                // @Returns a binary representation of this integer.
+                // @Example "1" .to_Bytes returns "0100000000000000".
+                // -->
+                case "to_binary":
+                    return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
                 default:
                     return new NumberTag(Internal).Handle(data);
             }

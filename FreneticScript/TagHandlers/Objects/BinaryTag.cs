@@ -136,6 +136,58 @@ namespace FreneticScript.TagHandlers.Objects
                         }
                         return new ListTag(objs).Handle(data.Shrink());
                     }
+                // <--[tag]
+                // @Name BooleanTag.to_integer
+                // @Group Binary Attributes
+                // @ReturnType IntegerTag
+                // @Returns the internal data converted to an integer value.
+                // @Note currently must be of length: 1, 2, 4, or 8 bytes.
+                // @Example "0100000000000000" .to_integer returns "1".
+                // -->
+                case "to_integer":
+                    {
+                        switch (Internal.Length)
+                        {
+                            case 1:
+                                return new IntegerTag(Internal[0]).Handle(data.Shrink());
+                            case 2:
+                                return new IntegerTag(BitConverter.ToInt16(Internal, 0)).Handle(data.Shrink());
+                            case 4:
+                                return new IntegerTag(BitConverter.ToInt32(Internal, 0)).Handle(data.Shrink());
+                            case 8:
+                                return new IntegerTag(BitConverter.ToInt64(Internal, 0)).Handle(data.Shrink());
+                            default:
+                                if (data.HasFallback)
+                                {
+                                    data.Error("Invalid to_integer binary data length: " + Internal.Length);
+                                }
+                                return new NullTag();
+                        }
+                    }
+                // <--[tag]
+                // @Name BooleanTag.to_number
+                // @Group Binary Attributes
+                // @ReturnType NumberTag
+                // @Returns the internal data converted to an floating-point number value.
+                // @Note currently must be of length: 4, or 8 bytes.
+                // @Example "000000000000F03F" .to_number returns "1".
+                // -->
+                case "to_number":
+                    {
+                        switch (Internal.Length)
+                        {
+                            case 4:
+                                return new NumberTag(BitConverter.ToSingle(Internal, 0)).Handle(data.Shrink());
+                            case 8:
+                                return new NumberTag(BitConverter.ToDouble(Internal, 0)).Handle(data.Shrink());
+                            default:
+                                if (data.HasFallback)
+                                {
+                                    data.Error("Invalid to_number binary data length: " + Internal.Length);
+                                }
+                                return new NullTag();
+                        }
+                    }
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

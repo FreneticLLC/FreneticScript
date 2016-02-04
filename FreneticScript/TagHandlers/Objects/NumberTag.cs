@@ -365,6 +365,15 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "truncate":
                     return new NumberTag(Math.Truncate(Internal)).Handle(data.Shrink());
+                // <--[tag]
+                // @Name NumberTag.to_binary
+                // @Group Mathematics
+                // @ReturnType BinaryTag
+                // @Returns a binary representation of this floating-point number.
+                // @Example "1" .to_Bytes returns "000000000000F03F".
+                // -->
+                case "to_binary":
+                    return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
