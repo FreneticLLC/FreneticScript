@@ -37,7 +37,10 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new IntegerTag(tval);
             }
-            dat.Error("Invalid integer: '" + TagParser.Escape(input) + "'!");
+            if (!dat.HasFallback)
+            {
+                dat.Error("Invalid integer: '" + TagParser.Escape(input) + "'!");
+            }
             return new IntegerTag(0);
         }
 

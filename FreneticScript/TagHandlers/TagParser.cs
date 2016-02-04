@@ -76,6 +76,7 @@ namespace FreneticScript.TagHandlers
         public void Init(Commands _system)
         {
             CommandSystem = _system;
+            Register(new BinaryTagBase());
             Register(new BooleanTagBase());
             Register(new CVarTagBase());
             Register(new EscapeTagBase());

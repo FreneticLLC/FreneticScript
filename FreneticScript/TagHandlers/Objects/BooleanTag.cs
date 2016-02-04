@@ -18,7 +18,7 @@ namespace FreneticScript.TagHandlers.Objects
         // -->
 
         /// <summary>
-        /// The text this TextTag represents.
+        /// The boolean this tag represents.
         /// </summary>
         public bool Internal;
 
@@ -40,7 +40,10 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new BooleanTag(false);
             }
-            dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
+            if (!dat.HasFallback)
+            {
+                dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
+            }
             return new BooleanTag(false);
         }
 
