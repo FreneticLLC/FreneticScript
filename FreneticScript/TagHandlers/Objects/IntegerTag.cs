@@ -95,7 +95,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType IntegerTag
                 // @Returns the number plus the specified number.
                 // @Other Commonly shortened to "+".
-                // @Example "1" .add[1] returns "2".
+                // @Example "1" .add_int[1] returns "2".
                 // -->
                 case "add_int":
                     return new IntegerTag(Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -105,7 +105,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType IntegerTag
                 // @Returns the number minus the specified number.
                 // @Other Commonly shortened to "-".
-                // @Example "1" .subtract[1] returns "0".
+                // @Example "1" .subtract_int[1] returns "0".
                 // -->
                 case "subtract_int":
                     return new IntegerTag(Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -115,7 +115,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType IntegerTag
                 // @Returns the number multiplied by the specified number.
                 // @Other Commonly shortened to "*".
-                // @Example "2" .multiply[2] returns "4".
+                // @Example "2" .multiply_int[2] returns "4".
                 // -->
                 case "multiply_int":
                     return new IntegerTag(Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -125,7 +125,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType IntegerTag
                 // @Returns the number divided by the specified number.
                 // @Other Commonly shortened to "/".
-                // @Example "4" .divide[2] returns "2".
+                // @Example "4" .divide_int[2] returns "2".
                 // -->
                 case "divide_int":
                     return new IntegerTag(Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -135,7 +135,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType IntegerTag
                 // @Returns the number modulo the specified number.
                 // @Other Commonly shortened to "%".
-                // @Example "10" .modulo[3] returns "1".
+                // @Example "10" .modulo_int[3] returns "1".
                 // -->
                 case "modulo_int":
                     return new IntegerTag(Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -144,7 +144,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Mathematics
                 // @ReturnType IntegerTag
                 // @Returns the absolute value of the number.
-                // @Example "-1" .absolute_value returns "1".
+                // @Example "-1" .absolute_value_int returns "1".
                 // -->
                 case "absolute_value_int":
                     return new NumberTag(Math.Abs(Internal)).Handle(data.Shrink());
@@ -153,7 +153,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Mathematics
                 // @ReturnType IntegerTag
                 // @Returns whichever is greater: the number or the specified number.
-                // @Example "10" .maximum[12] returns "12".
+                // @Example "10" .maximum_int[12] returns "12".
                 // -->
                 case "maximum_int":
                     return new IntegerTag(Math.Max(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
@@ -162,7 +162,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Mathematics
                 // @ReturnType IntegerTag
                 // @Returns whichever is lower: the number or the specified number.
-                // @Example "10" .minimum[12] returns "10".
+                // @Example "10" .minimum_int[12] returns "10".
                 // -->
                 case "minimum_int":
                     return new IntegerTag(Math.Min(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
@@ -174,7 +174,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Mathematics
                 // @ReturnType BinaryTag
                 // @Returns a binary representation of this integer.
-                // @Example "1" .to_Bytes returns "0100000000000000".
+                // @Example "1" .to_binary returns "0100000000000000".
                 // -->
                 case "to_binary":
                     return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
