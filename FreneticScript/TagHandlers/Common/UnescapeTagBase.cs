@@ -26,6 +26,7 @@ namespace FreneticScript.TagHandlers.Common
         public static string Unescape(string input)
         {
             return input.Replace("&sq", "\'")
+                .Replace("&car", "^")
                 .Replace("&quot", "\"")
                 .Replace("&gt", ">")
                 .Replace("&lt", "<")

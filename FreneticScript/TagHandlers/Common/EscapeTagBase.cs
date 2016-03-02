@@ -38,6 +38,7 @@ namespace FreneticScript.TagHandlers.Common
                 .Replace("<", "&lt")
                 .Replace(">", "&gt")
                 .Replace("\"", "&quot")
+                .Replace("^", "&car")
                 .Replace("\'", "&sq"); // TODO: More efficient method
         }
 
