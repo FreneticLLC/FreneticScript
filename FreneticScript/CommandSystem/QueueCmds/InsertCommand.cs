@@ -30,7 +30,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 CommandScript script = entry.Queue.CommandSystem.GetScript(fname);
                 if (script != null)
                 {
-                    entry.Good("Inserting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Inserting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                    }
                     entry.Queue.AddCommandsNow(script.GetEntries());
                 }
                 else

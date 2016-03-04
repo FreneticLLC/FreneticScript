@@ -31,7 +31,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The boolean tag.</returns>
         public static BooleanTag For(TagData dat, string input)
         {
-            string low = input.ToLower();
+            string low = input.ToLowerInvariant();
             if (low == "true")
             {
                 return new BooleanTag(true);

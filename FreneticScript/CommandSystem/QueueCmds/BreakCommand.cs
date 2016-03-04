@@ -98,7 +98,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                entry.Good("Broke through all layers.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Broke through all layers.");
+                }
             }
         }
     }

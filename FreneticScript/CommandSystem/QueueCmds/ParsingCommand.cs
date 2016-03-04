@@ -25,9 +25,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                bool modechoice = entry.GetArgument(0).ToLower() == "on";
+                bool modechoice = entry.GetArgument(0).ToLowerInvariant() == "on";
                 entry.Queue.ParseTags = modechoice;
-                entry.Good("Queue parsing <{text_color.emphasis}>" + (modechoice ? "enabled" : "disabled") + "<{text_color.base}>.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Queue parsing <{text_color.emphasis}>" + (modechoice ? "enabled" : "disabled") + "<{text_color.base}>.");
+                }
             }
         }
     }

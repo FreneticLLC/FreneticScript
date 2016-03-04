@@ -115,7 +115,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript GetScript(string script)
         {
             CommandScript commandscript;
-            if (Scripts.TryGetValue(script.ToLower(), out commandscript))
+            if (Scripts.TryGetValue(script.ToLowerInvariant(), out commandscript))
             {
                 return commandscript;
             }
@@ -138,7 +138,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript GetFunction(string script)
         {
             CommandScript commandscript;
-            if (Functions.TryGetValue(script.ToLower(), out commandscript))
+            if (Functions.TryGetValue(script.ToLowerInvariant(), out commandscript))
             {
                 return commandscript;
             }
@@ -178,7 +178,7 @@ namespace FreneticScript.CommandSystem
             {
                 // Last try - perhaps a command was registered after the script was loaded.
                 AbstractCommand cmd;
-                if (RegisteredCommands.TryGetValue(entry.Name.ToLower(), out cmd))
+                if (RegisteredCommands.TryGetValue(entry.Name.ToLowerInvariant(), out cmd))
                 {
                     entry.Command = cmd;
                 }
@@ -192,7 +192,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
-            command.Name = command.Name.ToLower(); // Just a quick backup in case somebody messed up.
+            command.Name = command.Name.ToLowerInvariant(); // Just a quick backup in case somebody messed up.
             command.CommandSystem = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
@@ -210,7 +210,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="name">The name of the command to remove.</param>
         public void UnregisterCommand(string name)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             AbstractCommand cmd;
             if (RegisteredCommands.TryGetValue(namelow, out cmd))
             {

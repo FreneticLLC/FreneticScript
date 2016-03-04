@@ -24,10 +24,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(0) == "\0CALLBACK")
             {
-                entry.Good("Completed catch successfully.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Completed catch successfully.");
+                }
                 return;
             }
-            entry.Good("Passing catch without executing.");
+            if (entry.ShouldShowGood())
+            {
+                entry.Good("Passing catch without executing.");
+            }
         }
     }
 }

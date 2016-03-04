@@ -20,7 +20,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ShowUsage(entry);
                 return;
             }
-            bool loud = entry.GetArgument(0).ToLower() == "loud";
+            bool loud = entry.GetArgument(0).ToLowerInvariant() == "loud";
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
                 string arg = entry.GetArgument(i);
@@ -32,7 +32,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        entry.Good("Missing variable '" + TagParser.Escape(arg) + "'!");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Missing variable '" + TagParser.Escape(arg) + "'!");
+                        }
                     }
                     entry.Queue.Stop();
                     return;

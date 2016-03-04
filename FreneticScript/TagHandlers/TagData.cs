@@ -127,11 +127,11 @@ namespace FreneticScript.TagHandlers
                 {
                     int index = Input[x].IndexOf('[');
                     Modifiers.Add(TagSystem.SplitToArgument(Input[x].Substring(index + 1, Input[x].Length - (index + 2)), wasquoted));
-                    Input[x] = Input[x].Substring(0, index).ToLower();
+                    Input[x] = Input[x].Substring(0, index).ToLowerInvariant();
                 }
                 else
                 {
-                    Input[x] = Input[x].ToLower();
+                    Input[x] = Input[x].ToLowerInvariant();
                     Modifiers.Add(new Argument());
                 }
             }

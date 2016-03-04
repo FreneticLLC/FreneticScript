@@ -27,15 +27,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ShowUsage(entry);
                 return;
             }
-            string type = entry.GetArgument(0).ToLower();
-            string eventname = entry.GetArgument(1).ToLower();
+            string type = entry.GetArgument(0).ToLowerInvariant();
+            string eventname = entry.GetArgument(1).ToLowerInvariant();
             if (type == "clear" && eventname == "all")
             {
                 foreach (KeyValuePair<string, ScriptEvent> evt in entry.Queue.CommandSystem.Events)
                 {
                     evt.Value.Handlers.Clear();
                 }
-                entry.Good("Cleared all events.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Cleared all events.");
+                }
                 return;
             }
             ScriptEvent theEvent;
@@ -48,7 +51,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 int count = theEvent.Handlers.Count;
                 theEvent.Handlers.Clear();
-                entry.Good("Cleared <{text_color.emphasis}>" + count + "<{text_color.base}> event handler" + (count == 1 ? "." : "s."));
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Cleared <{text_color.emphasis}>" + count + "<{text_color.base}> event handler" + (count == 1 ? "." : "s."));
+                }
             }
             else if (type == "remove")
             {
@@ -57,17 +63,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                string name = entry.GetArgument(2).ToLower();
+                string name = entry.GetArgument(2).ToLowerInvariant();
                 bool success = theEvent.RemoveEventHandler("eventhandler_" + theEvent.Name + "_" + name);
                 if (success)
                 {
-                    entry.Good("Removed event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Removed event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                    }
                 }
                 else
                 {
-                    if (entry.Arguments.Count > 3 && entry.GetArgument(3).ToLower() == "quiet_fail")
+                    if (entry.Arguments.Count > 3 && entry.GetArgument(3).ToLowerInvariant() == "quiet_fail")
                     {
-                        entry.Good("Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                        }
                     }
                     else
                     {
@@ -82,7 +94,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                string name = entry.GetArgument(2).ToLower();
+                string name = entry.GetArgument(2).ToLowerInvariant();
                 if (entry.Block == null)
                 {
                     entry.Error("Event command invalid: No block follows!");
@@ -104,9 +116,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (success)
                 {
-                    if (entry.Arguments.Count > 4 && entry.GetArgument(4).ToLower() == "quiet_fail")
+                    if (entry.Arguments.Count > 4 && entry.GetArgument(4).ToLowerInvariant() == "quiet_fail")
                     {
-                        entry.Good("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        }
                     }
                     else
                     {

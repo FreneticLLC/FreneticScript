@@ -77,7 +77,6 @@
     <Compile Include="CommandSystem\QueueCmds\DetermineCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ElseCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\EventCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\FireeventCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ForeachCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\FunctionCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\IfCommand.cs" />
@@ -85,7 +84,6 @@
     <Compile Include="CommandSystem\QueueCmds\ErrorCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\MarkCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ParsingCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\RegistereventCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RepeatCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RequireCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RunCommand.cs" />

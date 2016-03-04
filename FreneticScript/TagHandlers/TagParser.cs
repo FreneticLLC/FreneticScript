@@ -174,11 +174,11 @@ namespace FreneticScript.TagHandlers
                             {
                                 int index = split[x].IndexOf('[');
                                 bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
-                                split[x] = split[x].Substring(0, index).ToLower();
+                                split[x] = split[x].Substring(0, index).ToLowerInvariant();
                             }
                             else
                             {
-                                split[x] = split[x].ToLower();
+                                split[x] = split[x].ToLowerInvariant();
                                 bit.Variable = new Argument();
                             }
                             bit.Key = split[x];

@@ -18,14 +18,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(0).ToLower() == "all")
+            if (entry.Arguments.Count > 0 && entry.GetArgument(0).ToLowerInvariant() == "all")
             {
                 int qCount = entry.Queue.CommandSystem.Queues.Count;
                 if (!entry.Queue.CommandSystem.Queues.Contains(entry.Queue))
                 {
                     qCount++;
                 }
-                entry.Good("Stopping <{text_color.emphasis}>" + qCount + "<{text_color.base}> queue" + (qCount == 1 ? "." : "s."));
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Stopping <{text_color.emphasis}>" + qCount + "<{text_color.base}> queue" + (qCount == 1 ? "." : "s."));
+                }
                 foreach (CommandQueue queue in entry.Queue.CommandSystem.Queues)
                 {
                     queue.Stop();
@@ -34,7 +37,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                entry.Good("Stopping current queue.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Stopping current queue.");
+                }
                 entry.Queue.Stop();
             }
         }

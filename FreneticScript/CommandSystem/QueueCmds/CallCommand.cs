@@ -52,7 +52,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                string type = entry.GetArgument(0).ToLower();
+                string type = entry.GetArgument(0).ToLowerInvariant();
                 bool run = false;
                 if (type == "run")
                 {
@@ -72,11 +72,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     return;
                 }
-                fname = fname.ToLower();
+                fname = fname.ToLowerInvariant();
                 CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
                 if (script != null)
                 {
-                    entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>' (" + (run ? "run": "inject") + ")...");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>' (" + (run ? "run" : "inject") + ")...");
+                    }
                     List<CommandEntry> block = script.GetEntries();
                     block.Add(new CommandEntry("call \0CALLBACK", null, entry,
                             this, new List<Argument> { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "call", 0, entry.ScriptName, entry.ScriptLine));

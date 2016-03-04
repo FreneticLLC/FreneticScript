@@ -68,7 +68,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.Finished = true;
                 return;
             }
-            string fname = entry.GetArgument(0).ToLower();
+            string fname = entry.GetArgument(0).ToLowerInvariant();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs();
             args.ScriptName = fname;
             if (OnScriptRanPreEvent != null)
@@ -100,7 +100,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     return;
                 }
                 script = args2.Script;
-                entry.Good("Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                }
                 CommandQueue queue;
                 entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
                 if (!queue.Running)

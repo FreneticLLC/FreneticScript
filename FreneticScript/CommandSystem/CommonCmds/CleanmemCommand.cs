@@ -28,7 +28,10 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public override void Execute(CommandEntry entry)
         {
             GC.Collect();
-            entry.Good("Memory cleaned.");
+            if (entry.ShouldShowGood())
+            {
+                entry.Good("Memory cleaned.");
+            }
         }
     }
 }

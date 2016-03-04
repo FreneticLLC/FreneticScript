@@ -102,11 +102,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         data.Index++;
                         if (data.Index > data.Total)
                         {
-                            entry.Good("Repeating ending, reached target.");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Repeating ending, reached target.");
+                            }
                         }
                         else
                         {
-                            entry.Good("Repeating at index <{text_color.emphasis}>" + data.Index + "/" + data.Total + "<{text_color.base}>...");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Repeating at index <{text_color.emphasis}>" + data.Index + "/" + data.Total + "<{text_color.base}>...");
+                            }
                             entry.Queue.SetVariable("repeat_index", new TextTag(data.Index.ToString()));
                             entry.Queue.SetVariable("repeat_total", new TextTag(data.Total.ToString()));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
@@ -117,7 +123,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("Repeat CALLBACK invalid: not a real callback!");
                     }
                 }
-                else if (count.ToLower() == "stop")
+                else if (count.ToLowerInvariant() == "stop")
                 {
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -131,7 +137,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (hasnext)
                     {
-                        entry.Good("Stopping repeat loop.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Stopping repeat loop.");
+                        }
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
@@ -148,7 +157,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("Cannot stop repeat: not in one!");
                     }
                 }
-                else if (count.ToLower() == "next")
+                else if (count.ToLowerInvariant() == "next")
                 {
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -162,7 +171,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (hasnext)
                     {
-                        entry.Good("Skipping to next repeat entry...");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Skipping to next repeat entry...");
+                        }
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
@@ -183,7 +195,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     int target = StringToInt(count);
                     if (target <= 0)
                     {
-                        entry.Good("Not repeating.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Not repeating.");
+                        }
                         return;
                     }
                     RepeatCommandData data = new RepeatCommandData();
@@ -192,7 +207,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Data = data;
                     if (entry.Block != null)
                     {
-                        entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                        }
                         CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
                             this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "repeat", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);

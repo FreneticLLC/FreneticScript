@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ShowUsage(entry);
                 return;
             }
-            string type = entry.GetArgument(0).ToLower();
+            string type = entry.GetArgument(0).ToLowerInvariant();
             if (type == "removescript")
             {
                 if (entry.Arguments.Count < 2)
@@ -58,32 +58,39 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                string target = entry.GetArgument(1).ToLower();
+                string target = entry.GetArgument(1).ToLowerInvariant();
                 if (target == "all")
                 {
                     int count = entry.Queue.CommandSystem.Scripts.Count;
                     entry.Queue.CommandSystem.Scripts.Clear();
-                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
-                        count + "<{text_color.base}> script" + (count == 1 ? ".": "s."));
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Script cache cleared of <{text_color.emphasis}>" +
+                        count + "<{text_color.base}> script" + (count == 1 ? "." : "s."));
+                    }
                 }
                 else
                 {
                     if (entry.Queue.CommandSystem.Scripts.Remove(target))
                     {
-                        entry.Good("Script '<{text_color.emphasis}>" +
-                            TagParser.Escape(target) + "<{text_color.base}>' removed from the script cache.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Script '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' removed from the script cache.");
+
+                        }
                     }
                     else
                     {
-                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLower() == "quiet_fail")
+                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
                         {
-                            entry.Good("Script '<{text_color.emphasis}>" +
-                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Script '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
+                            }
                         }
                         else
                         {
-                            entry.Error("Script '<{text_color.emphasis}>" +
-                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
+                            entry.Error("Script '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
                         }
                     }
                 }
@@ -95,27 +102,33 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                string target = entry.GetArgument(1).ToLower();
+                string target = entry.GetArgument(1).ToLowerInvariant();
                 if (target == "all")
                 {
                     int count = entry.Queue.CommandSystem.Functions.Count;
                     entry.Queue.CommandSystem.Functions.Clear();
-                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
-                        count + "<{text_color.base}> function" + (count == 1 ? "." : "s."));
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Script cache cleared of <{text_color.emphasis}>" + count + "<{text_color.base}> function" + (count == 1 ? "." : "s."));
+                    }
                 }
                 else
                 {
                     if (entry.Queue.CommandSystem.Functions.Remove(target))
                     {
-                        entry.Good("Function '<{text_color.emphasis}>" +
-                            TagParser.Escape(target) + "<{text_color.base}>' removed from the script cache.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' removed from the script cache.");
+                        }
                     }
                     else
                     {
-                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLower() == "quiet_fail")
+                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
                         {
-                            entry.Good("Function '<{text_color.emphasis}>" +
-                                TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist in the script cache!");
+                            }
                         }
                         else
                         {
@@ -132,24 +145,3 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
     }
 }
-/*
-
-                else if (target == "functions")
-                {
-                    int count = entry.Queue.CommandSystem.Functions.Count;
-                    entry.Queue.CommandSystem.Functions.Clear();
-                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
-                        count + "<{text_color.base}> function" + (count == 1 ? "." : "s."));
-                }
-                else if (target == "all")
-                {
-                    int countScripts = entry.Queue.CommandSystem.Scripts.Count;
-                    int countFunctions = entry.Queue.CommandSystem.Functions.Count;
-                    entry.Queue.CommandSystem.Scripts.Clear();
-                    entry.Queue.CommandSystem.Functions.Clear();
-                    entry.Good("Script cache cleared of <{text_color.emphasis}>" +
-                        countScripts + "<{text_color.base}> script" + (countScripts == 1 ? "," : "s,")
-                        + " and <{text_color.emphasis}>" + countFunctions + "<{text_color.base}> function" +
-                        (countFunctions == 1 ? ".": "s."));
-                }
-*/

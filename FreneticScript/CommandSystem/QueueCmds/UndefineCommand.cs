@@ -27,14 +27,17 @@ namespace FreneticScript.CommandSystem.CommonCmds
             else
             {
                 string target = entry.GetArgument(0);
-                if (entry.Queue.Variables.ContainsKey(target.ToLower()))
+                if (entry.Queue.Variables.ContainsKey(target.ToLowerInvariant()))
                 {
-                    entry.Queue.Variables.Remove(target.ToLower());
-                    entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{text_color.base}>' removed'.");
+                    entry.Queue.Variables.Remove(target.ToLowerInvariant());
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerInvariant()) + "<{text_color.base}>' removed'.");
+                    }
                 }
                 else
                 {
-                    entry.Error("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLower()) + "<{text_color.base}>'.");
+                    entry.Error("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerInvariant()) + "<{text_color.base}>'.");
                 }
             }
         }

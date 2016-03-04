@@ -201,7 +201,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="_commands">All commands in the script.</param>
         public CommandScript(string _name, List<CommandEntry> _commands)
         {
-            Name = _name.ToLower();
+            Name = _name.ToLowerInvariant();
             Commands = _commands;
         }
 

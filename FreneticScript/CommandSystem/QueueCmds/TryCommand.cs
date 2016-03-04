@@ -21,13 +21,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(0) == "\0CALLBACK")
             {
-                entry.Good("Block completed successfully!");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Block completed successfully!");
+                }
             }
             else
             {
                 if (entry.Block != null)
                 {
-                    entry.Good("Trying block...");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Trying block...");
+                    }
                     CommandEntry callback = new CommandEntry("try \0CALLBACK", null, entry,
                         this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "try", 0, entry.ScriptName, entry.ScriptLine);
                     entry.Block.Add(callback);

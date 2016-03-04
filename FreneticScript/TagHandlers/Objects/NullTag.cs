@@ -24,7 +24,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The null tag, or internal null.</returns>
         public static NullTag For(string input)
         {
-            string low = input.ToLower();
+            string low = input.ToLowerInvariant();
             if (low == "null")
             {
                 return new NullTag();

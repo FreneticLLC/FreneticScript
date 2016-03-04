@@ -87,7 +87,7 @@ namespace FreneticScript.CommandSystem
                 waitfor = true;
                 BaseCommand = BaseCommand.Substring(1);
             }
-            string BaseCommandLow = BaseCommand.ToLower();
+            string BaseCommandLow = BaseCommand.ToLowerInvariant();
             args.RemoveAt(0);
             AbstractCommand cmd;
             if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
@@ -338,6 +338,15 @@ namespace FreneticScript.CommandSystem
                     Queue.Outputsystem.Invoke(text, MessageType.GOOD);
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns whether commands should output 'good' results.
+        /// </summary>
+        /// <returns>Whether commands should output 'good' results.</returns>
+        public bool ShouldShowGood()
+        {
+            return Queue.Debug == DebugMode.FULL;
         }
 
         /// <summary>

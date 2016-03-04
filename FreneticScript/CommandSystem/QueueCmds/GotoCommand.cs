@@ -41,7 +41,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (hasnext)
             {
-                entry.Good("Going to mark.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Going to mark.");
+                }
                 while (entry.Queue.CommandList.Length > 0)
                 {
                     if (entry.Queue.GetCommand(0).Command is MarkCommand

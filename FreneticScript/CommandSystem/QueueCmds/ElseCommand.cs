@@ -44,14 +44,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (((IfCommandData)IfEntry.Data).Result == 1)
             {
-                entry.Good("Else continuing, IF passed.");
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Else continuing, IF passed.");
+                }
                 data.Result = 1;
                 return;
             }
             if (entry.Arguments.Count >= 1)
             {
                 string ifbit = entry.GetArgument(0);
-                if (ifbit.ToLower() != "if")
+                if (ifbit.ToLowerInvariant() != "if")
                 {
                     ShowUsage(entry);
                     return;
@@ -68,13 +71,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (success)
                         {
-                            entry.Good("Else if is true, executing...");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Else if is true, executing...");
+                            }
                             data.Result = 1;
                             entry.Queue.AddCommandsNow(entry.Block);
                         }
                         else
                         {
-                            entry.Good("Else If is false, doing nothing!");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Else If is false, doing nothing!");
+                            }
                         }
                     }
                 }
@@ -83,7 +92,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.Block != null)
                 {
-                    entry.Good("Else is valid, executing...");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Else is valid, executing...");
+                    }
                     data.Result = 1;
                     entry.Queue.AddCommandsNow(entry.Block);
                 }

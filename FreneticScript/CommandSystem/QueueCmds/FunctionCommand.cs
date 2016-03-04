@@ -56,7 +56,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ShowUsage(entry);
                 return;
             }
-            string type = entry.GetArgument(0).ToLower();
+            string type = entry.GetArgument(0).ToLowerInvariant();
             if (type == "stop")
             {
                 bool hasnext = false;
@@ -70,7 +70,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (hasnext)
                 {
-                    entry.Good("Stopping function call.");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Stopping function call.");
+                    }
                     while (entry.Queue.CommandList.Length > 0)
                     {
                         if (entry.Queue.GetCommand(0).CommandLine == "call \0CALLBACK")
@@ -94,7 +97,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                string name = entry.GetArgument(1).ToLower();
+                string name = entry.GetArgument(1).ToLowerInvariant();
                 if (entry.Block == null)
                 {
                     entry.Error("Function invalid: No block follows!");
@@ -102,9 +105,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
                 {
-                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLower() == "quiet_fail")
+                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
                     {
-                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        }
                     }
                     else
                     {
@@ -114,7 +120,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 else
                 {
                     entry.Queue.CommandSystem.Functions.Add(name, new CommandScript(name, CommandScript.DisOwn(entry.Block, entry)));
-                    entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
+                    }
                 }
             }
             else

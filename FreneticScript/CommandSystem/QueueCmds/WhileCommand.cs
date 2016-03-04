@@ -54,13 +54,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         }
                         if (IfCommand.TryIf(comp))
                         {
-                            entry.Good("While loop at index <{text_color.emphasis}>" + data.Index + "<{text_color.base}>...");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("While loop at index <{text_color.emphasis}>" + data.Index + "<{text_color.base}>...");
+                            }
                             entry.Queue.SetVariable("while_index", new TextTag(data.Index.ToString()));
                             entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                         }
                         else
                         {
-                            entry.Good("While loop ending, reached 'false'.");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("While loop ending, reached 'false'.");
+                            }
                         }
                     }
                     else
@@ -68,7 +74,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("While CALLBACK invalid: not a real callback!");
                     }
                 }
-                else if (count.ToLower() == "stop")
+                else if (count.ToLowerInvariant() == "stop")
                 {
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -82,7 +88,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (hasnext)
                     {
-                        entry.Good("Stopping while loop.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Stopping while loop.");
+                        }
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is WhileCommand &&
@@ -99,7 +108,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("Cannot stop while: not in one!");
                     }
                 }
-                else if (count.ToLower() == "next")
+                else if (count.ToLowerInvariant() == "next")
                 {
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -113,7 +122,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (hasnext)
                     {
-                        entry.Good("Skipping to next repeat entry...");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Skipping to next repeat entry...");
+                        }
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is WhileCommand &&
@@ -140,7 +152,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     bool success = IfCommand.TryIf(parsedargs);
                     if (!success)
                     {
-                        entry.Good("Not looping.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Not looping.");
+                        }
                         return;
                     }
                     WhileCommandData data = new WhileCommandData();
@@ -149,7 +164,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Data = data;
                     if (entry.Block != null)
                     {
-                        entry.Good("While looping...");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("While looping...");
+                        }
                         CommandEntry callback = new CommandEntry("while \0CALLBACK", null, entry,
                             this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "while", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);

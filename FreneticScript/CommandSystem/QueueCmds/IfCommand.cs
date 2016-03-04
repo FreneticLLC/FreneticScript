@@ -57,7 +57,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 bool success = TryIf(parsedargs);
                 if (success)
                 {
-                    entry.Good("If is true, executing...");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("If is true, executing...");
+                    }
                     data.Result = 1;
                     entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
                         this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "if", 0, entry.ScriptName, entry.ScriptLine));
@@ -65,7 +68,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    entry.Good("If is false, doing nothing!");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("If is false, doing nothing!");
+                    }
                 }
             }
         }
@@ -78,7 +84,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLower() == "true";
+                return arguments[0].ToLowerInvariant() == "true";
             }
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -126,7 +132,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLower() == "true";
+                return arguments[0].ToLowerInvariant() == "true";
             }
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -165,7 +171,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLower() == "true";
+                return arguments[0].ToLowerInvariant() == "true";
             }
             if (arguments.Count == 2)
             {

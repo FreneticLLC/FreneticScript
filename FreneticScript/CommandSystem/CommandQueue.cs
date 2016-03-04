@@ -285,7 +285,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The value to set on the variable.</param>
         public void SetVariable(string name, TemplateObject value)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             Variables.Remove(namelow);
             Variables.Add(namelow, value);
         }
@@ -297,7 +297,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The variable's value.</returns>
         public TemplateObject GetVariable(string name)
         {
-            string namelow = name.ToLower();
+            string namelow = name.ToLowerInvariant();
             TemplateObject value;
             if (Variables.TryGetValue(namelow, out value))
             {

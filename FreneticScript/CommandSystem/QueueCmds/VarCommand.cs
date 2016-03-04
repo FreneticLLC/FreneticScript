@@ -60,7 +60,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Error("Invalid setter!");
                     return;
             }
-            entry.Good("Variable updated!");
+            if (entry.ShouldShowGood())
+            {
+                entry.Good("Variable updated!");
+            }
         }
     }
 }

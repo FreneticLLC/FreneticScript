@@ -99,11 +99,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         data.Index++;
                         if (data.Index > data.List.Count)
                         {
-                            entry.Good("Foreach loop ending, reached target.");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Foreach loop ending, reached target.");
+                            }
                         }
                         else
                         {
-                            entry.Good("Foreach loop continuing at index <{text_color.emphasis}>" + data.Index + "/" + data.List.Count + "<{text_color.base}>...");
+                            if (entry.ShouldShowGood())
+                            {
+                                entry.Good("Foreach loop continuing at index <{text_color.emphasis}>" + data.Index + "/" + data.List.Count + "<{text_color.base}>...");
+                            }
                             entry.Queue.SetVariable("foreach_index", new TextTag(data.Index.ToString()));
                             entry.Queue.SetVariable("foreach_total", new TextTag(data.List.Count.ToString()));
                             entry.Queue.SetVariable("foreach_value", data.List[data.Index - 1]);
@@ -116,7 +122,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("Foreach CALLBACK invalid: not a real callback!");
                     }
                 }
-                else if (type.ToLower() == "stop")
+                else if (type.ToLowerInvariant() == "stop")
                 {
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -130,7 +136,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (hasnext)
                     {
-                        entry.Good("Stopping foreach loop.");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Stopping foreach loop.");
+                        }
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
@@ -147,7 +156,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("Cannot stop foreach: not in one!");
                     }
                 }
-                else if (type.ToLower() == "next")
+                else if (type.ToLowerInvariant() == "next")
                 {
                     bool hasnext = false;
                     for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -161,7 +170,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (hasnext)
                     {
-                        entry.Good("Skipping to next foreach entry...");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Skipping to next foreach entry...");
+                        }
                         while (entry.Queue.CommandList.Length > 0)
                         {
                             if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
@@ -177,7 +189,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Error("Cannot stop foreach: not in one!");
                     }
                 }
-                else if (type.ToLower() == "start" && entry.Arguments.Count > 1)
+                else if (type.ToLowerInvariant() == "start" && entry.Arguments.Count > 1)
                 {
                     ListTag list = ListTag.For(entry.GetArgument(1));
                     int target = list.ListEntries.Count;
@@ -192,7 +204,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Data = data;
                     if (entry.Block != null)
                     {
-                        entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                        }
                         CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
                             this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "foreach", 0, entry.ScriptName, entry.ScriptLine);
                         entry.Block.Add(callback);
