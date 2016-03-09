@@ -193,7 +193,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Binary Attributes
                 // @ReturnType TextTag
                 // @Returns the text that is represented by this UTF8 binary data.
-                // @Example "6869" .to_number returns "hi".
+                // @Example "6869" .from_utf8 returns "hi".
                 // -->
                 case "from_utf8":
                     return new TextTag(new UTF8Encoding(false).GetString(Internal)).Handle(data.Shrink());
