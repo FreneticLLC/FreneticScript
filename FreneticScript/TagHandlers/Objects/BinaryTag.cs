@@ -138,7 +138,7 @@ namespace FreneticScript.TagHandlers.Objects
                     }
                 // <--[tag]
                 // @Name BinaryTag.to_integer
-                // @Group Binary Attributes
+                // @Group Conversion
                 // @ReturnType IntegerTag
                 // @Returns the internal data converted to an integer value.
                 // @Note currently must be of length: 1, 2, 4, or 8 bytes.
@@ -166,7 +166,7 @@ namespace FreneticScript.TagHandlers.Objects
                     }
                 // <--[tag]
                 // @Name BinaryTag.to_number
-                // @Group Binary Attributes
+                // @Group Conversion
                 // @ReturnType NumberTag
                 // @Returns the internal data converted to an floating-point number value.
                 // @Note currently must be of length: 4, or 8 bytes.
@@ -190,13 +190,23 @@ namespace FreneticScript.TagHandlers.Objects
                     }
                 // <--[tag]
                 // @Name BinaryTag.from_utf8
-                // @Group Binary Attributes
+                // @Group Conversion
                 // @ReturnType TextTag
                 // @Returns the text that is represented by this UTF8 binary data.
+                // @Other can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>.
                 // @Example "6869" .from_utf8 returns "hi".
                 // -->
                 case "from_utf8":
                     return new TextTag(new UTF8Encoding(false).GetString(Internal)).Handle(data.Shrink());
+                // <--[tag]
+                // @Name BinaryTag.to_base64
+                // @Group Conversion
+                // @ReturnType TextTag
+                // @Returns a Base-64 text representation of this binary data.
+                // @Example "6869" .to_base64 returns "aGk=".
+                // -->
+                case "to_base64":
+                    return new TextTag(Convert.ToBase64String(Internal)).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

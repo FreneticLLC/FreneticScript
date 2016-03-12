@@ -260,13 +260,38 @@ namespace FreneticScript.TagHandlers.Objects
                     return new BooleanTag(Text.ToLowerInvariant() != data.GetModifier(0).ToLowerInvariant()).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.to_utf8_binary
-                // @Group Text Attributes
+                // @Group Conversion
                 // @ReturnType BinaryTag
                 // @Returns UTF-8 encoded binary data of the included text.
+                // @Other can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
                 // @Example "hi" .to_utf8_binary returns "6869".
                 // -->
                 case "to_utf8_binary":
                     return new BinaryTag(new UTF8Encoding(false).GetBytes(Text)).Handle(data.Shrink());
+                // <--[tag]
+                // @Name TextTag.from_base64
+                // @Group Conversion
+                // @ReturnType BinaryTag
+                // @Returns the binary data represented by this Base-64 text.
+                // @Other can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
+                // @Example "aGk=" .from_base64 returns "6869".
+                // -->
+                case "from_base64":
+                    try
+                    {
+                        byte[] bits = Convert.FromBase64String(Text);
+                        if (bits == null)
+                        {
+                            data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "'!");
+                            return new NullTag();
+                        }
+                        return new BinaryTag(bits).Handle(data.Shrink());
+                    }
+                    catch (FormatException ex)
+                    {
+                        data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
+                        return new NullTag();
+                    }
                 default:
                     break;
             }
