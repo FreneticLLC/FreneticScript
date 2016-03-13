@@ -15,6 +15,7 @@ namespace FreneticScript.TagHandlers.Objects
         // @SubType NONE
         // @Group Mathematics
         // @Description Represents any text.
+        // @Other <@link explanation Text Tags>What are text tags?<@/link>
         // -->
 
         /// <summary>

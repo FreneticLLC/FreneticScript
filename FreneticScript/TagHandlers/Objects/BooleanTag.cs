@@ -123,6 +123,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType BooleanTag
                 // @Returns the opposite of the tag - true and false are flipped.
                 // @Example "true" .not returns "false".
+                // @Example "false" .not returns "true".
                 // -->
                 case "not":
                     return new BooleanTag(!Internal).Handle(data.Shrink());
@@ -132,6 +133,8 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType BooleanTag
                 // @Returns whether the boolean and the specified text are both true.
                 // @Example "true" .and[true] returns "true".
+                // @Example "true" .and[false] returns "false".
+                // @Example "false" .and[true] returns "false".
                 // -->
                 case "and":
                     return new BooleanTag(Internal && For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -140,7 +143,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Boolean Logic
                 // @ReturnType BooleanTag
                 // @Returns whether the boolean or the specified text are true.
+                // @Example "true" .or[true] returns "true".
                 // @Example "true" .or[false] returns "true".
+                // @Example "false" .or[false] returns "false".
                 // -->
                 case "or":
                     return new BooleanTag(Internal | For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
@@ -148,8 +153,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Name BooleanTag.xor[<BooleanTag>]
                 // @Group Boolean Logic
                 // @ReturnType BooleanTag
-                // @Returns whether the boolean exclusive-or the specified text are true.
-                // @Examplre "true" .xor[true] returns "false".
+                // @Returns whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.
+                // @Example "true" .xor[true] returns "false".
+                // @Example "true" .xor[fa,se] returns "true".
                 // -->
                 case "xor":
                     return new BooleanTag(Internal != For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
