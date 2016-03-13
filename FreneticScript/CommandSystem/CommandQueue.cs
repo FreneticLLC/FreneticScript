@@ -223,7 +223,14 @@ namespace FreneticScript.CommandSystem
             }
             else
             {
-                entry.Bad(message);
+                if (Debug <= DebugMode.MINIMAL)
+                {
+                    entry.Output.Bad(message, DebugMode.MINIMAL);
+                    if (Outputsystem != null)
+                    {
+                        Outputsystem.Invoke(message, MessageType.BAD);
+                    }
+                }
             }
         }
 
