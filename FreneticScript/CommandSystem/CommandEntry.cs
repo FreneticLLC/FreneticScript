@@ -368,12 +368,12 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Used to indicate an error has occured, and have the system react accordingly.
-        /// It is recommended you "return;" immediately after invoking this.
+        /// It is recommended you "return;" immediately after invoking this - this is not needed, as an exception is thrown, but instead used to keep code clear that the method stops there.
         /// </summary>
         /// <param name="EMsg">The error message.</param>
         public void Error(string EMsg)
         {
-            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + EMsg;
+            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + TagParser.Escape(EMsg);
             Queue.HandleError(this, EMsg);
             throw new ErrorInducedException();
         }

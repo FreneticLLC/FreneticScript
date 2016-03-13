@@ -60,6 +60,43 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Tries to return a valid boolean, or null.
+        /// </summary>
+        /// <param name="input">The input that is potentially a boolean.</param>
+        /// <returns>A boolean, or null.</returns>
+        public static BooleanTag TryFor(string input)
+        {
+            string low = input.ToLowerInvariant();
+            if (low == "true")
+            {
+                return new BooleanTag(true);
+            }
+            if (low == "false")
+            {
+                return new BooleanTag(false);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Tries to return a valid boolean, or null.
+        /// </summary>
+        /// <param name="input">The input that is potentially a boolean.</param>
+        /// <returns>A boolean, or null.</returns>
+        public static BooleanTag TryFor(TemplateObject input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            if (input is BooleanTag)
+            {
+                return (BooleanTag)input;
+            }
+            return TryFor(input.ToString());
+        }
+
+        /// <summary>
         /// Constructs a boolean tag.
         /// </summary>
         /// <param name="_val">The internal boolean to use.</param>

@@ -252,6 +252,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new ToggleCommand());
 
             // Queue-related Commands
+            RegisterCommand(new AssertCommand());
             RegisterCommand(new BreakCommand());
             RegisterCommand(new CallCommand());
             RegisterCommand(new CatchCommand());
