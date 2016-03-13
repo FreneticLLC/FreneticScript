@@ -123,7 +123,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name BinaryTag.byte_list
                 // @Group Binary Attributes
-                // @ReturnType ListTag<IntegerTag>
+                // @ReturnType ListTag
                 // @Returns a list of integer versions of the bytes in this binary tag.
                 // @Example "010203" .byte_list returns "1|2|3".
                 // -->

@@ -64,6 +64,10 @@ namespace FreneticScript.TagHandlers.Objects
             ListTag tlist = new ListTag();
             for (int i = 0; i < baselist.Length; i++)
             {
+                if (i == baselist.Length - 1 && baselist[i].Length == 0)
+                {
+                    break;
+                }
                 tlist.ListEntries.Add(new TextTag(UnescapeTagBase.Unescape(baselist[i])));
             }
             return tlist;
@@ -96,7 +100,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType NumberTag
                 // @Returns the number of entries in the list.
-                // @Example "one|two|three" .size returns "3".
+                // @Example "one|two|three|" .size returns "3".
                 // -->
                 case "size":
                     return new NumberTag(ListEntries.Count).Handle(data.Shrink());
@@ -105,7 +109,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list in a user-friendly comma-separated format.
-                // @Example "one|two|three" .comma_separated returns "one, two, three".
+                // @Example "one|two|three|" .comma_separated returns "one, two, three".
                 // -->
                 case "comma_separated":
                     return new TextTag(ToCSString()).Handle(data.Shrink());
@@ -114,7 +118,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list in a space-separated format.
-                // @Example "one|two|three" .space_separated returns "one two three".
+                // @Example "one|two|three|" .space_separated returns "one two three".
                 // -->
                 case "space_separated":
                     return new TextTag(ToSpaceString()).Handle(data.Shrink());
@@ -123,7 +127,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list as an unseparated string.
-                // @Example "one|two|three" .unseparated returns "onetwothree".
+                // @Example "one|two|three|" .unseparated returns "onetwothree".
                 // -->
                 case "unseparated":
                     return new TextTag(ToFlatString()).Handle(data.Shrink());
@@ -132,17 +136,17 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType TextTag
                 // @Returns the list in a user-friendly format.
-                // @Example "one|two|three" .formatted returns "one, two, and three",
-                // @Example "one|two" .formatted returns "one and two".
+                // @Example "one|two|three|" .formatted returns "one, two, and three",
+                // @Example "one|two|" .formatted returns "one and two".
                 // -->
                 case "formatted":
                     return new TextTag(Formatted()).Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.reversed
                 // @Group List Attributes
-                // @ReturnType ListTag<Dynamic>
+                // @ReturnType ListTag
                 // @Returns the list entirely backwards.
-                // @Example "one|two|three" .reversed returns "three|two|one".
+                // @Example "one|two|three|" .reversed returns "three|two|one|".
                 // -->
                 case "reversed":
                     {
@@ -153,10 +157,10 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.filter[<BooleanTag>]
                 // @Group List Attributes
-                // @ReturnType ListTag<Dynamic>
+                // @ReturnType ListTag
                 // @Returns the list modified such that each entry is only included if the input modifier would return true for it.
-                // @Example "one|two|three" .filter[true] returns "one|two|three".
-                // @Example "1|2|3" .filter[<{var[value].equals[2]}>] returns "2".
+                // @Example "one|two|three|" .filter[true] returns "one|two|three|".
+                // @Example "1|2|3|" .filter[<{var[value].equals[2]}>] returns "2|".
                 // -->
                 case "filter":
                     {
@@ -166,7 +170,7 @@ namespace FreneticScript.TagHandlers.Objects
                             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
                             vars.Add("value", ListEntries[i]);
                             TemplateObject tobj = data.Modifiers[0].Parse(data.BaseColor, vars, data.mode, data.Error);
-                            if ((tobj is BooleanTag ? (BooleanTag)tobj: BooleanTag.For(data, tobj.ToString())).Internal)
+                            if ((tobj is BooleanTag ? (BooleanTag)tobj : BooleanTag.For(data, tobj.ToString())).Internal)
                             {
                                 newlist.ListEntries.Add(ListEntries[i]);
                             }
@@ -176,9 +180,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.parse[<TextTag>]
                 // @Group List Attributes
-                // @ReturnType ListTag<Dynamic>
+                // @ReturnType ListTag
                 // @Returns the list modified such that each entry is modified to be what the input modifier would return for it.
-                // @Example "one|two|three" .parse[<{var[value].to_upper}>] returns "ONE|TWO|THREE".
+                // @Example "one|two|three|" .parse[<{var[value].to_upper}>] returns "ONE|TWO|THREE|".
                 // -->
                 case "parse":
                     {
@@ -196,7 +200,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns the first entry in the list.
-                // @Example "one|two|three" .first returns "one".
+                // @Example "one|two|three|" .first returns "one".
                 // -->
                 case "first":
                     if (ListEntries.Count == 0)
@@ -210,7 +214,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns a random entry from the list
-                // @Example "one|two|three" .random returns "one", "two", or "three".
+                // @Example "one|two|three|" .random returns "one", "two", or "three".
                 // -->
                 case "random":
                     if (ListEntries.Count == 0)
@@ -224,7 +228,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Entries
                 // @ReturnType Dynamic
                 // @Returns the last entry in the list.
-                // @Example "one|two|three" .last returns "three".
+                // @Example "one|two|three|" .last returns "three".
                 // -->
                 case "last":
                     if (ListEntries.Count == 0)
@@ -239,7 +243,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType Dynamic
                 // @Returns the specified entry in the list.
                 // @Other note that indices are one-based.
-                // @Example "one|two|three" .get[2] returns "two".
+                // @Example "one|two|three|" .get[2] returns "two".
                 // -->
                 case "get":
                     {
@@ -269,11 +273,11 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.range[<TextTag>,<TextTag>]
                 // @Group List Entries
-                // @ReturnType ListTag<Dynamic>
+                // @ReturnType ListTag
                 // @Returns the specified set of entries in the list.
                 // @Other note that indices are one-based.
-                // @Example "one|two|three|four" .range[2,3] returns "two|three".
-                // @Example "one|two|three" .range[2,2] returns "two".
+                // @Example "one|two|three|four|" .range[2,3] returns "two|three|".
+                // @Example "one|two|three|" .range[2,2] returns "two|".
                 // -->
                 case "range":
                     {
@@ -328,6 +332,43 @@ namespace FreneticScript.TagHandlers.Objects
                         }
                         return new ListTag(Entries).Handle(data.Shrink());
                     }
+                // <--[tag]
+                // @Name ListTag.include[<ListTag>]
+                // @Group List Entries
+                // @ReturnType ListTag
+                // @Returns a list with the input list added to the end.
+                // @Other note that indices are one-based.
+                // @Example "one|two|three|" .include[four|five] returns "one|two|three|four|five|".
+                // -->
+                case "include":
+                    {
+                        ListTag newlist = new ListTag(ListEntries);
+                        newlist.ListEntries.AddRange(For(data.GetModifierObject(0)).ListEntries);
+                        return newlist.Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name ListTag.insert[<IntegerTag>|<ListTag>]
+                // @Group List Entries
+                // @ReturnType ListTag
+                // @Returns a list with the input list added after an index specified as the first item in the list (index is not included in the final list).
+                // @Other note that indices are one-based.
+                // @Other specify 0 as the index to insert at the beginning.
+                // @Example "one|two|three|" .insert[1|a|b|] returns "one|a|b|two|three|".
+                // -->
+                case "insert":
+                    {
+                        ListTag modif = For(data.GetModifierObject(0));
+                        if (modif.ListEntries.Count == 0)
+                        {
+                            data.Error("Empty list to insert!");
+                            return new NullTag();
+                        }
+                        IntegerTag index = IntegerTag.For(data, modif.ListEntries[0]);
+                        modif.ListEntries.RemoveAt(0);
+                        ListTag newlist = new ListTag(ListEntries);
+                        newlist.ListEntries.InsertRange((int)index.Internal, modif.ListEntries);
+                        return newlist.Handle(data.Shrink());
+                    }
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
@@ -356,11 +397,7 @@ namespace FreneticScript.TagHandlers.Objects
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ListEntries.Count; i++)
             {
-                sb.Append(EscapeTagBase.Escape(ListEntries[i].ToString()));
-                if (i + 1 < ListEntries.Count)
-                {
-                    sb.Append("|");
-                }
+                sb.Append(EscapeTagBase.Escape(ListEntries[i].ToString())).Append("|");
             }
             return sb.ToString();
         }
