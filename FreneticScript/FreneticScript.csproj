@@ -106,6 +106,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagHandlers\Common\BinaryTagBase.cs" />
     <Compile Include="TagHandlers\Common\IntegerTagBase.cs" />
+    <Compile Include="TagHandlers\Common\MapTagBase.cs" />
     <Compile Include="TagHandlers\Common\NumberTagBase.cs" />
     <Compile Include="TagHandlers\Common\TextColorTags.cs" />
     <Compile Include="TagHandlers\Common\CVarTagBase.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="TagHandlers\Common\VarTagBase.cs" />
     <Compile Include="TagHandlers\Objects\BinaryTag.cs" />
     <Compile Include="TagHandlers\Objects\IntegerTag.cs" />
+    <Compile Include="TagHandlers\Objects\MapTag.cs" />
     <Compile Include="TagHandlers\Objects\NullTag.cs" />
     <Compile Include="TagHandlers\Objects\NumberTag.cs" />
     <Compile Include="TagHandlers\Objects\ListTag.cs" />

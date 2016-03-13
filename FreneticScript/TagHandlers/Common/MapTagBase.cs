@@ -7,29 +7,29 @@ using FreneticScript.TagHandlers.Objects;
 namespace FreneticScript.TagHandlers.Common
 {
     // <--[explanation]
-    // @Name Lists
+    // @Name Maps
     // @Description
-    // A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
+    // A map is a relationship between textual names and object values.
     // TODO: Explain better!
     // -->
-    class ListTagBase : TemplateTagBase
+    class MapTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base list[<ListTag>]
+        // @Base map[<MapTag>]
         // @Group Mathematics
-        // @ReturnType ListTag
-        // @Returns the specified input as a list.
-        // <@link explanation lists>What are lists?<@/link>
+        // @ReturnType MapTag
+        // @Returns the specified input as a map.
+        // <@link explanation maps>What are maps?<@/link>
         // -->
-        public ListTagBase()
+        public MapTagBase()
         {
-            Name = "list";
+            Name = "map";
         }
 
         public override TemplateObject Handle(TagData data)
         {
             TemplateObject modif = data.GetModifierObject(0);
-            return (modif is ListTag ? modif: ListTag.For(modif.ToString())).Handle(data.Shrink());
+            return (modif is MapTag ? modif: MapTag.For(modif.ToString())).Handle(data.Shrink());
         }
     }
 }

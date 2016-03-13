@@ -243,9 +243,8 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "get":
                     {
-                        // TODO: Integer tag
-                        string modif = data.GetModifier(0);
-                        NumberTag num = NumberTag.For(data, modif);
+                        TemplateObject modif = data.GetModifierObject(0);
+                        IntegerTag num = IntegerTag.For(data, modif);
                         if (ListEntries.Count == 0)
                         {
                             data.Error("Read 'get' tag on empty list!");
@@ -253,7 +252,7 @@ namespace FreneticScript.TagHandlers.Objects
                         }
                         if (num == null)
                         {
-                            data.Error("Invalid number input: '" + modif + "'!");
+                            data.Error("Invalid integer input: '" + modif + "'!");
                             return new NullTag();
                         }
                         int number = (int)num.Internal - 1;
