@@ -8,8 +8,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public RequireCommand()
         {
             Name = "require";
-            Arguments = "Loud/Quiet <variable to require> [...]";
-            Description = "Stops a command queue entirely if the relevant variables are not available.";
+            Arguments = "Loud/Quiet/Error <variable to require> [...]";
+            Description = "Stops a command queue entirely or throws an error if the relevant variables are not available.";
             IsFlow = true;
         }
 
@@ -20,24 +20,29 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ShowUsage(entry);
                 return;
             }
-            bool loud = entry.GetArgument(0).ToLowerInvariant() == "loud";
+            string loud = entry.GetArgument(0).ToLowerInvariant();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
                 string arg = entry.GetArgument(i);
                 if (!entry.Queue.Variables.ContainsKey(arg))
                 {
-                    if (loud)
+                    if (loud == "loud")
                     {
                         entry.Bad("Missing variable '" + TagParser.Escape(arg) + "'!");
+                        entry.Queue.Stop();
                     }
-                    else
+                    else if (loud == "quiet")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Missing variable '" + TagParser.Escape(arg) + "'!");
                         }
+                        entry.Queue.Stop();
                     }
-                    entry.Queue.Stop();
+                    else
+                    {
+                        entry.Error("Missing variable '" + TagParser.Escape(arg) + "'!");
+                    }
                     return;
                 }
             }
