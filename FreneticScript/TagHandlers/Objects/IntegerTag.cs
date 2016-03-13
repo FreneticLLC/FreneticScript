@@ -178,8 +178,12 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "to_binary":
                     return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
+                case "to_integer":
+                    return Handle(data.Shrink());
+                case "to_number":
+                    return new NumberTag(Internal).Handle(data.Shrink());
                 default:
-                    return new NumberTag(Internal).Handle(data);
+                    return new NumberTag(Internal).Handle(data); // TODO: is this best?
             }
         }
 

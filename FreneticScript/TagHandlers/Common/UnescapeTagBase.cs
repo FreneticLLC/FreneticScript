@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers.Common
         }
 
         /// <summary>
-        /// Construct the UnescapeTags - for internal use only.
+        /// Construct the UnescapeTagBase - for internal use only.
         /// </summary>
         public UnescapeTagBase()
         {

@@ -6,7 +6,10 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class BooleanTagBase : TemplateTagBase
+    /// <summary>
+    /// Gets a boolean tag.
+    /// </summary>
+    public class BooleanTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base boolean[<BooleanTag>]
@@ -15,11 +18,18 @@ namespace FreneticScript.TagHandlers.Common
         // @Returns the input boolean as a BooleanTag.
         // -->
 
+        /// <summary>
+        /// Constructs the BooleanTagBase - for internal use only.
+        /// </summary>
         public BooleanTagBase()
         {
             Name = "boolean";
         }
 
+        /// <summary>
+        /// Handles the 'boolean' tag.
+        /// </summary>
+        /// <param name="data">The data to be handled.</param>
         public override TemplateObject Handle(TagData data)
         {
             return BooleanTag.For(data, data.GetModifierObject(0)).Handle(data.Shrink());
