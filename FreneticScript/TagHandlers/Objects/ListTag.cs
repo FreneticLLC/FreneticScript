@@ -366,6 +366,10 @@ namespace FreneticScript.TagHandlers.Objects
                         IntegerTag index = IntegerTag.For(data, modif.ListEntries[0]);
                         modif.ListEntries.RemoveAt(0);
                         ListTag newlist = new ListTag(ListEntries);
+                        if (index.Internal > newlist.ListEntries.Count)
+                        {
+                            index.Internal = newlist.ListEntries.Count;
+                        }
                         newlist.ListEntries.InsertRange((int)index.Internal, modif.ListEntries);
                         return newlist.Handle(data.Shrink());
                     }
