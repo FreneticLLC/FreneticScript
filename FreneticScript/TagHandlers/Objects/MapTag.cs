@@ -91,14 +91,37 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Name MapTag.size
                 // @Group Map Entries
                 // @ReturnType IntegerTag
-                // @Returns the specified entry value in the map.
-                // @Other note that indices are one-based.
-                // @Example "one:a|two:b" .get[one] returns "a".
-                // @Example "one:a|two:b" .get[two] returns "b".
+                // @Returns the number of entries in the map.
+                // @Example "one:a|two:b" .size returns "2".
                 // -->
                 case "size":
                     {
                         return new IntegerTag(Internal.Count).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name MapTag.keys
+                // @Group Map Entries
+                // @ReturnType ListTag
+                // @Returns a list of all keys in the map.
+                // @Example "one:a|two:b" .get[one] returns "one|two|".
+                // -->
+                case "keys":
+                    {
+                        ListTag list = new ListTag(Internal.Keys.ToList());
+                        return list.Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name MapTag.values
+                // @Group Map Entries
+                // @ReturnType ListTag
+                // @Returns a list of all values in the map.
+                // @Example "one:a|two:b" .get[one] returns "a|b|".
+                // -->
+                case "values":
+                    {
+                        ListTag list = new ListTag();
+                        list.ListEntries.AddRange(Internal.Values);
+                        return list.Handle(data.Shrink());
                     }
                 // <--[tag]
                 // @Name MapTag.contains[<TextTag>]
