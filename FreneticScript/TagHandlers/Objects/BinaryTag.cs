@@ -102,7 +102,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 // <--[tag]
                 // @Name BinaryTag.byte_at[<IntegerTag>]
-                // @Group Binary Attributes
+                // @Group Binary Data
                 // @ReturnType IntegerTag
                 // @Returns the integer version of the byte at a specific 1-based index.
                 // @Example "010203" .byte_at[1] returns "1".
@@ -122,7 +122,7 @@ namespace FreneticScript.TagHandlers.Objects
                     }
                 // <--[tag]
                 // @Name BinaryTag.byte_list
-                // @Group Binary Attributes
+                // @Group Binary Data
                 // @ReturnType ListTag
                 // @Returns a list of integer versions of the bytes in this binary tag.
                 // @Example "010203" .byte_list returns "1|2|3".
@@ -135,6 +135,65 @@ namespace FreneticScript.TagHandlers.Objects
                             objs.Add(new IntegerTag(Internal[i]));
                         }
                         return new ListTag(objs).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name BinaryTag.range[<IntegerTag>,<IntegerTag>]
+                // @Group Binary Data
+                // @ReturnType BinaryTag
+                // @Returns the specified set of bytes in the binary data.
+                // @Other note that indices are one-based.
+                // @Example "01020304" .range[2,3] returns "0203".
+                // @Example "01020304" .range[2,2] returns "02".
+                // -->
+                case "range":
+                    {
+                        string modif = data.GetModifier(0);
+                        string[] split = modif.Split(',');
+                        if (split.Length != 2)
+                        {
+                            data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
+                            return new NullTag();
+                        }
+                        IntegerTag num1 = IntegerTag.For(data, split[0]);
+                        IntegerTag num2 = IntegerTag.For(data, split[1]);
+                        if (Internal.Length == 0)
+                        {
+                            data.Error("Read 'range' tag on empty BinaryTag!");
+                            return new NullTag();
+                        }
+                        if (num1 == null || num2 == null)
+                        {
+                            data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
+                            return new NullTag();
+                        }
+                        int number = (int)num1.Internal - 1;
+                        int number2 = (int)num2.Internal - 1;
+                        if (number < 0)
+                        {
+                            number = 0;
+                        }
+                        if (number2 < 0)
+                        {
+                            number2 = 0;
+                        }
+                        if (number >= Internal.Length)
+                        {
+                            data.Error("Invalid range tag!");
+                            return new NullTag();
+                        }
+                        if (number2 >= Internal.Length)
+                        {
+                            data.Error("Invalid range tag!");
+                            return new NullTag();
+                        }
+                        if (number2 < number)
+                        {
+                            data.Error("Invalid range tag!");
+                            return new NullTag();
+                        }
+                        byte[] ndat = new byte[number2 - number + 1];
+                        Array.Copy(Internal, number, ndat, 0, ndat.Length);
+                        return new BinaryTag(ndat).Handle(data.Shrink());
                     }
                 // <--[tag]
                 // @Name BinaryTag.to_integer
