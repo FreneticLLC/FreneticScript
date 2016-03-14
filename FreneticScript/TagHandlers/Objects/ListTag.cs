@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Common;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -68,7 +69,9 @@ namespace FreneticScript.TagHandlers.Objects
                 {
                     break;
                 }
-                tlist.ListEntries.Add(new TextTag(UnescapeTagBase.Unescape(baselist[i])));
+                string dat = UnescapeTagBase.Unescape(baselist[i]);
+                TextArgumentBit tab = new TextArgumentBit(dat, false);
+                tlist.ListEntries.Add(tab.InputValue);
             }
             return tlist;
         }

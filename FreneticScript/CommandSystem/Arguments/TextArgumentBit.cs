@@ -32,13 +32,25 @@ namespace FreneticScript.CommandSystem.Arguments
             {
                 InputValue = new BooleanTag(false);
             }
-            else if (_text == "null" && !wasquoted)
+            else if (_text == "null")
             {
                 InputValue = new NullTag();
             }
             else if (double.TryParse(_text, out tn) && tn.ToString() == _text)
             {
                 InputValue = new NumberTag(tn);
+            }
+            else if (_text.Contains('|'))
+            {
+                ListTag list = ListTag.For(_text);
+                if (list.ToString() == _text)
+                {
+                    InputValue = list;
+                }
+                else
+                {
+                    InputValue = new TextTag(_text);
+                }
             }
             else
             {
