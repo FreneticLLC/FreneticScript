@@ -19,6 +19,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
         public TextArgumentBit(string _text, bool wasquoted)
         {
+            long ti;
             double tn;
             if (wasquoted)
             {
@@ -35,6 +36,10 @@ namespace FreneticScript.CommandSystem.Arguments
             else if (_text == "null")
             {
                 InputValue = new NullTag();
+            }
+            else if (long.TryParse(_text, out ti) && ti.ToString() == _text)
+            {
+                InputValue = new IntegerTag(ti);
             }
             else if (double.TryParse(_text, out tn) && tn.ToString() == _text)
             {
