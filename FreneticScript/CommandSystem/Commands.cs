@@ -93,7 +93,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="script">The script to execute.</param>
         /// <param name="Variables">What variables to add to the commandqueue.</param>
         /// <param name="queue">Outputs the generated queue (already ran or running).</param>
-        public List<string> ExecuteScript(CommandScript script, Dictionary<string, TemplateObject> Variables, out CommandQueue queue)
+        /// <param name="mode">The debug mode to run it in.</param>
+        public List<string> ExecuteScript(CommandScript script, Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
         {
             queue = script.ToQueue(this);
             if (Variables != null)
@@ -103,6 +104,7 @@ namespace FreneticScript.CommandSystem
                     queue.SetVariable(variable.Key, variable.Value);
                 }
             }
+            queue.Debug = mode;
             queue.Execute();
             return queue.Determinations;
         }

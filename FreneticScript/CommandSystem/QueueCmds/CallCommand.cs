@@ -98,7 +98,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                             string[] split = str.Split(new char[] { ':' }, 2);
                             variables.Add(split[0], new TextTag(split[1]));
                         }
-                        entry.Queue.CommandSystem.ExecuteScript(script, variables, out queue);
+                        entry.Queue.CommandSystem.ExecuteScript(script, variables, out queue, DebugMode.MINIMAL);
                         if (!queue.Running)
                         {
                             entry.Finished = true;
