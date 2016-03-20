@@ -5,7 +5,10 @@ using System.Text;
 
 namespace FreneticScript
 {
-    class FreneticScriptUtilities
+    /// <summary>
+    /// Utilities for FreneticScript.
+    /// </summary>
+    public class FreneticScriptUtilities
     {
         /// <summary>
         /// Converts a string value to the long-integer value it represents.
