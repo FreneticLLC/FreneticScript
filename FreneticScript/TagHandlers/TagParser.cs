@@ -184,7 +184,7 @@ namespace FreneticScript.TagHandlers
                             bit.Key = split[x];
                             bits.Add(bit);
                         }
-                        TagArgumentBit tab = new TagArgumentBit(CommandSystem, bits);
+                        TagArgumentBit tab = new TagArgumentBit(CommandSystem, bits.ToArray());
                         tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
                         arg.Bits.Add(tab);
                         blockbuilder = new StringBuilder();
@@ -246,7 +246,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The string with tags parsed.</returns>
         public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, TemplateTagBase starter)
         {
-            if (bits.Bits.Count == 0)
+            if (bits.Bits.Length == 0)
             {
                 return new TextTag("");
             }

@@ -14,18 +14,18 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <summary>
         /// The pieces that make up the tag.
         /// </summary>
-        public List<TagBit> Bits = new List<TagBit>();
+        public TagBit[] Bits;
 
         /// <summary>
         /// Constructs a TagArgumentBit.
         /// </summary>
         /// <param name="system">The relevant command system.</param>
         /// <param name="bits">The tag bits.</param>
-        public TagArgumentBit(Commands system, List<TagBit> bits)
+        public TagArgumentBit(Commands system, TagBit[] bits)
         {
             Bits = bits;
             CommandSystem = system;
-            if (bits.Count > 0)
+            if (bits.Length > 0)
             {
                 if (!CommandSystem.TagSystem.Handlers.TryGetValue(bits[0].Key.ToLowerInvariant(), out Start))
                 {
@@ -65,10 +65,10 @@ namespace FreneticScript.CommandSystem.Arguments
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("<{");
-            for (int i = 0; i < Bits.Count; i++)
+            for (int i = 0; i < Bits.Length; i++)
             {
                 sb.Append(Bits[i].ToString());
-                if (i + 1 < Bits.Count)
+                if (i + 1 < Bits.Length)
                 {
                     sb.Append(".");
                 }

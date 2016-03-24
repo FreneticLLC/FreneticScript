@@ -42,7 +42,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string setter = entry.GetArgument(1);
             TemplateObject value = entry.GetArgumentObject(2);
             // TODO: Fix the below
-            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, (List<TagBit>)null, TextStyle.Color_Simple, entry.Queue.Variables, entry.Queue.Debug, entry.Error, null);
+            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, entry.Queue.Variables, entry.Queue.Debug, entry.Error, null);
             switch (setter)
             {
                 case "=":
