@@ -81,7 +81,7 @@ namespace FreneticScript.CommandSystem
             }
             if (MaximumArguments != -1 && entry.Arguments.Count > MaximumArguments)
             {
-                return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + TagParser.Escape(Arguments);
+                return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + TagParser.Escape(Arguments) + ", found: " + TagParser.Escape(entry.AllOriginalArguments());
             }
             return null;
         }

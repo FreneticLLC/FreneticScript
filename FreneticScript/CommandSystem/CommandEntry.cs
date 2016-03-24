@@ -35,10 +35,17 @@ namespace FreneticScript.CommandSystem
             List<Argument> args = new List<Argument>();
             int start = 0;
             bool quoted = false;
+            bool qtype = false;
             for (int i = 0; i < command.Length; i++)
             {
-                if (command[i] == '"')
+                if (command[i] == '"' && (!quoted || qtype))
                 {
+                    qtype = true;
+                    quoted = !quoted;
+                }
+                else if (command[i] == '\'' && (!quoted || !qtype))
+                {
+                    qtype = false;
                     quoted = !quoted;
                 }
                 else if (!quoted && command[i] == ' ' && (i - start > 0))

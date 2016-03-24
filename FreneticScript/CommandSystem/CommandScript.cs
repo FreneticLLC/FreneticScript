@@ -25,11 +25,18 @@ namespace FreneticScript.CommandSystem
             List<int> Lines = new List<int>();
             int start = 0;
             bool quoted = false;
+            bool qtype = false;
             int line = 0;
             for (int i = 0; i < commands.Length; i++)
             {
-                if (commands[i] == '"')
+                if (commands[i] == '"' && (!quoted || qtype))
                 {
+                    qtype = true;
+                    quoted = !quoted;
+                }
+                else if (commands[i] == '\'' && (!quoted || !qtype))
+                {
+                    qtype = false;
                     quoted = !quoted;
                 }
                 else if ((commands[i] == '\n') || (!quoted && commands[i] == ';'))
@@ -118,12 +125,14 @@ namespace FreneticScript.CommandSystem
                                 return block;
                             }
                             cent.BlockStart = istart;
-                            istart += block.Count;
+                            int bc = block.Count;
+                            istart += bc;
                             cent.BlockEnd = istart - 1;
                             if (cent.Command != null)
                             {
                                 cent.Command.AdaptBlockFollowers(cent, block);
                             }
+                            istart += (block.Count - bc);
                             cent.InnerCommandBlock = block;
                             toret.AddRange(block);
                         }
@@ -280,8 +289,11 @@ namespace FreneticScript.CommandSystem
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < Commands.Count; i++)
             {
-                sb.Append(Commands[i].FullString());
-                sb.Append("\n");
+                if (!Commands[i].CommandLine.Contains('\0'))
+                {
+                    sb.Append(Commands[i].FullString());
+                    sb.Append("\n");
+                }
             }
             return sb.ToString();
         }
