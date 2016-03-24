@@ -19,15 +19,17 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public DebugMode mode;
 
+        int cInd = 0;
+
         /// <summary>
         /// The tags current simplified input data.
         /// </summary>
-        public List<string> Input = null;
+        public string[] InputKeys = null;
 
         /// <summary>
         /// All 'modifier' data (EG, input[modifier].input[modifer]).
         /// </summary>
-        public List<Argument> Modifiers = null;
+        public Argument[] Modifiers = null;
 
         /// <summary>
         /// What to be returned if the tag fills null.
@@ -83,20 +85,21 @@ namespace FreneticScript.TagHandlers
             mode = _mode;
             Error = _error;
             Fallback = fallback;
+            Remaining = _input.Count;
             // TODO: Store TagBit list directly?
             if (_input == null)
             {
-                Input = new List<string>();
-                Modifiers = new List<Argument>();
+                InputKeys = new string[0];
+                Modifiers = new Argument[0];
             }
             else
             {
-                Input = new List<string>(_input.Count);
-                Modifiers = new List<Argument>(_input.Count);
+                InputKeys = new string[_input.Count];
+                Modifiers = new Argument[_input.Count];
                 for (int i = 0; i < _input.Count; i++)
                 {
-                    Input.Add(_input[i].Key);
-                    Modifiers.Add(_input[i].Variable ?? new Argument());
+                    InputKeys[i] = _input[i].Key;
+                    Modifiers[i] = _input[i].Variable ?? new Argument();
                 }
             }
         }
@@ -115,26 +118,40 @@ namespace FreneticScript.TagHandlers
         public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, bool wasquoted, Argument fallback)
         {
             TagSystem = _system;
-            Input = _input;
+            InputKeys = new string[_input.Count];
             BaseColor = _basecolor;
             Variables = _vars;
             mode = _mode;
             Error = _error;
             Fallback = fallback;
-            Modifiers = new List<Argument>();
-            for (int x = 0; x < Input.Count; x++)
+            Modifiers = new Argument[_input.Count];
+            Remaining = _input.Count;
+            for (int x = 0; x < _input.Count; x++)
             {
-                if (Input[x].Length > 1 && Input[x].Contains('[') && Input[x][Input[x].Length - 1] == ']')
+                if (_input[x].Length > 1 && _input[x].Contains('[') && _input[x][_input[x].Length - 1] == ']')
                 {
-                    int index = Input[x].IndexOf('[');
-                    Modifiers.Add(TagSystem.SplitToArgument(Input[x].Substring(index + 1, Input[x].Length - (index + 2)), wasquoted));
-                    Input[x] = Input[x].Substring(0, index).ToLowerInvariant();
+                    int index = _input[x].IndexOf('[');
+                    Modifiers[x] = TagSystem.SplitToArgument(_input[x].Substring(index + 1, _input[x].Length - (index + 2)), wasquoted);
+                    InputKeys[x] = _input[x].Substring(0, index).ToLowerInvariant();
                 }
                 else
                 {
-                    Input[x] = Input[x].ToLowerInvariant();
-                    Modifiers.Add(new Argument());
+                    InputKeys[x] = _input[x].ToLowerInvariant();
+                    Modifiers[x] = new Argument();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the key at a specified index.
+        /// </summary>
+        /// <param name="ind">The index.</param>
+        /// <returns>The key.</returns>
+        public string this[int ind]
+        {
+            get
+            {
+                return InputKeys[ind + cInd];
             }
         }
 
@@ -144,16 +161,15 @@ namespace FreneticScript.TagHandlers
         /// <returns>This object.</returns>
         public TagData Shrink()
         {
-            if (Input.Count > 0)
-            {
-                Input.RemoveAt(0);
-            }
-            if (Modifiers.Count > 0)
-            {
-                Modifiers.RemoveAt(0);
-            }
+            cInd++;
+            Remaining--;
             return this;
         }
+
+        /// <summary>
+        /// How many tag positions are left.
+        /// </summary>
+        public int Remaining;
 
         /// <summary>
         /// Gets the modifier at a specified place, handling any tags within - returning a string.
@@ -162,7 +178,8 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier as a string.</returns>
         public string GetModifier(int place)
         {
-            if (place < 0 || place >= Modifiers.Count)
+            place += cInd;
+            if (place < 0 || place >= Modifiers.Length)
             {
                 throw new ArgumentOutOfRangeException("place");
             }
@@ -176,7 +193,8 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObject(int place)
         {
-            if (place < 0 || place >= Modifiers.Count)
+            place += cInd;
+            if (place < 0 || place >= Modifiers.Length)
             {
                 throw new ArgumentOutOfRangeException("place");
             }

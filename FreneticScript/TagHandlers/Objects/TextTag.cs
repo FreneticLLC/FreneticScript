@@ -38,11 +38,11 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="data">The input tag data.</param>
         public override TemplateObject Handle(TagData data)
         {
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 return this;
             }
-            switch (data.Input[0])
+            switch (data[0])
             {
                 // <--[tag]
                 // @Name TextTag.to_number
@@ -298,7 +298,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             if (!data.HasFallback)
             {
-                data.Error("Invalid tag bit: '" + TagParser.Escape(data.Input[0]) + "'!");
+                data.Error("Invalid tag bit: '" + TagParser.Escape(data[0]) + "'!");
             }
             return new NullTag();
         }

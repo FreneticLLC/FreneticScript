@@ -38,7 +38,7 @@ namespace FreneticScript.TagHandlers.Common
                 if (data.Variables.TryGetValue(modif, out value))
                 {
                     data.Shrink();
-                    if (data.Input.Count == 0)
+                    if (data.Remaining == 0)
                     {
                         return value;
                     }
@@ -49,7 +49,7 @@ namespace FreneticScript.TagHandlers.Common
                     // @Returns whether the specified variable exists.
                     // Specifically for the tag <@link tag var[<TextTag>]><{var[<TextTag>]}><@/link>.
                     // -->
-                    if (data.Input[0] == "exists")
+                    if (data[0] == "exists")
                     {
                         return new BooleanTag(true).Handle(data.Shrink());
                     }
@@ -60,7 +60,7 @@ namespace FreneticScript.TagHandlers.Common
                 }
             }
             data.Shrink();
-            if (data.Input.Count > 0 && data.Input[0] == "exists")
+            if (data.Remaining > 0 && data[0] == "exists")
             {
                 return new BooleanTag(false).Handle(data.Shrink());
             }

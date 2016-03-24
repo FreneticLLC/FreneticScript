@@ -254,7 +254,7 @@ namespace FreneticScript.TagHandlers
             TemplateTagBase handler = starter;
             try
             {
-                if (handler != null || Handlers.TryGetValue(data.Input[0], out handler))
+                if (handler != null || Handlers.TryGetValue(data[0], out handler))
                 {
                     TemplateObject res = handler.Handle(data) ?? new TextTag("");
                     if (mode <= DebugMode.FULL)

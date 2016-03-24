@@ -35,11 +35,11 @@ namespace FreneticScript.TagHandlers.Common
         public override TemplateObject Handle(TagData data)
         {
             data.Shrink();
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 return new TextTag(ToString());
             }
-            switch (data.Input[0])
+            switch (data[0])
             {
                 // <--[tag]
                 // @Name TextColorTag.emphasis

@@ -38,16 +38,16 @@ namespace FreneticScript.TagHandlers.Common
             if (cvar != null)
             {
                 data.Shrink();
-                if (data.Input.Count == 0)
+                if (data.Remaining == 0)
                 {
                     return new TextTag(cvar.Value);
                 }
-                if (data.Input.Count > 0 && data.Input[0] == "exists")
+                if (data.Remaining > 0 && data[0] == "exists")
                 {
                     return new BooleanTag(false).Handle(data.Shrink());
                 }
                 // TODO: Separate CVar object?
-                switch (data.Input[0])
+                switch (data[0])
                 {
                     // <--[tag]
                     // @Name CVarTag.exists
@@ -175,7 +175,7 @@ namespace FreneticScript.TagHandlers.Common
                         return new TextTag(cvar.Value).Handle(data);
                 }
             }
-            if (data.Input.Count > 0 && data.Input[0] == "exists")
+            if (data.Remaining > 0 && data[0] == "exists")
             {
                 return new BooleanTag(false).Handle(data.Shrink());
             }

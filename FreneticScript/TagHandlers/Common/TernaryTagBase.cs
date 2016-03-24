@@ -38,7 +38,7 @@ namespace FreneticScript.TagHandlers.Common
         {
             bool basevalue = data.GetModifier(0).ToLowerInvariant() == "true";
             data.Shrink();
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 data.Error("Invalid ternary tag!");
                 return new NullTag();
@@ -50,7 +50,7 @@ namespace FreneticScript.TagHandlers.Common
             // @Returns a step in the ternary pass/fail tag.
             // Used as a part of the <@link tag Ternary[<TextTag>]>Ternary<@/link> tag.
             // -->
-            if (data.Input[0] != "pass")
+            if (data[0] != "pass")
             {
                 data.Error("Invalid ternary tag!");
                 return new NullTag();
@@ -61,7 +61,7 @@ namespace FreneticScript.TagHandlers.Common
                 result = data.GetModifier(0);
             }
             data.Shrink();
-            if (data.Input.Count == 0)
+            if (data.Remaining == 0)
             {
                 data.Error("Invalid ternary tag!");
                 return new NullTag();
@@ -73,7 +73,7 @@ namespace FreneticScript.TagHandlers.Common
             // @Returns a step in the ternary pass/fail tag.
             // Used as a part of the <@link tag Ternary[<TextTag>]>Ternary<@/link> tag.
             // -->
-            if (data.Input[0] != "fail")
+            if (data[0] != "fail")
             {
                 data.Error("Invalid ternary tag!");
                 return new NullTag();
