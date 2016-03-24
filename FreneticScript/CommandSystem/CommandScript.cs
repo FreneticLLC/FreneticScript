@@ -125,16 +125,16 @@ namespace FreneticScript.CommandSystem
                                 return block;
                             }
                             cent.BlockStart = istart;
-                            int bc = block.Count;
-                            istart += bc;
+                            istart += block.Count;
                             cent.BlockEnd = istart - 1;
+                            List<CommandEntry> toinj = new List<CommandEntry>(block);
                             if (cent.Command != null)
                             {
-                                cent.Command.AdaptBlockFollowers(cent, block);
+                                cent.Command.AdaptBlockFollowers(cent, toinj);
                             }
-                            istart += (block.Count - bc);
+                            istart += (toinj.Count - block.Count);
                             cent.InnerCommandBlock = block;
-                            toret.AddRange(block);
+                            toret.AddRange(toinj);
                         }
                     }
                     else if (blocks < 0)
