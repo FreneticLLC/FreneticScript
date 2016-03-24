@@ -123,7 +123,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Tick(float Delta)
         {
-            if (Delayable && WaitingOn)
+            if (Delayable && WaitingOn != null)
             {
                 return;
             }
@@ -144,11 +144,16 @@ namespace FreneticScript.CommandSystem
                 if (CurrentCommand.Command == CommandSystem.DebugInvalidCommand)
                 {
                     // Last try - perhaps a command was registered after the script was loaded.
+                    // TODO: Do we even want this? Command registration should be high-priority auto-run.
                     AbstractCommand cmd;
                     if (CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerInvariant(), out cmd))
                     {
                         CurrentCommand.Command = cmd;
                     }
+                }
+                if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
+                {
+                    WaitingOn = CurrentCommand;
                 }
                 try
                 {
@@ -177,7 +182,7 @@ namespace FreneticScript.CommandSystem
                         }
                     }
                 }
-                if (Delayable && ((Wait > 0f) || WaitingOn))
+                if (Delayable && ((Wait > 0f) || WaitingOn != null))
                 {
                     return;
                 }
@@ -192,7 +197,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Whether this Queue is waiting on the last command.
         /// </summary>
-        public bool WaitingOn = false;
+        public CommandEntry WaitingOn = null;
         
         /// <summary>
         /// Handles an error as appropriate to the situation, in the current queue, from the current command.
@@ -201,6 +206,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
         {
+            WaitingOn = null;
             for (int i = 0; i < CommandList.Length; i++)
             {
                 if (GetCommand(i).Command is TryCommand &&
@@ -291,24 +297,5 @@ namespace FreneticScript.CommandSystem
         /// Debug nothing.
         /// </summary>
         NONE = 3
-    }
-
-    /// <summary>
-    /// A mini-class used for the callback for &amp;waitable commands.
-    /// </summary>
-    public class EntryFinisher
-    {
-        /// <summary>
-        /// The entry being waited on.
-        /// </summary>
-        public CommandEntry Entry;
-
-        /// <summary>
-        /// Add this function as a callback to complete entry.
-        /// </summary>
-        public void Complete(object sender, CommandQueueEventArgs args)
-        {
-            Entry.Finished = true;
-        }
     }
 }

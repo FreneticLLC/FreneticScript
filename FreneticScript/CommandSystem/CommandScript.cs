@@ -130,7 +130,7 @@ namespace FreneticScript.CommandSystem
                             List<CommandEntry> toinj = new List<CommandEntry>(block);
                             if (cent.Command != null)
                             {
-                                cent.Command.AdaptBlockFollowers(cent, toinj);
+                                cent.Command.AdaptBlockFollowers(cent, toinj, block);
                             }
                             istart += (toinj.Count - block.Count);
                             cent.InnerCommandBlock = block;

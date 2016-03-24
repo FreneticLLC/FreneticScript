@@ -143,12 +143,7 @@ namespace FreneticScript.CommandSystem
         /// The end of this command's braced block.
         /// </summary>
         public int BlockEnd;
-
-        /// <summary>
-        /// Whether the &amp;waitable command entry is finished.
-        /// </summary>
-        public bool Finished = false;
-
+        
         /// <summary>
         /// Whether the &amp;waitable command entry should be waited for.
         /// </summary>

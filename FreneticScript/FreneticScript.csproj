@@ -71,6 +71,7 @@
     <Compile Include="CommandSystem\QueueCmds\BreakCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\CallCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\CatchCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\DelayCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\GotoCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DebugCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DefineCommand.cs" />

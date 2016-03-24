@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public CallCommand()
         {
             Name = "call";
-            Arguments = "<function to call> [<variable>:<value> ...]";
+            Arguments = "<function to call> [<variable>:<value> ...]"; // TODO: Object variables somehow?
             Description = "Runs a function.";
             IsFlow = true;
             Asyncable = true;
@@ -62,8 +62,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
-            CommandQueue queue;
-            Dictionary<string, TemplateObject> variables = new Dictionary<string, TemplateObject>();
+            CommandQueue queue = script.ToQueue(entry.Command.CommandSystem);
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
                 string str = entry.GetArgument(i);
@@ -73,17 +72,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     return;
                 }
                 string[] split = str.Split(new char[] { ':' }, 2);
-                variables.Add(split[0], new TextTag(split[1]));
+                queue.SetVariable(split[0], new TextTag(split[1]));
             }
-            entry.Queue.CommandSystem.ExecuteScript(script, variables, out queue, DebugMode.MINIMAL);
-            if (!queue.Running)
+            queue.Debug = DebugMode.MINIMAL;
+            queue.Outputsystem = entry.Queue.Outputsystem;
+            queue.Execute();
+            if (entry.WaitFor && entry.Queue.WaitingOn != null)
             {
-                entry.Finished = true;
-            }
-            else
-            {
-                EntryFinisher fin = new EntryFinisher() { Entry = entry };
-                queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
+                if (!queue.Running)
+                {
+                    entry.Queue.WaitingOn = null;
+                }
+                else
+                {
+                    EntryFinisher fin = new EntryFinisher() { Entry = entry };
+                    queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
+                }
             }
             ListTag list = new ListTag(queue.Determinations);
             entry.Queue.SetVariable("call_determinations", list);

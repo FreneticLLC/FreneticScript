@@ -85,16 +85,26 @@ namespace FreneticScript.CommandSystem
             }
             return null;
         }
+        
+        /// <summary>
+        /// Gets the follower (callback) entry for an entry.
+        /// </summary>
+        /// <param name="entry">The entry.</param>
+        public CommandEntry GetFollower(CommandEntry entry)
+        {
+            return new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() {
+                new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ");
+        }
 
         /// <summary>
         /// Adjust list of commands that formed by an inner block.
         /// </summary>
         /// <param name="entry">The producing entry.</param>
         /// <param name="input">The block of commands.</param>
-        public virtual void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input)
+        /// <param name="fblock">The final block to add to the entry.</param>
+        public virtual void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
-            input.Add(new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() {
-                new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    "));
+            input.Add(GetFollower(entry));
         }
 
         /// <summary>

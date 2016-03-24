@@ -42,6 +42,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // -->
     class FunctionCommand : AbstractCommand
     {
+        public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
+        {
+            int ic = input.Count;
+            input.Clear();
+            base.AdaptBlockFollowers(entry, input, fblock);
+            input[0].BlockEnd -= ic;
+            entry.BlockEnd -= ic;
+            fblock.Add(GetFollower(entry));
+        }
+
         public FunctionCommand()
         {
             Name = "function";

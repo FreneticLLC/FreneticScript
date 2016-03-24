@@ -8,6 +8,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class EventCommand : AbstractCommand
     {
+        public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
+        {
+            input.Clear();
+            base.AdaptBlockFollowers(entry, input, fblock);
+        }
+
         // TODO: Meta!
         public EventCommand()
         {

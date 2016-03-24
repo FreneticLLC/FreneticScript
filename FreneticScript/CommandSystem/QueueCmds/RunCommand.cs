@@ -74,6 +74,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (args.Cancelled)
             {
                 entry.Bad("Script running cancelled via the ScriptRanPreEvent.");
+                if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                {
+                    entry.Queue.WaitingOn = null;
+                }
                 return;
             }
             CommandScript script = entry.Queue.CommandSystem.GetScript(args.ScriptName);
@@ -88,11 +92,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 if (args2.Cancelled)
                 {
                     entry.Bad("Script running cancelled via the ScriptRanEvent.");
+                    if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                    {
+                        entry.Queue.WaitingOn = null;
+                    }
                     return;
                 }
                 if (script == null)
                 {
                     entry.Bad("Script running nullified via the ScriptRanEvent.");
+                    if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                    {
+                        entry.Queue.WaitingOn = null;
+                    }
                     return;
                 }
                 script = args2.Script;
@@ -102,14 +114,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 CommandQueue queue;
                 entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
-                if (!queue.Running)
+                if (entry.WaitFor && entry.Queue.WaitingOn == entry)
                 {
-                    entry.Finished = true;
-                }
-                else
-                {
-                    EntryFinisher fin = new EntryFinisher() { Entry = entry };
-                    queue.Complete += fin.Complete;
+                    if (!queue.Running)
+                    {
+                        entry.Queue.WaitingOn = null;
+                    }
+                    else
+                    {
+                        EntryFinisher fin = new EntryFinisher() { Entry = entry };
+                        queue.Complete += fin.Complete;
+                    }
                 }
                 ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs();
                 args4.Script = script;
@@ -124,8 +139,30 @@ namespace FreneticScript.CommandSystem.QueueCmds
             else
             {
                 entry.Error("Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
-                entry.Finished = true;
+                if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                { 
+                    entry.Queue.WaitingOn = null;
+                }
             }
+        }
+    }
+
+
+    /// <summary>
+    /// A mini-class used for the callback for &amp;waitable commands.
+    /// </summary>
+    public class EntryFinisher
+    {
+        /// <summary>
+        /// The entry being waited on.
+        /// </summary>
+        public CommandEntry Entry;
+
+        /// <summary>
+        /// Add this function as a callback to complete entry.
+        /// </summary>
+        public void Complete(object sender, CommandQueueEventArgs args)
+        {
         }
     }
 
