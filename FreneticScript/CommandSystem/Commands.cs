@@ -166,28 +166,7 @@ namespace FreneticScript.CommandSystem
             queue.Outputsystem = outputter;
             queue.Execute();
         }
-
-        /// <summary>
-        /// Executes a single command.
-        /// </summary>
-        /// <param name="entry">The command entry to execute.</param>
-        /// <param name="queue">The queue that is executing it.</param>
-        public void ExecuteCommand(CommandEntry entry, CommandQueue queue)
-        {
-            entry.Queue = queue;
-            entry.Output = Output;
-            if (entry.Command == DebugInvalidCommand)
-            {
-                // Last try - perhaps a command was registered after the script was loaded.
-                AbstractCommand cmd;
-                if (RegisteredCommands.TryGetValue(entry.Name.ToLowerInvariant(), out cmd))
-                {
-                    entry.Command = cmd;
-                }
-            }
-            entry.Command.Execute(entry);
-        }
-
+        
         /// <summary>
         /// Adds a command to the registered command list.
         /// </summary>
