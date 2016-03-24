@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers

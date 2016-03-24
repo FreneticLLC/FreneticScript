@@ -166,8 +166,7 @@ namespace FreneticScript.TagHandlers
                         {
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                         }
-                        TagArgumentBit tab = new TagArgumentBit() { CommandSystem = CommandSystem };
-                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
+                        List<TagBit> bits = new List<TagBit>();
                         for (int x = 0; x < split.Count; x++)
                         {
                             TagBit bit = new TagBit();
@@ -183,8 +182,10 @@ namespace FreneticScript.TagHandlers
                                 bit.Variable = new Argument();
                             }
                             bit.Key = split[x];
-                            tab.Bits.Add(bit);
+                            bits.Add(bit);
                         }
+                        TagArgumentBit tab = new TagArgumentBit(CommandSystem, bits);
+                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
                         arg.Bits.Add(tab);
                         blockbuilder = new StringBuilder();
                         i++;
@@ -241,19 +242,19 @@ namespace FreneticScript.TagHandlers
         /// <param name="bits">The tag data.</param>
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
+        /// <param name="starter">A preparsed start location.</param>
         /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, TemplateTagBase starter)
         {
             if (bits.Bits.Count == 0)
             {
                 return new TextTag("");
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback);
-            TemplateTagBase handler;
+            TemplateTagBase handler = starter;
             try
             {
-                bool handled = Handlers.TryGetValue(data.Input[0], out handler);
-                if (handled)
+                if (handler != null || Handlers.TryGetValue(data.Input[0], out handler))
                 {
                     TemplateObject res = handler.Handle(data) ?? new TextTag("");
                     if (mode <= DebugMode.FULL)
@@ -272,7 +273,7 @@ namespace FreneticScript.TagHandlers
                 {
                     if (mode <= DebugMode.MINIMAL)
                     {
-                        error("Failed to fill tag tag " + Escape(bits.ToString()) + "!");
+                        error("Failed to fill tag tag " + Escape(bits.ToString()) + ": nonexistant tag handler!");
                     }
                     return null;
                 }
