@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -17,7 +19,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
-            MaximumArguments = 2;
+            MaximumArguments = 1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+            };
         }
 
         /// <summary>
@@ -26,7 +35,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.ShouldShowGood() && (entry.Arguments.Count < 1 || entry.Arguments[1].ToString() == "\0SILENT"))
+            if (entry.ShouldShowGood())
             {
                 entry.Good("Passing mark.");
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -18,6 +19,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    string inp = input.ToString().ToLowerInvariant();
+                    if (inp == "on" || inp == "off")
+                    {
+                        return new TextTag(inp);
+                    }
+                    return null;
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)

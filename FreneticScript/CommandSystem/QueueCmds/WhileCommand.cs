@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
 
@@ -27,6 +28,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 1;
             MaximumArguments = -1;
             IsBreakable = true;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)
@@ -39,6 +47,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 List<string> comp = new List<string>();
                 for (int i = 0; i < dat.ComparisonArgs.Count; i++)
                 {
+                    // TODO: Preparse arguments less!
                     comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error).ToString());
                 }
                 if (IfCommand.TryIf(comp))

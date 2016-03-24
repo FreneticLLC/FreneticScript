@@ -67,6 +67,11 @@ namespace FreneticScript.CommandSystem
         /// How many arguments the command can have maximum.
         /// </summary>
         public int MaximumArguments = 100;
+
+        /// <summary>
+        /// The expected object type getters for a command.
+        /// </summary>
+        public List<Func<TemplateObject, TemplateObject>> ObjectTypes = null;
         
         /// <summary>
         /// Tests if the CommandEntry is valid for this command at pre-process time.
@@ -82,6 +87,24 @@ namespace FreneticScript.CommandSystem
             if (MaximumArguments != -1 && entry.Arguments.Count > MaximumArguments)
             {
                 return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + TagParser.Escape(Arguments) + ", found: " + TagParser.Escape(entry.AllOriginalArguments());
+            }
+            if (ObjectTypes != null)
+            {
+                for (int i = 0; i < entry.Arguments.Count; i++)
+                {
+                    if (entry.Arguments[i].Bits.Count == 1
+                        && entry.Arguments[i].Bits[0] is TextArgumentBit
+                        && i < ObjectTypes.Count)
+                    {
+                        TemplateObject obj = ObjectTypes[i].Invoke(((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue);
+                        if (obj == null)
+                        {
+                            return "Invalid argument '" + TagParser.Escape(entry.Arguments[i].ToString())
+                                + "', translates to NULL for this command's input expectation (Command is " + TagParser.Escape(entry.Command.Name) + ").";
+                        }
+                        ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = obj;
+                    }
+                }
             }
             return null;
         }

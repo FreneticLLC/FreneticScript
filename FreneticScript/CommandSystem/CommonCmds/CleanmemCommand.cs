@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
@@ -19,6 +20,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Arguments = "";
             Description = "Forces the system Garbage Collector to run, invoking CPU usage to lower RAM usage.";
             Asyncable = true;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
 
         /// <summary>

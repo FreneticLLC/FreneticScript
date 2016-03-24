@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -24,10 +25,47 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 2;
             MaximumArguments = 5;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    if (input.ToString() == "\0CALLBACK")
+                    {
+                        return input;
+                    }
+                    string inp = input.ToString().ToLowerInvariant();
+                    if (inp == "add" || inp == "remove" || inp == "clear")
+                    {
+                        return new TextTag(inp);
+                    }
+                    return null;
+                },
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    return IntegerTag.TryFor(input);
+                },
+                (input) =>
+                {
+                    string inp = input.ToString().ToLowerInvariant();
+                    if (inp == "quiet_fail")
+                    {
+                        return new TextTag(input.ToString());
+                    }
+                    return null;
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)
         {
+            if (entry.Arguments[0].ToString() == "\0CALLBACK")
+            {
+                return;
+            }
             string type = entry.GetArgument(0).ToLowerInvariant();
             string eventname = entry.GetArgument(1).ToLowerInvariant();
             if (type == "clear" && eventname == "all")
@@ -113,7 +151,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 int priority = 0;
                 if (entry.Arguments.Count > 3)
                 {
-                    priority = FreneticScriptUtilities.StringToInt(entry.GetArgument(3));
+                    IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(3));
+                    if (inter != null)
+                    {
+                        priority = (int)inter.Internal;
+                    }
                 }
                 if (success)
                 {

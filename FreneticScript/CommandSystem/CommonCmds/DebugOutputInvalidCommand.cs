@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
@@ -26,6 +27,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = -1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
 
         /// <summary>

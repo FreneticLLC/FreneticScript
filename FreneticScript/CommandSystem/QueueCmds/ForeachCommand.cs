@@ -76,6 +76,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 1;
             MaximumArguments = 2;
             IsBreakable = true;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    if (input.ToString() == "\0CALLBACK")
+                    {
+                        return input;
+                    }
+                    string inp = input.ToString().ToLowerInvariant();
+                    if (inp == "start" || inp == "stop" || inp == "next")
+                    {
+                        return new TextTag(input.ToString());
+                    }
+                    return null;
+                },
+                (input) =>
+                {
+                    return ListTag.For(input);
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)

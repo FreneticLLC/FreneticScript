@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -15,6 +17,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             MinimumArguments = 2;
             MaximumArguments = 2;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return BooleanTag.TryFor(input);
+                },
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)
@@ -23,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             BooleanTag bt = BooleanTag.TryFor(arg1);
             if (bt == null || !bt.Internal)
             {
-                entry.Error("Assertion failed: " + entry.GetArgument(1));
+                entry.Error("Assertion failed: " + TagParser.Escape(entry.GetArgument(1)));
                 return;
             }
             entry.Good("Require command passed, all variables present!");

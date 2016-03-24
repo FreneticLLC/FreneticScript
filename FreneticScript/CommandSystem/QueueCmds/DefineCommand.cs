@@ -1,4 +1,6 @@
-﻿using FreneticScript.TagHandlers;
+﻿using System;
+using System.Collections.Generic;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
@@ -34,6 +36,17 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Asyncable = true;
             MinimumArguments = 2;
             MaximumArguments = 2;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    return input;
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)

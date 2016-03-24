@@ -17,6 +17,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = -1;
+            ObjectTypes = new List<Func<TagHandlers.TemplateObject, TagHandlers.TemplateObject>>();
         }
 
         public override void Execute(CommandEntry entry)
@@ -50,7 +51,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     List<string> parsedargs = new List<string>(entry.Arguments.Count);
                     for (int i = 1; i < entry.Arguments.Count; i++)
                     {
-                        parsedargs.Add(entry.GetArgument(i));
+                        parsedargs.Add(entry.GetArgument(i)); // TODO: Don't pre-parse. Parse in TryIf.
                     }
                     success = IfCommand.TryIf(parsedargs);
                 }

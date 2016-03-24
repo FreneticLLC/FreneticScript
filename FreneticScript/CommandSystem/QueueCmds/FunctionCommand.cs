@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -61,6 +62,30 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 3;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    if (input.ToString() == "\0CALLBACK")
+                    {
+                        return input;
+                    }
+                    string inp = input.ToString().ToLowerInvariant();
+                    if (inp == "stop" || inp == "define")
+                    {
+                        return new TextTag(inp);
+                    }
+                    return null;
+                },
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)

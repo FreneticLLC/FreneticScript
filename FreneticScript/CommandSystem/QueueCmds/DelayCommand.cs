@@ -33,6 +33,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Waitable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    if (input.ToString() == "\0CALLBACK")
+                    {
+                        return input;
+                    }
+                    return NumberTag.TryFor(input);
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)

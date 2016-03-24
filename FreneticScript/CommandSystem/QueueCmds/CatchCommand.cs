@@ -17,6 +17,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = 1;
+            ObjectTypes = new List<Func<TagHandlers.TemplateObject, TagHandlers.TemplateObject>>();
         }
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(0) == "\0CALLBACK")
+            if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
             {
                 if (entry.ShouldShowGood())
                 {

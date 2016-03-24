@@ -18,6 +18,21 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             MinimumArguments = 3;
             MaximumArguments = 3;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    return input;
+                }
+            };
         }
 
         public override void Execute(CommandEntry entry)

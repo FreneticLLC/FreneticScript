@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
 
@@ -73,15 +74,24 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 1;
             MaximumArguments = 1;
             IsBreakable = true;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    if (input.ToString() == "\0CALLBACK")
+                    {
+                        return input;
+                    }
+                    int rep;
+                    if (int.TryParse(input.ToString(), out rep))
+                    {
+                        return new IntegerTag(rep);
+                    }
+                    return new TextTag(input.ToString());
+                }
+            };
         }
-
-        public static int StringToInt(string input)
-        {
-            int output = 0;
-            int.TryParse(input, out output);
-            return output;
-        }
-
+        
         public override void Execute(CommandEntry entry)
         {
             string count = entry.GetArgument(0);
@@ -139,7 +149,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                int target = StringToInt(count);
+                int target = (int)IntegerTag.TryFor(count).Internal; // TODO: Maybe a null check?
                 if (target <= 0)
                 {
                     if (entry.ShouldShowGood())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -53,21 +54,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = 1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return NumberTag.TryFor(input);
+                }
+            };
         }
-
-        public static int StringToInt(string input)
-        {
-            int output = 0;
-            int.TryParse(input, out output);
-            return output;
-        }
-
+        
         public override void Execute(CommandEntry entry)
         {
             int count = 1;
             if (entry.Arguments.Count > 0)
             {
-                count = StringToInt(entry.GetArgument(0));
+                IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(0));
+                if (inter != null)
+                {
+                    count = (int)inter.Internal;
+                }
             }
             if (count <= 0)
             {

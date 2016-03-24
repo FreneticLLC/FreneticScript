@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
@@ -18,6 +19,26 @@ namespace FreneticScript.CommandSystem.CommonCmds
             // TODO: make asyncable? Probably with a CVar system lock?
             MinimumArguments = 2;
             MaximumArguments = 3;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
+                    string inp = input.ToString().ToLowerInvariant();
+                    if (inp == "force" || inp == "remove" || inp == "do_not_save")
+                    {
+                        return new TextTag(inp);
+                    }
+                    return null;
+                }
+            };
         }
 
         /// <summary>

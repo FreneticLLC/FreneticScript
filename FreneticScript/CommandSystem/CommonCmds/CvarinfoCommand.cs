@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
@@ -18,6 +19,13 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Description = "Shows information on a specified CVar, or all of them if one isn't specified.";
             MinimumArguments = 0;
             MaximumArguments = 1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    return new TextTag(input.ToString());
+                }
+            };
         }
 
         /// <summary>

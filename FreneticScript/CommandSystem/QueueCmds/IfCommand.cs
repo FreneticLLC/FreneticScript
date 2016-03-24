@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -23,6 +24,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = -1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
 
         public override void Execute(CommandEntry entry)
@@ -44,7 +46,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             List<string> parsedargs = new List<string>(entry.Arguments.Count);
             for (int i = 0; i < entry.Arguments.Count; i++)
             {
-                parsedargs.Add(entry.GetArgument(i));
+                parsedargs.Add(entry.GetArgument(i)); // TODO: Don't pre-parse. Parse in TryIf.
             }
             bool success = TryIf(parsedargs);
             if (success)

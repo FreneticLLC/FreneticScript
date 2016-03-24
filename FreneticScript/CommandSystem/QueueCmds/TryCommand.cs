@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
 
@@ -19,7 +20,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 0;
-            MaximumArguments = 0;
+            MaximumArguments = 1;
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
 
 
