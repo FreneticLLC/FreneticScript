@@ -8,12 +8,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name function
-    // @Arguments stop/define [name of function] (quiet_fail)
+    // @Arguments 'stop'/'define' <name of function> ['quiet_fail']
     // @Short Creates a new function of the following command block, and adds it to the script cache.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
-    // @Braces true
+    // @Braces allowed
+    // @Minimum 2
+    // @Maximum 3
     // @Description
     // The function command will define the included command block to be a function which can be activated
     // by the <@link command call>call<@/link> command.
@@ -43,19 +45,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public FunctionCommand()
         {
             Name = "function";
-            Arguments = "stop/define [name of function] (quiet_fail)";
+            Arguments = "'stop'/'define' <name of function> ['quiet_fail']";
             Description = "Creates a new function of the following command block, and adds it to the script cache.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 2;
+            MaximumArguments = 3;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string type = entry.GetArgument(0).ToLowerInvariant();
             if (type == "stop")
             {

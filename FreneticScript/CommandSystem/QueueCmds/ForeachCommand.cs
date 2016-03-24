@@ -10,12 +10,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name foreach
-    // @Arguments start/stop/next [list to loop through]
+    // @Arguments 'start'/'stop'/'next' [list to loop through]
     // @Short Executes the following block of commands once foreach item in the given list.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
-    // @Braces true
+    // @Minimum 1
+    // @Maximum 2
+    // @Braces allowed
     // @Description
     // The foreach command will loop through the given list and run the included command block
     // once for each entry in the list.
@@ -75,157 +77,152 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public ForeachCommand()
         {
             Name = "foreach";
-            Arguments = "start/stop/next [list to loop through]";
+            Arguments = "'start'/'stop'/'next' [list to loop through]";
             Description = "Executes the following block of commands once foreach item in the given list.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 2;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
+            string type = entry.GetArgument(0);
+            if (type == "\0CALLBACK")
             {
-                ShowUsage(entry);
-            }
-            else
-            {
-                string type = entry.GetArgument(0);
-                if (type == "\0CALLBACK")
+                if (entry.BlockOwner.Command.Name == "foreach" || entry.BlockOwner.Block == null || entry.BlockOwner.Block.Count == 0
+                    || entry.BlockOwner.Block[entry.BlockOwner.Block.Count - 1] != entry)
                 {
-                    if (entry.BlockOwner.Command.Name == "foreach" || entry.BlockOwner.Block == null || entry.BlockOwner.Block.Count == 0
-                        || entry.BlockOwner.Block[entry.BlockOwner.Block.Count - 1] != entry)
-                    {
-                        ForeachCommandData data = (ForeachCommandData)entry.BlockOwner.Data;
-                        data.Index++;
-                        if (data.Index > data.List.Count)
-                        {
-                            if (entry.ShouldShowGood())
-                            {
-                                entry.Good("Foreach loop ending, reached target.");
-                            }
-                        }
-                        else
-                        {
-                            if (entry.ShouldShowGood())
-                            {
-                                entry.Good("Foreach loop continuing at index <{text_color.emphasis}>" + data.Index + "/" + data.List.Count + "<{text_color.base}>...");
-                            }
-                            entry.Queue.SetVariable("foreach_index", new TextTag(data.Index.ToString()));
-                            entry.Queue.SetVariable("foreach_total", new TextTag(data.List.Count.ToString()));
-                            entry.Queue.SetVariable("foreach_value", data.List[data.Index - 1]);
-                            entry.Queue.SetVariable("foreach_list", new ListTag(data.List));
-                            entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
-                        }
-                    }
-                    else
-                    {
-                        entry.Error("Foreach CALLBACK invalid: not a real callback!");
-                    }
-                }
-                else if (type.ToLowerInvariant() == "stop")
-                {
-                    bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
-                    {
-                        if (entry.Queue.GetCommand(i).Command is ForeachCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
-                        {
-                            hasnext = true;
-                            break;
-                        }
-                    }
-                    if (hasnext)
+                    ForeachCommandData data = (ForeachCommandData)entry.BlockOwner.Data;
+                    data.Index++;
+                    if (data.Index > data.List.Count)
                     {
                         if (entry.ShouldShowGood())
                         {
-                            entry.Good("Stopping foreach loop.");
-                        }
-                        while (entry.Queue.CommandList.Length > 0)
-                        {
-                            if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                            {
-                                entry.Queue.RemoveCommand(0);
-                                break;
-                            }
-                            entry.Queue.RemoveCommand(0);
+                            entry.Good("Foreach loop ending, reached target.");
                         }
                     }
                     else
-                    {
-                        entry.Error("Cannot stop foreach: not in one!");
-                    }
-                }
-                else if (type.ToLowerInvariant() == "next")
-                {
-                    bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
-                    {
-                        if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
-                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                        {
-                            hasnext = true;
-                            break;
-                        }
-                    }
-                    if (hasnext)
                     {
                         if (entry.ShouldShowGood())
                         {
-                            entry.Good("Skipping to next foreach entry...");
+                            entry.Good("Foreach loop continuing at index <{text_color.emphasis}>" + data.Index + "/" + data.List.Count + "<{text_color.base}>...");
                         }
-                        while (entry.Queue.CommandList.Length > 0)
-                        {
-                            if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                            {
-                                break;
-                            }
-                            entry.Queue.RemoveCommand(0);
-                        }
-                    }
-                    else
-                    {
-                        entry.Error("Cannot stop foreach: not in one!");
-                    }
-                }
-                else if (type.ToLowerInvariant() == "start" && entry.Arguments.Count > 1)
-                {
-                    ListTag list = ListTag.For(entry.GetArgument(1));
-                    int target = list.ListEntries.Count;
-                    if (target <= 0)
-                    {
-                        entry.Good("Not looping.");
-                        return;
-                    }
-                    ForeachCommandData data = new ForeachCommandData();
-                    data.Index = 1;
-                    data.List = list.ListEntries;
-                    entry.Data = data;
-                    if (entry.Block != null)
-                    {
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
-                        }
-                        CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "foreach", 0, entry.ScriptName, entry.ScriptLine);
-                        entry.Block.Add(callback);
-                        entry.Queue.SetVariable("foreach_index", new TextTag("1"));
-                        entry.Queue.SetVariable("foreach_total", new TextTag(target.ToString()));
-                        entry.Queue.SetVariable("foreach_value", list.ListEntries[0]);
-                        entry.Queue.SetVariable("foreach_list", list);
-                        entry.Queue.AddCommandsNow(entry.Block);
-                    }
-                    else
-                    {
-                        entry.Error("Foreach invalid: No block follows!");
+                        entry.Queue.SetVariable("foreach_index", new TextTag(data.Index.ToString()));
+                        entry.Queue.SetVariable("foreach_total", new TextTag(data.List.Count.ToString()));
+                        entry.Queue.SetVariable("foreach_value", data.List[data.Index - 1]);
+                        entry.Queue.SetVariable("foreach_list", new ListTag(data.List));
+                        entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                     }
                 }
                 else
                 {
-                    ShowUsage(entry);
+                    entry.Error("Foreach CALLBACK invalid: not a real callback!");
                 }
+            }
+            else if (type.ToLowerInvariant() == "stop")
+            {
+                bool hasnext = false;
+                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                {
+                    if (entry.Queue.GetCommand(i).Command is ForeachCommand &&
+                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    {
+                        hasnext = true;
+                        break;
+                    }
+                }
+                if (hasnext)
+                {
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Stopping foreach loop.");
+                    }
+                    while (entry.Queue.CommandList.Length > 0)
+                    {
+                        if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
+                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
+                        {
+                            entry.Queue.RemoveCommand(0);
+                            break;
+                        }
+                        entry.Queue.RemoveCommand(0);
+                    }
+                }
+                else
+                {
+                    entry.Error("Cannot stop foreach: not in one!");
+                }
+            }
+            else if (type.ToLowerInvariant() == "next")
+            {
+                bool hasnext = false;
+                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                {
+                    if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
+                        entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
+                    {
+                        hasnext = true;
+                        break;
+                    }
+                }
+                if (hasnext)
+                {
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Skipping to next foreach entry...");
+                    }
+                    while (entry.Queue.CommandList.Length > 0)
+                    {
+                        if (entry.Queue.GetCommand(0).Command is ForeachCommand &&
+                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
+                        {
+                            break;
+                        }
+                        entry.Queue.RemoveCommand(0);
+                    }
+                }
+                else
+                {
+                    entry.Error("Cannot stop foreach: not in one!");
+                }
+            }
+            else if (type.ToLowerInvariant() == "start" && entry.Arguments.Count > 1)
+            {
+                ListTag list = ListTag.For(entry.GetArgument(1));
+                int target = list.ListEntries.Count;
+                if (target <= 0)
+                {
+                    entry.Good("Not looping.");
+                    return;
+                }
+                ForeachCommandData data = new ForeachCommandData();
+                data.Index = 1;
+                data.List = list.ListEntries;
+                entry.Data = data;
+                if (entry.Block != null)
+                {
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                    }
+                    CommandEntry callback = new CommandEntry("foreach \0CALLBACK", null, entry,
+                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "foreach", 0, entry.ScriptName, entry.ScriptLine);
+                    entry.Block.Add(callback);
+                    entry.Queue.SetVariable("foreach_index", new TextTag("1"));
+                    entry.Queue.SetVariable("foreach_total", new TextTag(target.ToString()));
+                    entry.Queue.SetVariable("foreach_value", list.ListEntries[0]);
+                    entry.Queue.SetVariable("foreach_list", list);
+                    entry.Queue.AddCommandsNow(entry.Block);
+                }
+                else
+                {
+                    entry.Error("Foreach invalid: No block follows!");
+                }
+            }
+            else
+            {
+                ShowUsage(entry);
             }
         }
     }

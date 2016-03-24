@@ -8,10 +8,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name scriptcache
-    // @Arguments removefunction/removescript all/<function>/<script> (quiet_fail)
+    // @Arguments 'removefunction'/'removescript' 'all'/<function>/<script> ['quiet_fail']
     // @Short Modifies the state of the script cache, EG clearing it.
     // @Updated 2014/06/23
     // @Authors mcmonkey
+    // @Minimum 2
+    // @Maximum 3
     // @Group Queue
     // @Description
     // The ScriptCache 'removefunction' command is used to remove specified functions from the ScriptCache.
@@ -41,15 +43,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Arguments = "removefunction/removescript all/<function>/<script> (quiet_fail)";
             Description = "Modifies the state of the script cache, EG clearing it.";
             // TODO: Lock() functionality to ensure async-friendliness
+            MinimumArguments = 2;
+            MaximumArguments = 3;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string type = entry.GetArgument(0).ToLowerInvariant();
             if (type == "removescript")
             {

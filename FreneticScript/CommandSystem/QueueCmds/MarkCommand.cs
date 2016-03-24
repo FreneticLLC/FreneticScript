@@ -8,6 +8,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class MarkCommand : AbstractCommand
     {
+        // TODO: Meta!
         public MarkCommand()
         {
             Name = "mark";
@@ -15,6 +16,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Marks a location in the script for the goto command.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         /// <summary>
@@ -23,10 +26,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-            }
             if (entry.ShouldShowGood())
             {
                 entry.Good("Passing mark.");

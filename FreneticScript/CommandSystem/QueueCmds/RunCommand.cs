@@ -13,7 +13,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// </summary>
     public class RunCommand : AbstractCommand
     {
-        // TODO: Docs
+        // TODO: Meta!
         // @Waitable
 
         /// <summary>
@@ -28,6 +28,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             Waitable = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         /// <summary>
@@ -62,12 +64,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The command details to be ran.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-                entry.Finished = true;
-                return;
-            }
             string fname = entry.GetArgument(0).ToLowerInvariant();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs();
             args.ScriptName = fname;

@@ -14,6 +14,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Delays the current command queue a specified amount of time.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         public static float StringToFloat(string input)
@@ -25,26 +27,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
+            string delay = entry.GetArgument(0);
+            float seconds = StringToFloat(delay);
+            if (entry.Queue.Delayable)
             {
-                ShowUsage(entry);
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Delaying for <{text_color.emphasis}>" + seconds + "<{text_color.base}> seconds.");
+                }
+                entry.Queue.Wait = seconds;
             }
             else
             {
-                string delay = entry.GetArgument(0);
-                float seconds = StringToFloat(delay);
-                if (entry.Queue.Delayable)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Delaying for <{text_color.emphasis}>" + seconds + "<{text_color.base}> seconds.");
-                    }
-                    entry.Queue.Wait = seconds;
-                }
-                else
-                {
-                    entry.Error("Cannot delay, inside an instant queue!");
-                }
+                entry.Error("Cannot delay, inside an instant queue!");
             }
         }
     }

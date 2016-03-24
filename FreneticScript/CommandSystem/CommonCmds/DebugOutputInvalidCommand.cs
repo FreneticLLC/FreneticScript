@@ -11,6 +11,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
     /// </summary>
     public class DebugOutputInvalidCommand: AbstractCommand
     {
+        // Note: Intentionally no meta!
+
         /// <summary>
         /// Constructs the command.
         /// </summary>
@@ -22,6 +24,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
             IsDebug = true;
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         /// <summary>
@@ -30,20 +34,13 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
+            string name = entry.Arguments[0].ToString();
+            List<string> args = new List<string>(entry.Arguments.Count);
+            for (int i = 1; i < entry.Arguments.Count; i++)
             {
-                ShowUsage(entry);
+                args.Add(entry.Arguments[i].ToString());
             }
-            else
-            {
-                string name = entry.Arguments[0].ToString();
-                List<string> args = new List<string>(entry.Arguments.Count);
-                for (int i = 1; i < entry.Arguments.Count; i++)
-                {
-                    args.Add(entry.Arguments[i].ToString());
-                }
-                entry.Output.UnknownCommand(entry.Queue, name, args.ToArray());
-            }
+            entry.Output.UnknownCommand(entry.Queue, name, args.ToArray());
         }
     }
 }

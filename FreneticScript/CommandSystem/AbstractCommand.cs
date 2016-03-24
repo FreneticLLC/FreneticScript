@@ -53,6 +53,34 @@ namespace FreneticScript.CommandSystem
         public bool Asyncable = false;
 
         /// <summary>
+        /// How many arguments the command can have minimum.
+        /// </summary>
+        public int MinimumArguments = 0;
+
+        /// <summary>
+        /// How many arguments the command can have maximum.
+        /// </summary>
+        public int MaximumArguments = 100;
+        
+        /// <summary>
+        /// Tests if the CommandEntry is valid for this command at pre-process time.
+        /// </summary>
+        /// <param name="entry">The entry to test</param>
+        /// <returns>An error message (with tags), or null for none.</returns>
+        public virtual string TestForValidity(CommandEntry entry)
+        {
+            if (entry.Arguments.Count < MinimumArguments)
+            {
+                return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + TagParser.Escape(Arguments);
+            }
+            if (MaximumArguments != -1 && entry.Arguments.Count > MaximumArguments)
+            {
+                return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + TagParser.Escape(Arguments);
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="entry">Entry to be executed.</param>

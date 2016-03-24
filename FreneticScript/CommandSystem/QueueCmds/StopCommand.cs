@@ -10,10 +10,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public StopCommand()
         {
             Name = "stop";
-            Arguments = "(all)";
+            Arguments = "['all']";
             Description = "Stops the current command queue.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 0;
+            MaximumArguments = 1;
         }
 
         public override void Execute(CommandEntry entry)

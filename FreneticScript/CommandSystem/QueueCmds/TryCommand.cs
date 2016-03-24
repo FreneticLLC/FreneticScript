@@ -9,6 +9,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class TryCommand : AbstractCommand
     {
+        // TODO: Meta!
+        // @Braces always
         public TryCommand()
         {
             Name = "try";
@@ -16,6 +18,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Executes the following block of commands and exits forcefully if there is an error.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 0;
+            MaximumArguments = 0;
         }
         public override void Execute(CommandEntry entry)
         {

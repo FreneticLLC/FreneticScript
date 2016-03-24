@@ -7,14 +7,17 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    class SetCommand: AbstractCommand
+    class SetCommand : AbstractCommand
     {
+        // TODO: Meta!
         public SetCommand()
         {
             Name = "set";
-            Arguments = "<CVar to set> <new value> (force/remove/do_not_save)";
+            Arguments = "<CVar to set> <new value> ['force'/'remove'/'do_not_save']";
             Description = "Modifies the value of a specified CVar, or creates a new one.";
-            // TODO: make asyncable?
+            // TODO: make asyncable? Probably with a CVar system lock?
+            MinimumArguments = 2;
+            MaximumArguments = 3;
         }
 
         /// <summary>
@@ -23,68 +26,61 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
+            string target = entry.GetArgument(0);
+            string newvalue = entry.GetArgument(1);
+            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(2).ToLowerInvariant() : "";
+            bool force = a2 == "force";
+            bool remove = a2 == "remove";
+            bool do_not_save = a2 == "do_not_save";
+            if (remove)
             {
-                ShowUsage(entry);
-            }
-            else
-            {
-                string target = entry.GetArgument(0);
-                string newvalue = entry.GetArgument(1);
-                string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(2).ToLowerInvariant(): "";
-                bool force = a2 == "force";
-                bool remove = a2 == "remove";
-                bool do_not_save = a2 == "do_not_save";
-                if (remove)
-                {
-                    CVar Cvar = entry.Output.CVarSys.Get(target);
-                    if (Cvar == null)
-                    {
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' cannot be removed, it doesn't exist!");
-                        }
-                    }
-                    else if (!Cvar.Flags.HasFlag(CVarFlag.UserMade))
-                    {
-                        entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name) + "<{text_color.base}>' cannot be removed, it wasn't user made!");
-                    }
-                    else
-                    {
-                        Cvar.Set("");
-                        entry.Output.CVarSys.CVars.Remove(Cvar.Name);
-                        entry.Output.CVarSys.CVarList.Remove(Cvar);
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("<{text_color.info}>CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name) + "<{text_color.info}>' removed.");
-                        }
-                    }
-                    return;
-                }
-                CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave: CVarFlag.None);
-                if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
-                {
-                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' cannot be modified, it is server controlled!");
-                    return;
-                }
-                if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
-                {
-                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' cannot be modified, it is a read-only system variable!");
-                }
-                else if (cvar.Flags.HasFlag(CVarFlag.InitOnly) && !entry.Output.Initializing)
-                {
-                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' cannot be modified after game initialization.");
-                }
-                else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !entry.Output.Initializing)
-                {
-                    entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' is delayed, and its value will be calculated after the game is reloaded.");
-                }
-                else
+                CVar Cvar = entry.Output.CVarSys.Get(target);
+                if (Cvar == null)
                 {
                     if (entry.ShouldShowGood())
                     {
-                        entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(cvar.Value) + "<{text_color.base}>'.");
+                        entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' cannot be removed, it doesn't exist!");
                     }
+                }
+                else if (!Cvar.Flags.HasFlag(CVarFlag.UserMade))
+                {
+                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name) + "<{text_color.base}>' cannot be removed, it wasn't user made!");
+                }
+                else
+                {
+                    Cvar.Set("");
+                    entry.Output.CVarSys.CVars.Remove(Cvar.Name);
+                    entry.Output.CVarSys.CVarList.Remove(Cvar);
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("<{text_color.info}>CVar '<{text_color.emphasis}>" + TagParser.Escape(Cvar.Name) + "<{text_color.info}>' removed.");
+                    }
+                }
+                return;
+            }
+            CVar cvar = entry.Output.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave : CVarFlag.None);
+            if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
+            {
+                entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' cannot be modified, it is server controlled!");
+                return;
+            }
+            if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
+            {
+                entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' cannot be modified, it is a read-only system variable!");
+            }
+            else if (cvar.Flags.HasFlag(CVarFlag.InitOnly) && !entry.Output.Initializing)
+            {
+                entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' cannot be modified after game initialization.");
+            }
+            else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !entry.Output.Initializing)
+            {
+                entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' is delayed, and its value will be calculated after the game is reloaded.");
+            }
+            else
+            {
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("CVar '<{text_color.emphasis}>" + TagParser.Escape(cvar.Name) + "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(cvar.Value) + "<{text_color.base}>'.");
                 }
             }
         }

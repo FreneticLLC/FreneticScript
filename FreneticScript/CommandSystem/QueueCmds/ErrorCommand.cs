@@ -6,7 +6,7 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    // TODO: Meta
+    // TODO: Meta!
     class ErrorCommand : AbstractCommand
     {
         public ErrorCommand()
@@ -16,6 +16,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Throws an error on the current command queue.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         /// <summary>
@@ -24,10 +26,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-            }
             entry.Error(entry.GetArgument(0));
         }
     }

@@ -10,6 +10,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
     // @Updated 2014/06/22
     // @Authors mcmonkey
     // @Group Queue
+    // @Minimum 2
+    // @Maximum 2
     // @Description
     // The define command sets a <@link explanation Queue Variables>queue variable<@/link>
     // onto the queue it is running in.
@@ -21,7 +23,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
     // TODO: More examples!
     // Var <Dynamic> TextTag returns the value of the set definition.
     // -->
-    class DefineCommand: AbstractCommand // TODO: Public!
+    class DefineCommand : AbstractCommand // TODO: Public!
     {
         public DefineCommand()
         {
@@ -30,24 +32,19 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Description = "Modifies the value of a specified queue variable, or creates a new one.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 2;
+            MaximumArguments = 2;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
+            string target = entry.GetArgument(0);
+            TemplateObject newvalue = entry.GetArgumentObject(1);
+            entry.Queue.SetVariable(target, newvalue);
+            if (entry.ShouldShowGood())
             {
-                ShowUsage(entry);
-            }
-            else
-            {
-                string target = entry.GetArgument(0);
-                TemplateObject newvalue = entry.GetArgumentObject(1);
-                entry.Queue.SetVariable(target, newvalue);
-                if (entry.ShouldShowGood())
-                {
-                    entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerInvariant()) +
-                        "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue.ToString()) + "<{text_color.base}>'.");
-                }
+                entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerInvariant()) +
+                    "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue.ToString()) + "<{text_color.base}>'.");
             }
         }
     }

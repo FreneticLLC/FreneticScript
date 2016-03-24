@@ -19,14 +19,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
     class IfCommand: AbstractCommand
     {
-        // TODO: META
+        // TODO: Meta!
         public IfCommand()
         {
             Name = "if";
-            Arguments = "<if calculations>";
+            Arguments = "<comparisons>";
             Description = "Executes the following block of commands only if the input is true.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = -1;
         }
 
         public override void Execute(CommandEntry entry)
@@ -34,44 +36,37 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IfCommandData data = new IfCommandData();
             data.Result = 0;
             entry.Data = data;
-            if (entry.Arguments.Count < 1)
+            if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {
-                ShowUsage(entry);
+                return;
+            }
+            if (entry.Block == null)
+            {
+                entry.Error("If invalid: No block follows!");
+                return;
+            }
+            List<string> parsedargs = new List<string>(entry.Arguments.Count);
+            for (int i = 0; i < entry.Arguments.Count; i++)
+            {
+                parsedargs.Add(entry.GetArgument(i));
+            }
+            bool success = TryIf(parsedargs);
+            if (success)
+            {
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("If is true, executing...");
+                }
+                data.Result = 1;
+                entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
+                    this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "if", 0, entry.ScriptName, entry.ScriptLine));
+                entry.Queue.AddCommandsNow(entry.Block);
             }
             else
             {
-                if (entry.Arguments[0].ToString() == "\0CALLBACK")
+                if (entry.ShouldShowGood())
                 {
-                    return;
-                }
-                if (entry.Block == null)
-                {
-                    entry.Error("If invalid: No block follows!");
-                    return;
-                }
-                List<string> parsedargs = new List<string>(entry.Arguments.Count);
-                for (int i = 0; i < entry.Arguments.Count; i++)
-                {
-                    parsedargs.Add(entry.GetArgument(i));
-                }
-                bool success = TryIf(parsedargs);
-                if (success)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("If is true, executing...");
-                    }
-                    data.Result = 1;
-                    entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
-                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "if", 0, entry.ScriptName, entry.ScriptLine));
-                    entry.Queue.AddCommandsNow(entry.Block);
-                }
-                else
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("If is false, doing nothing!");
-                    }
+                    entry.Good("If is false, doing nothing!");
                 }
             }
         }

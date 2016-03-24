@@ -13,6 +13,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Updated 2014/06/24
     // @Authors mcmonkey
     // @Group Queue
+    // @Minimum 0
+    // @Maximum 1
     // @Description
     // Whenever <@link command foreach>foreach stop<@/link> or <@link command function>function stop<@/link> or
     // whatever specific stop command isn't enough, the break command is available to smash through as many
@@ -49,6 +51,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Breaks out of a specified number of braced layers.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 0;
+            MaximumArguments = 1;
         }
 
         public static int StringToInt(string input)

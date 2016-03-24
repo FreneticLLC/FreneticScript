@@ -8,6 +8,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class GotoCommand : AbstractCommand
     {
+        // TODO: Meta!
         public GotoCommand()
         {
             Name = "goto";
@@ -15,6 +16,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Goes forward to the next marked location in the script.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         /// <summary>
@@ -23,11 +26,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string targ = entry.GetArgument(0);
             bool hasnext = false;
             for (int i = 0; i < entry.Queue.CommandList.Length; i++)

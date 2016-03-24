@@ -7,6 +7,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class CatchCommand: AbstractCommand
     {
+        // TODO: Meta!
         public CatchCommand()
         {
             Name = "catch";
@@ -14,6 +15,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Contains exception handling code, only allowed to follow a try block.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 0;
+            MaximumArguments = 1;
         }
 
         /// <summary>

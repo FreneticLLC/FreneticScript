@@ -6,53 +6,49 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class DebugCommand: AbstractCommand
+    class DebugCommand : AbstractCommand
     {
+        // TODO: Meta!
         public DebugCommand()
         {
             Name = "debug";
-            Arguments = "full/minimal/none";
+            Arguments = "'full'/'minimal'/'none'";
             Description = "Modifies the debug mode of the current queue.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
+            string modechoice = entry.GetArgument(0);
+            switch (modechoice.ToLowerInvariant())
             {
-                ShowUsage(entry);
-            }
-            else
-            {
-                string modechoice = entry.GetArgument(0);
-                switch (modechoice.ToLowerInvariant())
-                {
-                    case "full":
-                        entry.Queue.Debug = DebugMode.FULL;
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
-                        }
-                        break;
-                    case "minimal":
-                        entry.Queue.Debug = DebugMode.MINIMAL;
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
-                        }
-                        break;
-                    case "none":
-                        entry.Queue.Debug = DebugMode.NONE;
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
-                        }
-                        break;
-                    default:
-                        entry.Error("Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
-                        break;
-                }
+                case "full":
+                    entry.Queue.Debug = DebugMode.FULL;
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
+                    }
+                    break;
+                case "minimal":
+                    entry.Queue.Debug = DebugMode.MINIMAL;
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
+                    }
+                    break;
+                case "none":
+                    entry.Queue.Debug = DebugMode.NONE;
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
+                    }
+                    break;
+                default:
+                    entry.Error("Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
+                    break;
             }
         }
     }

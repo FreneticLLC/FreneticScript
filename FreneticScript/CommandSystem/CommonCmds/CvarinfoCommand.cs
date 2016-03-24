@@ -9,12 +9,15 @@ namespace FreneticScript.CommandSystem.CommonCmds
 {
     class CvarinfoCommand: AbstractCommand
     {
+        // TODO: Meta!
+
         public CvarinfoCommand()
         {
             Name = "cvarinfo";
             Arguments = "[CVar to get info on]";
             Description = "Shows information on a specified CVar, or all of them if one isn't specified.";
-            // TODO: Make asyncable
+            MinimumArguments = 0;
+            MaximumArguments = 1;
         }
 
         /// <summary>

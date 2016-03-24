@@ -2,24 +2,21 @@
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class RequireCommand : AbstractCommand // TODO: Public!
+    class RequireCommand : AbstractCommand
     {
         // TODO: Meta!
         public RequireCommand()
         {
             Name = "require";
-            Arguments = "Loud/Quiet/Error <variable to require> [...]";
+            Arguments = "'Loud'/'Quiet'/'Error' <variable to require> [...]";
             Description = "Stops a command queue entirely or throws an error if the relevant variables are not available.";
             IsFlow = true;
+            MinimumArguments = 2;
+            MaximumArguments = -1;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string loud = entry.GetArgument(0).ToLowerInvariant();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {

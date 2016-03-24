@@ -8,6 +8,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
 {
     class NoopCommand: AbstractCommand
     {
+        // TODO: Meta!
         public NoopCommand()
         {
             Name = "noop";
@@ -15,6 +16,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Description = "Does nothing.";
             IsDebug = true;
             Asyncable = true;
+            MinimumArguments = 0;
+            MaximumArguments = -1;
         }
 
         /// <summary>

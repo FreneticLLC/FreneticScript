@@ -68,6 +68,7 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// What was returned by the determine command for this queue.
+        /// TODO: Template object!
         /// </summary>
         public List<string> Determinations = new List<string>();
 

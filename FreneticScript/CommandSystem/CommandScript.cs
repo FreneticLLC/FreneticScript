@@ -52,7 +52,8 @@ namespace FreneticScript.CommandSystem
                 Lines.Add(line);
                 CommandList.Add(commands.Substring(start).Trim());
             }
-            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system));
+            bool herr;
+            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, out herr));
         }
 
         /// <summary>
@@ -63,8 +64,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="from">The command strings.</param>
         /// <param name="entry">The entry that owns this block.</param>
         /// <param name="system">The command system to create this block inside.</param>
+        /// <param name="had_error">Whether there was a compile error.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, out bool had_error)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
             List<string> Temp = null;
@@ -93,12 +95,24 @@ namespace FreneticScript.CommandSystem
                     {
                         if (toret.Count == 0)
                         {
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system);
+                            bool err;
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, out err);
+                            if (err)
+                            {
+                                had_error = true;
+                                return block;
+                            }
                             toret.AddRange(block);
                         }
                         else
                         {
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, toret[toret.Count - 1], system);
+                            bool err;
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, toret[toret.Count - 1], system, out err);
+                            if (err)
+                            {
+                                had_error = true;
+                                return block;
+                            }
                             toret[toret.Count - 1].Block = block;
                         }
                     }
@@ -126,10 +140,23 @@ namespace FreneticScript.CommandSystem
                     }
                 }
             }
-            if (toret.Count == 0 && entry != null)
+            for (int i = 0; i < toret.Count; i++)
             {
-                return null;
+                if (toret[i].Command != null)
+                {
+                    string msg = toret[i].Command.TestForValidity(toret[i]);
+                    if (msg != null)
+                    {
+                        string fullmsg = "FAILED TO COMPILE SCRIPT '" + TagParser.Escape(name) + "': (line " + toret[i].ScriptLine + "): " + msg;
+                        system.Output.Bad(fullmsg, DebugMode.FULL);
+                        had_error = true;
+                        toret.Clear();
+                        toret.Add(CommandEntry.CreateErrorOutput(fullmsg, system, name));
+                        return toret;
+                    }
+                }
             }
+            had_error = false;
             return toret;
         }
 

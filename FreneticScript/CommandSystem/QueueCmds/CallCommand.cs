@@ -10,11 +10,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name call
-    // @Arguments [inject/run] <function to call> [<variable>:<value> ...]
+    // @Arguments ['inject'/'run'] <function to call> [<variable>:<value> ...]
     // @Short Runs a function.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
+    // @Minium 2
+    // @Maximum -1
     // @Description
     // Activates a function created by the <@link command function>function<@/link> command.
     // Note that 'injected' function calls do not take variable inputs (they use the current queue's variables),
@@ -33,15 +35,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @BlockVars
     // call_determinations ListTag
     // -->
+    // TODO: Make insert_function entirely its own separate command.
     class CallCommand: AbstractCommand
     {
         public CallCommand()
         {
             Name = "call";
-            Arguments = "[inject/run] <function to call> [<variable>:<value> ...]";
+            Arguments = "<'inject'/'run'> <function to call> [<variable>:<value> ...]";
             Description = "Runs a function.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 2;
+            MaximumArguments = -1;
         }
 
         public override void Execute(CommandEntry entry)

@@ -7,15 +7,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class ElseCommand: AbstractCommand
     {
-        // TODO: META
+        // TODO: Meta!
         public ElseCommand()
         {
             Name = "else";
-            Arguments = "[if true/false]";
-            Description = "Executes the following block of commands only if the previous if failed, "
-            + "and optionally if additional requirements are met.";
+            Arguments = "['if' <comparisons>]";
+            Description = "Executes the following block of commands only if the previous if failed, and optionally if additional requirements are met.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 0;
+            MaximumArguments = -1;
         }
 
         public override void Execute(CommandEntry entry)

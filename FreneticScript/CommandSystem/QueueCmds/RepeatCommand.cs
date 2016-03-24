@@ -9,12 +9,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name repeat
-    // @Arguments <times to repeat>/stop/next
+    // @Arguments <times to repeat>/'stop'/'next'
     // @Short Executes the following block of commands a specified number of times.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
-    // @Braces true
+    // @Minimum 1
+    // @Maximum 1
+    // @Braces allowed
     // @Description
     // The repeat command will loop the given number of times and execute the included command block
     // each time it loops.
@@ -71,10 +73,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public RepeatCommand()
         {
             Name = "repeat";
-            Arguments = "<times to repeat>/stop/next";
+            Arguments = "<times to repeat>/'stop'/'next'";
             Description = "Executes the following block of commands a specified number of times.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 1;
+            MaximumArguments = 1;
         }
 
         public static int StringToInt(string input)
@@ -86,142 +90,135 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 1)
+            string count = entry.GetArgument(0);
+            if (count == "\0CALLBACK")
             {
-                ShowUsage(entry);
-            }
-            else
-            {
-                string count = entry.GetArgument(0);
-                if (count == "\0CALLBACK")
+                if (entry.BlockOwner.Command.Name == "repeat" || entry.BlockOwner.Block == null || entry.BlockOwner.Block.Count == 0
+                    || entry.BlockOwner.Block[entry.BlockOwner.Block.Count - 1] != entry)
                 {
-                    if (entry.BlockOwner.Command.Name == "repeat" || entry.BlockOwner.Block == null || entry.BlockOwner.Block.Count == 0
-                        || entry.BlockOwner.Block[entry.BlockOwner.Block.Count - 1] != entry)
-                    {
-                        RepeatCommandData data = (RepeatCommandData)entry.BlockOwner.Data;
-                        data.Index++;
-                        if (data.Index > data.Total)
-                        {
-                            if (entry.ShouldShowGood())
-                            {
-                                entry.Good("Repeating ending, reached target.");
-                            }
-                        }
-                        else
-                        {
-                            if (entry.ShouldShowGood())
-                            {
-                                entry.Good("Repeating at index <{text_color.emphasis}>" + data.Index + "/" + data.Total + "<{text_color.base}>...");
-                            }
-                            entry.Queue.SetVariable("repeat_index", new TextTag(data.Index.ToString()));
-                            entry.Queue.SetVariable("repeat_total", new TextTag(data.Total.ToString()));
-                            entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
-                        }
-                    }
-                    else
-                    {
-                        entry.Error("Repeat CALLBACK invalid: not a real callback!");
-                    }
-                }
-                else if (count.ToLowerInvariant() == "stop")
-                {
-                    bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
-                    {
-                        if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
-                        {
-                            hasnext = true;
-                            break;
-                        }
-                    }
-                    if (hasnext)
+                    RepeatCommandData data = (RepeatCommandData)entry.BlockOwner.Data;
+                    data.Index++;
+                    if (data.Index > data.Total)
                     {
                         if (entry.ShouldShowGood())
                         {
-                            entry.Good("Stopping repeat loop.");
-                        }
-                        while (entry.Queue.CommandList.Length > 0)
-                        {
-                            if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                            {
-                                entry.Queue.RemoveCommand(0);
-                                break;
-                            }
-                            entry.Queue.RemoveCommand(0);
+                            entry.Good("Repeating ending, reached target.");
                         }
                     }
                     else
-                    {
-                        entry.Error("Cannot stop repeat: not in one!");
-                    }
-                }
-                else if (count.ToLowerInvariant() == "next")
-                {
-                    bool hasnext = false;
-                    for (int i = 0; i < entry.Queue.CommandList.Length; i++)
-                    {
-                        if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
-                            entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
-                        {
-                            hasnext = true;
-                            break;
-                        }
-                    }
-                    if (hasnext)
                     {
                         if (entry.ShouldShowGood())
                         {
-                            entry.Good("Skipping to next repeat entry...");
+                            entry.Good("Repeating at index <{text_color.emphasis}>" + data.Index + "/" + data.Total + "<{text_color.base}>...");
                         }
-                        while (entry.Queue.CommandList.Length > 0)
-                        {
-                            if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
-                                entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                            {
-                                break;
-                            }
-                            entry.Queue.RemoveCommand(0);
-                        }
-                    }
-                    else
-                    {
-                        entry.Error("Cannot stop repeat: not in one!");
+                        entry.Queue.SetVariable("repeat_index", new TextTag(data.Index.ToString()));
+                        entry.Queue.SetVariable("repeat_total", new TextTag(data.Total.ToString()));
+                        entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
                     }
                 }
                 else
                 {
-                    int target = StringToInt(count);
-                    if (target <= 0)
+                    entry.Error("Repeat CALLBACK invalid: not a real callback!");
+                }
+            }
+            else if (count.ToLowerInvariant() == "stop")
+            {
+                bool hasnext = false;
+                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                {
+                    if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
+                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        hasnext = true;
+                        break;
+                    }
+                }
+                if (hasnext)
+                {
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Stopping repeat loop.");
+                    }
+                    while (entry.Queue.CommandList.Length > 0)
+                    {
+                        if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
+                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                         {
-                            entry.Good("Not repeating.");
+                            entry.Queue.RemoveCommand(0);
+                            break;
                         }
-                        return;
+                        entry.Queue.RemoveCommand(0);
                     }
-                    RepeatCommandData data = new RepeatCommandData();
-                    data.Total = target;
-                    data.Index = 1;
-                    entry.Data = data;
-                    if (entry.Block != null)
+                }
+                else
+                {
+                    entry.Error("Cannot stop repeat: not in one!");
+                }
+            }
+            else if (count.ToLowerInvariant() == "next")
+            {
+                bool hasnext = false;
+                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                {
+                    if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
+                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        hasnext = true;
+                        break;
+                    }
+                }
+                if (hasnext)
+                {
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Skipping to next repeat entry...");
+                    }
+                    while (entry.Queue.CommandList.Length > 0)
+                    {
+                        if (entry.Queue.GetCommand(0).Command is RepeatCommand &&
+                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
                         {
-                            entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                            break;
                         }
-                        CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
-                            this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "repeat", 0, entry.ScriptName, entry.ScriptLine);
-                        entry.Block.Add(callback);
-                        entry.Queue.SetVariable("repeat_index", new TextTag("1"));
-                        entry.Queue.SetVariable("repeat_total", new TextTag(target.ToString()));
-                        entry.Queue.AddCommandsNow(entry.Block);
+                        entry.Queue.RemoveCommand(0);
                     }
-                    else
+                }
+                else
+                {
+                    entry.Error("Cannot stop repeat: not in one!");
+                }
+            }
+            else
+            {
+                int target = StringToInt(count);
+                if (target <= 0)
+                {
+                    if (entry.ShouldShowGood())
                     {
-                        entry.Error("Repeat invalid: No block follows!");
+                        entry.Good("Not repeating.");
                     }
+                    return;
+                }
+                RepeatCommandData data = new RepeatCommandData();
+                data.Total = target;
+                data.Index = 1;
+                entry.Data = data;
+                if (entry.Block != null)
+                {
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                    }
+                    CommandEntry callback = new CommandEntry("repeat \0CALLBACK", null, entry,
+                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "repeat", 0, entry.ScriptName, entry.ScriptLine);
+                    entry.Block.Add(callback);
+                    entry.Queue.SetVariable("repeat_index", new TextTag("1"));
+                    entry.Queue.SetVariable("repeat_total", new TextTag(target.ToString()));
+                    entry.Queue.AddCommandsNow(entry.Block);
+                }
+                else
+                {
+                    entry.Error("Repeat invalid: No block follows!");
                 }
             }
         }

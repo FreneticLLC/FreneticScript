@@ -16,15 +16,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Arguments = "<variable> <setter> <value>";
             Description = "Modifies a variable in the current queue.";
             IsFlow = true;
+            MinimumArguments = 3;
+            MaximumArguments = 3;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count != 3)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string variable = entry.GetArgument(0);
             TemplateObject varb = entry.Queue.GetVariable(variable);
             string setter = entry.GetArgument(1);

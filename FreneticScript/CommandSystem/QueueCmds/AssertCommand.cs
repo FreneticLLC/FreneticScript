@@ -4,7 +4,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class AssertCommand : AbstractCommand // TODO: Public!
+    class AssertCommand : AbstractCommand
     {
         // TODO: Meta!
         public AssertCommand()
@@ -13,15 +13,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Arguments = "<requirement> <error message>";
             Description = "Throws an error if a requirement is not 'true'.";
             IsFlow = true;
+            MinimumArguments = 2;
+            MaximumArguments = 2;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
-            {
-                ShowUsage(entry);
-                return;
-            }
             TemplateObject arg1 = entry.GetArgumentObject(0);
             BooleanTag bt = BooleanTag.TryFor(arg1);
             if (bt == null || !bt.Internal)

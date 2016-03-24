@@ -6,27 +6,22 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    // TODO: public, docs
     class EventCommand : AbstractCommand
     {
-        // TODO: Meta
-
+        // TODO: Meta!
         public EventCommand()
         {
             Name = "event";
-            Arguments = "add/remove/clear <name of event>/all [name of event handler] [priority] (quiet_fail)";
+            Arguments = "'add'/'remove'/'clear' <name of event>/'all' <name of event handler> <priority> ['quiet_fail']";
             Description = "Creates a new function of the following command block, and adds it to the specified event's handler.";
             IsFlow = true;
             Asyncable = true;
+            MinimumArguments = 2;
+            MaximumArguments = 5;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
-            {
-                ShowUsage(entry);
-                return;
-            }
             string type = entry.GetArgument(0).ToLowerInvariant();
             string eventname = entry.GetArgument(1).ToLowerInvariant();
             if (type == "clear" && eventname == "all")

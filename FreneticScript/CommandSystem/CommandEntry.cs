@@ -98,6 +98,16 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Create an entry that represents an error message.
+        /// </summary>
+        public static CommandEntry CreateErrorOutput(string message, Commands system, string script)
+        {
+            return new CommandEntry("error \"" + message.Replace('\"', '\'') + "\"", null, null, system.RegisteredCommands["error"],
+                new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0);
+
+        }
+
+        /// <summary>
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block, List<Argument> _arguments,
