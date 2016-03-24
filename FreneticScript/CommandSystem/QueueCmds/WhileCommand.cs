@@ -48,6 +48,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Good("While looping...: " + dat.Index);
                     }
                     entry.Queue.CommandIndex = entry.BlockStart;
+                    return;
                 }
                 if (entry.ShouldShowGood())
                 {
@@ -58,15 +59,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is WhileCommand &&
-                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is WhileCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Stopping a while loop.");
                         }
                         entry.Queue.CommandIndex = i + 2;
-                        break;
+                        return;
                     }
                 }
                 entry.Error("Cannot stop while: not in one!");
@@ -75,15 +75,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
                 {
-                    if (entry.Queue.GetCommand(i).Command is WhileCommand &&
-                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is WhileCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Jumping forward in a while loop.");
                         }
                         entry.Queue.CommandIndex = i + 1;
-                        break;
+                        return;
                     }
                 }
                 entry.Error("Cannot while repeat: not in one!");

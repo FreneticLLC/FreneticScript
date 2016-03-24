@@ -77,7 +77,7 @@ namespace FreneticScript.CommandSystem
         {
             if (entry.Arguments.Count < MinimumArguments)
             {
-                return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + TagParser.Escape(Arguments);
+                return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + TagParser.Escape(Arguments) + ", found only: " + TagParser.Escape(entry.AllOriginalArguments());
             }
             if (MaximumArguments != -1 && entry.Arguments.Count > MaximumArguments)
             {

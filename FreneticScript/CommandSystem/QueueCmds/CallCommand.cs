@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
-using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name call
-    // @Arguments ['inject'/'run'] <function to call> [<variable>:<value> ...]
+    // @Arguments <function to call> [<variable>:<value> ...]
     // @Short Runs a function.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
-    // @Minium 2
+    // @Minium 1
     // @Maximum -1
     // @Description
     // Activates a function created by the <@link command function>function<@/link> command.
@@ -36,99 +35,58 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // call_determinations ListTag
     // -->
     // TODO: Make insert_function entirely its own separate command.
-    class CallCommand: AbstractCommand
+    class CallCommand : AbstractCommand
     {
         public CallCommand()
         {
             Name = "call";
-            Arguments = "<'inject'/'run'> <function to call> [<variable>:<value> ...]";
+            Arguments = "<function to call> [<variable>:<value> ...]";
             Description = "Runs a function.";
             IsFlow = true;
             Asyncable = true;
-            MinimumArguments = 2;
+            MinimumArguments = 1;
             MaximumArguments = -1;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count < 2)
+            string fname = entry.GetArgument(0);
+            fname = fname.ToLowerInvariant();
+            CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
+            if (script == null)
             {
-                ShowUsage(entry);
+                entry.Error("Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
+                return;
+            }
+            if (entry.ShouldShowGood())
+            {
+                entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+            }
+            CommandQueue queue;
+            Dictionary<string, TemplateObject> variables = new Dictionary<string, TemplateObject>();
+            for (int i = 1; i < entry.Arguments.Count; i++)
+            {
+                string str = entry.GetArgument(i);
+                if (!str.Contains(':'))
+                {
+                    entry.Error("Invalid variable input!");
+                    return;
+                }
+                string[] split = str.Split(new char[] { ':' }, 2);
+                variables.Add(split[0], new TextTag(split[1]));
+            }
+            entry.Queue.CommandSystem.ExecuteScript(script, variables, out queue, DebugMode.MINIMAL);
+            if (!queue.Running)
+            {
+                entry.Finished = true;
             }
             else
             {
-                /*
-                string type = entry.GetArgument(0).ToLowerInvariant();
-                bool run = false;
-                if (type == "run")
-                {
-                    run = true;
-                }
-                else if (type == "inject")
-                {
-                    run = false;
-                }
-                else
-                {
-                    ShowUsage(entry);
-                    return;
-                }
-                string fname = entry.GetArgument(1);
-                if (fname == "\0CALLBACK")
-                {
-                    return;
-                }
-                fname = fname.ToLowerInvariant();
-                CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
-                if (script != null)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>' (" + (run ? "run" : "inject") + ")...");
-                    }
-                    List<CommandEntry> block = script.GetEntries();
-                    block.Add(new CommandEntry("call \0CALLBACK", null, entry,
-                            this, new List<Argument> { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "call", 0, entry.ScriptName, entry.ScriptLine));
-                    if (run)
-                    {
-                        CommandQueue queue;
-                        Dictionary<string, TemplateObject> variables = new Dictionary<string, TemplateObject>();
-                        for (int i = 2; i < entry.Arguments.Count; i++)
-                        {
-                            string str = entry.GetArgument(i);
-                            if (!str.Contains(':'))
-                            {
-                                entry.Error("Invalid variable input!");
-                                return;
-                            }
-                            string[] split = str.Split(new char[] { ':' }, 2);
-                            variables.Add(split[0], new TextTag(split[1]));
-                        }
-                        entry.Queue.CommandSystem.ExecuteScript(script, variables, out queue, DebugMode.MINIMAL);
-                        if (!queue.Running)
-                        {
-                            entry.Finished = true;
-                        }
-                        else
-                        {
-                            EntryFinisher fin = new EntryFinisher() { Entry = entry };
-                            queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
-                        }
-                        ListTag list = new ListTag(queue.Determinations);
-                        entry.Queue.SetVariable("call_determinations", list);
-                    }
-                    else
-                    {
-                        entry.Queue.AddCommandsNow(block);
-                }
-                else
-                {
-                    entry.Error("Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
-                    }
-                }
-                */
-               entry.Error("FUNCTIONS ARE // TODO: FIXME!");
+                EntryFinisher fin = new EntryFinisher() { Entry = entry };
+                queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
             }
+            ListTag list = new ListTag(queue.Determinations);
+            entry.Queue.SetVariable("call_determinations", list);
         }
     }
 }

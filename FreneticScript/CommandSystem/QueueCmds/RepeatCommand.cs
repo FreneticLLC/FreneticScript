@@ -98,6 +98,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Good("Repeating...: " + dat.Index + "/" + dat.Total);
                     }
                     entry.Queue.CommandIndex = entry.BlockStart;
+                    return;
                 }
                 if (entry.ShouldShowGood())
                 {
@@ -108,15 +109,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
-                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is RepeatCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Stopping a repeat loop.");
                         }
                         entry.Queue.CommandIndex = i + 2;
-                        break;
+                        return;
                     }
                 }
                 entry.Error("Cannot stop repeat: not in one!");
@@ -125,15 +125,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
                 {
-                    if (entry.Queue.GetCommand(i).Command is RepeatCommand &&
-                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is RepeatCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Jumping forward in a repeat loop.");
                         }
                         entry.Queue.CommandIndex = i + 1;
-                        break;
+                        return;
                     }
                 }
                 entry.Error("Cannot advance repeat: not in one!");

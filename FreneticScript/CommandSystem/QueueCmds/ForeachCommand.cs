@@ -92,6 +92,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Good("Foreach looping...: " + dat.Index + "/" + dat.List.Count);
                     }
                     entry.Queue.CommandIndex = entry.BlockStart;
+                    return;
                 }
                 if (entry.ShouldShowGood())
                 {
@@ -102,15 +103,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is ForeachCommand &&
-                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is ForeachCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Stopping a foreach loop.");
                         }
                         entry.Queue.CommandIndex = i + 2;
-                        break;
+                        return;
                     }
                 }
                 entry.Error("Cannot stop foreach: not in one!");
@@ -119,15 +119,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
                 {
-                    if (entry.Queue.GetCommand(i).Command is ForeachCommand &&
-                        entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is ForeachCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         if (entry.ShouldShowGood())
                         {
                             entry.Good("Jumping forward in a foreach loop.");
                         }
                         entry.Queue.CommandIndex = i + 1;
-                        break;
+                        return;
                     }
                 }
                 entry.Error("Cannot advance foreach: not in one!");

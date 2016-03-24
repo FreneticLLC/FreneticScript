@@ -8,13 +8,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name function
-    // @Arguments 'stop'/'define' <name of function> ['quiet_fail']
+    // @Arguments 'stop'/'define' [name of function] ['quiet_fail']
     // @Short Creates a new function of the following command block, and adds it to the script cache.
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
     // @Braces allowed
-    // @Minimum 2
+    // @Minimum 1
     // @Maximum 3
     // @Description
     // The function command will define the included command block to be a function which can be activated
@@ -45,93 +45,83 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public FunctionCommand()
         {
             Name = "function";
-            Arguments = "'stop'/'define' <name of function> ['quiet_fail']";
+            Arguments = "'stop'/'define' [name of function] ['quiet_fail']";
             Description = "Creates a new function of the following command block, and adds it to the script cache.";
             IsFlow = true;
             Asyncable = true;
-            MinimumArguments = 2;
+            MinimumArguments = 1;
             MaximumArguments = 3;
         }
 
         public override void Execute(CommandEntry entry)
         {
-            /*
-        string type = entry.GetArgument(0).ToLowerInvariant();
-        if (type == "stop")
-        {
-            bool hasnext = false;
-            for (int i = 0; i < entry.Queue.CommandList.Length; i++)
-            {
-                if (entry.Queue.GetCommand(i).CommandLine == "call \0CALLBACK")
-                {
-                    hasnext = true;
-                    break;
-                }
-            }
-            if (hasnext)
+            string type = entry.GetArgument(0);
+            if (type == "\0CALLBACK")
             {
                 if (entry.ShouldShowGood())
                 {
-                    entry.Good("Stopping function call.");
+                    entry.Good("Completed function call.");
                 }
-                while (entry.Queue.CommandList.Length > 0)
+                return;
+            }
+            type = type.ToLowerInvariant();
+            if (type == "stop")
+            {
+                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(0).CommandLine == "call \0CALLBACK")
+                    if (entry.Queue.GetCommand(i).Command is FunctionCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        entry.Queue.RemoveCommand(0);
-                        break;
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Stopping a function call.");
+                        }
+                        entry.Queue.CommandIndex = i + 2;
+                        return;
                     }
-                    entry.Queue.RemoveCommand(0);
                 }
+                entry.Error("Cannot stop function: not in one!");
             }
-            else
+            else if (type == "define")
             {
-                entry.Error("Cannot stop function call: not in one!");
-            }
-            return;
-        }
-        else if (type == "define")
-        {
-            if (entry.Arguments.Count < 2)
-            {
-                ShowUsage(entry);
-                return;
-            }
-            string name = entry.GetArgument(1).ToLowerInvariant();
-            if (entry.Block == null)
-            {
-                entry.Error("Function invalid: No block follows!");
-                return;
-            }
-            if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
-            {
-                if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
+                if (entry.Arguments.Count < 2)
                 {
-                    if (entry.ShouldShowGood())
+                    ShowUsage(entry);
+                    return;
+                }
+                string name = entry.GetArgument(1).ToLowerInvariant();
+                if (entry.InnerCommandBlock == null)
+                {
+                    entry.Error("Function invalid: No block follows!");
+                    return;
+                }
+                if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
+                {
+                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
                     {
-                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        }
+                    }
+                    else
+                    {
+                        entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else
                 {
-                    entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                    entry.Queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart));
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
+                    }
                 }
-            }
-            else
-            {
-                entry.Queue.CommandSystem.Functions.Add(name, new CommandScript(name, CommandScript.DisOwn(entry.Block, entry)));
-                if (entry.ShouldShowGood())
-                {
-                    entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
-                }
-            }
+                entry.Queue.CommandIndex = entry.BlockEnd + 2;
             }
             else
             {
                 ShowUsage(entry);
             }
-            */
-            entry.Error("FUNCTIONS ARE // TODO: FIXME!");
         }
     }
 }

@@ -89,10 +89,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                entry.Error("EVENTS ARE // TODO: FIXME!");
-                /*
                 string name = entry.GetArgument(2).ToLowerInvariant();
-                if (entry.Block == null)
+                if (entry.InnerCommandBlock == null)
                 {
                     entry.Error("Event command invalid: No block follows!");
                     return;
@@ -127,11 +125,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, CommandScript.DisOwn(entry.Block, entry)) { Debug = DebugMode.MINIMAL });
+                    theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, entry.InnerCommandBlock, entry.BlockStart) { Debug = DebugMode.MINIMAL });
                     entry.Good("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) +
                         "<{text_color.base}>' defined for event '<{text_color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{text_color.base}>'.");
                 }
-                */
             }
             else
             {

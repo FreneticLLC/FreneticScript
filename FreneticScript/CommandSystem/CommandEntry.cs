@@ -123,6 +123,11 @@ namespace FreneticScript.CommandSystem
         public string CommandLine;
 
         /// <summary>
+        /// A list of all commands that were inside this command originally.
+        /// </summary>
+        public List<CommandEntry> InnerCommandBlock = null;
+
+        /// <summary>
         /// The start of this command's braced block.
         /// </summary>
         public int BlockStart;

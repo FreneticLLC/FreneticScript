@@ -118,13 +118,14 @@ namespace FreneticScript.CommandSystem
                                 return block;
                             }
                             cent.BlockStart = istart;
-                            cent.BlockEnd = istart + block.Count;
+                            istart += block.Count;
+                            cent.BlockEnd = istart - 1;
                             if (cent.Command != null)
                             {
                                 cent.Command.AdaptBlockFollowers(cent, block);
                             }
+                            cent.InnerCommandBlock = block;
                             toret.AddRange(block);
-                            istart += block.Count;
                         }
                     }
                     else if (blocks < 0)
@@ -147,9 +148,10 @@ namespace FreneticScript.CommandSystem
                     CommandEntry centry = CommandEntry.FromInput(from[i], system, name, lines[i], tabs);
                     if (centry != null)
                     {
+                        istart++;
                         toret.Add(centry);
                     }
-                    istart++;
+
                 }
             }
             for (int i = 0; i < toret.Count; i++)
@@ -217,10 +219,21 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="_name">The name of the script.</param>
         /// <param name="_commands">All commands in the script.</param>
-        public CommandScript(string _name, List<CommandEntry> _commands)
+        /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
+        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0)
         {
             Name = _name.ToLowerInvariant();
             Commands = _commands;
+            if (adj != 0)
+            {
+                Commands = new List<CommandEntry>(_commands);
+                for (int i = 0; i < Commands.Count; i++)
+                {
+                    Commands[i] = Commands[i].Duplicate();
+                    Commands[i].BlockStart -= adj;
+                    Commands[i].BlockEnd -= adj;
+                }
+            }
         }
 
         /// <summary>
