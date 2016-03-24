@@ -57,6 +57,39 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Tries to return a valid integer, or null.
+        /// </summary>
+        /// <param name="input">The input that is potentially an integer.</param>
+        /// <returns>An integer, or null.</returns>
+        public static IntegerTag TryFor(string input)
+        {
+            long tval;
+            if (long.TryParse(input, out tval))
+            {
+                return new IntegerTag(tval);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Tries to return a valid integer, or null.
+        /// </summary>
+        /// <param name="input">The input that is potentially an integer.</param>
+        /// <returns>An integer, or null.</returns>
+        public static IntegerTag TryFor(TemplateObject input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            if (input is IntegerTag)
+            {
+                return (IntegerTag)input;
+            }
+            return TryFor(input.ToString());
+        }
+
+        /// <summary>
         /// Constructs an integer tag.
         /// </summary>
         /// <param name="_val">The internal integer to use.</param>

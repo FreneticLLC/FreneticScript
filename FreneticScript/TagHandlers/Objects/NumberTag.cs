@@ -57,6 +57,39 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Tries to return a valid number, or null.
+        /// </summary>
+        /// <param name="input">The input that is potentially a number.</param>
+        /// <returns>A number, or null.</returns>
+        public static NumberTag TryFor(string input)
+        {
+            double tval;
+            if (double.TryParse(input, out tval))
+            {
+                return new NumberTag(tval);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Tries to return a valid number, or null.
+        /// </summary>
+        /// <param name="input">The input that is potentially a number.</param>
+        /// <returns>A number, or null.</returns>
+        public static NumberTag TryFor(TemplateObject input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            if (input is NumberTag)
+            {
+                return (NumberTag)input;
+            }
+            return TryFor(input.ToString());
+        }
+
+        /// <summary>
         /// Constructs a number tag.
         /// </summary>
         /// <param name="_val">The internal number to use.</param>
