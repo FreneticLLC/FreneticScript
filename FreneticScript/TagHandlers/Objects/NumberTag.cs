@@ -140,6 +140,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "is_less_than":
                     return new BooleanTag(Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
+                    // Documented in TextTag.
+                case "equals":
+                    return new BooleanTag(Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.is_less_than_or_equal_to[<NumberTag>]
                 // @Group Number Comparison
@@ -417,7 +420,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Returns the a string representation of the number internally stored by this boolean tag. EG, could return "0", or "1", or "-1.005".
+        /// Returns the a string representation of the number internally stored by this number tag. EG, could return "0", or "1", or "-1.005", or...
         /// </summary>
         /// <returns>A string representation of the number.</returns>
         public override string ToString()

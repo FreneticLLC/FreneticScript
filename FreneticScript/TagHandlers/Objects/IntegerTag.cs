@@ -98,6 +98,110 @@ namespace FreneticScript.TagHandlers.Objects
             Internal = _val;
         }
 
+        static Dictionary<string, Func<TagData, IntegerTag, TemplateObject>> Handlers = new Dictionary<string, Func<TagData, IntegerTag, TemplateObject>>();
+
+        static void RegisterTag(string name, Func<TagData, IntegerTag, TemplateObject> method)
+        {
+            Handlers.Add(name.ToLowerInvariant(), method);
+        }
+
+        static IntegerTag()
+        {
+            // Documented in NumberTag.
+            RegisterTag("is_greater_than", (data, obj) => new BooleanTag(obj.Internal > For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // Documented in NumberTag.
+            RegisterTag("is_greater_than_or_equal_to", (data, obj) => new BooleanTag(obj.Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // Documented in NumberTag.
+            RegisterTag("is_less_than", (data, obj) => new BooleanTag(obj.Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // Documented in NumberTag.
+            RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(obj.Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // Documented in TextTag.
+            RegisterTag("equals", (data, obj) => new BooleanTag(obj.Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.add_int[<IntegerTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns the number plus the specified number.
+            // @Other Commonly shortened to "+".
+            // @Example "1" .add_int[1] returns "2".
+            // -->
+            RegisterTag("add_int", (data, obj) => new IntegerTag(obj.Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.subtract_int[<IntegerTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns the number minus the specified number.
+            // @Other Commonly shortened to "-".
+            // @Example "1" .subtract_int[1] returns "0".
+            // -->
+            RegisterTag("subtract_int", (data, obj) => new IntegerTag(obj.Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.multiply_int[<IntegerTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns the number multiplied by the specified number.
+            // @Other Commonly shortened to "*".
+            // @Example "2" .multiply_int[2] returns "4".
+            // -->
+            RegisterTag("multiply_int", (data, obj) => new IntegerTag(obj.Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.divide_int[<IntegerTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns the number divided by the specified number.
+            // @Other Commonly shortened to "/".
+            // @Example "4" .divide_int[2] returns "2".
+            // -->
+            RegisterTag("divide_int", (data, obj) => new IntegerTag(obj.Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.modulo_int[<IntegerTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns the number modulo the specified number.
+            // @Other Commonly shortened to "%".
+            // @Example "10" .modulo_int[3] returns "1".
+            // -->
+            RegisterTag("modulo_int", (data, obj) => new IntegerTag(obj.Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.absolute_value_int
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns the absolute value of the number.
+            // @Example "-1" .absolute_value_int returns "1".
+            // -->
+            RegisterTag("absolute_value_int", (data, obj) => new IntegerTag(Math.Abs(obj.Internal)).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name NumberTag.maximum_int[<NumberTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns whichever is greater: the number or the specified number.
+            // @Example "10" .maximum_int[12] returns "12".
+            // -->
+            RegisterTag("maximum_int", (data, obj) => new IntegerTag(Math.Max(obj.Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.minimum_int[<NumberTag>]
+            // @Group Mathematics
+            // @ReturnType IntegerTag
+            // @Returns whichever is lower: the number or the specified number.
+            // @Example "10" .minimum_int[12] returns "10".
+            // -->
+            RegisterTag("minimum_int", (data, obj) => new IntegerTag(Math.Min(obj.Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()));
+            // Documented in NumberTag.
+            RegisterTag("sign", (data, obj) => new IntegerTag(Math.Sign(obj.Internal)).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name IntegerTag.to_binary
+            // @Group Mathematics
+            // @ReturnType BinaryTag
+            // @Returns a binary representation of this integer.
+            // @Example "1" .to_binary returns "0100000000000000".
+            // -->
+            RegisterTag("to_binary", (data, obj) => new BinaryTag(BitConverter.GetBytes(obj.Internal)).Handle(data.Shrink()));
+            // Documented in TextTag.
+            RegisterTag("to_integer", (data, obj) => obj.Handle(data.Shrink()));
+            // Documented in TextTag.
+            RegisterTag("to_number", (data, obj) => new NumberTag(obj.Internal).Handle(data.Shrink()));
+        }
+
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -108,122 +212,18 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            switch (data[0])
+            Func<TagData, IntegerTag, TemplateObject> handler;
+            if (Handlers.TryGetValue(data[0], out handler))
             {
-                // Documented in NumberTag.
-                case "is_greater_than":
-                    return new BooleanTag(Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // Documented in NumberTag.
-                case "is_greater_than_or_equal_to":
-                    return new BooleanTag(Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // Documented in NumberTag.
-                case "is_less_than":
-                    return new BooleanTag(Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // Documented in NumberTag.
-                case "is_less_than_or_equal_to":
-                    return new BooleanTag(Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.add_int[<IntegerTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns the number plus the specified number.
-                // @Other Commonly shortened to "+".
-                // @Example "1" .add_int[1] returns "2".
-                // -->
-                case "add_int":
-                    return new IntegerTag(Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.subtract_int[<IntegerTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns the number minus the specified number.
-                // @Other Commonly shortened to "-".
-                // @Example "1" .subtract_int[1] returns "0".
-                // -->
-                case "subtract_int":
-                    return new IntegerTag(Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.multiply_int[<IntegerTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns the number multiplied by the specified number.
-                // @Other Commonly shortened to "*".
-                // @Example "2" .multiply_int[2] returns "4".
-                // -->
-                case "multiply_int":
-                    return new IntegerTag(Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.divide_int[<IntegerTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns the number divided by the specified number.
-                // @Other Commonly shortened to "/".
-                // @Example "4" .divide_int[2] returns "2".
-                // -->
-                case "divide_int":
-                    return new IntegerTag(Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.modulo_int[<IntegerTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns the number modulo the specified number.
-                // @Other Commonly shortened to "%".
-                // @Example "10" .modulo_int[3] returns "1".
-                // -->
-                case "modulo_int":
-                    return new IntegerTag(Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.absolute_value_int
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns the absolute value of the number.
-                // @Example "-1" .absolute_value_int returns "1".
-                // -->
-                case "absolute_value_int":
-                    return new NumberTag(Math.Abs(Internal)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name NumberTag.maximum_int[<NumberTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns whichever is greater: the number or the specified number.
-                // @Example "10" .maximum_int[12] returns "12".
-                // -->
-                case "maximum_int":
-                    return new IntegerTag(Math.Max(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.minimum_int[<NumberTag>]
-                // @Group Mathematics
-                // @ReturnType IntegerTag
-                // @Returns whichever is lower: the number or the specified number.
-                // @Example "10" .minimum_int[12] returns "10".
-                // -->
-                case "minimum_int":
-                    return new IntegerTag(Math.Min(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
-                // Documented in NumberTag.
-                case "sign":
-                    return new IntegerTag(Math.Sign(Internal)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name IntegerTag.to_binary
-                // @Group Mathematics
-                // @ReturnType BinaryTag
-                // @Returns a binary representation of this integer.
-                // @Example "1" .to_binary returns "0100000000000000".
-                // -->
-                case "to_binary":
-                    return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
-                case "to_integer":
-                    return Handle(data.Shrink());
-                case "to_number":
-                    return new NumberTag(Internal).Handle(data.Shrink());
-                default:
-                    return new NumberTag(Internal).Handle(data); // TODO: is this best?
+                return handler.Invoke(data, this);
             }
+            return new NumberTag(Internal).Handle(data); // TODO: is this best? Perhaps a BigDecimal type of tag?
         }
 
         /// <summary>
-        /// Returns the a string representation of the number internally stored by this boolean tag. EG, could return "0", or "1", or "-1.005".
+        /// Returns the a string representation of the integer internally stored by this integer tag. EG, could return "0", or "1", or...
         /// </summary>
-        /// <returns>A string representation of the number.</returns>
+        /// <returns>A string representation of the integer.</returns>
         public override string ToString()
         {
             return Internal.ToString();
