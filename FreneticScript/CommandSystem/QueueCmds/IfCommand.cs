@@ -74,7 +74,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLowerInvariant() == "true";
+                return arguments[0].ToLowerFast() == "true";
             }
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -122,7 +122,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLowerInvariant() == "true";
+                return arguments[0].ToLowerFast() == "true";
             }
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -161,7 +161,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLowerInvariant() == "true";
+                return arguments[0].ToLowerFast() == "true";
             }
             if (arguments.Count == 2)
             {

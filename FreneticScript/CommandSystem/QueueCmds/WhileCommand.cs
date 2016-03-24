@@ -64,7 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good("While stopping.");
                 }
             }
-            else if (count.ToLowerInvariant() == "stop")
+            else if (count.ToLowerFast() == "stop")
             {
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
@@ -80,7 +80,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 entry.Error("Cannot stop while: not in one!");
             }
-            else if (count.ToLowerInvariant() == "next")
+            else if (count.ToLowerFast() == "next")
             {
                 for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
                 {

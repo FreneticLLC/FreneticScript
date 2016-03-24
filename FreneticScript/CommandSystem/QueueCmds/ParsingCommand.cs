@@ -23,7 +23,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 (input) =>
                 {
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "on" || inp == "off")
                     {
                         return new TextTag(inp);
@@ -35,7 +35,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            bool modechoice = entry.GetArgument(0).ToLowerInvariant() == "on";
+            bool modechoice = entry.GetArgument(0).ToLowerFast() == "on";
             entry.Queue.ParseTags = modechoice;
             if (entry.ShouldShowGood())
             {

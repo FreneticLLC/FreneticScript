@@ -22,7 +22,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 (input) =>
                 {
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "all")
                     {
                         return new TextTag(inp);
@@ -34,7 +34,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(0).ToLowerInvariant() == "all")
+            if (entry.Arguments.Count > 0 && entry.GetArgument(0).ToLowerFast() == "all")
             {
                 int qCount = entry.Queue.CommandSystem.Queues.Count;
                 if (!entry.Queue.CommandSystem.Queues.Contains(entry.Queue))

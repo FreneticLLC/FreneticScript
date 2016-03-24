@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             }
             else
             {
-                string target = entry.GetArgument(0).ToLowerInvariant();
+                string target = entry.GetArgument(0).ToLowerFast();
                 List<CVar> cvars = new List<CVar>();
                 for (int i = 0; i < entry.Output.CVarSys.CVars.Count; i++)
                 {

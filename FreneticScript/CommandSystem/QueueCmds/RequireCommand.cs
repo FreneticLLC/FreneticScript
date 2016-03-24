@@ -20,7 +20,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 (input) =>
                 {
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "loud" || inp == "quiet" || inp == "error")
                     {
                         return new TextTag(inp);
@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            string loud = entry.GetArgument(0).ToLowerInvariant();
+            string loud = entry.GetArgument(0).ToLowerFast();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
                 string arg = entry.GetArgument(i);

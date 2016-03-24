@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The boolean tag.</returns>
         public static BinaryTag For(TagData dat, string input)
         {
-            string low = input.ToLowerInvariant();
+            string low = input.ToLowerFast();
             try
             {
                 return new BinaryTag(StringToBytes(input));

@@ -102,7 +102,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         static void RegisterTag(string name, Func<TagData, IntegerTag, TemplateObject> method)
         {
-            Handlers.Add(name.ToLowerInvariant(), method);
+            Handlers.Add(name.ToLowerFast(), method);
         }
 
         static IntegerTag()

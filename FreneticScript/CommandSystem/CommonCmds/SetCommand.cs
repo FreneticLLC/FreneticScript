@@ -31,7 +31,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 },
                 (input) =>
                 {
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "force" || inp == "remove" || inp == "do_not_save")
                     {
                         return new TextTag(inp);
@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         {
             string target = entry.GetArgument(0);
             string newvalue = entry.GetArgument(1);
-            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(2).ToLowerInvariant() : "";
+            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(2).ToLowerFast() : "";
             bool force = a2 == "force";
             bool remove = a2 == "remove";
             bool do_not_save = a2 == "do_not_save";

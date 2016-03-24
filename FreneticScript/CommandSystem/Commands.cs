@@ -112,7 +112,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript GetScript(string script)
         {
             CommandScript commandscript;
-            if (Scripts.TryGetValue(script.ToLowerInvariant(), out commandscript))
+            if (Scripts.TryGetValue(script.ToLowerFast(), out commandscript))
             {
                 return commandscript;
             }
@@ -135,7 +135,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript GetFunction(string script)
         {
             CommandScript commandscript;
-            if (Functions.TryGetValue(script.ToLowerInvariant(), out commandscript))
+            if (Functions.TryGetValue(script.ToLowerFast(), out commandscript))
             {
                 return commandscript;
             }
@@ -168,7 +168,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
-            command.Name = command.Name.ToLowerInvariant(); // Just a quick backup in case somebody messed up.
+            command.Name = command.Name.ToLowerFast(); // Just a quick backup in case somebody messed up.
             command.CommandSystem = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
@@ -186,7 +186,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="name">The name of the command to remove.</param>
         public void UnregisterCommand(string name)
         {
-            string namelow = name.ToLowerInvariant();
+            string namelow = name.ToLowerFast();
             AbstractCommand cmd;
             if (RegisteredCommands.TryGetValue(namelow, out cmd))
             {

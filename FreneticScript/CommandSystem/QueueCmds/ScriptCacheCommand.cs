@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 (input) =>
                 {
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "removefunction" || inp == "removescript")
                     {
                         return new TextTag(inp);
@@ -70,10 +70,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            string type = entry.GetArgument(0).ToLowerInvariant();
+            string type = entry.GetArgument(0).ToLowerFast();
             if (type == "removescript")
             {
-                string target = entry.GetArgument(1).ToLowerInvariant();
+                string target = entry.GetArgument(1).ToLowerFast();
                 if (target == "all")
                 {
                     int count = entry.Queue.CommandSystem.Scripts.Count;
@@ -96,7 +96,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
+                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerFast() == "quiet_fail")
                         {
                             if (entry.ShouldShowGood())
                             {
@@ -112,7 +112,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (type == "removefunction")
             {
-                string target = entry.GetArgument(1).ToLowerInvariant();
+                string target = entry.GetArgument(1).ToLowerFast();
                 if (target == "all")
                 {
                     int count = entry.Queue.CommandSystem.Functions.Count;
@@ -133,7 +133,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
+                        if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerFast() == "quiet_fail")
                         {
                             if (entry.ShouldShowGood())
                             {

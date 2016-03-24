@@ -93,7 +93,7 @@ namespace FreneticScript.CommandSystem
                 waitfor = true;
                 BaseCommand = BaseCommand.Substring(1);
             }
-            string BaseCommandLow = BaseCommand.ToLowerInvariant();
+            string BaseCommandLow = BaseCommand.ToLowerFast();
             args.RemoveAt(0);
             AbstractCommand cmd;
             if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))

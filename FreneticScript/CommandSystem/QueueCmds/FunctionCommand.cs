@@ -70,7 +70,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         return input;
                     }
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "stop" || inp == "define")
                     {
                         return new TextTag(inp);
@@ -99,7 +99,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            type = type.ToLowerInvariant();
+            type = type.ToLowerFast();
             if (type == "stop")
             {
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
@@ -123,7 +123,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
-                string name = entry.GetArgument(1).ToLowerInvariant();
+                string name = entry.GetArgument(1).ToLowerFast();
                 if (entry.InnerCommandBlock == null)
                 {
                     entry.Error("Function invalid: No block follows!");
@@ -131,7 +131,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
                 {
-                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
+                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerFast() == "quiet_fail")
                     {
                         if (entry.ShouldShowGood())
                         {

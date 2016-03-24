@@ -41,7 +41,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (entry.Arguments.Count >= 1)
             {
                 string ifbit = entry.GetArgument(0);
-                if (ifbit.ToLowerInvariant() != "if")
+                if (ifbit.ToLowerFast() != "if")
                 {
                     ShowUsage(entry);
                     return;

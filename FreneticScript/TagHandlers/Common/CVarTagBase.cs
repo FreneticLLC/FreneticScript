@@ -33,7 +33,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public override TemplateObject Handle(TagData data)
         {
-            string modif = data.GetModifier(0).ToLowerInvariant();
+            string modif = data.GetModifier(0).ToLowerFast();
             CVar cvar = data.TagSystem.CommandSystem.Output.CVarSys.Get(modif);
             if (cvar != null)
             {

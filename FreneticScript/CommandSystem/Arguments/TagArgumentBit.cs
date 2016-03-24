@@ -27,7 +27,7 @@ namespace FreneticScript.CommandSystem.Arguments
             CommandSystem = system;
             if (bits.Length > 0)
             {
-                if (!CommandSystem.TagSystem.Handlers.TryGetValue(bits[0].Key.ToLowerInvariant(), out Start))
+                if (!CommandSystem.TagSystem.Handlers.TryGetValue(bits[0].Key.ToLowerFast(), out Start))
                 {
                     Start = null;
                 }

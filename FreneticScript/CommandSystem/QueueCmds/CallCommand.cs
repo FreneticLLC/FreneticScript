@@ -58,7 +58,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandEntry entry)
         {
             string fname = entry.GetArgument(0);
-            fname = fname.ToLowerInvariant();
+            fname = fname.ToLowerFast();
             CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {

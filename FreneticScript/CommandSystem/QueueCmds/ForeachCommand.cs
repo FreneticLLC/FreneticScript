@@ -84,7 +84,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         return input;
                     }
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "start" || inp == "stop" || inp == "next")
                     {
                         return new TextTag(input.ToString());
@@ -119,7 +119,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good("Foreach stopping.");
                 }
             }
-            else if (type.ToLowerInvariant() == "stop")
+            else if (type.ToLowerFast() == "stop")
             {
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
@@ -135,7 +135,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 entry.Error("Cannot stop foreach: not in one!");
             }
-            else if (type.ToLowerInvariant() == "next")
+            else if (type.ToLowerFast() == "next")
             {
                 for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
                 {
@@ -151,7 +151,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 entry.Error("Cannot advance foreach: not in one!");
             }
-            else if (type.ToLowerInvariant() == "start" && entry.Arguments.Count > 1)
+            else if (type.ToLowerFast() == "start" && entry.Arguments.Count > 1)
             {
                 ListTag list = ListTag.For(entry.GetArgument(1));
                 int target = list.ListEntries.Count;

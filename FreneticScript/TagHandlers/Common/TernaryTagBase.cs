@@ -36,7 +36,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public override TemplateObject Handle(TagData data)
         {
-            bool basevalue = data.GetModifier(0).ToLowerInvariant() == "true";
+            bool basevalue = data.GetModifier(0).ToLowerFast() == "true";
             data.Shrink();
             if (data.Remaining == 0)
             {

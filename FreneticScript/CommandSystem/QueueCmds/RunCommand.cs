@@ -71,7 +71,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The command details to be ran.</param>
         public override void Execute(CommandEntry entry)
         {
-            string fname = entry.GetArgument(0).ToLowerInvariant();
+            string fname = entry.GetArgument(0).ToLowerFast();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs();
             args.ScriptName = fname;
             if (OnScriptRanPreEvent != null)

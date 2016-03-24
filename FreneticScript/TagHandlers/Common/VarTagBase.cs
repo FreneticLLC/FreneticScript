@@ -31,7 +31,7 @@ namespace FreneticScript.TagHandlers.Common
 
         public override TemplateObject Handle(TagData data)
         {
-            string modif = data.GetModifier(0).ToLowerInvariant();
+            string modif = data.GetModifier(0).ToLowerFast();
             if (data.Variables != null)
             {
                 TemplateObject value;

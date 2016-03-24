@@ -6,6 +6,30 @@ using System.Text;
 namespace FreneticScript
 {
     /// <summary>
+    /// Adds some extensions to strings.
+    /// </summary>
+    public static class StringExtensions
+    {
+        /// <summary>
+        /// Rapidly converts a string to a lowercase representation.
+        /// </summary>
+        /// <param name="input">The original string.</param>
+        /// <returns>A lowercase version.</returns>
+        public static string ToLowerFast(this string input)
+        {
+            char[] dt = input.ToCharArray();
+            for (int i = 0; i < dt.Length; i++)
+            {
+                if (dt[i] >= 'A' && dt[i] <= 'Z')
+                {
+                    dt[i] = (char)(dt[i] - ('A' - 'a'));
+                }
+            }
+            return new string(dt);
+        }
+    }
+
+    /// <summary>
     /// Utilities for FreneticScript.
     /// </summary>
     public class FreneticScriptUtilities

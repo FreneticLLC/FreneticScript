@@ -146,7 +146,7 @@ namespace FreneticScript.CommandSystem
                     // Last try - perhaps a command was registered after the script was loaded.
                     // TODO: Do we even want this? Command registration should be high-priority auto-run.
                     AbstractCommand cmd;
-                    if (CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerInvariant(), out cmd))
+                    if (CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerFast(), out cmd))
                     {
                         CurrentCommand.Command = cmd;
                     }
@@ -258,7 +258,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The value to set on the variable.</param>
         public void SetVariable(string name, TemplateObject value)
         {
-            string namelow = name.ToLowerInvariant();
+            string namelow = name.ToLowerFast();
             Variables.Remove(namelow);
             Variables.Add(namelow, value);
         }
@@ -270,7 +270,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The variable's value.</returns>
         public TemplateObject GetVariable(string name)
         {
-            string namelow = name.ToLowerInvariant();
+            string namelow = name.ToLowerFast();
             TemplateObject value;
             if (Variables.TryGetValue(namelow, out value))
             {

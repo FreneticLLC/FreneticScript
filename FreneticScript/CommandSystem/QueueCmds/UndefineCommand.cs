@@ -31,17 +31,17 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public override void Execute(CommandEntry entry)
         {
             string target = entry.GetArgument(0);
-            if (entry.Queue.Variables.ContainsKey(target.ToLowerInvariant()))
+            if (entry.Queue.Variables.ContainsKey(target.ToLowerFast()))
             {
-                entry.Queue.Variables.Remove(target.ToLowerInvariant());
+                entry.Queue.Variables.Remove(target.ToLowerFast());
                 if (entry.ShouldShowGood())
                 {
-                    entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerInvariant()) + "<{text_color.base}>' removed'.");
+                    entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>' removed'.");
                 }
             }
             else
             {
-                entry.Error("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerInvariant()) + "<{text_color.base}>'.");
+                entry.Error("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>'.");
             }
         }
     }

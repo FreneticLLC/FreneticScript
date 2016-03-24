@@ -114,12 +114,12 @@ namespace FreneticScript.TagHandlers
                 if (_input[x].Length > 1 && _input[x].Contains('[') && _input[x][_input[x].Length - 1] == ']')
                 {
                     int index = _input[x].IndexOf('[');
-                    InputKeys[x].Key = _input[x].Substring(0, index).ToLowerInvariant();
+                    InputKeys[x].Key = _input[x].Substring(0, index).ToLowerFast();
                     InputKeys[x].Variable = TagSystem.SplitToArgument(_input[x].Substring(index + 1, _input[x].Length - (index + 2)), wasquoted);
                 }
                 else
                 {
-                    InputKeys[x].Key = _input[x].ToLowerInvariant();
+                    InputKeys[x].Key = _input[x].ToLowerFast();
                     InputKeys[x].Variable = new Argument();
                 }
             }

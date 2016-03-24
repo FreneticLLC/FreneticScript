@@ -23,7 +23,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 (input) =>
                 {
-                    string inp = input.ToString().ToLowerInvariant();
+                    string inp = input.ToString().ToLowerFast();
                     if (inp == "full" || inp == "minimal" || inp == "none")
                     {
                         return new TextTag(inp);
@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandEntry entry)
         {
             string modechoice = entry.GetArgument(0);
-            switch (modechoice.ToLowerInvariant())
+            switch (modechoice.ToLowerFast())
             {
                 case "full":
                     entry.Queue.Debug = DebugMode.FULL;

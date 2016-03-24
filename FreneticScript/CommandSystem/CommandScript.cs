@@ -231,7 +231,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
         public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0)
         {
-            Name = _name.ToLowerInvariant();
+            Name = _name.ToLowerFast();
             Commands = _commands;
             if (adj != 0)
             {

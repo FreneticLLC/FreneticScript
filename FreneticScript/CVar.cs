@@ -185,7 +185,7 @@ namespace FreneticScript
             ValueI = (int)ValueL;
             ValueD = FreneticScriptUtilities.StringToDouble(newvalue);
             ValueF = (float)ValueD;
-            ValueB = newvalue.ToLowerInvariant() == "true" || ValueF > 0f;
+            ValueB = newvalue.ToLowerFast() == "true" || ValueF > 0f;
             if (!force)
             {
                 system.Modified = true;

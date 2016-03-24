@@ -154,7 +154,7 @@ namespace FreneticScript.CommandSystem
         public ScriptEvent(Commands _system, string _name, bool cancellable)
         {
             System = _system;
-            Name = _name.ToLowerInvariant();
+            Name = _name.ToLowerFast();
             Cancellable = cancellable;
         }
 
@@ -181,7 +181,7 @@ namespace FreneticScript.CommandSystem
                     CommandQueue queue;
                     foreach (string determ in System.ExecuteScript(script, Variables, out queue))
                     {
-                        ApplyDetermination(determ, determ.ToLowerInvariant(), queue.Debug);
+                        ApplyDetermination(determ, determ.ToLowerFast(), queue.Debug);
                     }
                     if (i >= Handlers.Count || Handlers[i].Value != script)
                     {

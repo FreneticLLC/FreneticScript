@@ -136,7 +136,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Example "ALPHA" .to_lower returns "alpha".
                 // -->
                 case "to_lower":
-                    return new TextTag(Text.ToLowerInvariant()).Handle(data.Shrink());
+                    return new TextTag(Text.ToLowerFast()).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.to_list_of_characters
                 // @Group Text Modification
@@ -249,7 +249,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Example "alpha" .equals_ignore_case[ALPHA] returns "true".
                 // -->
                 case "equals_ignore_case":
-                    return new BooleanTag(Text.ToLowerInvariant() == data.GetModifier(0).ToLowerInvariant()).Handle(data.Shrink());
+                    return new BooleanTag(Text.ToLowerFast() == data.GetModifier(0).ToLowerFast()).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.does_not_equal_ignore_case[<TextTag>]
                 // @Group Text Comparison
@@ -258,7 +258,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Example "alpha" .does_not_equal_ignore_case[ALPHA] returns "false".
                 // -->
                 case "does_not_equal_ignore_case":
-                    return new BooleanTag(Text.ToLowerInvariant() != data.GetModifier(0).ToLowerInvariant()).Handle(data.Shrink());
+                    return new BooleanTag(Text.ToLowerFast() != data.GetModifier(0).ToLowerFast()).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.to_utf8_binary
                 // @Group Conversion
