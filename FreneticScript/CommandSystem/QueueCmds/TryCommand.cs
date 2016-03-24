@@ -21,6 +21,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 0;
             MaximumArguments = 0;
         }
+
+
+
         public override void Execute(CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(0) == "\0CALLBACK")
@@ -32,20 +35,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                if (entry.Block != null)
+                if (entry.ShouldShowGood())
                 {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Trying block...");
-                    }
-                    CommandEntry callback = new CommandEntry("try \0CALLBACK", null, entry,
-                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "try", 0, entry.ScriptName, entry.ScriptLine);
-                    entry.Block.Add(callback);
-                    entry.Queue.AddCommandsNow(entry.Block);
-                }
-                else
-                {
-                    entry.Error("Try invalid: No block follows!");
+                    entry.Good("Trying block...");
                 }
             }
         }

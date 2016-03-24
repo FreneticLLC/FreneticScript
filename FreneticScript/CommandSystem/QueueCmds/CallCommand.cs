@@ -57,6 +57,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
+                /*
                 string type = entry.GetArgument(0).ToLowerInvariant();
                 bool run = false;
                 if (type == "run")
@@ -119,12 +120,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     else
                     {
                         entry.Queue.AddCommandsNow(block);
-                    }
                 }
                 else
                 {
                     entry.Error("Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
+                    }
                 }
+                */
+               entry.Error("FUNCTIONS ARE // TODO: FIXME!");
             }
         }
     }

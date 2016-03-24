@@ -17,7 +17,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
-            MaximumArguments = 1;
+            MaximumArguments = 2;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandEntry entry)
         {
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood() && (entry.Arguments.Count < 1 || entry.Arguments[1].ToString() == "\0SILENT"))
             {
                 entry.Good("Passing mark.");
             }

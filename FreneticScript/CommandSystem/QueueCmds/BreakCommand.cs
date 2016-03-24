@@ -74,39 +74,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ShowUsage(entry);
                 return;
             }
-            CommandEntry Owner = entry.BlockOwner;
-            while (entry.Queue.CommandList.Length > 0 && count > 0)
+            for (int i = 0; i < count; i++)
             {
-                if (Owner == null)
+                for (int ind = entry.Queue.CommandIndex; ind < entry.Queue.CommandList.Length; ind++)
                 {
-                    entry.Error("Tried to break <{text_color.emphasis}>" + count +
-                        "<{text_color.base}> more brace" + (count == 1 ? "" : "s") + " than there are!");
-                    return;
+                    CommandEntry tentry = entry.Queue.CommandList[ind];
+                    if (tentry.Command.IsBreakable && tentry.Arguments[0].ToString() == "\0CALLBACK")
+                    {
+                        entry.Queue.CommandIndex = ind + 1;
+                        goto completed;
+                    }
                 }
-                CommandEntry compOwner = entry.Queue.GetCommand(0).BlockOwner;
-                if (compOwner == Owner)
-                {
-                    entry.Queue.RemoveCommand(0);
-                }
-                else
-                {
-                    Owner = compOwner;
-                    count--;
-                }
+                entry.Error("Not in that many blocks!");
+                return;
+                completed:
+                continue;
             }
-            count--;
-            if (count > 0)
-            {
-                entry.Error("Tried to break <{text_color.emphasis}>" + count +
-                    "<{text_color.base}> more brace" + (count == 1 ? "": "s") + " than there " + (count == 1 ? "is": "are") + "!");
-            }
-            else
-            {
-                if (entry.ShouldShowGood())
-                {
-                    entry.Good("Broke through all layers.");
-                }
-            }
+            entry.Good("Broke free successfully.");
         }
     }
 }

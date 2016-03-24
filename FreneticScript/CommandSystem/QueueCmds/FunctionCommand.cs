@@ -55,80 +55,83 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            string type = entry.GetArgument(0).ToLowerInvariant();
-            if (type == "stop")
+            /*
+        string type = entry.GetArgument(0).ToLowerInvariant();
+        if (type == "stop")
+        {
+            bool hasnext = false;
+            for (int i = 0; i < entry.Queue.CommandList.Length; i++)
             {
-                bool hasnext = false;
-                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                if (entry.Queue.GetCommand(i).CommandLine == "call \0CALLBACK")
                 {
-                    if (entry.Queue.GetCommand(i).CommandLine == "call \0CALLBACK")
+                    hasnext = true;
+                    break;
+                }
+            }
+            if (hasnext)
+            {
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Stopping function call.");
+                }
+                while (entry.Queue.CommandList.Length > 0)
+                {
+                    if (entry.Queue.GetCommand(0).CommandLine == "call \0CALLBACK")
                     {
-                        hasnext = true;
+                        entry.Queue.RemoveCommand(0);
                         break;
                     }
+                    entry.Queue.RemoveCommand(0);
                 }
-                if (hasnext)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Stopping function call.");
-                    }
-                    while (entry.Queue.CommandList.Length > 0)
-                    {
-                        if (entry.Queue.GetCommand(0).CommandLine == "call \0CALLBACK")
-                        {
-                            entry.Queue.RemoveCommand(0);
-                            break;
-                        }
-                        entry.Queue.RemoveCommand(0);
-                    }
-                }
-                else
-                {
-                    entry.Error("Cannot stop function call: not in one!");
-                }
+            }
+            else
+            {
+                entry.Error("Cannot stop function call: not in one!");
+            }
+            return;
+        }
+        else if (type == "define")
+        {
+            if (entry.Arguments.Count < 2)
+            {
+                ShowUsage(entry);
                 return;
             }
-            else if (type == "define")
+            string name = entry.GetArgument(1).ToLowerInvariant();
+            if (entry.Block == null)
             {
-                if (entry.Arguments.Count < 2)
+                entry.Error("Function invalid: No block follows!");
+                return;
+            }
+            if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
+            {
+                if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
                 {
-                    ShowUsage(entry);
-                    return;
-                }
-                string name = entry.GetArgument(1).ToLowerInvariant();
-                if (entry.Block == null)
-                {
-                    entry.Error("Function invalid: No block follows!");
-                    return;
-                }
-                if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
-                {
-                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerInvariant() == "quiet_fail")
+                    if (entry.ShouldShowGood())
                     {
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
-                        }
-                    }
-                    else
-                    {
-                        entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else
                 {
-                    entry.Queue.CommandSystem.Functions.Add(name, new CommandScript(name, CommandScript.DisOwn(entry.Block, entry)));
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
-                    }
+                    entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                 }
+            }
+            else
+            {
+                entry.Queue.CommandSystem.Functions.Add(name, new CommandScript(name, CommandScript.DisOwn(entry.Block, entry)));
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
+                }
+            }
             }
             else
             {
                 ShowUsage(entry);
             }
+            */
+            entry.Error("FUNCTIONS ARE // TODO: FIXME!");
         }
     }
 }

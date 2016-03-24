@@ -53,7 +53,7 @@ namespace FreneticScript.CommandSystem
                 CommandList.Add(commands.Substring(start).Trim());
             }
             bool herr;
-            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, out herr));
+            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr));
         }
 
         /// <summary>
@@ -64,9 +64,11 @@ namespace FreneticScript.CommandSystem
         /// <param name="from">The command strings.</param>
         /// <param name="entry">The entry that owns this block.</param>
         /// <param name="system">The command system to create this block inside.</param>
+        /// <param name="tabs">How far out tabulation should go.</param>
         /// <param name="had_error">Whether there was a compile error.</param>
+        /// <param name="istart">The starting index.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, out bool had_error)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, string tabs, int istart, out bool had_error)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
             List<string> Temp = null;
@@ -96,24 +98,33 @@ namespace FreneticScript.CommandSystem
                         if (toret.Count == 0)
                         {
                             bool err;
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, out err);
                             if (err)
                             {
                                 had_error = true;
                                 return block;
                             }
                             toret.AddRange(block);
+                            istart += block.Count;
                         }
                         else
                         {
                             bool err;
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, toret[toret.Count - 1], system, out err);
+                            CommandEntry cent = toret[toret.Count - 1];
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, out err);
                             if (err)
                             {
                                 had_error = true;
                                 return block;
                             }
-                            toret[toret.Count - 1].Block = block;
+                            cent.BlockStart = istart;
+                            cent.BlockEnd = istart + block.Count;
+                            if (cent.Command != null)
+                            {
+                                cent.Command.AdaptBlockFollowers(cent, block);
+                            }
+                            toret.AddRange(block);
+                            istart += block.Count;
                         }
                     }
                     else if (blocks < 0)
@@ -133,11 +144,12 @@ namespace FreneticScript.CommandSystem
                 }
                 else
                 {
-                    CommandEntry centry = CommandEntry.FromInput(from[i], null, entry, system, name, lines[i]);
+                    CommandEntry centry = CommandEntry.FromInput(from[i], system, name, lines[i], tabs);
                     if (centry != null)
                     {
                         toret.Add(centry);
                     }
+                    istart++;
                 }
             }
             for (int i = 0; i < toret.Count; i++)
@@ -151,7 +163,7 @@ namespace FreneticScript.CommandSystem
                         system.Output.Bad(fullmsg, DebugMode.FULL);
                         had_error = true;
                         toret.Clear();
-                        toret.Add(CommandEntry.CreateErrorOutput(fullmsg, system, name));
+                        toret.Add(CommandEntry.CreateErrorOutput(fullmsg, system, name, tabs));
                         return toret;
                     }
                 }
@@ -162,7 +174,6 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Creates a script by file name.
-        /// File is /scripts/filename.cfg
         /// </summary>
         /// <param name="filename">The name of the file to execute.</param>
         /// <param name="system">The command system to get the script for.</param>
@@ -185,27 +196,7 @@ namespace FreneticScript.CommandSystem
                 return null;
             }
         }
-
-        /// <summary>
-        /// Removes an entry's ownership over the list of entries, and returns them in a new list of duplicates.
-        /// </summary>
-        /// <param name="entries">The list of entries.</param>
-        /// <param name="baseentry">The entry that is no longer an owner.</param>
-        /// <returns>The new entry list.</returns>
-        public static List<CommandEntry> DisOwn(List<CommandEntry> entries, CommandEntry baseentry)
-        {
-            List<CommandEntry> newentries = new List<CommandEntry>();
-            for (int i = 0; i < entries.Count; i++)
-            {
-                newentries.Add(entries[i].Duplicate());
-                if (newentries[i].BlockOwner == baseentry)
-                {
-                    newentries[i].BlockOwner = null;
-                }
-            }
-            return newentries;
-        }
-
+        
         /// <summary>
         /// The name of the script.
         /// </summary>
@@ -276,7 +267,7 @@ namespace FreneticScript.CommandSystem
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < Commands.Count; i++)
             {
-                sb.Append(Commands[i].FullString(tabulation));
+                sb.Append(Commands[i].FullString());
                 sb.Append("\n");
             }
             return sb.ToString();

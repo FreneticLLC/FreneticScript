@@ -9,12 +9,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
     class IfCommandData : AbstractCommandEntryData
     {
         public int Result;
-        public override AbstractCommandEntryData Duplicate()
-        {
-            IfCommandData toret = new IfCommandData();
-            toret.Result = Result;
-            return toret;
-        }
     }
 
     class IfCommand: AbstractCommand
@@ -33,16 +27,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            IfCommandData data = new IfCommandData();
-            data.Result = 0;
-            entry.Data = data;
+            entry.Data = new IfCommandData() { Result = 0 };
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {
-                return;
-            }
-            if (entry.Block == null)
-            {
-                entry.Error("If invalid: No block follows!");
+                CommandEntry ifentry = entry.Queue.CommandList[entry.BlockStart - 1];
+                if (entry.Queue.CommandIndex + 1 < entry.Queue.CommandList.Length)
+                {
+                    CommandEntry elseentry = entry.Queue.CommandList[entry.Queue.CommandIndex + 1];
+                    if (elseentry.Command is ElseCommand)
+                    {
+                        elseentry.Data = ifentry.Data;
+                    }
+                }
                 return;
             }
             List<string> parsedargs = new List<string>(entry.Arguments.Count);
@@ -57,10 +53,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good("If is true, executing...");
                 }
-                data.Result = 1;
-                entry.Block.Add(new CommandEntry("if \0CALLBACK", null, entry,
-                    this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "if", 0, entry.ScriptName, entry.ScriptLine));
-                entry.Queue.AddCommandsNow(entry.Block);
+                ((IfCommandData)entry.Data).Result = 1;
             }
             else
             {

@@ -16,13 +16,12 @@ namespace FreneticScript.CommandSystem
         /// Creates a CommandEntry from the given input and queue information.
         /// </summary>
         /// <param name="command">The command line text itself.</param>
-        /// <param name="_block">The command block that held this entry.</param>
-        /// <param name="_owner">The command entry that owns the block that held this entry.</param>
         /// <param name="system">The command system to work from.</param>
         /// <param name="script">The name of the creating script.</param>
         /// <param name="line">The line in the creating script.</param>
+        /// <param name="tabs">What tabulation to use when outputting this entry.</param>
         /// <returns>The command system.</returns>
-        public static CommandEntry FromInput(string command, List<CommandEntry> _block, CommandEntry _owner, Commands system, string script, int line)
+        public static CommandEntry FromInput(string command, Commands system, string script, int line, string tabs)
         {
             if (command.StartsWith("//"))
             {
@@ -92,29 +91,29 @@ namespace FreneticScript.CommandSystem
             AbstractCommand cmd;
             if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
             {
-                return new CommandEntry(command, _block, _owner, cmd, args, BaseCommand, marker, script, line) { WaitFor = waitfor };
+                return new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs) { WaitFor = waitfor };
             }
-            return CreateInvalidOutput(BaseCommand, _block, args, _owner, system, command, marker, waitfor, script, line);
+            return CreateInvalidOutput(BaseCommand, args, system, command, marker, waitfor, script, line, tabs);
         }
 
         /// <summary>
         /// Create an entry that represents an error message.
         /// </summary>
-        public static CommandEntry CreateErrorOutput(string message, Commands system, string script)
+        public static CommandEntry CreateErrorOutput(string message, Commands system, string script, string tabs)
         {
-            return new CommandEntry("error \"" + message.Replace('\"', '\'') + "\"", null, null, system.RegisteredCommands["error"],
-                new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0);
+            return new CommandEntry("error \"" + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
+                new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs);
 
         }
 
         /// <summary>
         /// Create an entry that represents invalid output.
         /// </summary>
-        public static CommandEntry CreateInvalidOutput(string name, List<CommandEntry> _block, List<Argument> _arguments,
-            CommandEntry _owner, Commands system, string line, int marker, bool waitfor, string script, int linen)
+        public static CommandEntry CreateInvalidOutput(string name, List<Argument> _arguments,
+            Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs)
         {
             _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false));
-            return new CommandEntry(line, _block, _owner, system.DebugInvalidCommand, _arguments, name, marker, script, linen) { WaitFor = waitfor };
+            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs) { WaitFor = waitfor };
                 
         }
 
@@ -124,14 +123,14 @@ namespace FreneticScript.CommandSystem
         public string CommandLine;
 
         /// <summary>
-        /// If the command has a block of { braced } commands, this will contain that block.
+        /// The start of this command's braced block.
         /// </summary>
-        public List<CommandEntry> Block;
+        public int BlockStart;
 
         /// <summary>
-        /// What command entry object owns this entry, if any.
+        /// The end of this command's braced block.
         /// </summary>
-        public CommandEntry BlockOwner = null;
+        public int BlockEnd;
 
         /// <summary>
         /// Whether the &amp;waitable command entry is finished.
@@ -156,18 +155,19 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Full constructor, recommended.
         /// </summary>
-        public CommandEntry(string _commandline, List<CommandEntry> _block, CommandEntry _owner,
-            AbstractCommand _command, List<Argument> _arguments, string _name, int _marker, string _script, int _line)
+        public CommandEntry(string _commandline, int bstart, int bend,
+            AbstractCommand _command, List<Argument> _arguments, string _name, int _marker, string _script, int _line, string fairtabs)
         {
+            BlockStart = bstart;
+            BlockEnd = bend;
             CommandLine = _commandline;
-            Block = _block;
-            BlockOwner = _owner;
             Command = _command;
             Arguments = _arguments;
             Name = _name;
             Marker = _marker;
             ScriptName = _script;
             ScriptLine = _line;
+            FairTabulation = fairtabs;
             if (Command == null)
             {
                 throw new Exception("Invalid Command (null!)");
@@ -184,27 +184,16 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Gets the full command string that represents this command.
         /// </summary>
-        /// <param name="tabulation">How much space to include in front of the commands.</param>
         /// <returns>The full command string.</returns>
-        public string FullString(string tabulation = "")
+        public string FullString()
         {
-            if (Block == null)
-            {
-                return tabulation + CommandLine + ";";
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(tabulation + CommandLine + "\n");
-                sb.Append("{\n");
-                foreach (CommandEntry entry in Block)
-                {
-                    sb.Append(entry.FullString(tabulation + "\t") + "\n");
-                }
-                sb.Append("}\n");
-                return sb.ToString();
-            }
+            return FairTabulation + CommandLine + ";";
         }
+
+        /// <summary>
+        /// Space to include in front of this tab when outputting it as text.
+        /// </summary>
+        public string FairTabulation = "";
 
         /// <summary>
         /// The command name input by the user.
@@ -391,42 +380,10 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Returns a duplicate of this command entry.
         /// </summary>
-        /// <param name="NewOwner">The new owner of the command entry.</param>
         /// <returns>The duplicate entry.</returns>
-        public CommandEntry Duplicate(CommandEntry NewOwner = null)
+        public CommandEntry Duplicate()
         {
-            CommandEntry entry = new CommandEntry();
-            entry.Arguments = new List<Argument>(Arguments);
-            if (Block == null)
-            {
-                entry.Block = null;
-            }
-            else
-            {
-                entry.Block = new List<CommandEntry>();
-                for (int i = 0; i < Block.Count; i++)
-                {
-                    entry.Block.Add(Block[i].Duplicate(entry));
-                }
-            }
-            entry.BlockOwner = NewOwner;
-            entry.Command = Command;
-            entry.CommandLine = CommandLine;
-            entry.Name = Name;
-            entry.Output = Output;
-            entry.Queue = Queue;
-            entry.ScriptName = ScriptName;
-            entry.ScriptLine = ScriptLine;
-            if (Data != null)
-            {
-                entry.Data = Data.Duplicate();
-            }
-            else
-            {
-                entry.Data = null;
-            }
-            entry.Marker = Marker;
-            return entry;
+            return (CommandEntry)MemberwiseClone();
         }
     }
 }

@@ -89,6 +89,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(entry);
                     return;
                 }
+                entry.Error("EVENTS ARE // TODO: FIXME!");
+                /*
                 string name = entry.GetArgument(2).ToLowerInvariant();
                 if (entry.Block == null)
                 {
@@ -129,6 +131,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good("Handler '<{text_color.emphasis}>" + TagParser.Escape(name) +
                         "<{text_color.base}>' defined for event '<{text_color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{text_color.base}>'.");
                 }
+                */
             }
             else
             {

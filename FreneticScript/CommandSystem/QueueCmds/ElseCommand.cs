@@ -21,37 +21,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            IfCommandData data = new IfCommandData();
-            data.Result = 0;
-            entry.Data = data;
-            CommandEntry IfEntry = null;
-            CommandEntry Holder = entry.Queue.LastCommand;
-            while (IfEntry == null && Holder != null)
+            if (!(entry.Data is IfCommandData))
             {
-                if (Holder.BlockOwner == entry.BlockOwner)
-                {
-                    if (Holder.Command.Name == "if" || Holder.Command.Name == "else")
-                    {
-                        IfEntry = Holder;
-                    }
-                    break;
-                }
-                Holder = Holder.BlockOwner;
-            }
-            if (IfEntry == null)
-            {
-                entry.Error("Else invalid: IF command did not preceed!");
+                entry.Error("ELSE invalid, IF did not preceed!");
                 return;
             }
-            if (((IfCommandData)IfEntry.Data).Result == 1)
+            IfCommandData data = (IfCommandData)entry.Data;
+            if (data.Result == 1)
             {
                 if (entry.ShouldShowGood())
                 {
-                    entry.Good("Else continuing, IF passed.");
+                    entry.Good("Else continuing, previous IF passed.");
                 }
-                data.Result = 1;
+                entry.Queue.CommandIndex = entry.BlockEnd + 1;
                 return;
             }
+            bool success = true;
             if (entry.Arguments.Count >= 1)
             {
                 string ifbit = entry.GetArgument(0);
@@ -67,43 +52,24 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         parsedargs.Add(entry.GetArgument(i));
                     }
-                    bool success = IfCommand.TryIf(parsedargs);
-                    if (entry.Block != null)
-                    {
-                        if (success)
-                        {
-                            if (entry.ShouldShowGood())
-                            {
-                                entry.Good("Else if is true, executing...");
-                            }
-                            data.Result = 1;
-                            entry.Queue.AddCommandsNow(entry.Block);
-                        }
-                        else
-                        {
-                            if (entry.ShouldShowGood())
-                            {
-                                entry.Good("Else If is false, doing nothing!");
-                            }
-                        }
-                    }
+                    success = IfCommand.TryIf(parsedargs);
                 }
+            }
+            if (success)
+            {
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("Else [if] is true, executing...");
+                }
+                data.Result = 1;
             }
             else
             {
-                if (entry.Block != null)
+                if (entry.ShouldShowGood())
                 {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Else is valid, executing...");
-                    }
-                    data.Result = 1;
-                    entry.Queue.AddCommandsNow(entry.Block);
+                    entry.Good("Else continuing, ELSE-IF is false!");
                 }
-                else
-                {
-                    entry.Error("Else invalid: No block follows!");
-                }
+                entry.Queue.CommandIndex = entry.BlockEnd + 1;
             }
         }
     }

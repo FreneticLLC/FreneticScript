@@ -80,7 +80,6 @@
     <Compile Include="CommandSystem\QueueCmds\ForeachCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\FunctionCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\IfCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\InsertCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ErrorCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\MarkCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ParsingCommand.cs" />

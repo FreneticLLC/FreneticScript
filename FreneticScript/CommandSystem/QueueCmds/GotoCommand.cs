@@ -13,7 +13,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             Name = "goto";
             Arguments = "<mark name>";
-            Description = "Goes forward to the next marked location in the script.";
+            Description = "Goes to the marked location in the script.";
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
@@ -27,37 +27,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandEntry entry)
         {
             string targ = entry.GetArgument(0);
-            bool hasnext = false;
             for (int i = 0; i < entry.Queue.CommandList.Length; i++)
             {
                 if (entry.Queue.GetCommand(i).Command is MarkCommand
                     && entry.Queue.GetCommand(i).Arguments[0].ToString() == targ)
                 {
-                    hasnext = true;
-                    break;
+                    // TODO: Maybe parse tags in the mark commands?
+                    entry.Queue.CommandIndex = i;
+                    return;
                 }
             }
-            if (hasnext)
-            {
-                if (entry.ShouldShowGood())
-                {
-                    entry.Good("Going to mark.");
-                }
-                while (entry.Queue.CommandList.Length > 0)
-                {
-                    if (entry.Queue.GetCommand(0).Command is MarkCommand
-                        && entry.Queue.GetCommand(0).Arguments[0].ToString() == targ)
-                    {
-                        entry.Queue.RemoveCommand(0);
-                        break;
-                    }
-                    entry.Queue.RemoveCommand(0);
-                }
-            }
-            else
-            {
-                entry.Error("Cannot goto marked location: unknown marker!");
-            }
+            entry.Error("Cannot goto marked location: unknown marker!");
         }
     }
 }

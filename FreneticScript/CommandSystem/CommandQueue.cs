@@ -15,10 +15,15 @@ namespace FreneticScript.CommandSystem
     public class CommandQueue
     {
         /// <summary>
-        /// All commands in this queue, as strings.
-        /// TODO: Replace list with more efficient handler (Linked list, perhaps?)
+        /// All commands in this queue.
+        /// TODO: Rewrite to be a static array that we roll through, not a rapidly modified queue :(
         /// </summary>
-        public ListQueue<CommandEntry> CommandList;
+        public CommandEntry[] CommandList;
+
+        /// <summary>
+        /// What command we are currently running.
+        /// </summary>
+        public int CommandIndex;
 
         /// <summary>
         /// A list of all variables saved in this queue.
@@ -40,11 +45,6 @@ namespace FreneticScript.CommandSystem
         /// Whether the queue is running.
         /// </summary>
         public bool Running = false;
-
-        /// <summary>
-        /// The last command to be run.
-        /// </summary>
-        public CommandEntry LastCommand;
 
         /// <summary>
         /// The command system running this queue.
@@ -92,7 +92,7 @@ namespace FreneticScript.CommandSystem
                 _commands[i].Queue = this;
                 _commands[i].Output = CommandSystem.Output;
             }
-            CommandList = new ListQueue<CommandEntry>(_commands);
+            CommandList = _commands.ToArray();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Tick(float Delta)
         {
-            if (Delayable && (LastCommand != null && LastCommand.Command.Waitable && LastCommand.WaitFor && !LastCommand.Finished))
+            if (Delayable && WaitingOn)
             {
                 return;
             }
@@ -136,13 +136,11 @@ namespace FreneticScript.CommandSystem
                 }
                 Wait = 0f;
             }
-            while (CommandList.Length > 0)
+            while (CommandIndex < CommandList.Length)
             {
-                CommandEntry CurrentCommand = CommandList.Pop();
-                if (CurrentCommand == null)
-                {
-                    continue;
-                }
+                CommandEntry CurrentCommand = CommandList[CommandIndex];
+                CommandIndex++;
+                int cind = CommandIndex;
                 try
                 {
                     CommandSystem.ExecuteCommand(CurrentCommand, this);
@@ -151,11 +149,26 @@ namespace FreneticScript.CommandSystem
                 {
                     if (!(ex is ErrorInducedException))
                     {
-                        CurrentCommand.Error("Internal exception: " + ex.ToString());
+                        try
+                        {
+                            CurrentCommand.Error("Internal exception: " + ex.ToString());
+                        }
+                        catch (Exception ex2)
+                        {
+                            string message = ex2.ToString();
+                            if (Debug <= DebugMode.MINIMAL)
+                            {
+                                CurrentCommand.Output.Bad(message, DebugMode.MINIMAL);
+                                if (Outputsystem != null)
+                                {
+                                    Outputsystem.Invoke(message, MessageType.BAD);
+                                }
+                                CommandIndex = CommandList.Length + 1;
+                            }
+                        }
                     }
                 }
-                LastCommand = CurrentCommand;
-                if (Delayable && ((Wait > 0f) || (LastCommand.Command.Waitable && LastCommand.WaitFor && !LastCommand.Finished)))
+                if (Delayable && ((Wait > 0f) || WaitingOn))
                 {
                     return;
                 }
@@ -166,6 +179,11 @@ namespace FreneticScript.CommandSystem
             }
             Running = false;
         }
+
+        /// <summary>
+        /// Whether this Queue is waiting on the last command.
+        /// </summary>
+        public bool WaitingOn = false;
         
         /// <summary>
         /// Handles an error as appropriate to the situation, in the current queue, from the current command.
@@ -174,65 +192,25 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
         {
-            bool hasnext = false;
             for (int i = 0; i < CommandList.Length; i++)
             {
                 if (GetCommand(i).Command is TryCommand &&
                     GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                 {
-                    hasnext = true;
-                    break;
+                    entry.Good("Force-exiting try block.");
+                    CommandIndex = i;
+                    return;
                 }
             }
-            if (hasnext)
+            if (Debug <= DebugMode.MINIMAL)
             {
-                entry.Good("Force-exiting try block.");
-                while (CommandList.Length > 0)
+                entry.Output.Bad(message, DebugMode.MINIMAL);
+                if (Outputsystem != null)
                 {
-                    CommandEntry entr = GetCommand(0);
-                    if (entr.Command is TryCommand &&
-                        entr.Arguments[0].ToString() == "\0CALLBACK")
-                    {
-                        RemoveCommand(0);
-                        break;
-                    }
-                    RemoveCommand(0);
-                }
-                if (CommandList.Length > 0)
-                {
-                    CommandEntry ce = GetCommand(0);
-                    if (ce.Command is CatchCommand)
-                    {
-                        RemoveCommand(0);
-                        ce.Queue = this;
-                        ce.Output = CommandSystem.Output;
-                        SetVariable("error_message", new TextTag(message));
-                        if (ce.Block != null)
-                        {
-                            ce.Good("Trying block...");
-                            CommandEntry callback = new CommandEntry("catch \0CALLBACK", null, ce,
-                                ce.Command, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "catch", 0, ce.ScriptName, ce.ScriptLine);
-                            ce.Block.Add(callback);
-                            AddCommandsNow(ce.Block);
-                        }
-                        else
-                        {
-                            ce.Error("Catch invalid: No block follows!");
-                        }
-                    }
+                    Outputsystem.Invoke(message, MessageType.BAD);
                 }
             }
-            else
-            {
-                if (Debug <= DebugMode.MINIMAL)
-                {
-                    entry.Output.Bad(message, DebugMode.MINIMAL);
-                    if (Outputsystem != null)
-                    {
-                        Outputsystem.Invoke(message, MessageType.BAD);
-                    }
-                }
-            }
+            CommandIndex = CommandList.Length + 1;
         }
 
         /// <summary>
@@ -249,41 +227,13 @@ namespace FreneticScript.CommandSystem
             }
             return CommandList[index + x];
         }
-
+        
         /// <summary>
-        /// Removes the command at the specified index.
-        /// </summary>
-        /// <param name="index">The index of the command.</param>
-        public void RemoveCommand(int index)
-        {
-            int x = 0;
-            while (CommandList.Length > index + x && CommandList[index + x] == null)
-            {
-                x++;
-            }
-            CommandList[index + x] = null;
-        }
-
-        /// <summary>
-        /// Adds a list of entries to be executed next in line.
-        /// </summary>
-        /// <param name="entries">Commands to be run.</param>
-        public void AddCommandsNow(List<CommandEntry> entries)
-        {
-            for (int i = 0; i < entries.Count; i++)
-            {
-                entries[i].Queue = this;
-                entries[i].Output = CommandSystem.Output;
-            }
-            CommandList.Insert(0, entries.ToArray());
-        }
-
-        /// <summary>
-        /// Immediately stops the Command Queue.
+        /// Immediately stops the Command Queue by jumping to the end.
         /// </summary>
         public void Stop()
         {
-            CommandList.Clear();
+            CommandIndex = CommandList.Length;
         }
 
         /// <summary>

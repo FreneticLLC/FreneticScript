@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem
 {
@@ -35,6 +36,11 @@ namespace FreneticScript.CommandSystem
         /// Whether the command is for debugging purposes.
         /// </summary>
         public bool IsDebug = false;
+
+        /// <summary>
+        /// Whether the 'break' command can be used on this command.
+        /// </summary>
+        public bool IsBreakable = false;
 
         /// <summary>
         /// Whether the command is part of a script's flow rather than for normal client use.
@@ -78,6 +84,17 @@ namespace FreneticScript.CommandSystem
                 return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + TagParser.Escape(Arguments);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Adjust list of commands that formed by an inner block.
+        /// </summary>
+        /// <param name="entry">The producing entry.</param>
+        /// <param name="input">The block of commands.</param>
+        public virtual void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input)
+        {
+            input.Add(new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() {
+                new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    "));
         }
 
         /// <summary>

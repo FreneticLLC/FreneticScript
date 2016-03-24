@@ -11,13 +11,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
     {
         public List<Argument> ComparisonArgs;
         public int Index;
-        public override AbstractCommandEntryData Duplicate()
-        {
-            WhileCommandData toret = new WhileCommandData();
-            toret.ComparisonArgs = new List<Argument>(ComparisonArgs);
-            toret.Index = Index;
-            return toret;
-        }
     }
 
     class WhileCommand : AbstractCommand
@@ -33,6 +26,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = -1;
+            IsBreakable = true;
         }
 
         public override void Execute(CommandEntry entry)
@@ -40,104 +34,59 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string count = entry.GetArgument(0);
             if (count == "\0CALLBACK")
             {
-                if (entry.BlockOwner.Command.Name == "while" || entry.BlockOwner.Block == null || entry.BlockOwner.Block.Count == 0
-                    || entry.BlockOwner.Block[entry.BlockOwner.Block.Count - 1] != entry)
+                WhileCommandData dat = (WhileCommandData)entry.Queue.CommandList[entry.BlockStart - 1].Data;
+                dat.Index++;
+                List<string> comp = new List<string>();
+                for (int i = 0; i < dat.ComparisonArgs.Count; i++)
                 {
-                    WhileCommandData data = (WhileCommandData)entry.BlockOwner.Data;
-                    data.Index++;
-                    List<string> comp = new List<string>();
-                    for (int i = 0; i < data.ComparisonArgs.Count; i++)
-                    {
-                        comp.Add(data.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error).ToString());
-                    }
-                    if (IfCommand.TryIf(comp))
-                    {
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("While loop at index <{text_color.emphasis}>" + data.Index + "<{text_color.base}>...");
-                        }
-                        entry.Queue.SetVariable("while_index", new TextTag(data.Index.ToString()));
-                        entry.Queue.AddCommandsNow(entry.BlockOwner.Block);
-                    }
-                    else
-                    {
-                        if (entry.ShouldShowGood())
-                        {
-                            entry.Good("While loop ending, reached 'false'.");
-                        }
-                    }
+                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error).ToString());
                 }
-                else
+                if (IfCommand.TryIf(comp))
                 {
-                    entry.Error("While CALLBACK invalid: not a real callback!");
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("While looping...: " + dat.Index);
+                    }
+                    entry.Queue.CommandIndex = entry.BlockStart;
+                }
+                if (entry.ShouldShowGood())
+                {
+                    entry.Good("While stopping.");
                 }
             }
             else if (count.ToLowerInvariant() == "stop")
             {
-                bool hasnext = false;
                 for (int i = 0; i < entry.Queue.CommandList.Length; i++)
                 {
                     if (entry.Queue.GetCommand(i).Command is WhileCommand &&
                         entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        hasnext = true;
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Stopping a while loop.");
+                        }
+                        entry.Queue.CommandIndex = i + 2;
                         break;
                     }
                 }
-                if (hasnext)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Stopping while loop.");
-                    }
-                    while (entry.Queue.CommandList.Length > 0)
-                    {
-                        if (entry.Queue.GetCommand(0).Command is WhileCommand &&
-                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                        {
-                            entry.Queue.RemoveCommand(0);
-                            break;
-                        }
-                        entry.Queue.RemoveCommand(0);
-                    }
-                }
-                else
-                {
-                    entry.Error("Cannot stop while: not in one!");
-                }
+                entry.Error("Cannot stop while: not in one!");
             }
             else if (count.ToLowerInvariant() == "next")
             {
-                bool hasnext = false;
-                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
                 {
                     if (entry.Queue.GetCommand(i).Command is WhileCommand &&
                         entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        hasnext = true;
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Jumping forward in a while loop.");
+                        }
+                        entry.Queue.CommandIndex = i + 1;
                         break;
                     }
                 }
-                if (hasnext)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("Skipping to next repeat entry...");
-                    }
-                    while (entry.Queue.CommandList.Length > 0)
-                    {
-                        if (entry.Queue.GetCommand(0).Command is WhileCommand &&
-                            entry.Queue.GetCommand(0).Arguments[0].ToString() == "\0CALLBACK")
-                        {
-                            break;
-                        }
-                        entry.Queue.RemoveCommand(0);
-                    }
-                }
-                else
-                {
-                    entry.Error("Cannot stop while: not in one!");
-                }
+                entry.Error("Cannot while repeat: not in one!");
             }
             else
             {
@@ -154,28 +103,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Not looping.");
                     }
+                    entry.Queue.CommandIndex = entry.BlockEnd + 2;
                     return;
                 }
-                WhileCommandData data = new WhileCommandData();
-                data.Index = 1;
-                data.ComparisonArgs = new List<Argument>(entry.Arguments);
-                entry.Data = data;
-                if (entry.Block != null)
-                {
-                    if (entry.ShouldShowGood())
-                    {
-                        entry.Good("While looping...");
-                    }
-                    CommandEntry callback = new CommandEntry("while \0CALLBACK", null, entry,
-                        this, new List<Argument>() { CommandSystem.TagSystem.SplitToArgument("\0CALLBACK", true) }, "while", 0, entry.ScriptName, entry.ScriptLine);
-                    entry.Block.Add(callback);
-                    entry.Queue.SetVariable("while_index", new TextTag("1"));
-                    entry.Queue.AddCommandsNow(entry.Block);
-                }
-                else
-                {
-                    entry.Error("While invalid: No block follows!");
-                }
+                entry.Data = new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments };
             }
         }
     }

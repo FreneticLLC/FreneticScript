@@ -10,9 +10,5 @@ namespace FreneticScript.CommandSystem
     /// </summary>
     public abstract class AbstractCommandEntryData
     {
-        /// <summary>
-        /// Perfectly clone the entrydata object.
-        /// </summary>
-        public abstract AbstractCommandEntryData Duplicate();
     }
 }

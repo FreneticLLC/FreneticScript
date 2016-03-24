@@ -25,7 +25,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
-            MaximumArguments = 1;
+            MaximumArguments = -1;
         }
 
         /// <summary>
