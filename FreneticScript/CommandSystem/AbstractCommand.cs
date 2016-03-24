@@ -139,16 +139,20 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Displays the usage information on a command to the console.
         /// </summary>
-        /// <param name="entry">The CommandEntry data to get usage help from..</param>
-        public static void ShowUsage(CommandEntry entry)
+        /// <param name="entry">The CommandEntry data to show usage help to.</param>
+        /// <param name="doError">Whether to end with an error.</param>
+        public void ShowUsage(CommandEntry entry, bool doError = true)
         {
-            entry.Bad("<{text_color.emphasis}>" + TagParser.Escape(entry.Command.Name) + "<{text_color.base}>: " + TagParser.Escape(entry.Command.Description));
-            entry.Bad("<{text_color.cmdhelp}>Usage: /" + TagParser.Escape(entry.Name) + " " + TagParser.Escape(entry.Command.Arguments));
-            if (entry.Command.IsDebug)
+            entry.Bad("<{text_color.emphasis}>" + TagParser.Escape(Name) + "<{text_color.base}>: " + TagParser.Escape(Description));
+            entry.Bad("<{text_color.cmdhelp}>Usage: /" + TagParser.Escape(Name) + " " + TagParser.Escape(Arguments));
+            if (IsDebug)
             {
                 entry.Bad("Note: This command is intended for debugging purposes.");
             }
-            entry.Error("Invalid arguments or not enough arguments!");
+            if (doError)
+            {
+                entry.Error("Invalid arguments or not enough arguments!");
+            }
         }
     }
 }

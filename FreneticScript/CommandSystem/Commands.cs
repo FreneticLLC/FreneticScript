@@ -218,14 +218,6 @@ namespace FreneticScript.CommandSystem
             TagSystem = new TagParser();
             TagSystem.Init(this);
 
-            // Common Commands
-            RegisterCommand(new CleanmemCommand());
-            RegisterCommand(new CvarinfoCommand());
-            RegisterCommand(new EchoCommand());
-            RegisterCommand(new NoopCommand());
-            RegisterCommand(new SetCommand());
-            RegisterCommand(new ToggleCommand());
-
             // Queue-related Commands
             RegisterCommand(new AssertCommand());
             RegisterCommand(new BreakCommand());
@@ -257,6 +249,15 @@ namespace FreneticScript.CommandSystem
 
             // Register debug command
             RegisterCommand(DebugInvalidCommand = new DebugOutputInvalidCommand());
+
+            // Common Commands
+            RegisterCommand(new CleanmemCommand());
+            RegisterCommand(new CvarinfoCommand());
+            RegisterCommand(new EchoCommand());
+            RegisterCommand(new HelpCommand());
+            RegisterCommand(new NoopCommand());
+            RegisterCommand(new SetCommand());
+            RegisterCommand(new ToggleCommand());
 
             // Command-Related Events
             RegisterEvent(new ScriptRanPreScriptEvent(this));

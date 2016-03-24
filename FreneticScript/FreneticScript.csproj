@@ -63,6 +63,7 @@
     <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\DebugOutputInvalidCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\EchoCommand.cs" />
+    <Compile Include="CommandSystem\CommonCmds\HelpCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\NoopCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\SetCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\ToggleCommand.cs" />

@@ -73,11 +73,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string type = entry.GetArgument(0).ToLowerInvariant();
             if (type == "removescript")
             {
-                if (entry.Arguments.Count < 2)
-                {
-                    ShowUsage(entry);
-                    return;
-                }
                 string target = entry.GetArgument(1).ToLowerInvariant();
                 if (target == "all")
                 {
@@ -117,11 +112,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (type == "removefunction")
             {
-                if (entry.Arguments.Count < 2)
-                {
-                    ShowUsage(entry);
-                    return;
-                }
                 string target = entry.GetArgument(1).ToLowerInvariant();
                 if (target == "all")
                 {
