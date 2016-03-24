@@ -75,12 +75,7 @@ namespace FreneticScript.CommandSystem
         /// All script events this command system is aware of.
         /// </summary>
         public Dictionary<string, ScriptEvent> Events;
-
-        /// <summary>
-        /// A placeholder queue, to represent an existent queue object.
-        /// </summary>
-        public CommandQueue PlaceholderQueue;
-
+        
         /// <summary>
         /// A random number generator.
         /// </summary>
@@ -214,7 +209,6 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Init()
         {
-            PlaceholderQueue = new CommandQueue(new CommandScript("PLACEHOLDER_QUEUE", new List<CommandEntry>()), new List<CommandEntry>(), this);
             RegisteredCommands = new Dictionary<string, AbstractCommand>(30);
             RegisteredCommandList = new List<AbstractCommand>(30);
             Scripts = new Dictionary<string, CommandScript>(30);
