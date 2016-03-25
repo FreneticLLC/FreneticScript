@@ -194,7 +194,21 @@ namespace FreneticScript.CommandSystem
         /// <returns>The full command string.</returns>
         public string FullString()
         {
-            return FairTabulation + CommandLine + ";";
+            if (InnerCommandBlock == null)
+            {
+                return FairTabulation + CommandLine + ";\n";
+            }
+            else
+            {
+                string b = FairTabulation + CommandLine + "\n"
+                    + FairTabulation + "{\n";
+                foreach (CommandEntry entr in InnerCommandBlock)
+                {
+                    b += entr.FullString();
+                }
+                b += FairTabulation + "}\n";
+                return b;
+            }
         }
 
         /// <summary>

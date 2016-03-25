@@ -14,11 +14,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
-            int ic = input.Count;
+            entry.BlockEnd -= input.Count;
             input.Clear();
             base.AdaptBlockFollowers(entry, input, fblock);
-            input[0].BlockEnd -= ic;
-            entry.BlockEnd -= ic;
             fblock.Insert(0, new CommandEntry("WAIT " + entry.Arguments[0].ToString(), 0, 0, entry.Command.CommandSystem.RegisteredCommands["wait"],
                 entry.Arguments, "wait", 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation));
         }

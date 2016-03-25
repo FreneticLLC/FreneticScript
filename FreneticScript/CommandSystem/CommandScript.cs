@@ -128,11 +128,12 @@ namespace FreneticScript.CommandSystem
                             istart += block.Count;
                             cent.BlockEnd = istart - 1;
                             List<CommandEntry> toinj = new List<CommandEntry>(block);
+                            int bc = block.Count;
                             if (cent.Command != null)
                             {
                                 cent.Command.AdaptBlockFollowers(cent, toinj, block);
                             }
-                            istart += (toinj.Count - block.Count);
+                            istart += (toinj.Count - bc);
                             cent.InnerCommandBlock = block;
                             toret.AddRange(toinj);
                         }
@@ -292,7 +293,10 @@ namespace FreneticScript.CommandSystem
                 if (!Commands[i].CommandLine.Contains('\0'))
                 {
                     sb.Append(Commands[i].FullString());
-                    sb.Append("\n");
+                    if (Commands[i].InnerCommandBlock != null)
+                    {
+                        i = Commands[i].BlockEnd;
+                    }
                 }
             }
             return sb.ToString();

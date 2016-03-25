@@ -45,11 +45,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
     {
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
-            int ic = input.Count;
+            entry.BlockEnd -= input.Count;
             input.Clear();
             base.AdaptBlockFollowers(entry, input, fblock);
-            input[0].BlockEnd -= ic;
-            entry.BlockEnd -= ic;
             fblock.Add(GetFollower(entry));
         }
 
