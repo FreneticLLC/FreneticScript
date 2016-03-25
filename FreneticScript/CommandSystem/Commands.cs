@@ -20,14 +20,14 @@ namespace FreneticScript.CommandSystem
         // @Description The word 'argument', when used in a command description, refers to the any input value
         // outside the command itself.
         // Generally a command is formatted like:
-        // /command <required argument> literal_argument/option2 (optional_literal) [optional argument] [optional argument]
+        // /command <required argument> 'literal_argument'/'option2' ['optional literal'] [optional argument] [optional argument]
         // A required argument is an input that *must* be included, while an optional argument is something you
         // can choose whether or not to fill in. (Generally, if not included, they will receive default values
         // or just not be used, depending on the specific command and argument in question.) A literal argument
         // is one the should be input exactly as-is. In the example above, "literal_argument" or "option2" must
         // be typed in exactly, or the command will fail.
         // An optional literal is similar to a literal, except it is not required.
-        // A / between two arguments, EG "<required argument>/literal_argument" means you may pick either
+        // A / between two arguments, EG "<required argument>/'literal_argument'" means you may pick either
         // "literal_argument" as input, or you can fill in the required argument there, but not both.
         // -->
 
@@ -126,6 +126,79 @@ namespace FreneticScript.CommandSystem
                 return null;
             }
         }
+
+        /// <summary>
+        /// Precalculates a script file to potentially be run.
+        /// </summary>
+        /// <param name="name">The name of the script.</param>
+        /// <param name="script">The script to run.</param>
+        public void PrecalcScript(string name, string script)
+        {
+            try
+            {
+                script = script.Replace("\r", "").Replace("\0", "\\0");
+                string[] dat = script.Split('\n');
+                bool shouldarun = false;
+                int arun = 0;
+                for (int i = 0; i < dat.Length; i++)
+                {
+                    string trimmed = dat[i].Trim();
+                    if (trimmed.Length == 0)
+                    {
+                        continue;
+                    }
+                    if (trimmed.StartsWith("///"))
+                    {
+                        string[] args = trimmed.Substring(3).Split('=');
+                        string mode = args[0].Trim().ToLowerFast();
+                        if (mode == "autorun")
+                        {
+                            shouldarun = true;
+                            arun = FreneticScriptUtilities.StringToInt(args[1]);
+                        }
+                        continue;
+                    }
+                    break;
+                }
+                if (shouldarun)
+                {
+                    for (int i = 0; i < scriptsToRun.Count; i++)
+                    {
+                        if (scriptsToRun[i].Key == arun)
+                        {
+                            scriptsToRun[i].Value.Add(new KeyValuePair<string, string>(name, script));
+                            return;
+                        }
+                    }
+                    scriptsToRun.Add(new KeyValuePair<int, List<KeyValuePair<string, string>>>(arun, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(name, script) }));
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Output.Bad("Found exception while precalculating script '" + TagParser.Escape(name) + "'...: " + TagParser.Escape(ex.ToString()), DebugMode.FULL);
+            }
+        }
+
+        /// <summary>
+        /// Runs any precalculated scripts.
+        /// </summary>
+        public void RunPrecalculated()
+        {
+            scriptsToRun.Sort((one, two) => (one.Key.CompareTo(two.Key)));
+            for (int i = 0; i < scriptsToRun.Count; i++)
+            {
+                for (int x = 0; x < scriptsToRun[i].Value.Count; x++)
+                {
+                    CommandQueue queue = CommandScript.SeparateCommands(scriptsToRun[i].Value[x].Key, scriptsToRun[i].Value[x].Value, this).ToQueue(this);
+                    queue.Debug = DebugMode.MINIMAL;
+                    queue.Execute();
+                }
+            }
+            scriptsToRun.Clear();
+        }
+
+        List<KeyValuePair<int, List<KeyValuePair<string, string>>>> scriptsToRun = new List<KeyValuePair<int, List<KeyValuePair<string, string>>>>();
 
         /// <summary>
         /// A function to invoke when output is generated.
