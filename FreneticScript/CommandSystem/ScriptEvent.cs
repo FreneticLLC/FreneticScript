@@ -179,9 +179,9 @@ namespace FreneticScript.CommandSystem
                     CommandScript script = Handlers[i].Value;
                     Dictionary<string, TemplateObject> Variables = GetVariables();
                     CommandQueue queue;
-                    foreach (string determ in System.ExecuteScript(script, Variables, out queue))
+                    foreach (TemplateObject determ in System.ExecuteScript(script, Variables, out queue))
                     {
-                        ApplyDetermination(determ, determ.ToLowerFast(), queue.Debug);
+                        ApplyDetermination(determ, queue.Debug);
                     }
                     if (i >= Handlers.Count || Handlers[i].Value != script)
                     {
@@ -192,16 +192,15 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// Applies a determination string to the event.
+        /// Applies a determination object to the event.
         /// </summary>
         /// <param name="determ">What was determined.</param>
-        /// <param name="determLow">A lowercase copy of the determination.</param>
         /// <param name="mode">What debugmode to use.</param>
-        public virtual void ApplyDetermination(string determ, string determLow, DebugMode mode)
+        public virtual void ApplyDetermination(TemplateObject determ, DebugMode mode)
         {
             if (Cancellable)
             {
-                switch (determLow)
+                switch (determ.ToString().ToLowerFast())
                 {
                     case "cancelled:true":
                     case "cancelled":
@@ -211,13 +210,13 @@ namespace FreneticScript.CommandSystem
                         Cancelled = false;
                         break;
                     default:
-                        System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ) + "<{color.base}>'.", mode);
+                        System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.base}>'.", mode);
                         break;
                 }
             }
             else
             {
-                System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ) + "<{color.base}>'.", mode);
+                System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.base}>'.", mode);
             }
         }
 

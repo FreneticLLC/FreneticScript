@@ -135,7 +135,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs();
                 args4.Script = script;
-                args4.Determinations = new List<string>(queue.Determinations);
+                args4.Determinations = new List<TemplateObject>(queue.Determinations);
                 if (OnScriptRanPostEvent != null)
                 {
                     OnScriptRanPostEvent.Fire(args4);
@@ -221,6 +221,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// All determines of the script run.
         /// Do not edit.
         /// </summary>
-        public List<string> Determinations;
+        public List<TemplateObject> Determinations;
     }
 }

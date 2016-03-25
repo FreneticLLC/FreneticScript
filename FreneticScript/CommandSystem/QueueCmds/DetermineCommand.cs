@@ -31,11 +31,11 @@ namespace FreneticScript.CommandSystem.CommonCmds
 
         public override void Execute(CommandEntry entry)
         {
-            string determ = entry.GetArgument(0);
+            TemplateObject determ = entry.GetArgumentObject(0);
             entry.Queue.Determinations.Add(determ);
             if (entry.ShouldShowGood())
             {
-                entry.Good("<{color.info}>Determination of the queue set to '<{color.emphasis}>" + TagParser.Escape(determ) + "<{color.info}>'.");
+                entry.Good("<{color.info}>Determination of the queue set to '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.info}>'.");
             }
         }
     }
