@@ -9,7 +9,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name function
-    // @Arguments 'stop'/'define' [name of function] ['quiet_fail']
+    // @Arguments 'stop'/'define'/'undefine' [name of function] ['quiet_fail']
     // @Short Creates a new function of the following command block, and adds it to the script cache.
     // @Updated 2014/06/23
     // @Authors mcmonkey
@@ -71,7 +71,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         return input;
                     }
                     string inp = input.ToString().ToLowerFast();
-                    if (inp == "stop" || inp == "define")
+                    if (inp == "stop" || inp == "define" || inp == "undefine")
                     {
                         return new TextTag(inp);
                     }
@@ -115,6 +115,37 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                 }
                 entry.Error("Cannot stop function: not in one!");
+            }
+            else if (type == "undefine")
+            {
+                if (entry.Arguments.Count < 2)
+                {
+                    ShowUsage(entry);
+                    return;
+                }
+                string name = entry.GetArgument(1).ToLowerFast();
+                if (!entry.Queue.CommandSystem.Functions.ContainsKey(name))
+                {
+                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerFast() == "quiet_fail")
+                    {
+                        if (entry.ShouldShowGood())
+                        {
+                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' doesn't exist!");
+                        }
+                    }
+                    else
+                    {
+                        entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' doesn't exist!");
+                    }
+                }
+                else
+                {
+                    entry.Queue.CommandSystem.Functions.Remove(name);
+                    if (entry.ShouldShowGood())
+                    {
+                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' undefined.");
+                    }
+                }
             }
             else if (type == "define")
             {

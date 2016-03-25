@@ -379,7 +379,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="EMsg">The error message.</param>
         public void Error(string EMsg)
         {
-            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + TagParser.Escape(EMsg);
+            EMsg = "ERROR in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + EMsg;
             Queue.HandleError(this, EMsg);
             throw new ErrorInducedException();
         }

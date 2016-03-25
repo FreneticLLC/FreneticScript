@@ -60,12 +60,7 @@ namespace FreneticScript.CommandSystem
         /// The AbstractCommand for the invalid command-command.
         /// </summary>
         public DebugOutputInvalidCommand DebugInvalidCommand;
-
-        /// <summary>
-        /// All scripts this command system has loaded.
-        /// </summary>
-        public Dictionary<string, CommandScript> Scripts;
-
+        
         /// <summary>
         /// All functions this command system has loaded.
         /// </summary>
@@ -111,20 +106,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>A script, or null if there's no match.</returns>
         public CommandScript GetScript(string script)
         {
-            CommandScript commandscript;
-            if (Scripts.TryGetValue(script.ToLowerFast(), out commandscript))
-            {
-                return commandscript;
-            }
-            else
-            {
-                commandscript = CommandScript.GetByFileName(script, this);
-                if (commandscript != null)
-                {
-                    Scripts.Add(commandscript.Name, commandscript);
-                }
-                return commandscript;
-            }
+            return CommandScript.GetByFileName(script, this);
         }
 
         /// <summary>
@@ -211,7 +193,6 @@ namespace FreneticScript.CommandSystem
         {
             RegisteredCommands = new Dictionary<string, AbstractCommand>(30);
             RegisteredCommandList = new List<AbstractCommand>(30);
-            Scripts = new Dictionary<string, CommandScript>(30);
             Functions = new Dictionary<string, CommandScript>(30);
             Events = new Dictionary<string, ScriptEvent>(30);
             Queues = new List<CommandQueue>(20);
@@ -239,7 +220,6 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new RepeatCommand());
             RegisterCommand(new RequireCommand());
             RegisterCommand(TheRunCommand = new RunCommand());
-            RegisterCommand(new ScriptCacheCommand());
             RegisterCommand(new StopCommand());
             RegisterCommand(new TryCommand());
             RegisterCommand(new UndefineCommand());

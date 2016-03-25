@@ -89,7 +89,6 @@
     <Compile Include="CommandSystem\QueueCmds\AssertCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RequireCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RunCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\ScriptCacheCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\StopCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\TryCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\UndefineCommand.cs" />
