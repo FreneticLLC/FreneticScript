@@ -49,6 +49,17 @@ namespace FreneticScript.CommandSystem
                     start = i + 1;
                     quoted = false;
                 }
+                else if (!quoted && i + 1 < commands.Length && commands[i] == '/' && commands[i + 1] == '*')
+                {
+                    for (int x = i; x < commands.Length - 1; x++)
+                    {
+                        if (commands[x] == '*' && commands[x + 1] == '/')
+                        {
+                            commands = commands.Substring(0, i) + commands.Substring(x + 2);
+                            break;
+                        }
+                    }
+                }
                 if (commands[i] == '\n')
                 {
                     line++;
