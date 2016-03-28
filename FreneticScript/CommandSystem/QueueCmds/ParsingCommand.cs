@@ -35,11 +35,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandEntry entry)
         {
-            bool modechoice = entry.GetArgument(0).ToLowerFast() == "on";
+            TagParseMode modechoice = (TagParseMode)Enum.Parse(typeof(TagParseMode), entry.GetArgument(0).ToUpper());
             entry.Queue.ParseTags = modechoice;
             if (entry.ShouldShowGood())
             {
-                entry.Good("Queue parsing <{text_color.emphasis}>" + (modechoice ? "enabled" : "disabled") + "<{text_color.base}>.");
+                entry.Good("Queue parsing now <{text_color.emphasis}>" + modechoice + "<{text_color.base}>.");
             }
         }
     }

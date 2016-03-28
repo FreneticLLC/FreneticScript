@@ -270,7 +270,7 @@ namespace FreneticScript.CommandSystem
             {
                 throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
             }
-            if (Queue.ParseTags)
+            if (Queue.ParseTags != TagParseMode.OFF)
             {
                 return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error);
             }
@@ -291,7 +291,7 @@ namespace FreneticScript.CommandSystem
             {
                 throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
             }
-            if (Queue.ParseTags)
+            if (Queue.ParseTags != TagParseMode.OFF)
             {
                 return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error).ToString();
             }

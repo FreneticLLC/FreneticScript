@@ -64,7 +64,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Whether commands in the queue will parse tags.
         /// </summary>
-        public bool ParseTags = true;
+        public TagParseMode ParseTags = TagParseMode.ON;
 
         /// <summary>
         /// What was returned by the determine command for this queue.
@@ -296,5 +296,20 @@ namespace FreneticScript.CommandSystem
         /// Debug nothing.
         /// </summary>
         NONE = 3
+    }
+
+    /// <summary>
+    /// What mode of parsing a Queue uses.
+    /// </summary>
+    public enum TagParseMode
+    {
+        /// <summary>
+        /// Parsing entirely disabled.
+        /// </summary>
+        OFF = 0,
+        /// <summary>
+        /// Parsing enabled in standard tag-syntax mode.
+        /// </summary>
+        ON = 1
     }
 }
