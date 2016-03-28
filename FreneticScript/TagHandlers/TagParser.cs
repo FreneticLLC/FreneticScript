@@ -175,6 +175,17 @@ namespace FreneticScript.TagHandlers
                                 int index = split[x].IndexOf('[');
                                 bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
                                 split[x] = split[x].Substring(0, index).ToLowerFast();
+                                if (split[x].Length == 0)
+                                {
+                                    if (x == 0)
+                                    {
+                                        split[x] = "var";
+                                    }
+                                    else
+                                    {
+                                        split[x] = "get";
+                                    }
+                                }
                             }
                             else
                             {
