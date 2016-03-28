@@ -62,6 +62,7 @@
     <Compile Include="CommandSystem\CommonCmds\CleanmemCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\DebugOutputInvalidCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\DebugVarSetCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\EchoCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\HelpCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\NoopCommand.cs" />

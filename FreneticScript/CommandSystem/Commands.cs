@@ -60,6 +60,11 @@ namespace FreneticScript.CommandSystem
         /// The AbstractCommand for the invalid command-command.
         /// </summary>
         public DebugOutputInvalidCommand DebugInvalidCommand;
+
+        /// <summary>
+        /// The AbstractCommand for the var-set command.
+        /// </summary>
+        public DebugVarSetCommand DebugVarSetCommand;
         
         /// <summary>
         /// All functions this command system has loaded.
@@ -302,6 +307,7 @@ namespace FreneticScript.CommandSystem
 
             // Register debug command
             RegisterCommand(DebugInvalidCommand = new DebugOutputInvalidCommand());
+            RegisterCommand(DebugVarSetCommand = new DebugVarSetCommand());
 
             // Common Commands
             RegisterCommand(new CleanmemCommand());

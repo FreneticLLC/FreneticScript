@@ -70,6 +70,14 @@ namespace FreneticScript.CommandSystem
             {
                 return null;
             }
+            if (args.Count == 3 && !args[1].WasQuoted)
+            {
+                string a1 = args[1].ToString();
+                if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
+                {
+                    return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, 0, script, line, tabs);
+                }
+            }
             int marker = 0;
             string BaseCommand = args[0].ToString();
             if (BaseCommand.StartsWith("+") && BaseCommand.Length > 1)

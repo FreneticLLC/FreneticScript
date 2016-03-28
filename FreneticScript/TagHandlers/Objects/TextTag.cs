@@ -311,5 +311,35 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return Text;
         }
+
+        /// <summary>
+        /// Sets a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to set it to.</param>
+        public override void Set(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Text = val.ToString();
+                return;
+            }
+            base.Set(names, val);
+        }
+
+        /// <summary>
+        /// Adds a value to a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to add.</param>
+        public override void Add(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Text += val.ToString();
+                return;
+            }
+            base.Add(names, val);
+        }
     }
 }

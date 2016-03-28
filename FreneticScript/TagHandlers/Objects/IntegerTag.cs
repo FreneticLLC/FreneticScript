@@ -228,5 +228,80 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return Internal.ToString();
         }
+
+        /// <summary>
+        /// Sets a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to set it to.</param>
+        public override void Set(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Internal = TryFor(val).Internal;
+                return;
+            }
+            base.Set(names, val);
+        }
+
+        /// <summary>
+        /// Adds a value to a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to add.</param>
+        public override void Add(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Internal += TryFor(val).Internal;
+                return;
+            }
+            base.Add(names, val);
+        }
+
+        /// <summary>
+        /// Subtracts a value from a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to subtract.</param>
+        public override void Subtract(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Internal -= TryFor(val).Internal;
+                return;
+            }
+            base.Subtract(names, val);
+        }
+
+        /// <summary>
+        /// Multiplies a value by a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to multiply.</param>
+        public override void Multiply(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Internal *= TryFor(val).Internal;
+                return;
+            }
+            base.Multiply(names, val);
+        }
+
+        /// <summary>
+        /// Divides a value from a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to divide.</param>
+        public override void Divide(string[] names, TemplateObject val)
+        {
+            if (names == null || names.Length == 0)
+            {
+                Internal /= TryFor(val).Internal;
+                return;
+            }
+            base.Divide(names, val);
+        }
     }
 }

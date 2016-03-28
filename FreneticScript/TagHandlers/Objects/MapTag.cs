@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Common;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -59,7 +60,7 @@ namespace FreneticScript.TagHandlers.Objects
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLower()] = new TextTag(kvp[1]);
+                map.Internal[kvp[0].ToLowerFast()] = new TextArgumentBit(kvp[1], false).InputValue;
             }
             return map;
         }
@@ -176,6 +177,100 @@ namespace FreneticScript.TagHandlers.Objects
                 toret.Append(EscapeTagBase.Escape(entry.Key)).Append(":").Append(EscapeTagBase.Escape(entry.Value.ToString())).Append("|");
             }
             return toret.ToString().Substring(0, toret.Length - 1);
+        }
+
+        /// <summary>
+        /// Sets a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to set it to.</param>
+        public override void Set(string[] names, TemplateObject val)
+        {
+            if (names != null && names.Length == 1)
+            {
+                Internal[names[0].ToLowerFast()] = val;
+                return;
+            }
+            TemplateObject obj;
+            if (names != null && names.Length > 1 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            {
+                string[] n2 = new string[names.Length - 1];
+                Array.Copy(names, 1, n2, 0, n2.Length);
+                obj.Set(n2, val);
+            }
+            base.Set(names, val);
+        }
+
+        /// <summary>
+        /// Adds a value to a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to add.</param>
+        public override void Add(string[] names, TemplateObject val)
+        {
+            TemplateObject obj;
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            {
+                string[] n2 = new string[names.Length - 1];
+                Array.Copy(names, 1, n2, 0, n2.Length);
+                obj.Add(n2, val);
+                return;
+            }
+            base.Add(names, val);
+        }
+
+        /// <summary>
+        /// Subtracts a value from a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to subtract.</param>
+        public override void Subtract(string[] names, TemplateObject val)
+        {
+            TemplateObject obj;
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            {
+                string[] n2 = new string[names.Length - 1];
+                Array.Copy(names, 1, n2, 0, n2.Length);
+                obj.Subtract(n2, val);
+                return;
+            }
+            base.Subtract(names, val);
+        }
+
+        /// <summary>
+        /// Multiplies a value by a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to multiply.</param>
+        public override void Multiply(string[] names, TemplateObject val)
+        {
+            TemplateObject obj;
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            {
+                string[] n2 = new string[names.Length - 1];
+                Array.Copy(names, 1, n2, 0, n2.Length);
+                obj.Multiply(n2, val);
+                return;
+            }
+            base.Multiply(names, val);
+        }
+
+        /// <summary>
+        /// Divides a value from a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to divide.</param>
+        public override void Divide(string[] names, TemplateObject val)
+        {
+            TemplateObject obj;
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            {
+                string[] n2 = new string[names.Length - 1];
+                Array.Copy(names, 1, n2, 0, n2.Length);
+                obj.Divide(n2, val);
+                return;
+            }
+            base.Divide(names, val);
         }
     }
 }
