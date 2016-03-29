@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem
                 }
                 else if (!quoted && command[i] == ' ' && (i - start > 0))
                 {
-                    string arg = command.Substring(start, i - start).Trim().Replace("\"", "");
+                    string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
                     if (arg.Length > 0)
                     {
                         args.Add(system.TagSystem.SplitToArgument(arg, quoted));
@@ -60,7 +60,7 @@ namespace FreneticScript.CommandSystem
             }
             if (command.Length - start > 0)
             {
-                string arg = command.Substring(start, command.Length - start).Trim().Replace("\"", "");
+                string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
                 if (arg.Length > 0)
                 {
                     args.Add(system.TagSystem.SplitToArgument(arg, quoted));
