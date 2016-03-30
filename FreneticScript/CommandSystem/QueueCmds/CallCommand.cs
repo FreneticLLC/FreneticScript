@@ -9,7 +9,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name call
-    // @Arguments <function to call> [<variable>:<value> ...]
+    // @Arguments <function to call> [-variable value ...]
     // @Short Runs a function.
     // @Updated 2014/06/23
     // @Authors mcmonkey
@@ -18,29 +18,27 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Maximum -1
     // @Description
     // Activates a function created by the <@link command function>function<@/link> command.
-    // Note that 'injected' function calls do not take variable inputs (they use the current queue's variables),
-    // and do not output detemrinations!
     // TODO: Explain more!
     // @Example
     // // This example calls the function 'helloworld'.
     // call helloworld
     // @Example
     // // This example calls the function 'outputme' with variable 'text' set to 'hello world'.
-    // call outputme "text:hello world"
+    // call outputme -text "hello world"
     // @Example
     // TODO: More examples!
     // @Tags
-    // <{var[call_determinations]}> returns what the called function determined, if anything (Only for 'run' mode).
+    // <{var[call_determinations]}> returns what the called function determined, if anything.
     // @BlockVars
     // call_determinations ListTag
     // -->
-    // TODO: Make insert_function entirely its own separate command.
+
     class CallCommand : AbstractCommand
     {
         public CallCommand()
         {
             Name = "call";
-            Arguments = "<function to call> [<variable>:<value> ...]"; // TODO: Object variables somehow?
+            Arguments = "<function to call> [-<variable> <value> ...]";
             Description = "Runs a function.";
             IsFlow = true;
             Asyncable = true;
@@ -70,16 +68,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
             CommandQueue queue = script.ToQueue(entry.Command.CommandSystem);
-            for (int i = 1; i < entry.Arguments.Count; i++)
+            foreach (string var in entry.NamedArguments.Keys)
             {
-                string str = entry.GetArgument(i);
-                if (!str.Contains(':'))
-                {
-                    entry.Error("Invalid variable input!");
-                    return;
-                }
-                string[] split = str.Split(new char[] { ':' }, 2);
-                queue.SetVariable(split[0], new TextTag(split[1]));
+                queue.SetVariable(var, entry.GetNamedArgumentObject(var));
             }
             queue.Debug = DebugMode.MINIMAL;
             queue.Outputsystem = entry.Queue.Outputsystem;

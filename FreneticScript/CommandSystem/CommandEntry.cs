@@ -103,12 +103,27 @@ namespace FreneticScript.CommandSystem
             }
             string BaseCommandLow = BaseCommand.ToLowerFast();
             args.RemoveAt(0);
+            Dictionary<string, Argument> nameds = new Dictionary<string, Argument>();
+            for (int i = 0; i < args.Count - 1; i++)
+            {
+                if (!args[i].WasQuoted && args[i].ToString().StartsWith("-"))
+                {
+                    nameds[args[i].ToString().Substring(1).ToLowerFast()] = args[i + 1];
+                    args.RemoveRange(i, 2);
+                    i -= 2;
+                }
+            }
             AbstractCommand cmd;
+            CommandEntry entry;
             if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
             {
-                return new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs) { WaitFor = waitfor };
+                entry = new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs, nameds) { WaitFor = waitfor };
             }
-            return CreateInvalidOutput(BaseCommand, args, system, command, marker, waitfor, script, line, tabs);
+            else
+            {
+                entry = CreateInvalidOutput(BaseCommand, args, system, command, marker, waitfor, script, line, tabs, nameds);
+            }
+            return entry;
         }
 
         /// <summary>
@@ -125,10 +140,10 @@ namespace FreneticScript.CommandSystem
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutput(string name, List<Argument> _arguments,
-            Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs)
+            Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs, Dictionary<string, Argument> nameds)
         {
             _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false));
-            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs) { WaitFor = waitfor };
+            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs, nameds) { WaitFor = waitfor };
                 
         }
 
@@ -141,6 +156,11 @@ namespace FreneticScript.CommandSystem
         /// A list of all commands that were inside this command originally.
         /// </summary>
         public List<CommandEntry> InnerCommandBlock = null;
+
+        /// <summary>
+        /// All 'named' arguments on this command entry.
+        /// </summary>
+        public Dictionary<string, Argument> NamedArguments;
 
         /// <summary>
         /// The start of this command's braced block.
@@ -170,8 +190,17 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Full constructor, recommended.
         /// </summary>
-        public CommandEntry(string _commandline, int bstart, int bend,
-            AbstractCommand _command, List<Argument> _arguments, string _name, int _marker, string _script, int _line, string fairtabs)
+        public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
+            string _name, int _marker, string _script, int _line, string fairtabs)
+            : this(_commandline, bstart, bend, _command, _arguments, _name, _marker, _script, _line, fairtabs, new Dictionary<string, Argument>())
+        {
+        }
+
+        /// <summary>
+        /// Full constructor, recommended.
+        /// </summary>
+        public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
+            string _name, int _marker, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds)
         {
             BlockStart = bstart;
             BlockEnd = bend;
@@ -183,6 +212,7 @@ namespace FreneticScript.CommandSystem
             ScriptName = _script;
             ScriptLine = _line;
             FairTabulation = fairtabs;
+            NamedArguments = nameds;
             if (Command == null)
             {
                 throw new Exception("Invalid Command (null!)");
@@ -258,6 +288,21 @@ namespace FreneticScript.CommandSystem
         /// What marker was used. 0 = none, 1 = +, 2 = -, 3 = !
         /// </summary>
         public int Marker = 0;
+
+        /// <summary>
+        /// Gets a named argument with a specified name, handling any tags.
+        /// </summary>
+        /// <param name="name">The argument name.</param>
+        /// <returns>The parsed argument.</returns>
+        public TemplateObject GetNamedArgumentObject(string name)
+        {
+            Argument arg;
+            if (NamedArguments.TryGetValue(name, out arg))
+            {
+                return arg.Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error);
+            }
+            return null;
+        }
 
         /// <summary>
         /// Gets an argument at a specified place, handling any tags.

@@ -31,9 +31,9 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="toUse">The data to use.</param>
         public MapTag(Dictionary<string, TemplateObject> toUse)
         {
-            Internal = toUse;
+            Internal = new Dictionary<string, TemplateObject>(toUse);
         }
-
+        
         /// <summary>
         /// Constructs a MapTag without existing data.
         /// </summary>
