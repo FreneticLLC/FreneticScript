@@ -20,25 +20,38 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The DateTime this TimeTag represents.
         /// </summary>
-        DateTime Internal;
+        DateTimeOffset Internal;
 
         /// <summary>
         /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
         /// </summary>
-        /// <param name="dat">The TagData used to construct this TimeTag.</param>
         /// <param name="input">The input text to create a time from.</param>
         /// <returns>The time tag, or null.</returns>
-        public static TimeTag For(TagData dat, string input)
+        public static TimeTag For(string input)
         {
-            // TODO: Constructable!
-            return null;
+            DateTimeOffset? dt = FreneticScriptUtilities.StringToDateTime(input);
+            if (dt == null)
+            {
+                return null;
+            }
+            return new TimeTag(dt.Value);
+        }
+
+        /// <summary>
+        /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
+        /// </summary>
+        /// <param name="input">The input to create a time from.</param>
+        /// <returns>The time tag, or null.</returns>
+        public static TimeTag For(TemplateObject input)
+        {
+            return (input is TimeTag) ? (TimeTag)input : For(input.ToString());
         }
 
         /// <summary>
         /// Constructs a time tag.
         /// </summary>
         /// <param name="_time">The internal date-time to use.</param>
-        public TimeTag(DateTime _time)
+        public TimeTag(DateTimeOffset _time)
         {
             Internal = _time;
         }

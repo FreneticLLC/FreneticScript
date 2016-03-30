@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace FreneticScript
 {
@@ -87,24 +88,83 @@ namespace FreneticScript
         }
 
         /// <summary>
+        /// Converts a string to a date-time.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>The date-time.</returns>
+        public static DateTimeOffset? StringToDateTime(string input)
+        {
+            string[] bdat = input.Split(' ');
+            if (bdat.Length != 3)
+            {
+                return null;
+            }
+            string[] ymd = bdat[0].Split('/');
+            if (ymd.Length != 3)
+            {
+                return null;
+            }
+            int year = StringToInt(ymd[0]);
+            int month = StringToInt(ymd[1]);
+            int day = StringToInt(ymd[2]);
+            string[] hmsm = bdat[1].Split(':');
+            if (hmsm.Length != 3 && hmsm.Length != 4)
+            {
+                return null;
+            }
+            int hour = StringToInt(hmsm[0]);
+            int minute = StringToInt(hmsm[1]);
+            int second = StringToInt(hmsm[2]);
+            int millisecond = hmsm.Length == 4 ? StringToInt(hmsm[3]) : 0;
+            int offH = 0;
+            int offM = 0;
+            if (bdat[2].Contains('-'))
+            {
+                string[] offsetinfo = bdat[2].Split('-');
+                string[] subinf = offsetinfo[1].Split(':');
+                if (subinf.Length != 2)
+                {
+                    return null;
+                }
+                offH = -StringToInt(subinf[0]);
+                offM = -StringToInt(subinf[1]);
+            }
+            else
+            {
+                string[] offsetinfo = bdat[2].Split('+');
+                if (offsetinfo.Length != 2)
+                {
+                    return null;
+                }
+                string[] subinf = offsetinfo[1].Split(':');
+                if (subinf.Length != 2)
+                {
+                    return null;
+                }
+                offH = StringToInt(subinf[0]);
+                offM = StringToInt(subinf[1]);
+            }
+            TimeSpan offs = new TimeSpan(offH, offM, 0);
+            DateTimeOffset dto = new DateTimeOffset(year, month, day, hour, minute, second, millisecond, offs);
+            return dto;
+        }
+
+        /// <summary>
         /// Returns a string representation of the specified time.
         /// </summary>
         /// <param name="dt">The datetime object.</param>
         /// <param name="ms">Whether to include milliseconds.</param>
         /// <returns>The time as a string.</returns>
-        public static string DateTimeToString(DateTime dt, bool ms)
+        public static string DateTimeToString(DateTimeOffset dt, bool ms)
         {
-            string utcoffset = "";
-            DateTime UTC = dt.ToUniversalTime();
-            if (dt.CompareTo(UTC) < 0)
+            string utcoffset;
+            if (dt.Offset.TotalMilliseconds < 0)
             {
-                TimeSpan span = UTC.Subtract(dt);
-                utcoffset = "-" + Pad(((int)Math.Floor(span.TotalHours)).ToString(), '0', 2) + ":" + Pad(span.Minutes.ToString(), '0', 2);
+                utcoffset = "-" + Pad(((int)Math.Abs(Math.Floor(dt.Offset.TotalHours))).ToString(), '0', 2) + ":" + Pad(dt.Offset.Minutes.ToString(), '0', 2);
             }
             else
             {
-                TimeSpan span = dt.Subtract(UTC);
-                utcoffset = "+" + Pad(((int)Math.Floor(span.TotalHours)).ToString(), '0', 2) + ":" + Pad(span.Minutes.ToString(), '0', 2);
+                utcoffset = "+" + Pad(((int)Math.Floor(dt.Offset.TotalHours)).ToString(), '0', 2) + ":" + Pad(dt.Offset.Minutes.ToString(), '0', 2);
             }
             return Pad(dt.Year.ToString(), '0', 4) + "/" + Pad(dt.Month.ToString(), '0', 2) + "/" +
                 Pad(dt.Day.ToString(), '0', 2) + " " + Pad(dt.Hour.ToString(), '0', 2) + ":" +

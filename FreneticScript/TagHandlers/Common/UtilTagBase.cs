@@ -57,7 +57,7 @@ namespace FreneticScript.TagHandlers.Common
                 // @TODO move to System?
                 // -->
                 case "current_time_utc":
-                    return new TimeTag(DateTime.UtcNow).Handle(data.Shrink());
+                    return new TimeTag(DateTimeOffset.UtcNow).Handle(data.Shrink());
                 // TODO: Meta: Link the two current_time's at each other!
                 // <--[tag]
                 // @Name UtilTag.current_time
@@ -67,7 +67,7 @@ namespace FreneticScript.TagHandlers.Common
                 // @TODO move to System?
                 // -->
                 case "current_time":
-                    return new TimeTag(DateTime.Now).Handle(data.Shrink());
+                    return new TimeTag(DateTimeOffset.Now).Handle(data.Shrink());
                 // <--[tag]
                 // @Name UtilTag.total_ram_usage
                 // @Group Utilities
