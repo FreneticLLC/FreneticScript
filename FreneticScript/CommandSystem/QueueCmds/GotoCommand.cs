@@ -36,13 +36,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandEntry entry)
         {
             string targ = entry.GetArgument(0);
-            for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            for (int i = 0; i < cse.Entries.Length; i++)
             {
                 if (entry.Queue.GetCommand(i).Command is MarkCommand
                     && entry.Queue.GetCommand(i).Arguments[0].ToString() == targ)
                 {
                     // TODO: Maybe parse tags in the mark commands?
-                    entry.Queue.CommandIndex = i;
+                    cse.Index = i;
                     return;
                 }
             }

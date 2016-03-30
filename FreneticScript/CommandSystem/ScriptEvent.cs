@@ -181,7 +181,7 @@ namespace FreneticScript.CommandSystem
                     CommandQueue queue;
                     foreach (TemplateObject determ in System.ExecuteScript(script, Variables, out queue))
                     {
-                        ApplyDetermination(determ, queue.Debug);
+                        ApplyDetermination(determ, queue.CommandStack.Peek().Debug);
                     }
                     if (i >= Handlers.Count || Handlers[i].Value != script)
                     {

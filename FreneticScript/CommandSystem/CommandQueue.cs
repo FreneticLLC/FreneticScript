@@ -15,21 +15,10 @@ namespace FreneticScript.CommandSystem
     public class CommandQueue
     {
         /// <summary>
-        /// All commands in this queue.
-        /// TODO: Rewrite to be a static array that we roll through, not a rapidly modified queue :(
+        /// The current stack of all command execution data.
         /// </summary>
-        public CommandEntry[] CommandList;
-
-        /// <summary>
-        /// What command we are currently running.
-        /// </summary>
-        public int CommandIndex;
-
-        /// <summary>
-        /// A list of all variables saved in this queue.
-        /// </summary>
-        public Dictionary<string, TemplateObject> Variables;
-
+        public Stack<CommandStackEntry> CommandStack = new Stack<CommandStackEntry>();
+        
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
         /// Almost always true.
@@ -57,19 +46,9 @@ namespace FreneticScript.CommandSystem
         public CommandScript Script;
 
         /// <summary>
-        /// How much debug information this queue should show.
-        /// </summary>
-        public DebugMode Debug;
-
-        /// <summary>
         /// Whether commands in the queue will parse tags.
         /// </summary>
         public TagParseMode ParseTags = TagParseMode.ON;
-
-        /// <summary>
-        /// What was returned by the determine command for this queue.
-        /// </summary>
-        public List<TemplateObject> Determinations = new List<TemplateObject>();
 
         /// <summary>
         /// What function to invoke when output is generated.
@@ -84,14 +63,30 @@ namespace FreneticScript.CommandSystem
         {
             Script = _script;
             CommandSystem = _system;
-            Variables = new Dictionary<string, TemplateObject>();
-            Debug = DebugMode.FULL;
+            PushToStack(_commands, DebugMode.FULL, new Dictionary<string, TemplateObject>());
+        }
+
+        /// <summary>
+        /// Pushes a list of already-calculated commands to the command stack.
+        /// </summary>
+        /// <param name="_commands">The commands to push.</param>
+        /// <param name="mode">What debug mode to use.</param>
+        /// <param name="vars">What variables to use.</param>
+        public void PushToStack(IList<CommandEntry> _commands, DebugMode mode, Dictionary<string, TemplateObject> vars)
+        {
+            CommandEntry[] cmds = new CommandEntry[_commands.Count];
             for (int i = 0; i < _commands.Count; i++)
             {
-                _commands[i].Queue = this;
-                _commands[i].Output = CommandSystem.Output;
+                cmds[i] = _commands[i].Duplicate(); // TODO: Rather than duplicating the entries, store an array of data holders in the Command-Stack-Entries?
+                cmds[i].Queue = this;
+                cmds[i].Output = CommandSystem.Output;
             }
-            CommandList = _commands.ToArray();
+            CommandStackEntry cse = new CommandStackEntry();
+            cse.Index = 0;
+            cse.Entries = cmds;
+            cse.Debug = mode;
+            cse.Variables = vars;
+            CommandStack.Push(cse);
         }
 
         /// <summary>
@@ -135,54 +130,74 @@ namespace FreneticScript.CommandSystem
                 }
                 Wait = 0f;
             }
-            while (CommandIndex < CommandList.Length)
+            while (CommandStack.Count > 0)
             {
-                CommandEntry CurrentCommand = CommandList[CommandIndex];
-                CommandIndex++;
-                if (CurrentCommand.Command == CommandSystem.DebugInvalidCommand)
+                CommandStackEntry cse = CommandStack.Peek();
+                while (cse != null && cse.Index < cse.Entries.Length)
                 {
-                    // Last try - perhaps a command was registered after the script was loaded.
-                    // TODO: Do we even want this? Command registration should be high-priority auto-run.
-                    AbstractCommand cmd;
-                    if (CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerFast(), out cmd))
+                    CommandEntry CurrentCommand = cse.Entries[cse.Index];
+                    cse.Index++;
+                    if (CurrentCommand.Command == CommandSystem.DebugInvalidCommand)
                     {
-                        CurrentCommand.Command = cmd;
-                    }
-                }
-                if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
-                {
-                    WaitingOn = CurrentCommand;
-                }
-                try
-                {
-                    CurrentCommand.Command.Execute(CurrentCommand);
-                }
-                catch (Exception ex)
-                {
-                    if (!(ex is ErrorInducedException))
-                    {
-                        try
+                        // Last try - perhaps a command was registered after the script was loaded.
+                        // TODO: Do we even want this? Command registration should be high-priority auto-run.
+                        AbstractCommand cmd;
+                        if (CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerFast(), out cmd))
                         {
-                            CurrentCommand.Error("Internal exception: " + ex.ToString());
+                            CurrentCommand.Command = cmd;
                         }
-                        catch (Exception ex2)
+                    }
+                    if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
+                    {
+                        WaitingOn = CurrentCommand;
+                    }
+                    try
+                    {
+                        CurrentCommand.Command.Execute(CurrentCommand);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!(ex is ErrorInducedException))
                         {
-                            string message = ex2.ToString();
-                            if (Debug <= DebugMode.MINIMAL)
+                            try
                             {
-                                CurrentCommand.Output.Bad(message, DebugMode.MINIMAL);
-                                if (Outputsystem != null)
+                                CurrentCommand.Error("Internal exception: " + ex.ToString());
+                            }
+                            catch (Exception ex2)
+                            {
+                                string message = ex2.ToString();
+                                if (cse.Debug <= DebugMode.MINIMAL)
                                 {
-                                    Outputsystem.Invoke(message, MessageType.BAD);
+                                    CurrentCommand.Output.Bad(message, DebugMode.MINIMAL);
+                                    if (Outputsystem != null)
+                                    {
+                                        Outputsystem.Invoke(message, MessageType.BAD);
+                                    }
+                                    cse.Index = cse.Entries.Length + 1;
+                                    CommandStack.Clear();
                                 }
-                                CommandIndex = CommandList.Length + 1;
                             }
                         }
                     }
+                    if (Delayable && ((Wait > 0f) || WaitingOn != null))
+                    {
+                        return;
+                    }
+                    cse = CommandStack.Count > 0 ? CommandStack.Peek(): null;
                 }
-                if (Delayable && ((Wait > 0f) || WaitingOn != null))
+                if (CommandStack.Count > 0)
                 {
-                    return;
+                    CommandStackEntry ncse = CommandStack.Pop();
+                    if (CommandStack.Count > 0 && ncse.Determinations != null)
+                    {
+                        LastDeterminations = ncse.Determinations;
+                        CommandStackEntry tcse = CommandStack.Peek();
+                        tcse.Variables.Add("determinations", new ListTag(ncse.Determinations));
+                    }
+                    else
+                    {
+                        LastDeterminations = null;
+                    }
                 }
             }
             if (Complete != null)
@@ -191,6 +206,11 @@ namespace FreneticScript.CommandSystem
             }
             Running = false;
         }
+
+        /// <summary>
+        /// The determinations ran on the lowest level of this queue.
+        /// </summary>
+        public List<TemplateObject> LastDeterminations = null;
 
         /// <summary>
         /// Whether this Queue is waiting on the last command.
@@ -205,17 +225,25 @@ namespace FreneticScript.CommandSystem
         public void HandleError(CommandEntry entry, string message)
         {
             WaitingOn = null;
-            for (int i = 0; i < CommandList.Length; i++)
+            CommandStackEntry cse = CommandStack.Peek();
+            DebugMode dbmode = cse.Debug;
+            while (cse != null)
             {
-                if (GetCommand(i).Command is TryCommand &&
-                    GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                for (int i = cse.Index; i < cse.Entries.Length; i++)
                 {
-                    entry.Good("Force-exiting try block.");
-                    CommandIndex = i;
-                    return;
+                    if (GetCommand(i).Command is TryCommand &&
+                        GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    {
+                        entry.Good("Force-exiting try block.");
+                        cse.Index = i;
+                        return;
+                    }
                 }
+                cse.Index = cse.Entries.Length + 1;
+                CommandStack.Pop();
+                cse = CommandStack.Count > 0 ? CommandStack.Peek() : null;
             }
-            if (Debug <= DebugMode.MINIMAL)
+            if (dbmode <= DebugMode.MINIMAL)
             {
                 entry.Output.Bad(message, DebugMode.MINIMAL);
                 if (Outputsystem != null)
@@ -223,7 +251,6 @@ namespace FreneticScript.CommandSystem
                     Outputsystem.Invoke(message, MessageType.BAD);
                 }
             }
-            CommandIndex = CommandList.Length + 1;
         }
 
         /// <summary>
@@ -233,12 +260,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The specified command.</returns>
         public CommandEntry GetCommand(int index)
         {
-            int x = 0;
-            while (CommandList.Length > index + x && CommandList[index + x] == null)
-            {
-                x++;
-            }
-            return CommandList[index + x];
+            return CommandStack.Peek().Entries[index];
         }
         
         /// <summary>
@@ -246,7 +268,8 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Stop()
         {
-            CommandIndex = CommandList.Length;
+            CommandStack.Peek().Index = CommandStack.Peek().Entries.Length + 1;
+            CommandStack.Clear();
         }
 
         /// <summary>
@@ -256,9 +279,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The value to set on the variable.</param>
         public void SetVariable(string name, TemplateObject value)
         {
-            string namelow = name.ToLowerFast();
-            Variables.Remove(namelow);
-            Variables.Add(namelow, value);
+            CommandStack.Peek().Variables[name.ToLowerFast()] = value;
         }
 
         /// <summary>
@@ -270,7 +291,7 @@ namespace FreneticScript.CommandSystem
         {
             string namelow = name.ToLowerFast();
             TemplateObject value;
-            if (Variables.TryGetValue(namelow, out value))
+            if (CommandStack.Peek().Variables.TryGetValue(namelow, out value))
             {
                 return value;
             }

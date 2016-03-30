@@ -34,7 +34,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good("Else continuing, previous IF passed.");
                 }
-                entry.Queue.CommandIndex = entry.BlockEnd + 1;
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                cse.Index = entry.BlockEnd + 1;
                 return;
             }
             bool success = true;
@@ -70,7 +71,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good("Else continuing, ELSE-IF is false!");
                 }
-                entry.Queue.CommandIndex = entry.BlockEnd + 1;
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+               cse.Index = entry.BlockEnd + 1;
             }
         }
     }

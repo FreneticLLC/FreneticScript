@@ -42,13 +42,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string count = entry.GetArgument(0);
             if (count == "\0CALLBACK")
             {
-                WhileCommandData dat = (WhileCommandData)entry.Queue.CommandList[entry.BlockStart - 1].Data;
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                WhileCommandData dat = (WhileCommandData)cse.Entries[entry.BlockStart - 1].Data;
                 dat.Index++;
                 List<string> comp = new List<string>();
                 for (int i = 0; i < dat.ComparisonArgs.Count; i++)
                 {
                     // TODO: Preparse arguments less!
-                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, entry.Queue.Variables, entry.Queue.Debug, entry.Error).ToString());
+                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, cse.Variables, cse.Debug, entry.Error).ToString());
                 }
                 if (IfCommand.TryIf(comp))
                 {
@@ -56,7 +57,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("While looping...: " + dat.Index);
                     }
-                    entry.Queue.CommandIndex = entry.BlockStart;
+                    cse.Index = entry.BlockStart;
                     return;
                 }
                 if (entry.ShouldShowGood())
@@ -66,7 +67,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (count.ToLowerFast() == "stop")
             {
-                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = 0; i < cse.Entries.Length; i++)
                 {
                     if (entry.Queue.GetCommand(i).Command is WhileCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -74,7 +76,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Stopping a while loop.");
                         }
-                        entry.Queue.CommandIndex = i + 2;
+                        cse.Index = i + 2;
                         return;
                     }
                 }
@@ -82,7 +84,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (count.ToLowerFast() == "next")
             {
-                for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = cse.Index - 1; i > 0; i--)
                 {
                     if (entry.Queue.GetCommand(i).Command is WhileCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -90,7 +93,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Jumping forward in a while loop.");
                         }
-                        entry.Queue.CommandIndex = i + 1;
+                        cse.Index = i + 1;
                         return;
                     }
                 }
@@ -111,7 +114,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Not looping.");
                     }
-                    entry.Queue.CommandIndex = entry.BlockEnd + 2;
+                    CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                    cse.Index = entry.BlockEnd + 2;
                     return;
                 }
                 entry.Data = new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments };

@@ -14,6 +14,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Arguments = "'loud'/'quiet'/'error' <variable to require> [...]";
             Description = "Stops a command queue entirely or throws an error if the relevant variables are not available.";
             IsFlow = true;
+            Asyncable = true;
             MinimumArguments = 2;
             MaximumArguments = -1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
@@ -39,8 +40,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string loud = entry.GetArgument(0).ToLowerFast();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
-                string arg = entry.GetArgument(i);
-                if (!entry.Queue.Variables.ContainsKey(arg))
+                string arg = entry.GetArgument(i).ToLowerFast();
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                if (!cse.Variables.ContainsKey(arg))
                 {
                     if (loud == "loud")
                     {

@@ -32,10 +32,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             entry.Data = new IfCommandData() { Result = 0 };
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {
-                CommandEntry ifentry = entry.Queue.CommandList[entry.BlockStart - 1];
-                if (entry.Queue.CommandIndex + 1 < entry.Queue.CommandList.Length)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
+                if (cse.Index + 1 < cse.Entries.Length)
                 {
-                    CommandEntry elseentry = entry.Queue.CommandList[entry.Queue.CommandIndex + 1];
+                    CommandEntry elseentry = cse.Entries[cse.Index + 1];
                     if (elseentry.Command is ElseCommand)
                     {
                         elseentry.Data = ifentry.Data;
@@ -66,6 +67,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
+        // TODO: better comparison systme!
         public static bool TryIf(List<string> arguments)
         {
             if (arguments.Count == 0)

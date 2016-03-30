@@ -36,24 +36,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandEntry entry)
         {
             string modechoice = entry.GetArgument(0);
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
             switch (modechoice.ToLowerFast())
             {
                 case "full":
-                    entry.Queue.Debug = DebugMode.FULL;
+                    cse.Debug = DebugMode.FULL;
                     if (entry.ShouldShowGood())
                     {
                         entry.Good("Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
                     }
                     break;
                 case "minimal":
-                    entry.Queue.Debug = DebugMode.MINIMAL;
+                    cse.Debug = DebugMode.MINIMAL;
                     if (entry.ShouldShowGood())
                     {
                         entry.Good("Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
                     }
                     break;
                 case "none":
-                    entry.Queue.Debug = DebugMode.NONE;
+                    cse.Debug = DebugMode.NONE;
                     if (entry.ShouldShowGood())
                     {
                         entry.Good("Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");

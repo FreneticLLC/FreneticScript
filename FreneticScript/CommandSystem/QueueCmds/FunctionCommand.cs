@@ -98,7 +98,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             type = type.ToLowerFast();
             if (type == "stop")
             {
-                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = 0; i < cse.Entries.Length; i++)
                 {
                     if (entry.Queue.GetCommand(i).Command is FunctionCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -106,7 +107,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Stopping a function call.");
                         }
-                        entry.Queue.CommandIndex = i + 2;
+                        cse.Index = i + 2;
                         return;
                     }
                 }
@@ -178,7 +179,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
                     }
                 }
-                entry.Queue.CommandIndex = entry.BlockEnd + 2;
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                cse.Index = entry.BlockEnd + 2;
             }
             else
             {

@@ -66,7 +66,8 @@ namespace FreneticScript.TagHandlers.Common
             }
             else
             {
-                return new TextTag("").Handle(data);
+                data.Error("Invalid variable name!");
+                return new NullTag().Handle(data);
             }
         }
     }

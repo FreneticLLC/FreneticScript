@@ -31,9 +31,9 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public override void Execute(CommandEntry entry)
         {
             string target = entry.GetArgument(0);
-            if (entry.Queue.Variables.ContainsKey(target.ToLowerFast()))
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            if (cse.Variables.Remove(target.ToLowerFast()))
             {
-                entry.Queue.Variables.Remove(target.ToLowerFast());
                 if (entry.ShouldShowGood())
                 {
                     entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>' removed'.");

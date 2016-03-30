@@ -103,7 +103,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string type = entry.GetArgument(0);
             if (type == "\0CALLBACK")
             {
-                ForeachCommandData dat = (ForeachCommandData)entry.Queue.CommandList[entry.BlockStart - 1].Data;
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                ForeachCommandData dat = (ForeachCommandData)cse.Entries[entry.BlockStart - 1].Data;
                 dat.Index++;
                 if (dat.Index <= dat.List.Count)
                 {
@@ -111,7 +112,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Foreach looping...: " + dat.Index + "/" + dat.List.Count);
                     }
-                    entry.Queue.CommandIndex = entry.BlockStart;
+                    cse.Index = entry.BlockStart;
                     return;
                 }
                 if (entry.ShouldShowGood())
@@ -121,7 +122,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (type.ToLowerFast() == "stop")
             {
-                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = 0; i < cse.Entries.Length; i++)
                 {
                     if (entry.Queue.GetCommand(i).Command is ForeachCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -129,7 +131,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Stopping a foreach loop.");
                         }
-                        entry.Queue.CommandIndex = i + 2;
+                        cse.Index = i + 2;
                         return;
                     }
                 }
@@ -137,7 +139,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (type.ToLowerFast() == "next")
             {
-                for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = cse.Index - 1; i > 0; i--)
                 {
                     if (entry.Queue.GetCommand(i).Command is ForeachCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -145,7 +148,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Jumping forward in a foreach loop.");
                         }
-                        entry.Queue.CommandIndex = i + 1;
+                        cse.Index = i + 1;
                         return;
                     }
                 }
@@ -158,7 +161,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 if (target <= 0)
                 {
                     entry.Good("Not looping.");
-                    entry.Queue.CommandIndex = entry.BlockEnd + 2;
+                    CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                    cse.Index = entry.BlockEnd + 2;
                     return;
                 }
                 entry.Data = new ForeachCommandData() { Index = 1, List = list.ListEntries };

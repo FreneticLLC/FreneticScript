@@ -135,12 +135,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs();
                 args4.Script = script;
-                args4.Determinations = new List<TemplateObject>(queue.Determinations);
+                args4.Determinations = queue.LastDeterminations;
                 if (OnScriptRanPostEvent != null)
                 {
                     OnScriptRanPostEvent.Fire(args4);
                 }
-                ListTag list = new ListTag(queue.Determinations);
+                ListTag list = new ListTag(queue.LastDeterminations);
                 entry.Queue.SetVariable("run_determinations", list);
             }
             else

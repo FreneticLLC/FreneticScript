@@ -99,9 +99,10 @@ namespace FreneticScript.CommandSystem
                     queue.SetVariable(variable.Key, variable.Value);
                 }
             }
-            queue.Debug = mode;
+            CommandStackEntry cse = queue.CommandStack.Peek();
+            cse.Debug = mode;
             queue.Execute();
-            return queue.Determinations;
+            return queue.LastDeterminations;
         }
 
         /// <summary>
@@ -196,7 +197,7 @@ namespace FreneticScript.CommandSystem
                 for (int x = 0; x < scriptsToRun[i].Value.Count; x++)
                 {
                     CommandQueue queue = CommandScript.SeparateCommands(scriptsToRun[i].Value[x].Key, scriptsToRun[i].Value[x].Value, this).ToQueue(this);
-                    queue.Debug = DebugMode.MINIMAL;
+                    queue.CommandStack.Peek().Debug = DebugMode.MINIMAL;
                     queue.Execute();
                 }
             }

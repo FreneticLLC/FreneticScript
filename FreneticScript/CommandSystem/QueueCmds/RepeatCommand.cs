@@ -97,7 +97,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string count = entry.GetArgument(0);
             if (count == "\0CALLBACK")
             {
-                RepeatCommandData dat = (RepeatCommandData)entry.Queue.CommandList[entry.BlockStart - 1].Data;
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                RepeatCommandData dat = (RepeatCommandData)cse.Entries[entry.BlockStart - 1].Data;
                 dat.Index++;
                 entry.Queue.SetVariable("repeat_index", new IntegerTag(dat.Index));
                 entry.Queue.SetVariable("repeat_total", new IntegerTag(dat.Total));
@@ -107,7 +108,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Repeating...: " + dat.Index + "/" + dat.Total);
                     }
-                    entry.Queue.CommandIndex = entry.BlockStart;
+                    cse.Index = entry.BlockStart;
                     return;
                 }
                 if (entry.ShouldShowGood())
@@ -117,7 +118,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (count.ToLowerFast() == "stop")
             {
-                for (int i = 0; i < entry.Queue.CommandList.Length; i++)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = 0; i < cse.Entries.Length; i++)
                 {
                     if (entry.Queue.GetCommand(i).Command is RepeatCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -125,7 +127,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Stopping a repeat loop.");
                         }
-                        entry.Queue.CommandIndex = i + 2;
+                        cse.Index = i + 2;
                         return;
                     }
                 }
@@ -133,7 +135,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (count.ToLowerFast() == "next")
             {
-                for (int i = entry.Queue.CommandIndex - 1; i > 0; i--)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int i = cse.Index - 1; i > 0; i--)
                 {
                     if (entry.Queue.GetCommand(i).Command is RepeatCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -141,7 +144,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         {
                             entry.Good("Jumping forward in a repeat loop.");
                         }
-                        entry.Queue.CommandIndex = i + 1;
+                        cse.Index = i + 1;
                         return;
                     }
                 }
@@ -156,7 +159,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good("Not repeating.");
                     }
-                    entry.Queue.CommandIndex = entry.BlockEnd + 1;
+                    CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                    cse.Index = entry.BlockEnd + 1;
                     return;
                 }
                 entry.Data = new RepeatCommandData() { Index = 1, Total = target };

@@ -28,9 +28,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // @Tags
-    // <{var[call_determinations]}> returns what the called function determined, if anything.
-    // @BlockVars
-    // call_determinations ListTag
+    // <{var[determinations]}> returns what the called function determined, if anything.
     // -->
 
     class CallCommand : AbstractCommand
@@ -67,28 +65,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
-            CommandQueue queue = script.ToQueue(entry.Command.CommandSystem);
+            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
             foreach (string var in entry.NamedArguments.Keys)
             {
-                queue.SetVariable(var, entry.GetNamedArgumentObject(var));
+                vars[var] = entry.GetNamedArgumentObject(var);
             }
-            queue.Debug = DebugMode.MINIMAL;
-            queue.Outputsystem = entry.Queue.Outputsystem;
-            queue.Execute();
-            if (entry.WaitFor && entry.Queue.WaitingOn != null)
-            {
-                if (!queue.Running)
-                {
-                    entry.Queue.WaitingOn = null;
-                }
-                else
-                {
-                    EntryFinisher fin = new EntryFinisher() { Entry = entry };
-                    queue.Complete += new EventHandler<CommandQueueEventArgs>(fin.Complete);
-                }
-            }
-            ListTag list = new ListTag(queue.Determinations);
-            entry.Queue.SetVariable("call_determinations", list);
+            entry.Queue.PushToStack(script.Commands, DebugMode.MINIMAL, vars);
         }
     }
 }

@@ -299,7 +299,8 @@ namespace FreneticScript.CommandSystem
             Argument arg;
             if (NamedArguments.TryGetValue(name, out arg))
             {
-                return arg.Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error);
+                CommandStackEntry cse = Queue.CommandStack.Peek();
+                return arg.Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, Error);
             }
             return null;
         }
@@ -317,7 +318,8 @@ namespace FreneticScript.CommandSystem
             }
             if (Queue.ParseTags != TagParseMode.OFF)
             {
-                return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error);
+                CommandStackEntry cse = Queue.CommandStack.Peek();
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, Error);
             }
             else
             {
@@ -338,7 +340,8 @@ namespace FreneticScript.CommandSystem
             }
             if (Queue.ParseTags != TagParseMode.OFF)
             {
-                return Arguments[place].Parse(TextStyle.Color_Simple, Queue.Variables, Queue.Debug, Error).ToString();
+                CommandStackEntry cse = Queue.CommandStack.Peek();
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, Error).ToString();
             }
             else
             {
@@ -403,7 +406,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Good(string text)
         {
-            if (Queue.Debug == DebugMode.FULL)
+            if (Queue.CommandStack.Peek().Debug == DebugMode.FULL)
             {
                 Output.Good(text, DebugMode.MINIMAL);
                 if (Queue.Outputsystem != null)
@@ -419,7 +422,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether commands should output 'good' results.</returns>
         public bool ShouldShowGood()
         {
-            return Queue.Debug == DebugMode.FULL;
+            return Queue.CommandStack.Peek().Debug == DebugMode.FULL;
         }
 
         /// <summary>
@@ -428,9 +431,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Bad(string text)
         {
-            text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + text;
-            if (Queue.Debug <= DebugMode.MINIMAL)
+            if (Queue.CommandStack.Peek().Debug <= DebugMode.MINIMAL)
             {
+                text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + text;
                 Output.Bad(text, DebugMode.MINIMAL);
                 if (Queue.Outputsystem != null)
                 {

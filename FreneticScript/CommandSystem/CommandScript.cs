@@ -279,7 +279,7 @@ namespace FreneticScript.CommandSystem
         public CommandQueue ToQueue(Commands system)
         {
             CommandQueue queue = new CommandQueue(this, GetEntries(), system);
-            queue.Debug = Debug;
+            queue.CommandStack.Peek().Debug = Debug;
             return queue;
         }
 

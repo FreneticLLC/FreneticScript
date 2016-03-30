@@ -58,16 +58,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // TODO: Don't regenerate constantly!
             CommandScript script = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart);
             CommandQueue queue = script.ToQueue(entry.Command.CommandSystem);
-            queue.Debug = entry.Queue.Debug;
+            queue.CommandStack.Peek().Debug = entry.Queue.CommandStack.Peek().Debug;
             queue.Outputsystem = entry.Queue.Outputsystem;
             queue.Execute();
             if (entry.WaitFor && entry.Queue.WaitingOn == entry)
             {
                 entry.Queue.WaitingOn = null;
             }
-            // TODO: Don't uselessly inline the method (which requires we jump over it, see line below). Base this off a defaultly true AbstractCommand variable: 'InlineBlock'.
-            // Possibly add entry.NextIndex to represent "entry.BlockEnd + 2" if block was added, or "Entry.Index + 1" if not.
-            entry.Queue.CommandIndex = entry.BlockEnd + 2;
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            cse.Index = entry.BlockEnd + 2;
         }
     }
 }

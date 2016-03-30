@@ -26,8 +26,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // // This example breaks the if layer it is in, without running the following echo.
     // if true
     // {
-    //     break
-    //     echo "This will never show"
+    //     break;
+    //     echo "This will never show";
     // }
     // @Example
     // // This example breaks the if layers it is in, without running the following echos.
@@ -35,10 +35,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // {
     //     if true
     //     {
-    //         break 2
-    //         echo "This will never show"
+    //         break 2;
+    //         echo "This will never show";
     //     }
-    //     echo "This also will never show"
+    //     echo "This also will never show";
     // }
     // @Example
     // TODO: More examples!
@@ -81,17 +81,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             for (int i = 0; i < count; i++)
             {
-                for (int ind = entry.Queue.CommandIndex; ind < entry.Queue.CommandList.Length; ind++)
+                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                for (int ind = cse.Index; ind < cse.Entries.Length; ind++)
                 {
-                    CommandEntry tentry = entry.Queue.CommandList[ind];
+                    CommandEntry tentry = cse.Entries[ind];
                     if (tentry.Command.IsBreakable && tentry.Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        entry.Queue.CommandIndex = ind + 1;
+                        cse.Index = ind + 1;
                         goto completed;
                     }
                 }
-                entry.Error("Not in that many blocks!");
-                return;
+                if (entry.Queue.CommandStack.Count > 1)
+                {
+                    entry.Queue.CommandStack.Pop();
+                }
+                else
+                {
+                    entry.Error("Not in that many blocks!");
+                    return;
+                }
                 completed:
                 continue;
             }

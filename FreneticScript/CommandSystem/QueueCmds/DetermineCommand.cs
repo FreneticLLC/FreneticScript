@@ -32,7 +32,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public override void Execute(CommandEntry entry)
         {
             TemplateObject determ = entry.GetArgumentObject(0);
-            entry.Queue.Determinations.Add(determ);
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            cse.Determinations.Add(determ);
             if (entry.ShouldShowGood())
             {
                 entry.Good("<{color.info}>Determination of the queue set to '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.info}>'.");

@@ -41,8 +41,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             TemplateObject varb = entry.Queue.GetVariable(variable);
             string setter = entry.GetArgument(1);
             TemplateObject value = entry.GetArgumentObject(2);
+            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
             // TODO: Fix the below
-            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, entry.Queue.Variables, entry.Queue.Debug, entry.Error, null);
+            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, cse.Variables, cse.Debug, entry.Error, null);
             switch (setter)
             {
                 case "=":
