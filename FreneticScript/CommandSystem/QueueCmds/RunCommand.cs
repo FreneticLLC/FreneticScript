@@ -140,8 +140,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     OnScriptRanPostEvent.Fire(args4);
                 }
-                ListTag list = new ListTag(queue.LastDeterminations);
-                entry.Queue.SetVariable("run_determinations", list);
+                if (queue.LastDeterminations != null)
+                {
+                    entry.Queue.SetVariable("run_determinations", new ListTag(queue.LastDeterminations));
+                }
             }
             else
             {

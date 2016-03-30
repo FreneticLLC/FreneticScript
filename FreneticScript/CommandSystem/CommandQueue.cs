@@ -224,6 +224,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
         {
+            StringBuilder stacktrace = new StringBuilder();
+            stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
+                + ": (" + entry.Name + ")\n");
             WaitingOn = null;
             CommandStackEntry cse = CommandStack.Peek();
             DebugMode dbmode = cse.Debug;
@@ -235,14 +238,29 @@ namespace FreneticScript.CommandSystem
                         GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
                         entry.Good("Force-exiting try block.");
+                        SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
                         cse.Index = i;
                         return;
                     }
                 }
                 cse.Index = cse.Entries.Length + 1;
                 CommandStack.Pop();
-                cse = CommandStack.Count > 0 ? CommandStack.Peek() : null;
+                if (CommandStack.Count > 0)
+                {
+                    cse = CommandStack.Peek();
+                    if (cse.Index <= cse.Entries.Length)
+                    {
+                        stacktrace.Append("    in script '" + cse.Entries[cse.Index - 1].ScriptName + "' at line " + (cse.Entries[cse.Index - 1].ScriptLine + 1)
+                            + ": (" + cse.Entries[cse.Index - 1].Name + ")\n");
+                    }
+                }
+                else
+                {
+                    cse = null;
+                    break;
+                }
             }
+            message = stacktrace.ToString().Substring(0, stacktrace.Length - 1);
             if (dbmode <= DebugMode.MINIMAL)
             {
                 entry.Output.Bad(message, DebugMode.MINIMAL);
