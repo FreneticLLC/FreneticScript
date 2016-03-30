@@ -139,7 +139,6 @@ namespace FreneticScript.CommandSystem
             {
                 CommandEntry CurrentCommand = CommandList[CommandIndex];
                 CommandIndex++;
-                int cind = CommandIndex;
                 if (CurrentCommand.Command == CommandSystem.DebugInvalidCommand)
                 {
                     // Last try - perhaps a command was registered after the script was loaded.

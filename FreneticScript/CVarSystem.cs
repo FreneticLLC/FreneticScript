@@ -32,10 +32,12 @@ namespace FreneticScript
         /// </summary>
         public bool Modified = false;
 
+#pragma warning disable 1591 // Some compilers don't realize that all these CVars share a summary, and give a warning. This can be safely ignored/disabled.
         /// <summary>
         /// System CVars.
         /// </summary>
         public CVar s_osversion, s_user, s_dotnetversion, s_totalram, s_culture, s_processors, s_machinename;
+#pragma warning restore 1591
 
         /// <summary>
         /// Constructs the CVar system.
