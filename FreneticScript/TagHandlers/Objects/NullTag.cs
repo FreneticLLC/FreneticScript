@@ -61,6 +61,9 @@ namespace FreneticScript.TagHandlers.Objects
             }
             switch (data[0])
             {
+                // Documented in TextTag.
+                case "duplicate":
+                    return new NullTag().Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

@@ -64,6 +64,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "total_milliseconds":
                     return new IntegerTag(Internal.Ticks / 10000L).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "duplicate":
+                    return new TimeTag(Internal).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

@@ -410,10 +410,15 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "to_binary":
                     return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
+                // Documented in TextTag.
                 case "to_integer":
                     return new IntegerTag((long)Internal).Handle(data.Shrink());
+                // Documented in TextTag.
                 case "to_number":
                     return Handle(data.Shrink());
+                // Documented in TextTag.
+                case "duplicate":
+                    return new NumberTag(Internal).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

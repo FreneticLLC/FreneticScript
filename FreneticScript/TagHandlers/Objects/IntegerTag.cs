@@ -200,6 +200,8 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("to_integer", (data, obj) => obj.Handle(data.Shrink()));
             // Documented in TextTag.
             RegisterTag("to_number", (data, obj) => new NumberTag(obj.Internal).Handle(data.Shrink()));
+            // Documented in TextTag.
+            RegisterTag("duplicate", (data, obj) => new IntegerTag(obj.Internal).Handle(data.Shrink()));
         }
 
         /// <summary>

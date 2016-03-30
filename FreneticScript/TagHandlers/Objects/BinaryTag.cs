@@ -85,7 +85,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="_val">The internal binary data to use.</param>
         public BinaryTag(byte[] _val)
         {
-            Internal = _val;
+            Internal = _val.ToArray();
         }
 
         /// <summary>
@@ -266,6 +266,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "to_base64":
                     return new TextTag(Convert.ToBase64String(Internal)).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "duplicate":
+                    return new BinaryTag(Internal).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

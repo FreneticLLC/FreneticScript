@@ -293,6 +293,14 @@ namespace FreneticScript.TagHandlers.Objects
                         data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
                         return new NullTag();
                     }
+                // <--[tag]
+                // @Name TextTag.duplicate
+                // @Group Global Usage Tags
+                // @ReturnType Dynamic
+                // @Returns a perfect duplicate of this tag.
+                // -->
+                case "duplicate":
+                    return new TextTag(Text).Handle(data.Shrink());
                 default:
                     break;
             }

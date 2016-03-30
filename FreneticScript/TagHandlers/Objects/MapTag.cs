@@ -156,6 +156,9 @@ namespace FreneticScript.TagHandlers.Objects
                         data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
                         return new NullTag();
                     }
+                // Documented in TextTag.
+                case "duplicate":
+                    return new MapTag(Internal).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

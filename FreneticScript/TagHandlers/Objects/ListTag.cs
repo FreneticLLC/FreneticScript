@@ -376,6 +376,9 @@ namespace FreneticScript.TagHandlers.Objects
                         newlist.ListEntries.InsertRange((int)index.Internal, modif.ListEntries);
                         return newlist.Handle(data.Shrink());
                     }
+                // Documented in TextTag.
+                case "duplicate":
+                    return new ListTag(ListEntries).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

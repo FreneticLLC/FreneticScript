@@ -159,6 +159,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "xor":
                     return new BooleanTag(Internal != For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "duplicate":
+                    return new BooleanTag(Internal).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
