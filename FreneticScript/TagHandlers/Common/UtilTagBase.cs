@@ -49,34 +49,6 @@ namespace FreneticScript.TagHandlers.Common
                 // -->
                 case "random_decimal":
                     return new NumberTag(data.TagSystem.CommandSystem.random.NextDouble()).Handle(data.Shrink());
-                // <--[tag]
-                // @Name UtilTag.current_time_utc
-                // @Group Utilities
-                // @ReturnType TimeTag
-                // @Returns the current system time (UTC).
-                // @TODO move to System?
-                // -->
-                case "current_time_utc":
-                    return new TimeTag(DateTimeOffset.UtcNow).Handle(data.Shrink());
-                // TODO: Meta: Link the two current_time's at each other!
-                // <--[tag]
-                // @Name UtilTag.current_time
-                // @Group Utilities
-                // @ReturnType TimeTag
-                // @Returns the current system time (local).
-                // @TODO move to System?
-                // -->
-                case "current_time":
-                    return new TimeTag(DateTimeOffset.Now).Handle(data.Shrink());
-                // <--[tag]
-                // @Name UtilTag.total_ram_usage
-                // @Group Utilities
-                // @ReturnType TimeTag
-                // @Returns the total RAM usage of the program running.
-                // @TODO move to System?
-                // -->
-                case "total_ram_usage":
-                    return new IntegerTag(GC.GetTotalMemory(false)).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

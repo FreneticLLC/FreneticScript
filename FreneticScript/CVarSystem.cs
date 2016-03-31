@@ -31,14 +31,7 @@ namespace FreneticScript
         /// This variable is so implementations can save CVars to file only when needed.
         /// </summary>
         public bool Modified = false;
-
-#pragma warning disable 1591 // Some compilers don't realize that all these CVars share a summary, and give a warning. This can be safely ignored/disabled.
-        /// <summary>
-        /// System CVars.
-        /// </summary>
-        public CVar s_osversion, s_user, s_dotnetversion, s_totalram, s_culture, s_processors, s_machinename;
-#pragma warning restore 1591
-
+        
         /// <summary>
         /// Constructs the CVar system.
         /// </summary>
@@ -49,18 +42,6 @@ namespace FreneticScript
             CVarList = new List<CVar>();
             Output = _output;
             Output.CVarSys = this;
-
-            // System CVars
-            s_osversion = Register("s_osversion", Environment.OSVersion.VersionString, CVarFlag.Textual | CVarFlag.ReadOnly, "The name and version of the operating system the engine is being run on.");
-            s_user = Register("s_user", Environment.UserName, CVarFlag.Textual | CVarFlag.ReadOnly, "The name of the system user running the engine.");
-            s_dotnetversion = Register("s_dotnetversion", Environment.Version.ToString(), CVarFlag.Textual | CVarFlag.ReadOnly, "The system's .NET (CLR) version string.");
-#if WINDOWS // TODO: Replace me!
-            s_totalram = Register("s_totalram", new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly, "How much RAM the system has.");
-#endif
-            s_culture = Register("s_culture", System.Globalization.CultureInfo.CurrentUICulture.EnglishName, CVarFlag.Textual | CVarFlag.ReadOnly, "The system culture (locale).");
-            s_processors = Register("s_processors", Environment.ProcessorCount.ToString(), CVarFlag.Numeric | CVarFlag.ReadOnly, "The number of processors the system the engine is being run on has.");
-            s_machinename = Register("s_machinename", Environment.MachineName, CVarFlag.Textual | CVarFlag.ReadOnly, "The name given to the computer the engine is being run on.");
-            // TODO: other system info
         }
 
         /// <summary>

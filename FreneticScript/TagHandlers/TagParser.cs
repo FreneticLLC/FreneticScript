@@ -84,6 +84,7 @@ namespace FreneticScript.TagHandlers
             Register(new ListTagBase());
             Register(new MapTagBase());
             Register(new NumberTagBase());
+            Register(new SystemTagBase());
             Register(new TernaryTagBase());
             Register(new TextColorTags());
             Register(new TextTagBase());

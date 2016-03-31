@@ -108,6 +108,7 @@
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagHandlers\Common\BinaryTagBase.cs" />
+    <Compile Include="TagHandlers\Common\SystemTagBase.cs" />
     <Compile Include="TagHandlers\Common\TimeTagBase.cs" />
     <Compile Include="TagHandlers\Common\IntegerTagBase.cs" />
     <Compile Include="TagHandlers\Common\MapTagBase.cs" />
