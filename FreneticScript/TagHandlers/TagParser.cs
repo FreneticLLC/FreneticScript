@@ -94,8 +94,6 @@ namespace FreneticScript.TagHandlers
             Register(new VarTagBase());
         }
 
-        static char[] dot = new char[] { '.' };
-
         /// <summary>
         /// Splits text into an Argument, for preparsing.
         /// </summary>
@@ -163,13 +161,13 @@ namespace FreneticScript.TagHandlers
                                 break;
                             }
                         }
-                        List<string> split = value.Split(dot).ToList();
-                        for (int s = 0; s < split.Count; s++)
+                        string[] split = value.Split('.');
+                        for (int s = 0; s < split.Length; s++)
                         {
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                         }
                         List<TagBit> bits = new List<TagBit>();
-                        for (int x = 0; x < split.Count; x++)
+                        for (int x = 0; x < split.Length; x++)
                         {
                             TagBit bit = new TagBit();
                             if (split[x].Length > 1 && split[x].Contains('[') && split[x][split[x].Length - 1] == ']')
