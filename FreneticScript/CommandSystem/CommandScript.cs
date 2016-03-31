@@ -29,7 +29,42 @@ namespace FreneticScript.CommandSystem
             int line = 0;
             for (int i = 0; i < commands.Length; i++)
             {
-                if (commands[i] == '"' && (!quoted || qtype))
+                if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '/')
+                {
+                    int x = i;
+                    while (x < commands.Length && commands[x] != '\n')
+                    {
+                        x++;
+                    }
+                    if (x < commands.Length)
+                    {
+                        commands = commands.Substring(0, i) + commands.Substring(x);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '*')
+                {
+                    int x;
+                    for (x = i; x < commands.Length && !(commands[x] == '*' && x + 1 < commands.Length && commands[x + 1] == '/'); x++)
+                    {
+                        if (commands[x] == '\n')
+                        {
+                            line++;
+                        }
+                    }
+                    if (x + 1 < commands.Length)
+                    {
+                        commands = commands.Substring(0, i) + commands.Substring(x + 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (commands[i] == '"' && (!quoted || qtype))
                 {
                     qtype = true;
                     quoted = !quoted;
@@ -59,17 +94,6 @@ namespace FreneticScript.CommandSystem
                     CommandList.Add(commands[i].ToString());
                     start = i + 1;
                     continue;
-                }
-                else if (!quoted && i + 1 < commands.Length && commands[i] == '/' && commands[i + 1] == '*')
-                {
-                    for (int x = i; x < commands.Length - 1; x++)
-                    {
-                        if (commands[x] == '*' && commands[x + 1] == '/')
-                        {
-                            commands = commands.Substring(0, i) + commands.Substring(x + 2);
-                            break;
-                        }
-                    }
                 }
                 if (commands[i] == '\n')
                 {

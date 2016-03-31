@@ -23,10 +23,6 @@ namespace FreneticScript.CommandSystem
         /// <returns>The command system.</returns>
         public static CommandEntry FromInput(string command, Commands system, string script, int line, string tabs)
         {
-            if (command.StartsWith("//"))
-            {
-                return null;
-            }
             if (command.StartsWith("/"))
             {
                 command = command.Substring(1);
@@ -50,6 +46,10 @@ namespace FreneticScript.CommandSystem
                     qtype = false;
                     quoted = !quoted;
                     thisArgQuoted = true;
+                }
+                else if (command[i] == '\n' && !quoted)
+                {
+                    command = (i + 1 < command.Length) ? command.Substring(0, i) + command.Substring(i + 1) : command.Substring(0, i);
                 }
                 else if (!quoted && command[i] == ' ')
                 {
