@@ -36,35 +36,40 @@ namespace FreneticScript.CommandSystem
             int start = 0;
             bool quoted = false;
             bool qtype = false;
+            bool thisArgQuoted = false;
             for (int i = 0; i < command.Length; i++)
             {
                 if (command[i] == '"' && (!quoted || qtype))
                 {
                     qtype = true;
                     quoted = !quoted;
+                    thisArgQuoted = true;
                 }
                 else if (command[i] == '\'' && (!quoted || !qtype))
                 {
                     qtype = false;
                     quoted = !quoted;
+                    thisArgQuoted = true;
                 }
-                else if (!quoted && command[i] == ' ' && (i - start > 0))
+                else if (!quoted && command[i] == ' ')
                 {
-                    string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
-                    if (arg.Length > 0)
+                    if (i - start > 0)
                     {
-                        args.Add(system.TagSystem.SplitToArgument(arg, quoted));
+                        string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
+                        args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
+                        start = i + 1;
+                        thisArgQuoted = false;
                     }
-                    start = i + 1;
+                    else
+                    {
+                        start = i + 1;
+                    }
                 }
             }
             if (command.Length - start > 0)
             {
                 string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
-                if (arg.Length > 0)
-                {
-                    args.Add(system.TagSystem.SplitToArgument(arg, quoted));
-                }
+                args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
             }
             if (args.Count == 0)
             {
