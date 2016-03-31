@@ -39,7 +39,7 @@ namespace FreneticScript.CommandSystem
                     qtype = false;
                     quoted = !quoted;
                 }
-                else if ((commands[i] == '\n') || (!quoted && commands[i] == ';'))
+                else if (!quoted && commands[i] == ';')
                 {
                     if (start < i)
                     {
@@ -47,7 +47,6 @@ namespace FreneticScript.CommandSystem
                         CommandList.Add(commands.Substring(start, i - start).Trim());
                     }
                     start = i + 1;
-                    quoted = false;
                 }
                 else if (((commands[i] == '{' && (i == 0 || commands[i - 1] != '<')) || (commands[i] == '}' && (i + 1 >= commands.Length || commands[i + 1] != '>'))) && !quoted)
                 {
