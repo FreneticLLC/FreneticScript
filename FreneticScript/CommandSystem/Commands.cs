@@ -143,7 +143,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 script = script.Replace("\r", "").Replace("\0", "\\0");
-                string[] dat = script.Split('\n');
+                string[] dat = script.SplitFast('\n');
                 bool shouldarun = false;
                 int arun = 0;
                 for (int i = 0; i < dat.Length; i++)
@@ -155,7 +155,7 @@ namespace FreneticScript.CommandSystem
                     }
                     if (trimmed.StartsWith("///"))
                     {
-                        string[] args = trimmed.Substring(3).Split('=');
+                        string[] args = trimmed.Substring(3).SplitFast('=');
                         string mode = args[0].Trim().ToLowerFast();
                         if (mode == "autorun")
                         {

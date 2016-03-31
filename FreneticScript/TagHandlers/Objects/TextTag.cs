@@ -165,7 +165,7 @@ namespace FreneticScript.TagHandlers.Objects
                 case "substring":
                     {
                         string modif = data.GetModifier(0);
-                        string[] inputs = modif.Split(',');
+                        string[] inputs = modif.SplitFast(',');
                         if (inputs.Length < 2)
                         {
                             break;

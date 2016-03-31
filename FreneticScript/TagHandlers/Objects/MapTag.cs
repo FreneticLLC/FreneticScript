@@ -50,11 +50,11 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The map represented by the input text.</returns>
         public static MapTag For(string input)
         {
-            string[] dat = input.Split('|');
+            string[] dat = input.SplitFast('|');
             MapTag map = new MapTag();
             for (int i = 0; i < dat.Length; i++)
             {
-                string[] kvp = dat[i].Split(':');
+                string[] kvp = dat[i].SplitFast(':');
                 if (kvp.Length != 2)
                 {
                     // TODO: Error?

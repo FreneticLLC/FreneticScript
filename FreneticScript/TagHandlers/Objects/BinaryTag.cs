@@ -148,7 +148,7 @@ namespace FreneticScript.TagHandlers.Objects
                 case "range":
                     {
                         string modif = data.GetModifier(0);
-                        string[] split = modif.Split(',');
+                        string[] split = modif.SplitFast(',');
                         if (split.Length != 2)
                         {
                             data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");

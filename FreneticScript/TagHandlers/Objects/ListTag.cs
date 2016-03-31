@@ -61,7 +61,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid list.</returns>
         public static ListTag For(string list)
         {
-            string[] baselist = list.Split('|');
+            string[] baselist = list.SplitFast('|');
             ListTag tlist = new ListTag();
             for (int i = 0; i < baselist.Length; i++)
             {
@@ -285,7 +285,7 @@ namespace FreneticScript.TagHandlers.Objects
                 case "range":
                     {
                         string modif = data.GetModifier(0);
-                        string[] split = modif.Split(',');
+                        string[] split = modif.SplitFast(',');
                         if (split.Length != 2)
                         {
                             data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");

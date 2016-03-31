@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandEntry entry)
         {
             string var = entry.GetArgument(0);
-            string[] dat = var.Split('.');
+            string[] dat = var.SplitFast('.');
             TemplateObject tvar = entry.Queue.GetVariable(dat[0]);
             if (tvar == null)
             {

@@ -161,7 +161,7 @@ namespace FreneticScript.TagHandlers
                                 break;
                             }
                         }
-                        string[] split = value.Split('.');
+                        string[] split = value.SplitFast('.');
                         for (int s = 0; s < split.Length; s++)
                         {
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
