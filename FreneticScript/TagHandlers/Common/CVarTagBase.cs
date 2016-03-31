@@ -27,6 +27,53 @@ namespace FreneticScript.TagHandlers.Common
             Name = "cvar";
         }
 
+        static Dictionary<string, Func<TagData, CVar, TemplateObject>> Handlers = new Dictionary<string, Func<TagData, CVar, TemplateObject>>();
+
+        static void RegisterTag(string name, Func<TagData, CVar, TemplateObject> method)
+        {
+            Handlers.Add(name.ToLowerFast(), method);
+        }
+
+        static CVarTagBase()
+        {
+                    // <--[tag]
+                    // @Name CVarTag.exists
+                    // @Group Variables
+                    // @ReturnType BooleanTag
+                    // @Returns whether the specified CVar exists.
+                    // Specifically for the tag <@link tag cvar[<TextTag>]><{cvar[<TextTag>]}><@/link>.
+                    // -->
+            RegisterTag("exists", (data, obj) => new BooleanTag(true).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name CVarTag.value_boolean
+            // @Group Variables
+            // @ReturnType BooleanTag
+            // @Returns whether the CVar is marked 'true'.
+            // -->
+            RegisterTag("value_boolean", (data, obj) => new BooleanTag(obj.ValueB).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name CVarTag.value_integer
+            // @Group Variables
+            // @ReturnType IntegerTag
+            // @Returns the integer number value of the CVar.
+            // -->
+            RegisterTag("value_integer", (data, obj) => new IntegerTag(obj.ValueL).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name CVarTag.value_text
+            // @Group Variables
+            // @ReturnType TextTag
+            // @Returns the value of the CVar, as plain text.
+            // -->
+            RegisterTag("value_text", (data, obj) => new TextTag(obj.Value).Handle(data.Shrink()));
+            // <--[tag]
+            // @Name CVarTag.value_number
+            // @Group Variables
+            // @ReturnType TextTag
+            // @Returns the decimal number value of the CVar.
+            // -->
+            RegisterTag("value_number", (data, obj) => new NumberTag(obj.ValueD).Handle(data.Shrink()));
+        }
+
         /// <summary>
         /// Handles a 'cvar' tag.
         /// </summary>
@@ -40,56 +87,20 @@ namespace FreneticScript.TagHandlers.Common
                 data.Shrink();
                 if (data.Remaining == 0)
                 {
-                    return new TextTag(cvar.Value);
+                    return new TextTag(cvar.Name);
                 }
                 if (data.Remaining > 0 && data[0] == "exists")
                 {
                     return new BooleanTag(false).Handle(data.Shrink());
                 }
+                Func<TagData, CVar, TemplateObject> handler;
+                if (Handlers.TryGetValue(data[0], out handler))
+                {
+                    return handler.Invoke(data, cvar);
+                }
                 // TODO: Separate CVar object?
                 switch (data[0])
                 {
-                    // <--[tag]
-                    // @Name CVarTag.exists
-                    // @Group Variables
-                    // @ReturnType BooleanTag
-                    // @Returns whether the specified CVar exists.
-                    // Specifically for the tag <@link tag cvar[<TextTag>]><{cvar[<TextTag>]}><@/link>.
-                    // -->
-                    case "exists":
-                        return new BooleanTag(true).Handle(data.Shrink());
-                    // <--[tag]
-                    // @Name CVarTag.value
-                    // @Group Variables
-                    // @ReturnType TextTag
-                    // @Returns the value of the CVar, as plain text.
-                    // -->
-                    case "value":
-                        return new TextTag(cvar.Value).Handle(data.Shrink());
-                    // <--[tag]
-                    // @Name CVarTag.value_boolean
-                    // @Group Variables
-                    // @ReturnType BooleanTag
-                    // @Returns whether the CVar is marked 'true'.
-                    // -->
-                    case "value_boolean":
-                        return new BooleanTag(cvar.ValueB).Handle(data.Shrink());
-                    // <--[tag]
-                    // @Name CVarTag.value_integer
-                    // @Group Variables
-                    // @ReturnType IntegerTag
-                    // @Returns the integer number value of the CVar.
-                    // -->
-                    case "value_integer":
-                        return new IntegerTag(cvar.ValueL).Handle(data.Shrink());
-                    // <--[tag]
-                    // @Name CVarTag.value_number
-                    // @Group Variables
-                    // @ReturnType NumberTag
-                    // @Returns the decimal number value of the CVar.
-                    // -->
-                    case "value_number":
-                        return new NumberTag(cvar.ValueD).Handle(data.Shrink());
                     // <--[tag]
                     // @Name CVarTag.name
                     // @Group Variables
@@ -181,8 +192,7 @@ namespace FreneticScript.TagHandlers.Common
             }
             else
             {
-                // TODO: ??
-                return new TextTag("").Handle(data);
+                return new NullTag().Handle(data);
             }
         }
     }
