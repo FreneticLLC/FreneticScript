@@ -66,7 +66,7 @@ namespace FreneticScript.TagHandlers.Common
             }
             else
             {
-                data.Error("Invalid variable name!");
+                data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");
                 return new NullTag().Handle(data);
             }
         }

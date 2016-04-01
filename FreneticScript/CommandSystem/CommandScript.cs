@@ -325,6 +325,7 @@ namespace FreneticScript.CommandSystem
                     typebuild.DefineMethodOverride(methodbuild, CompiledCommandRunnable.RunMethod);
                     Type t = typebuild.CreateType();
                     ccse.EntryCommands[i] = (CompiledCommandRunnable)Activator.CreateInstance(t);
+                    ccse.EntryCommands[i].Entry = ccse.Entries[i];
                 }
             }
         }

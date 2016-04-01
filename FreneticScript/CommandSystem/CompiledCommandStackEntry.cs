@@ -25,10 +25,15 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether to continue looping.</returns>
         public override bool Run(CommandQueue queue)
         {
-            while (Index < Entries.Length)
+            while (Index >= 0 && Index < Entries.Length)
             {
                 CommandEntry CurrentCommand = Entries[Index];
+                CompiledCommandRunnable Runnable = EntryCommands[Index];
                 Index++;
+                if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
+                {
+                    queue.WaitingOn = CurrentCommand;
+                }
                 if (CurrentCommand.Command == queue.CommandSystem.DebugInvalidCommand)
                 {
                     // Last try - perhaps a command was registered after the script was loaded.
@@ -38,35 +43,39 @@ namespace FreneticScript.CommandSystem
                     {
                         CurrentCommand.Command = cmd;
                     }
-                }
-                if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
-                {
-                    queue.WaitingOn = CurrentCommand;
-                }
-                try
-                {
+                    if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
+                    {
+                        queue.WaitingOn = CurrentCommand;
+                    }
                     CurrentCommand.Command.Execute(queue, CurrentCommand);
                 }
-                catch (Exception ex)
+                else
                 {
-                    if (!(ex is ErrorInducedException))
+                    try
                     {
-                        try
+                        Runnable.Run(queue);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!(ex is ErrorInducedException))
                         {
-                            queue.HandleError(CurrentCommand, "Internal exception: " + ex.ToString());
-                        }
-                        catch (Exception ex2)
-                        {
-                            string message = ex2.ToString();
-                            if (Debug <= DebugMode.MINIMAL)
+                            try
                             {
-                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
-                                if (queue.Outputsystem != null)
+                                queue.HandleError(CurrentCommand, "Internal exception: " + ex.ToString());
+                            }
+                            catch (Exception ex2)
+                            {
+                                string message = ex2.ToString();
+                                if (Debug <= DebugMode.MINIMAL)
                                 {
-                                    queue.Outputsystem.Invoke(message, MessageType.BAD);
+                                    queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                                    if (queue.Outputsystem != null)
+                                    {
+                                        queue.Outputsystem.Invoke(message, MessageType.BAD);
+                                    }
+                                    Index = Entries.Length + 1;
+                                    queue.CommandStack.Clear();
                                 }
-                                Index = Entries.Length + 1;
-                                queue.CommandStack.Clear();
                             }
                         }
                     }

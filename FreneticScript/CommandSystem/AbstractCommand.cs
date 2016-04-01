@@ -191,6 +191,11 @@ namespace FreneticScript.CommandSystem
         public static FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("Entry");
 
         /// <summary>
+        /// Represents the field "Entry.Command" in the class CompiledCommandRunnable.
+        /// </summary>
+        public static FieldInfo Entry_CommandField = typeof(CommandEntry).GetField("Command");
+
+        /// <summary>
         /// Represents the "Execute(queue, entry)" method.
         /// </summary>
         public static MethodInfo ExecuteMethod = typeof(AbstractCommand).GetMethod("Execute", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
@@ -222,8 +227,9 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void CallExecute()
         {
-            LoadQueue();
             LoadEntry();
+            ILGen.Emit(OpCodes.Ldfld, Entry_CommandField);
+            LoadQueue();
             LoadEntry();
             ILGen.Emit(OpCodes.Callvirt, ExecuteMethod);
         }
