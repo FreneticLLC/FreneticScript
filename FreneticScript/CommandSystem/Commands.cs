@@ -145,6 +145,7 @@ namespace FreneticScript.CommandSystem
                 script = script.Replace("\r", "").Replace("\0", "\\0");
                 string[] dat = script.SplitFast('\n');
                 bool shouldarun = false;
+                bool shouldcompile = false;
                 int arun = 0;
                 for (int i = 0; i < dat.Length; i++)
                 {
@@ -162,21 +163,26 @@ namespace FreneticScript.CommandSystem
                             shouldarun = true;
                             arun = FreneticScriptUtilities.StringToInt(args[1]);
                         }
+                        else if (mode == "compile")
+                        {
+                            shouldcompile = args[1].Trim().ToLowerFast() == "true";
+                        }
                         continue;
                     }
                     break;
                 }
                 if (shouldarun)
                 {
+                    CommandScript cscript = CommandScript.SeparateCommands(name, script, this, shouldcompile);
                     for (int i = 0; i < scriptsToRun.Count; i++)
                     {
                         if (scriptsToRun[i].Key == arun)
                         {
-                            scriptsToRun[i].Value.Add(new KeyValuePair<string, string>(name, script));
+                            scriptsToRun[i].Value.Add(cscript);
                             return;
                         }
                     }
-                    scriptsToRun.Add(new KeyValuePair<int, List<KeyValuePair<string, string>>>(arun, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>(name, script) }));
+                    scriptsToRun.Add(new KeyValuePair<int, List<CommandScript>>(arun, new List<CommandScript>() { cscript }));
                     return;
                 }
             }
@@ -196,7 +202,7 @@ namespace FreneticScript.CommandSystem
             {
                 for (int x = 0; x < scriptsToRun[i].Value.Count; x++)
                 {
-                    CommandQueue queue = CommandScript.SeparateCommands(scriptsToRun[i].Value[x].Key, scriptsToRun[i].Value[x].Value, this).ToQueue(this);
+                    CommandQueue queue = scriptsToRun[i].Value[x].ToQueue(this);
                     queue.CommandStack.Peek().Debug = DebugMode.MINIMAL;
                     queue.Execute();
                 }
@@ -204,7 +210,7 @@ namespace FreneticScript.CommandSystem
             scriptsToRun.Clear();
         }
 
-        List<KeyValuePair<int, List<KeyValuePair<string, string>>>> scriptsToRun = new List<KeyValuePair<int, List<KeyValuePair<string, string>>>>();
+        List<KeyValuePair<int, List<CommandScript>>> scriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
 
         /// <summary>
         /// A function to invoke when output is generated.
@@ -218,7 +224,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
-            CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this).ToQueue(this);
+            CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this, false).ToQueue(this); // TODO: Compile option!
             queue.Outputsystem = outputter;
             queue.Execute();
         }

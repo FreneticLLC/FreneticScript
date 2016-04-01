@@ -18,8 +18,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="name">The name of the script.</param>
         /// <param name="commands">The command string to parse.</param>
         /// <param name="system">The command system to create the script within.</param>
+        /// <param name="compile">Whether the script should be compiled.</param>
         /// <returns>A list of command strings.</returns>
-        public static CommandScript SeparateCommands(string name, string commands, Commands system)
+        public static CommandScript SeparateCommands(string name, string commands, Commands system, bool compile)
         {
             List<string> CommandList = new List<string>();
             List<int> Lines = new List<int>();
@@ -106,7 +107,7 @@ namespace FreneticScript.CommandSystem
                 CommandList.Add(commands.Substring(start).Trim());
             }
             bool herr;
-            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr));
+            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr), 0, compile);
         }
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 string fname = filename + ".cfg";
-                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system);
+                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system, false); // TODO: Compile optional
             }
             catch (System.IO.FileNotFoundException)
             {
@@ -276,7 +277,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="_name">The name of the script.</param>
         /// <param name="_commands">All commands in the script.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
-        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0)
+        /// <param name="compile">Whether the script should be compiled.</param>
+        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, bool compile = false)
         {
             Name = _name.ToLowerFast();
             Commands = _commands;
@@ -290,22 +292,12 @@ namespace FreneticScript.CommandSystem
                     Commands[i].BlockEnd -= adj;
                 }
             }
-        }
-
-        /// <summary>
-        /// Returns a duplicate of the script's entry list.
-        /// </summary>
-        /// <returns>The entry list.</returns>
-        public List<CommandEntry> GetEntries()
-        {
-            List<CommandEntry> entries = new List<CommandEntry>(Commands.Count);
-            for (int i = 0; i < Commands.Count; i++)
+            if (compile)
             {
-                entries.Add(Commands[i].Duplicate());
-            }
-            return entries;
-        }
 
+            }
+        }
+        
         /// <summary>
         /// Creates a new queue for this script.
         /// </summary>
@@ -313,7 +305,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The created queue.</returns>
         public CommandQueue ToQueue(Commands system)
         {
-            CommandQueue queue = new CommandQueue(this, GetEntries(), system);
+            CommandQueue queue = new CommandQueue(this, Commands, system);
             queue.CommandStack.Peek().Debug = Debug;
             return queue;
         }

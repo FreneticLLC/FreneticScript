@@ -113,7 +113,7 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Recalculates and advances the command queue.
-        /// <param name="Delta">The time passed this tick.</param>
+        /// <param name="Delta">The time that passed this tick.</param>
         /// </summary>
         public void Tick(float Delta)
         {
@@ -132,72 +132,9 @@ namespace FreneticScript.CommandSystem
             }
             while (CommandStack.Count > 0)
             {
-                CommandStackEntry cse = CommandStack.Peek();
-                while (cse != null && cse.Index < cse.Entries.Length)
+                if (!CommandStack.Peek().Run(this))
                 {
-                    CommandEntry CurrentCommand = cse.Entries[cse.Index];
-                    cse.Index++;
-                    if (CurrentCommand.Command == CommandSystem.DebugInvalidCommand)
-                    {
-                        // Last try - perhaps a command was registered after the script was loaded.
-                        // TODO: Do we even want this? Command registration should be high-priority auto-run.
-                        AbstractCommand cmd;
-                        if (CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerFast(), out cmd))
-                        {
-                            CurrentCommand.Command = cmd;
-                        }
-                    }
-                    if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
-                    {
-                        WaitingOn = CurrentCommand;
-                    }
-                    try
-                    {
-                        CurrentCommand.Command.Execute(CurrentCommand);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (!(ex is ErrorInducedException))
-                        {
-                            try
-                            {
-                                CurrentCommand.Error("Internal exception: " + ex.ToString());
-                            }
-                            catch (Exception ex2)
-                            {
-                                string message = ex2.ToString();
-                                if (cse.Debug <= DebugMode.MINIMAL)
-                                {
-                                    CurrentCommand.Output.Bad(message, DebugMode.MINIMAL);
-                                    if (Outputsystem != null)
-                                    {
-                                        Outputsystem.Invoke(message, MessageType.BAD);
-                                    }
-                                    cse.Index = cse.Entries.Length + 1;
-                                    CommandStack.Clear();
-                                }
-                            }
-                        }
-                    }
-                    if (Delayable && ((Wait > 0f) || WaitingOn != null))
-                    {
-                        return;
-                    }
-                    cse = CommandStack.Count > 0 ? CommandStack.Peek(): null;
-                }
-                if (CommandStack.Count > 0)
-                {
-                    CommandStackEntry ncse = CommandStack.Pop();
-                    if (CommandStack.Count > 0 && ncse.Determinations != null)
-                    {
-                        LastDeterminations = ncse.Determinations;
-                        CommandStackEntry tcse = CommandStack.Peek();
-                        tcse.Variables.Add("determinations", new ListTag(ncse.Determinations));
-                    }
-                    else
-                    {
-                        LastDeterminations = null;
-                    }
+                    break;
                 }
             }
             if (Complete != null)
