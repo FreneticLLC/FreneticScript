@@ -46,23 +46,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string fname = entry.GetArgument(0);
+            string fname = entry.GetArgument(queue, 0);
             fname = fname.ToLowerFast();
-            CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
+            CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {
-                entry.Error("Cannot inject function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
+                queue.HandleError(entry, "Cannot inject function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
                 return;
             }
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Injecting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                entry.Good(queue, "Injecting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
-            entry.Queue.PushToStack(script.Commands, cse.Debug, cse.Variables);
-            entry.Queue.CommandStack.Peek().Determinations = cse.Determinations;
+            CommandStackEntry cse = queue.CommandStack.Peek();
+            queue.PushToStack(script.Commands, cse.Debug, cse.Variables);
+            queue.CommandStack.Peek().Determinations = cse.Determinations;
         }
     }
 }

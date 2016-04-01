@@ -27,19 +27,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            entry.Data = new IfCommandData() { Result = 0 };
+            entry.SetData(queue, new IfCommandData() { Result = 0 });
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
                 if (cse.Index + 1 < cse.Entries.Length)
                 {
                     CommandEntry elseentry = cse.Entries[cse.Index + 1];
                     if (elseentry.Command is ElseCommand)
                     {
-                        elseentry.Data = ifentry.Data;
+                        elseentry.SetData(queue, ifentry.GetData(queue));
                     }
                 }
                 return;
@@ -47,22 +47,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             List<string> parsedargs = new List<string>(entry.Arguments.Count);
             for (int i = 0; i < entry.Arguments.Count; i++)
             {
-                parsedargs.Add(entry.GetArgument(i)); // TODO: Don't pre-parse. Parse in TryIf.
+                parsedargs.Add(entry.GetArgument(queue, i)); // TODO: Don't pre-parse. Parse in TryIf.
             }
             bool success = TryIf(parsedargs);
             if (success)
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("If is true, executing...");
+                    entry.Good(queue, "If is true, executing...");
                 }
-                ((IfCommandData)entry.Data).Result = 1;
+                ((IfCommandData)entry.GetData(queue)).Result = 1;
             }
             else
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("If is false, doing nothing!");
+                    entry.Good(queue, "If is false, doing nothing!");
                 }
             }
         }

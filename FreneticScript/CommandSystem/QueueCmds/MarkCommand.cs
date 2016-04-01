@@ -32,12 +32,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Passing mark.");
+                entry.Good(queue, "Passing mark.");
             }
         }
     }

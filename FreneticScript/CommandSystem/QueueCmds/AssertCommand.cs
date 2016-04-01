@@ -30,16 +30,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            TemplateObject arg1 = entry.GetArgumentObject(0);
+            TemplateObject arg1 = entry.GetArgumentObject(queue, 0);
             BooleanTag bt = BooleanTag.TryFor(arg1);
             if (bt == null || !bt.Internal)
             {
-                entry.Error("Assertion failed: " + TagParser.Escape(entry.GetArgument(1)));
+                queue.HandleError(entry, "Assertion failed: " + TagParser.Escape(entry.GetArgument(queue, 1)));
                 return;
             }
-            entry.Good("Require command passed, all variables present!");
+            entry.Good(queue, "Require command passed, all variables present!");
         }
     }
 }

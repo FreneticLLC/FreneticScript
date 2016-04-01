@@ -34,21 +34,21 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return output;
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string delay = entry.GetArgument(0);
+            string delay = entry.GetArgument(queue, 0);
             float seconds = StringToFloat(delay);
-            if (entry.Queue.Delayable)
+            if (queue.Delayable)
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Delaying for <{text_color.emphasis}>" + seconds + "<{text_color.base}> seconds.");
+                    entry.Good(queue, "Delaying for <{text_color.emphasis}>" + seconds + "<{text_color.base}> seconds.");
                 }
-                entry.Queue.Wait = seconds;
+                queue.Wait = seconds;
             }
             else
             {
-                entry.Error("Cannot delay, inside an instant queue!");
+                queue.HandleError(entry, "Cannot delay, inside an instant queue!");
             }
         }
     }

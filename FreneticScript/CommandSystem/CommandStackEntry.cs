@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
@@ -21,6 +22,11 @@ namespace FreneticScript.CommandSystem
         /// All available commands.
         /// </summary>
         public CommandEntry[] Entries;
+
+        /// <summary>
+        /// All entry data available in this CommandStackEntry.
+        /// </summary>
+        public AbstractCommandEntryData[] EntryData;
         
         /// <summary>
         /// Run this command stack.
@@ -49,7 +55,7 @@ namespace FreneticScript.CommandSystem
                 }
                 try
                 {
-                    CurrentCommand.Command.Execute(CurrentCommand);
+                    CurrentCommand.Command.Execute(queue, CurrentCommand);
                 }
                 catch (Exception ex)
                 {
@@ -57,14 +63,14 @@ namespace FreneticScript.CommandSystem
                     {
                         try
                         {
-                            CurrentCommand.Error("Internal exception: " + ex.ToString());
+                            queue.HandleError(CurrentCommand, "Internal exception: " + ex.ToString());
                         }
                         catch (Exception ex2)
                         {
                             string message = ex2.ToString();
                             if (Debug <= DebugMode.MINIMAL)
                             {
-                                CurrentCommand.Output.Bad(message, DebugMode.MINIMAL);
+                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
                                 if (queue.Outputsystem != null)
                                 {
                                     queue.Outputsystem.Invoke(message, MessageType.BAD);
@@ -105,7 +111,63 @@ namespace FreneticScript.CommandSystem
             }
             return false;
         }
-        
+
+        /// <summary>
+        /// Handles an error as appropriate to the situation, in the current queue, from the current command.
+        /// </summary>
+        /// <param name="queue">The associated queue.</param>
+        /// <param name="entry">The command entry that errored.</param>
+        /// <param name="message">The error message.</param>
+        public void HandleError(CommandQueue queue, CommandEntry entry, string message)
+        {
+            StringBuilder stacktrace = new StringBuilder();
+            stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
+                + ": (" + entry.Name + ")\n");
+            queue.WaitingOn = null;
+            CommandStackEntry cse = queue.CommandStack.Peek();
+            DebugMode dbmode = cse.Debug;
+            while (cse != null)
+            {
+                for (int i = cse.Index; i < cse.Entries.Length; i++)
+                {
+                    if (queue.GetCommand(i).Command is TryCommand &&
+                        queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    {
+                        entry.Good(queue, "Force-exiting try block.");
+                        queue.SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
+                        cse.Index = i;
+                        throw new ErrorInducedException();
+                    }
+                }
+                cse.Index = cse.Entries.Length + 1;
+                queue.CommandStack.Pop();
+                if (queue.CommandStack.Count > 0)
+                {
+                    cse = queue.CommandStack.Peek();
+                    if (cse.Index <= cse.Entries.Length)
+                    {
+                        stacktrace.Append("    in script '" + cse.Entries[cse.Index - 1].ScriptName + "' at line " + (cse.Entries[cse.Index - 1].ScriptLine + 1)
+                            + ": (" + cse.Entries[cse.Index - 1].Name + ")\n");
+                    }
+                }
+                else
+                {
+                    cse = null;
+                    break;
+                }
+            }
+            message = stacktrace.ToString().Substring(0, stacktrace.Length - 1);
+            if (dbmode <= DebugMode.MINIMAL)
+            {
+                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                if (queue.Outputsystem != null)
+                {
+                    queue.Outputsystem.Invoke(message, MessageType.BAD);
+                }
+            }
+            throw new ErrorInducedException();
+        }
+
         /// <summary>
         /// All variables available in this portion of the stack.
         /// </summary>

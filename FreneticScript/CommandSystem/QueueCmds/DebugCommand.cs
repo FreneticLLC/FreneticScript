@@ -33,35 +33,35 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string modechoice = entry.GetArgument(0);
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            string modechoice = entry.GetArgument(queue, 0);
+            CommandStackEntry cse = queue.CommandStack.Peek();
             switch (modechoice.ToLowerFast())
             {
                 case "full":
                     cse.Debug = DebugMode.FULL;
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
+                        entry.Good(queue, "Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
                     }
                     break;
                 case "minimal":
                     cse.Debug = DebugMode.MINIMAL;
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
+                        entry.Good(queue, "Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
                     }
                     break;
                 case "none":
                     cse.Debug = DebugMode.NONE;
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
+                        entry.Good(queue, "Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
                     }
                     break;
                 default:
-                    entry.Error("Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
+                    queue.HandleError(entry, "Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
                     break;
             }
         }

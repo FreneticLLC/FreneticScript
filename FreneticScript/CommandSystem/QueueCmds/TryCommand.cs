@@ -26,20 +26,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
 
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(0) == "\0CALLBACK")
+            if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0) == "\0CALLBACK")
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Block completed successfully!");
+                    entry.Good(queue, "Block completed successfully!");
                 }
             }
             else
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Trying block...");
+                    entry.Good(queue, "Trying block...");
                 }
             }
         }

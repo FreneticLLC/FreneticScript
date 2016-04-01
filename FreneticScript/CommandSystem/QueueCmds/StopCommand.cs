@@ -32,32 +32,32 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(0).ToLowerFast() == "all")
+            if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0).ToLowerFast() == "all")
             {
-                int qCount = entry.Queue.CommandSystem.Queues.Count;
-                if (!entry.Queue.CommandSystem.Queues.Contains(entry.Queue))
+                int qCount = queue.CommandSystem.Queues.Count;
+                if (!queue.CommandSystem.Queues.Contains(queue))
                 {
                     qCount++;
                 }
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Stopping <{text_color.emphasis}>" + qCount + "<{text_color.base}> queue" + (qCount == 1 ? "." : "s."));
+                    entry.Good(queue, "Stopping <{text_color.emphasis}>" + qCount + "<{text_color.base}> queue" + (qCount == 1 ? "." : "s."));
                 }
-                foreach (CommandQueue queue in entry.Queue.CommandSystem.Queues)
+                foreach (CommandQueue tqueue in queue.CommandSystem.Queues)
                 {
-                    queue.Stop();
+                    tqueue.Stop();
                 }
-                entry.Queue.Stop();
+                queue.Stop();
             }
             else
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Stopping current queue.");
+                    entry.Good(queue, "Stopping current queue.");
                 }
-                entry.Queue.Stop();
+                queue.Stop();
             }
         }
     }

@@ -35,47 +35,47 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string variable = entry.GetArgument(0);
-            TemplateObject varb = entry.Queue.GetVariable(variable);
-            string setter = entry.GetArgument(1);
-            TemplateObject value = entry.GetArgumentObject(2);
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            string variable = entry.GetArgument(queue, 0);
+            TemplateObject varb = queue.GetVariable(variable);
+            string setter = entry.GetArgument(queue, 1);
+            TemplateObject value = entry.GetArgumentObject(queue, 2);
+            CommandStackEntry cse = queue.CommandStack.Peek();
             // TODO: Fix the below
-            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, cse.Variables, cse.Debug, entry.Error, null);
+            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(entry, o), null);
             switch (setter)
             {
                 case "=":
-                    entry.Queue.SetVariable(variable, value);
+                    queue.SetVariable(variable, value);
                     break;
                 case "+=":
                     double added = NumberTag.For(dat, varb).Internal + NumberTag.For(dat, value).Internal;
-                    entry.Queue.SetVariable(variable, new NumberTag(added));
+                    queue.SetVariable(variable, new NumberTag(added));
                     break;
                 case "-=":
                     double subbed = NumberTag.For(dat, varb).Internal - NumberTag.For(dat, value).Internal;
-                    entry.Queue.SetVariable(variable, new NumberTag(subbed));
+                    queue.SetVariable(variable, new NumberTag(subbed));
                     break;
                 case "/=":
                     double divd = NumberTag.For(dat, varb).Internal / NumberTag.For(dat, value).Internal;
-                    entry.Queue.SetVariable(variable, new NumberTag(divd));
+                    queue.SetVariable(variable, new NumberTag(divd));
                     break;
                 case "*=":
                     double multd = NumberTag.For(dat, varb).Internal + NumberTag.For(dat, value).Internal;
-                    entry.Queue.SetVariable(variable, new NumberTag(multd));
+                    queue.SetVariable(variable, new NumberTag(multd));
                     break;
                 case ".=":
                     string combined = varb.ToString() + value.ToString();
-                    entry.Queue.SetVariable(variable, new TextTag(combined));
+                    queue.SetVariable(variable, new TextTag(combined));
                     break;
                 default:
-                    entry.Error("Invalid setter!");
+                    queue.HandleError(entry, "Invalid setter!");
                     return;
             }
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Variable updated!");
+                entry.Good(queue, "Variable updated!");
             }
         }
     }

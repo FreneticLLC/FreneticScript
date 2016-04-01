@@ -32,10 +32,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            entry.Error(entry.GetArgument(0));
+            queue.HandleError(entry, entry.GetArgument(queue, 0));
         }
     }
 }

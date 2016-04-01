@@ -36,21 +36,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Executs the command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">The entry to execute with.</param>
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string var = entry.GetArgument(0);
+            string var = entry.GetArgument(queue, 0);
             string[] dat = var.SplitFast('.');
-            TemplateObject tvar = entry.Queue.GetVariable(dat[0]);
+            TemplateObject tvar = queue.GetVariable(dat[0]);
             if (tvar == null)
             {
-                entry.Error("Unknown variable '" + TagParser.Escape(dat[0]) + "'.");
+                queue.HandleError(entry, "Unknown variable '" + TagParser.Escape(dat[0]) + "'.");
                 return;
             }
             string[] sdat = new string[dat.Length - 1];
             Array.Copy(dat, 1, sdat, 0, sdat.Length);
-            string setter = entry.GetArgument(1);
-            TemplateObject val = entry.GetArgumentObject(2);
+            string setter = entry.GetArgument(queue, 1);
+            TemplateObject val = entry.GetArgumentObject(queue, 2);
             switch (setter)
             {
                 case "=":

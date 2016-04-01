@@ -35,36 +35,36 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string loud = entry.GetArgument(0).ToLowerFast();
+            string loud = entry.GetArgument(queue, 0).ToLowerFast();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
-                string arg = entry.GetArgument(i).ToLowerFast();
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                string arg = entry.GetArgument(queue, i).ToLowerFast();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 if (!cse.Variables.ContainsKey(arg))
                 {
                     if (loud == "loud")
                     {
-                        entry.Bad("Missing variable '" + TagParser.Escape(arg) + "'!");
-                        entry.Queue.Stop();
+                        entry.Bad(queue, "Missing variable '" + TagParser.Escape(arg) + "'!");
+                        queue.Stop();
                     }
                     else if (loud == "quiet")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Missing variable '" + TagParser.Escape(arg) + "'!");
+                            entry.Good(queue, "Missing variable '" + TagParser.Escape(arg) + "'!");
                         }
-                        entry.Queue.Stop();
+                        queue.Stop();
                     }
                     else
                     {
-                        entry.Error("Missing variable '" + TagParser.Escape(arg) + "'!");
+                        queue.HandleError(entry, "Missing variable '" + TagParser.Escape(arg) + "'!");
                     }
                     return;
                 }
             }
-            entry.Good("Require command passed, all variables present!");
+            entry.Good(queue, "Require command passed, all variables present!");
         }
     }
 }

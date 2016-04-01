@@ -92,83 +92,83 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
         
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string count = entry.GetArgument(0);
+            string count = entry.GetArgument(queue, 0);
             if (count == "\0CALLBACK")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
-                RepeatCommandData dat = (RepeatCommandData)cse.Entries[entry.BlockStart - 1].Data;
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                RepeatCommandData dat = (RepeatCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
                 dat.Index++;
-                entry.Queue.SetVariable("repeat_index", new IntegerTag(dat.Index));
-                entry.Queue.SetVariable("repeat_total", new IntegerTag(dat.Total));
+                queue.SetVariable("repeat_index", new IntegerTag(dat.Index));
+                queue.SetVariable("repeat_total", new IntegerTag(dat.Total));
                 if (dat.Index <= dat.Total)
                 {
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Repeating...: " + dat.Index + "/" + dat.Total);
+                        entry.Good(queue, "Repeating...: " + dat.Index + "/" + dat.Total);
                     }
                     cse.Index = entry.BlockStart;
                     return;
                 }
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Repeat stopping.");
+                    entry.Good(queue, "Repeat stopping.");
                 }
             }
             else if (count.ToLowerFast() == "stop")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int i = 0; i < cse.Entries.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is RepeatCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is RepeatCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Stopping a repeat loop.");
+                            entry.Good(queue, "Stopping a repeat loop.");
                         }
                         cse.Index = i + 2;
                         return;
                     }
                 }
-                entry.Error("Cannot stop repeat: not in one!");
+                queue.HandleError(entry, "Cannot stop repeat: not in one!");
             }
             else if (count.ToLowerFast() == "next")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int i = cse.Index - 1; i > 0; i--)
                 {
-                    if (entry.Queue.GetCommand(i).Command is RepeatCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is RepeatCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Jumping forward in a repeat loop.");
+                            entry.Good(queue, "Jumping forward in a repeat loop.");
                         }
                         cse.Index = i + 1;
                         return;
                     }
                 }
-                entry.Error("Cannot advance repeat: not in one!");
+                queue.HandleError(entry, "Cannot advance repeat: not in one!");
             }
             else
             {
                 int target = (int)IntegerTag.TryFor(count).Internal; // TODO: Maybe a null check?
                 if (target <= 0)
                 {
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Not repeating.");
+                        entry.Good(queue, "Not repeating.");
                     }
-                    CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                    CommandStackEntry cse = queue.CommandStack.Peek();
                     cse.Index = entry.BlockEnd + 1;
                     return;
                 }
-                entry.Data = new RepeatCommandData() { Index = 1, Total = target };
-                entry.Queue.SetVariable("repeat_index", new IntegerTag(1));
-                entry.Queue.SetVariable("repeat_total", new IntegerTag(target));
-                if (entry.ShouldShowGood())
+                entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
+                queue.SetVariable("repeat_index", new IntegerTag(1));
+                queue.SetVariable("repeat_total", new IntegerTag(target));
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                    entry.Good(queue, "Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                 }
             }
         }

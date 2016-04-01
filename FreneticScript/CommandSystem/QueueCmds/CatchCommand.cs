@@ -23,20 +23,21 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Completed catch successfully.");
+                    entry.Good(queue, "Completed catch successfully.");
                 }
                 return;
             }
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Passing catch without executing.");
+                entry.Good(queue, "Passing catch without executing.");
             }
         }
     }

@@ -33,13 +33,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            TagParseMode modechoice = (TagParseMode)Enum.Parse(typeof(TagParseMode), entry.GetArgument(0).ToUpper());
-            entry.Queue.ParseTags = modechoice;
-            if (entry.ShouldShowGood())
+            TagParseMode modechoice = (TagParseMode)Enum.Parse(typeof(TagParseMode), entry.GetArgument(queue, 0).ToUpper());
+            queue.ParseTags = modechoice;
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Queue parsing now <{text_color.emphasis}>" + modechoice + "<{text_color.base}>.");
+                entry.Good(queue, "Queue parsing now <{text_color.emphasis}>" + modechoice + "<{text_color.base}>.");
             }
         }
     }

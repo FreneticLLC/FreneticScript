@@ -20,31 +20,31 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ObjectTypes = new List<Func<TagHandlers.TemplateObject, TagHandlers.TemplateObject>>();
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (!(entry.Data is IfCommandData))
+            if (!(entry.GetData(queue) is IfCommandData))
             {
-                entry.Error("ELSE invalid, IF did not preceed!");
+                queue.HandleError(entry, "ELSE invalid, IF did not preceed!");
                 return;
             }
-            IfCommandData data = (IfCommandData)entry.Data;
+            IfCommandData data = (IfCommandData)entry.GetData(queue);
             if (data.Result == 1)
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Else continuing, previous IF passed.");
+                    entry.Good(queue, "Else continuing, previous IF passed.");
                 }
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 cse.Index = entry.BlockEnd + 1;
                 return;
             }
             bool success = true;
             if (entry.Arguments.Count >= 1)
             {
-                string ifbit = entry.GetArgument(0);
+                string ifbit = entry.GetArgument(queue, 0);
                 if (ifbit.ToLowerFast() != "if")
                 {
-                    ShowUsage(entry);
+                    ShowUsage(queue, entry);
                     return;
                 }
                 else
@@ -52,26 +52,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     List<string> parsedargs = new List<string>(entry.Arguments.Count);
                     for (int i = 1; i < entry.Arguments.Count; i++)
                     {
-                        parsedargs.Add(entry.GetArgument(i)); // TODO: Don't pre-parse. Parse in TryIf.
+                        parsedargs.Add(entry.GetArgument(queue, i)); // TODO: Don't pre-parse. Parse in TryIf.
                     }
                     success = IfCommand.TryIf(parsedargs);
                 }
             }
             if (success)
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Else [if] is true, executing...");
+                    entry.Good(queue, "Else [if] is true, executing...");
                 }
                 data.Result = 1;
             }
             else
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Else continuing, ELSE-IF is false!");
+                    entry.Good(queue, "Else continuing, ELSE-IF is false!");
                 }
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                cse.Index = entry.BlockEnd + 1;
             }
         }

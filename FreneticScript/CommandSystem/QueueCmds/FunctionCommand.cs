@@ -84,63 +84,63 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string type = entry.GetArgument(0);
+            string type = entry.GetArgument(queue, 0);
             if (type == "\0CALLBACK")
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Completed function call.");
+                    entry.Good(queue, "Completed function call.");
                 }
                 return;
             }
             type = type.ToLowerFast();
             if (type == "stop")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CurrentEntry;
                 for (int i = 0; i < cse.Entries.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is FunctionCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is FunctionCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Stopping a function call.");
+                            entry.Good(queue, "Stopping a function call.");
                         }
                         cse.Index = i + 2;
                         return;
                     }
                 }
-                entry.Error("Cannot stop function: not in one!");
+                queue.HandleError(entry, "Cannot stop function: not in one!");
             }
             else if (type == "undefine")
             {
                 if (entry.Arguments.Count < 2)
                 {
-                    ShowUsage(entry);
+                    ShowUsage(queue, entry);
                     return;
                 }
-                string name = entry.GetArgument(1).ToLowerFast();
-                if (!entry.Queue.CommandSystem.Functions.ContainsKey(name))
+                string name = entry.GetArgument(queue, 1).ToLowerFast();
+                if (!queue.CommandSystem.Functions.ContainsKey(name))
                 {
-                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerFast() == "quiet_fail")
+                    if (entry.Arguments.Count > 2 && entry.GetArgument(queue, 2).ToLowerFast() == "quiet_fail")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' doesn't exist!");
+                            entry.Good(queue, "Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' doesn't exist!");
                         }
                     }
                     else
                     {
-                        entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' doesn't exist!");
+                        queue.HandleError(entry, "Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' doesn't exist!");
                     }
                 }
                 else
                 {
-                    entry.Queue.CommandSystem.Functions.Remove(name);
-                    if (entry.ShouldShowGood())
+                    queue.CommandSystem.Functions.Remove(name);
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' undefined.");
+                        entry.Good(queue, "Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' undefined.");
                     }
                 }
             }
@@ -148,44 +148,43 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.Arguments.Count < 2)
                 {
-                    ShowUsage(entry);
+                    ShowUsage(queue, entry);
                     return;
                 }
-                string name = entry.GetArgument(1).ToLowerFast();
+                string name = entry.GetArgument(queue, 1).ToLowerFast();
                 if (entry.InnerCommandBlock == null)
                 {
-                    entry.Error("Function invalid: No block follows!");
+                    queue.HandleError(entry, "Function invalid: No block follows!");
                     return;
                 }
-                if (entry.Queue.CommandSystem.Functions.ContainsKey(name))
+                if (queue.CommandSystem.Functions.ContainsKey(name))
                 {
-                    if (entry.Arguments.Count > 2 && entry.GetArgument(2).ToLowerFast() == "quiet_fail")
+                    if (entry.Arguments.Count > 2 && entry.GetArgument(queue, 2).ToLowerFast() == "quiet_fail")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                            entry.Good(queue, "Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                         }
                     }
                     else
                     {
-                        entry.Error("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        queue.HandleError(entry, "Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
                     }
                 }
                 else
                 {
                     // NOTE: Always compile a function!
-                    entry.Queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart, true));
-                    if (entry.ShouldShowGood())
+                    queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart, true));
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
+                        entry.Good(queue, "Function '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' defined.");
                     }
                 }
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
-                cse.Index = entry.BlockEnd + 2;
+                queue.CurrentEntry.Index = entry.BlockEnd + 2;
             }
             else
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
             }
         }
     }

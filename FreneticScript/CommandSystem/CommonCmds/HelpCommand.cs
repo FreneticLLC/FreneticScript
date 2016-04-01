@@ -25,16 +25,16 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string cmd = entry.GetArgument(0);
+            string cmd = entry.GetArgument(queue, 0);
             AbstractCommand acmd;
             if (!entry.Command.CommandSystem.RegisteredCommands.TryGetValue(cmd, out acmd))
             {
-                entry.Error("Unrecognized command name!");
+                queue.HandleError(entry, "Unrecognized command name!");
                 return;
             }
-            acmd.ShowUsage(entry, false);
+            acmd.ShowUsage(queue, entry, false);
         }
     }
 }

@@ -29,14 +29,14 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            TemplateObject determ = entry.GetArgumentObject(0);
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            TemplateObject determ = entry.GetArgumentObject(queue, 0);
+            CommandStackEntry cse = queue.CommandStack.Peek();
             cse.Determinations.Add(determ);
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("<{color.info}>Determination of the queue set to '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.info}>'.");
+                entry.Good(queue, "<{color.info}>Determination of the queue set to '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.info}>'.");
             }
         }
     }

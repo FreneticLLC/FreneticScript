@@ -18,6 +18,11 @@ namespace FreneticScript.CommandSystem
         /// The current stack of all command execution data.
         /// </summary>
         public Stack<CommandStackEntry> CommandStack = new Stack<CommandStackEntry>();
+
+        /// <summary>
+        /// The current stack entry being used.
+        /// </summary>
+        public CommandStackEntry CurrentEntry;
         
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
@@ -57,17 +62,19 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Constructs a new CommandQueue - generally kept to the FreneticScript internals.
-        /// TODO: IList _commands -> ListQueue?
         /// </summary>
         public CommandQueue(CommandScript _script, IList<CommandEntry> _commands, Commands _system)
         {
             Script = _script;
             CommandSystem = _system;
-            PushToStack(_commands, DebugMode.FULL, new Dictionary<string, TemplateObject>());
+            if (_commands != null)
+            {
+                PushToStack(_commands, DebugMode.FULL, new Dictionary<string, TemplateObject>());
+            }
         }
-
+        
         /// <summary>
-        /// Pushes a list of already-calculated commands to the command stack.
+        /// Pushes a list of semi-calculated commands to the command stack.
         /// </summary>
         /// <param name="_commands">The commands to push.</param>
         /// <param name="mode">What debug mode to use.</param>
@@ -77,15 +84,15 @@ namespace FreneticScript.CommandSystem
             CommandEntry[] cmds = new CommandEntry[_commands.Count];
             for (int i = 0; i < _commands.Count; i++)
             {
-                cmds[i] = _commands[i].Duplicate(); // TODO: Rather than duplicating the entries, store an array of data holders in the Command-Stack-Entries?
-                cmds[i].Queue = this;
-                cmds[i].Output = CommandSystem.Output;
+                cmds[i] = _commands[i];
+                cmds[i].OwnIndex = i;
             }
             CommandStackEntry cse = new CommandStackEntry();
             cse.Index = 0;
             cse.Entries = cmds;
             cse.Debug = mode;
             cse.Variables = vars;
+            cse.EntryData = new AbstractCommandEntryData[cmds.Length];
             CommandStack.Push(cse);
         }
 
@@ -132,7 +139,8 @@ namespace FreneticScript.CommandSystem
             }
             while (CommandStack.Count > 0)
             {
-                if (!CommandStack.Peek().Run(this))
+                CurrentEntry = CommandStack.Peek();
+                if (!CurrentEntry.Run(this))
                 {
                     break;
                 }
@@ -153,7 +161,7 @@ namespace FreneticScript.CommandSystem
         /// Whether this Queue is waiting on the last command.
         /// </summary>
         public CommandEntry WaitingOn = null;
-        
+
         /// <summary>
         /// Handles an error as appropriate to the situation, in the current queue, from the current command.
         /// </summary>
@@ -161,51 +169,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
         {
-            StringBuilder stacktrace = new StringBuilder();
-            stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
-                + ": (" + entry.Name + ")\n");
-            WaitingOn = null;
-            CommandStackEntry cse = CommandStack.Peek();
-            DebugMode dbmode = cse.Debug;
-            while (cse != null)
-            {
-                for (int i = cse.Index; i < cse.Entries.Length; i++)
-                {
-                    if (GetCommand(i).Command is TryCommand &&
-                        GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
-                    {
-                        entry.Good("Force-exiting try block.");
-                        SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
-                        cse.Index = i;
-                        return;
-                    }
-                }
-                cse.Index = cse.Entries.Length + 1;
-                CommandStack.Pop();
-                if (CommandStack.Count > 0)
-                {
-                    cse = CommandStack.Peek();
-                    if (cse.Index <= cse.Entries.Length)
-                    {
-                        stacktrace.Append("    in script '" + cse.Entries[cse.Index - 1].ScriptName + "' at line " + (cse.Entries[cse.Index - 1].ScriptLine + 1)
-                            + ": (" + cse.Entries[cse.Index - 1].Name + ")\n");
-                    }
-                }
-                else
-                {
-                    cse = null;
-                    break;
-                }
-            }
-            message = stacktrace.ToString().Substring(0, stacktrace.Length - 1);
-            if (dbmode <= DebugMode.MINIMAL)
-            {
-                entry.Output.Bad(message, DebugMode.MINIMAL);
-                if (Outputsystem != null)
-                {
-                    Outputsystem.Invoke(message, MessageType.BAD);
-                }
-            }
+            CurrentEntry.HandleError(this, entry, message);
         }
 
         /// <summary>

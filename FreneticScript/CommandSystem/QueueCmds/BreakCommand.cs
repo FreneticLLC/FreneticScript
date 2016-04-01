@@ -63,12 +63,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
         
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             int count = 1;
             if (entry.Arguments.Count > 0)
             {
-                IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(0));
+                IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(queue, 0));
                 if (inter != null)
                 {
                     count = (int)inter.Internal;
@@ -76,12 +76,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (count <= 0)
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
                 return;
             }
             for (int i = 0; i < count; i++)
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int ind = cse.Index; ind < cse.Entries.Length; ind++)
                 {
                     CommandEntry tentry = cse.Entries[ind];
@@ -91,19 +91,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         goto completed;
                     }
                 }
-                if (entry.Queue.CommandStack.Count > 1)
+                if (queue.CommandStack.Count > 1)
                 {
-                    entry.Queue.CommandStack.Pop();
+                    queue.CommandStack.Pop();
                 }
                 else
                 {
-                    entry.Error("Not in that many blocks!");
+                    queue.HandleError(entry, "Not in that many blocks!");
                     return;
                 }
                 completed:
                 continue;
             }
-            entry.Good("Broke free successfully.");
+            entry.Good(queue, "Broke free successfully.");
         }
     }
 }

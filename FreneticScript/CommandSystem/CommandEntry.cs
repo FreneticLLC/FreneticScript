@@ -153,6 +153,11 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// The index of this entry in its block.
+        /// </summary>
+        public int OwnIndex;
+
+        /// <summary>
         /// The original command input.
         /// </summary>
         public string CommandLine;
@@ -191,7 +196,7 @@ namespace FreneticScript.CommandSystem
         /// The line number in the creating script.
         /// </summary>
         public int ScriptLine;
-
+        
         /// <summary>
         /// Full constructor, recommended.
         /// </summary>
@@ -273,22 +278,7 @@ namespace FreneticScript.CommandSystem
         /// The arguments input by the user.
         /// </summary>
         public List<Argument> Arguments;
-
-        /// <summary>
-        /// The command queue this command is running inside.
-        /// </summary>
-        public CommandQueue Queue = null;
-
-        /// <summary>
-        /// The object to use for any console / debug output.
-        /// </summary>
-        public Outputter Output = null;
-
-        /// <summary>
-        /// An object set by the command, if any.
-        /// </summary>
-        public AbstractCommandEntryData Data;
-
+        
         /// <summary>
         /// What marker was used. 0 = none, 1 = +, 2 = -, 3 = !
         /// </summary>
@@ -297,15 +287,16 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Gets a named argument with a specified name, handling any tags.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="name">The argument name.</param>
         /// <returns>The parsed argument.</returns>
-        public TemplateObject GetNamedArgumentObject(string name)
+        public TemplateObject GetNamedArgumentObject(CommandQueue queue, string name)
         {
             Argument arg;
             if (NamedArguments.TryGetValue(name, out arg))
             {
-                CommandStackEntry cse = Queue.CommandStack.Peek();
-                return arg.Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, Error);
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                return arg.Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(this, o));
             }
             return null;
         }
@@ -313,18 +304,19 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Gets an argument at a specified place, handling any tags.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="place">The argument place number.</param>
         /// <returns>The parsed argument.</returns>
-        public TemplateObject GetArgumentObject(int place)
+        public TemplateObject GetArgumentObject(CommandQueue queue, int place)
         {
             if (place >= Arguments.Count || place < 0)
             {
                 throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
             }
-            if (Queue.ParseTags != TagParseMode.OFF)
+            if (queue.ParseTags != TagParseMode.OFF)
             {
-                CommandStackEntry cse = Queue.CommandStack.Peek();
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, Error);
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(this, o));
             }
             else
             {
@@ -335,18 +327,19 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Gets an argument at a specified place, handling any tags - returning a string.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="place">The argument place number.</param>
         /// <returns>The parsed argument as a string.</returns>
-        public string GetArgument(int place)
+        public string GetArgument(CommandQueue queue, int place)
         {
             if (place >= Arguments.Count || place < 0)
             {
                 throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
             }
-            if (Queue.ParseTags != TagParseMode.OFF)
+            if (queue.ParseTags != TagParseMode.OFF)
             {
-                CommandStackEntry cse = Queue.CommandStack.Peek();
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, Error).ToString();
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(this, o)).ToString();
             }
             else
             {
@@ -357,14 +350,15 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Gets all arguments piled together into a string.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="index">The index to start at.</param>
         /// <returns>The combined string.</returns>
-        public string AllArguments(int index = 0)
+        public string AllArguments(CommandQueue queue, int index = 0)
         {
             StringBuilder result = new StringBuilder(CommandLine.Length);
             for (int i = index; i < Arguments.Count; i++)
             {
-                result.Append(GetArgument(i));
+                result.Append(GetArgument(queue, i));
                 if (i + 1 < Arguments.Count)
                 {
                     result.Append(" ");
@@ -395,71 +389,84 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Used to output requested information.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="text">The text to output, with tags included.</param>
-        public void Info(string text)
+        public void Info(CommandQueue queue, string text)
         {
-            Output.Good(text, DebugMode.MINIMAL);
-            if (Queue.Outputsystem != null)
+            queue.CommandSystem.Output.Good(text, DebugMode.MINIMAL);
+            if (queue.Outputsystem != null)
             {
-                Queue.Outputsystem.Invoke(text, MessageType.INFO);
+                queue.Outputsystem.Invoke(text, MessageType.INFO);
             }
         }
 
         /// <summary>
         /// Used to output a success message.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="text">The text to output, with tags included.</param>
-        public void Good(string text)
+        public void Good(CommandQueue queue, string text)
         {
-            if (Queue.CommandStack.Peek().Debug == DebugMode.FULL)
+            if (queue.CommandStack.Peek().Debug == DebugMode.FULL)
             {
-                Output.Good(text, DebugMode.MINIMAL);
-                if (Queue.Outputsystem != null)
+                queue.CommandSystem.Output.Good(text, DebugMode.MINIMAL);
+                if (queue.Outputsystem != null)
                 {
-                    Queue.Outputsystem.Invoke(text, MessageType.GOOD);
+                    queue.Outputsystem.Invoke(text, MessageType.GOOD);
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the data associated with this entry in the queue.
+        /// </summary>
+        /// <param name="queue">The queue holding the data.</param>
+        /// <param name="x">The data to set to.</param>
+        /// <returns>The entry data.</returns>
+        public void SetData(CommandQueue queue, AbstractCommandEntryData x)
+        {
+            queue.CurrentEntry.EntryData[OwnIndex] = x;
+        }
+
+        /// <summary>
+        /// Gets the data associated with this entry in the queue.
+        /// </summary>
+        /// <param name="queue">The queue holding the data.</param>
+        /// <returns>The entry data.</returns>
+        public AbstractCommandEntryData GetData(CommandQueue queue)
+        {
+            return queue.CurrentEntry.EntryData[OwnIndex];
         }
 
         /// <summary>
         /// Returns whether commands should output 'good' results.
         /// </summary>
         /// <returns>Whether commands should output 'good' results.</returns>
-        public bool ShouldShowGood()
+        public bool ShouldShowGood(CommandQueue queue)
         {
-            return Queue.CommandStack.Peek().Debug == DebugMode.FULL;
+            return queue.CommandStack.Peek().Debug == DebugMode.FULL;
         }
 
         /// <summary>
         /// Used to output a failure message. This is considered a 'warning' and will not induce an error.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="text">The text to output, with tags included.</param>
-        public void Bad(string text)
+        public void Bad(CommandQueue queue, string text)
         {
-            if (Queue.CommandStack.Peek().Debug <= DebugMode.MINIMAL)
+            if (queue.CommandStack.Peek().Debug <= DebugMode.MINIMAL)
             {
                 text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + text;
-                Output.Bad(text, DebugMode.MINIMAL);
-                if (Queue.Outputsystem != null)
+                queue.CommandSystem.Output.Bad(text, DebugMode.MINIMAL);
+                if (queue.Outputsystem != null)
                 {
-                    Queue.Outputsystem.Invoke(text, MessageType.BAD);
+                    queue.Outputsystem.Invoke(text, MessageType.BAD);
                 }
             }
         }
 
         /// <summary>
-        /// Used to indicate an error has occured, and have the system react accordingly.
-        /// It is recommended you "return;" immediately after invoking this - this is not needed, as an exception is thrown, but instead used to keep code clear that the method stops there.
-        /// </summary>
-        /// <param name="EMsg">The error message.</param>
-        public void Error(string EMsg)
-        {
-            Queue.HandleError(this, EMsg);
-            throw new ErrorInducedException();
-        }
-
-        /// <summary>
-        /// Returns a duplicate of this command entry.
+        /// Perfectly duplicates the command entry.
         /// </summary>
         /// <returns>The duplicate entry.</returns>
         public CommandEntry Duplicate()

@@ -51,26 +51,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string fname = entry.GetArgument(0);
+            string fname = entry.GetArgument(queue, 0);
             fname = fname.ToLowerFast();
-            CommandScript script = entry.Queue.CommandSystem.GetFunction(fname);
+            CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {
-                entry.Error("Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
+                queue.HandleError(entry, "Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
                 return;
             }
-            if (entry.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                entry.Good(queue, "Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
             foreach (string var in entry.NamedArguments.Keys)
             {
-                vars[var] = entry.GetNamedArgumentObject(var);
+                vars[var] = entry.GetNamedArgumentObject(queue, var);
             }
-            entry.Queue.PushToStack(script.Commands, DebugMode.MINIMAL, vars);
+            queue.PushToStack(script.Commands, DebugMode.MINIMAL, vars);
         }
     }
 }

@@ -28,7 +28,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Delays the contained block of commands for the input amount of time.";
             IsFlow = true;
             Asyncable = true;
-            Waitable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
@@ -44,7 +43,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {
@@ -52,20 +51,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (entry.InnerCommandBlock == null)
             {
-                entry.Error("No commands follow!");
+                queue.HandleError(entry, "No commands follow!");
                 return;
             }
             // TODO: Don't regenerate constantly!
             CommandScript script = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart);
-            CommandQueue queue = script.ToQueue(entry.Command.CommandSystem);
-            queue.CommandStack.Peek().Debug = entry.Queue.CommandStack.Peek().Debug;
-            queue.Outputsystem = entry.Queue.Outputsystem;
-            queue.Execute();
-            if (entry.WaitFor && entry.Queue.WaitingOn == entry)
-            {
-                entry.Queue.WaitingOn = null;
-            }
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            CommandQueue nqueue = script.ToQueue(entry.Command.CommandSystem);
+            nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;
+            nqueue.Outputsystem = queue.Outputsystem;
+            nqueue.Execute();
+            CommandStackEntry cse = queue.CommandStack.Peek();
             cse.Index = entry.BlockEnd + 2;
         }
     }

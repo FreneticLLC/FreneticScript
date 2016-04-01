@@ -287,7 +287,7 @@ namespace FreneticScript.CommandSystem
                 Commands = new List<CommandEntry>(_commands);
                 for (int i = 0; i < Commands.Count; i++)
                 {
-                    Commands[i] = Commands[i].Duplicate();
+                    Commands[i] = _commands[i].Duplicate();
                     Commands[i].BlockStart -= adj;
                     Commands[i].BlockEnd -= adj;
                 }

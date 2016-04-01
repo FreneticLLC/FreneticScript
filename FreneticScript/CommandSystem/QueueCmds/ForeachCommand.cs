@@ -98,82 +98,82 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string type = entry.GetArgument(0);
+            string type = entry.GetArgument(queue, 0);
             if (type == "\0CALLBACK")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
-                ForeachCommandData dat = (ForeachCommandData)cse.Entries[entry.BlockStart - 1].Data;
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                ForeachCommandData dat = (ForeachCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
                 dat.Index++;
                 if (dat.Index <= dat.List.Count)
                 {
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Foreach looping...: " + dat.Index + "/" + dat.List.Count);
+                        entry.Good(queue, "Foreach looping...: " + dat.Index + "/" + dat.List.Count);
                     }
                     cse.Index = entry.BlockStart;
                     return;
                 }
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Foreach stopping.");
+                    entry.Good(queue, "Foreach stopping.");
                 }
             }
             else if (type.ToLowerFast() == "stop")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int i = 0; i < cse.Entries.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is ForeachCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is ForeachCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Stopping a foreach loop.");
+                            entry.Good(queue, "Stopping a foreach loop.");
                         }
                         cse.Index = i + 2;
                         return;
                     }
                 }
-                entry.Error("Cannot stop foreach: not in one!");
+                queue.HandleError(entry, "Cannot stop foreach: not in one!");
             }
             else if (type.ToLowerFast() == "next")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int i = cse.Index - 1; i > 0; i--)
                 {
-                    if (entry.Queue.GetCommand(i).Command is ForeachCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is ForeachCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Jumping forward in a foreach loop.");
+                            entry.Good(queue, "Jumping forward in a foreach loop.");
                         }
                         cse.Index = i + 1;
                         return;
                     }
                 }
-                entry.Error("Cannot advance foreach: not in one!");
+                queue.HandleError(entry, "Cannot advance foreach: not in one!");
             }
             else if (type.ToLowerFast() == "start" && entry.Arguments.Count > 1)
             {
-                ListTag list = ListTag.For(entry.GetArgument(1));
+                ListTag list = ListTag.For(entry.GetArgument(queue, 1));
                 int target = list.ListEntries.Count;
                 if (target <= 0)
                 {
-                    entry.Good("Not looping.");
-                    CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                    entry.Good(queue, "Not looping.");
+                    CommandStackEntry cse = queue.CommandStack.Peek();
                     cse.Index = entry.BlockEnd + 2;
                     return;
                 }
-                entry.Data = new ForeachCommandData() { Index = 1, List = list.ListEntries };
-                if (entry.ShouldShowGood())
+                entry.SetData(queue, new ForeachCommandData() { Index = 1, List = list.ListEntries });
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                    entry.Good(queue, "Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
                 }
             }
             else
             {
-                ShowUsage(entry);
+                ShowUsage(queue, entry);
             }
         }
     }

@@ -49,14 +49,14 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string target = entry.GetArgument(0);
-            TemplateObject newvalue = entry.GetArgumentObject(1);
-            entry.Queue.SetVariable(target, newvalue);
-            if (entry.ShouldShowGood())
+            string target = entry.GetArgument(queue, 0);
+            TemplateObject newvalue = entry.GetArgumentObject(queue, 1);
+            queue.SetVariable(target, newvalue);
+            if (entry.ShouldShowGood(queue))
             {
-                entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) +
+                entry.Good(queue, "Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) +
                     "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue.ToString()) + "<{text_color.base}>'.");
             }
         }

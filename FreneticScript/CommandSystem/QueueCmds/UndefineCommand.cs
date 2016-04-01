@@ -28,20 +28,20 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string target = entry.GetArgument(0);
-            CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+            string target = entry.GetArgument(queue, 0);
+            CommandStackEntry cse = queue.CommandStack.Peek();
             if (cse.Variables.Remove(target.ToLowerFast()))
             {
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>' removed'.");
+                    entry.Good(queue, "Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>' removed'.");
                 }
             }
             else
             {
-                entry.Error("Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>'.");
+                queue.HandleError(entry, "Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>'.");
             }
         }
     }

@@ -133,25 +133,27 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public abstract void Execute(CommandEntry entry);
+        public abstract void Execute(CommandQueue queue, CommandEntry entry);
 
         /// <summary>
         /// Displays the usage information on a command to the console.
         /// </summary>
+        /// <param name="queue">The associated queue.</param>
         /// <param name="entry">The CommandEntry data to show usage help to.</param>
         /// <param name="doError">Whether to end with an error.</param>
-        public void ShowUsage(CommandEntry entry, bool doError = true)
+        public void ShowUsage(CommandQueue queue, CommandEntry entry, bool doError = true)
         {
-            entry.Bad("<{text_color.emphasis}>" + TagParser.Escape(Name) + "<{text_color.base}>: " + TagParser.Escape(Description));
-            entry.Bad("<{text_color.cmdhelp}>Usage: /" + TagParser.Escape(Name) + " " + TagParser.Escape(Arguments));
+            entry.Bad(queue, "<{text_color.emphasis}>" + TagParser.Escape(Name) + "<{text_color.base}>: " + TagParser.Escape(Description));
+            entry.Bad(queue, "<{text_color.cmdhelp}>Usage: /" + TagParser.Escape(Name) + " " + TagParser.Escape(Arguments));
             if (IsDebug)
             {
-                entry.Bad("Note: This command is intended for debugging purposes.");
+                entry.Bad(queue, "Note: This command is intended for debugging purposes.");
             }
             if (doError)
             {
-                entry.Error("Invalid arguments or not enough arguments!");
+                queue.HandleError(entry, "Invalid arguments or not enough arguments!");
             }
         }
     }

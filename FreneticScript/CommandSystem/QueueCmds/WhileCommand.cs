@@ -37,67 +37,67 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string count = entry.GetArgument(0);
+            string count = entry.GetArgument(queue, 0);
             if (count == "\0CALLBACK")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
-                WhileCommandData dat = (WhileCommandData)cse.Entries[entry.BlockStart - 1].Data;
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                WhileCommandData dat = (WhileCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
                 dat.Index++;
                 List<string> comp = new List<string>();
                 for (int i = 0; i < dat.ComparisonArgs.Count; i++)
                 {
                     // TODO: Preparse arguments less!
-                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, cse.Variables, cse.Debug, entry.Error).ToString());
+                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, cse.Variables, cse.Debug, (o) => queue.HandleError(entry, o)).ToString());
                 }
                 if (IfCommand.TryIf(comp))
                 {
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("While looping...: " + dat.Index);
+                        entry.Good(queue, "While looping...: " + dat.Index);
                     }
                     cse.Index = entry.BlockStart;
                     return;
                 }
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("While stopping.");
+                    entry.Good(queue, "While stopping.");
                 }
             }
             else if (count.ToLowerFast() == "stop")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int i = 0; i < cse.Entries.Length; i++)
                 {
-                    if (entry.Queue.GetCommand(i).Command is WhileCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is WhileCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Stopping a while loop.");
+                            entry.Good(queue, "Stopping a while loop.");
                         }
                         cse.Index = i + 2;
                         return;
                     }
                 }
-                entry.Error("Cannot stop while: not in one!");
+                queue.HandleError(entry, "Cannot stop while: not in one!");
             }
             else if (count.ToLowerFast() == "next")
             {
-                CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CommandStack.Peek();
                 for (int i = cse.Index - 1; i > 0; i--)
                 {
-                    if (entry.Queue.GetCommand(i).Command is WhileCommand && entry.Queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (queue.GetCommand(i).Command is WhileCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        if (entry.ShouldShowGood())
+                        if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good("Jumping forward in a while loop.");
+                            entry.Good(queue, "Jumping forward in a while loop.");
                         }
                         cse.Index = i + 1;
                         return;
                     }
                 }
-                entry.Error("Cannot while repeat: not in one!");
+                queue.HandleError(entry, "Cannot while repeat: not in one!");
             }
             else
             {
@@ -105,20 +105,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 parsedargs.Add(count);
                 for (int i = 1; i < entry.Arguments.Count; i++)
                 {
-                    parsedargs.Add(entry.GetArgument(i));
+                    parsedargs.Add(entry.GetArgument(queue, i));
                 }
                 bool success = IfCommand.TryIf(parsedargs);
                 if (!success)
                 {
-                    if (entry.ShouldShowGood())
+                    if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good("Not looping.");
+                        entry.Good(queue, "Not looping.");
                     }
-                    CommandStackEntry cse = entry.Queue.CommandStack.Peek();
+                    CommandStackEntry cse = queue.CommandStack.Peek();
                     cse.Index = entry.BlockEnd + 2;
                     return;
                 }
-                entry.Data = new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments };
+                entry.SetData(queue, new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments });
             }
         }
     }

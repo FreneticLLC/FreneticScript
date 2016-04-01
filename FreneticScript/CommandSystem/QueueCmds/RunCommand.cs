@@ -68,10 +68,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Executes the run command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">The command details to be ran.</param>
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string fname = entry.GetArgument(0).ToLowerFast();
+            string fname = entry.GetArgument(queue, 0).ToLowerFast();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs();
             args.ScriptName = fname;
             if (OnScriptRanPreEvent != null)
@@ -80,14 +81,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (args.Cancelled)
             {
-                entry.Bad("Script running cancelled via the ScriptRanPreEvent.");
-                if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                entry.Bad(queue, "Script running cancelled via the ScriptRanPreEvent.");
+                if (entry.WaitFor && queue.WaitingOn == entry)
                 {
-                    entry.Queue.WaitingOn = null;
+                    queue.WaitingOn = null;
                 }
                 return;
             }
-            CommandScript script = entry.Queue.CommandSystem.GetScript(args.ScriptName);
+            CommandScript script = queue.CommandSystem.GetScript(args.ScriptName);
             if (script != null)
             {
                 ScriptRanEventArgs args2 = new ScriptRanEventArgs();
@@ -98,39 +99,39 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (args2.Cancelled)
                 {
-                    entry.Bad("Script running cancelled via the ScriptRanEvent.");
-                    if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                    entry.Bad(queue, "Script running cancelled via the ScriptRanEvent.");
+                    if (entry.WaitFor && queue.WaitingOn == entry)
                     {
-                        entry.Queue.WaitingOn = null;
+                        queue.WaitingOn = null;
                     }
                     return;
                 }
                 if (script == null)
                 {
-                    entry.Bad("Script running nullified via the ScriptRanEvent.");
-                    if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                    entry.Bad(queue, "Script running nullified via the ScriptRanEvent.");
+                    if (entry.WaitFor && queue.WaitingOn == entry)
                     {
-                        entry.Queue.WaitingOn = null;
+                        queue.WaitingOn = null;
                     }
                     return;
                 }
                 script = args2.Script;
-                if (entry.ShouldShowGood())
+                if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good("Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                    entry.Good(queue, "Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
                 }
-                CommandQueue queue;
-                entry.Queue.CommandSystem.ExecuteScript(script, null, out queue);
-                if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                CommandQueue nqueue;
+                queue.CommandSystem.ExecuteScript(script, null, out nqueue);
+                if (entry.WaitFor && queue.WaitingOn == entry)
                 {
-                    if (!queue.Running)
+                    if (!nqueue.Running)
                     {
-                        entry.Queue.WaitingOn = null;
+                        queue.WaitingOn = null;
                     }
                     else
                     {
-                        EntryFinisher fin = new EntryFinisher() { Entry = entry };
-                        queue.Complete += fin.Complete;
+                        EntryFinisher fin = new EntryFinisher() { Entry = entry, Queue = queue };
+                        nqueue.Complete += fin.Complete;
                     }
                 }
                 ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs();
@@ -142,15 +143,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (queue.LastDeterminations != null)
                 {
-                    entry.Queue.SetVariable("run_determinations", new ListTag(queue.LastDeterminations));
+                    queue.SetVariable("run_determinations", new ListTag(queue.LastDeterminations));
                 }
             }
             else
             {
-                entry.Error("Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
-                if (entry.WaitFor && entry.Queue.WaitingOn == entry)
+                queue.HandleError(entry, "Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
+                if (entry.WaitFor && queue.WaitingOn == entry)
                 { 
-                    entry.Queue.WaitingOn = null;
+                    queue.WaitingOn = null;
                 }
             }
         }
@@ -168,10 +169,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public CommandEntry Entry;
 
         /// <summary>
+        /// The relevant queue.
+        /// </summary>
+        public CommandQueue Queue;
+
+        /// <summary>
         /// Add this function as a callback to complete entry.
         /// </summary>
         public void Complete(object sender, CommandQueueEventArgs args)
         {
+            if (Queue.WaitingOn == Entry)
+            {
+                Queue.WaitingOn = null;
+            }
         }
     }
 

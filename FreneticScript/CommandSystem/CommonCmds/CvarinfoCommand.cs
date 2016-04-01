@@ -31,40 +31,41 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// <summary>
         /// Executes the command.
         /// </summary>
+        /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandEntry entry)
+        public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {
-                entry.Info("Listing <{text_color.emphasis}>" + entry.Output.CVarSys.CVars.Count + "<{text_color.base}> CVars...");
-                for (int i = 0; i < entry.Output.CVarSys.CVars.Count; i++)
+                entry.Info(queue, "Listing <{text_color.emphasis}>" + queue.CommandSystem.Output.CVarSys.CVars.Count + "<{text_color.base}> CVars...");
+                for (int i = 0; i < queue.CommandSystem.Output.CVarSys.CVars.Count; i++)
                 {
-                    CVar cvar = entry.Output.CVarSys.CVarList[i];
-                    entry.Info("<{text_color.emphasis}>" + (i + 1).ToString() + "<{text_color.simple}>)<{text_color.emphasis}> " + TagParser.Escape(cvar.Info()));
+                    CVar cvar = queue.CommandSystem.Output.CVarSys.CVarList[i];
+                    entry.Info(queue, "<{text_color.emphasis}>" + (i + 1).ToString() + "<{text_color.simple}>)<{text_color.emphasis}> " + TagParser.Escape(cvar.Info()));
                 }
             }
             else
             {
-                string target = entry.GetArgument(0).ToLowerFast();
+                string target = entry.GetArgument(queue, 0).ToLowerFast();
                 List<CVar> cvars = new List<CVar>();
-                for (int i = 0; i < entry.Output.CVarSys.CVars.Count; i++)
+                for (int i = 0; i < queue.CommandSystem.Output.CVarSys.CVars.Count; i++)
                 {
-                    if (entry.Output.CVarSys.CVarList[i].Name.StartsWith(target))
+                    if (queue.CommandSystem.Output.CVarSys.CVarList[i].Name.StartsWith(target))
                     {
-                        cvars.Add(entry.Output.CVarSys.CVarList[i]);
+                        cvars.Add(queue.CommandSystem.Output.CVarSys.CVarList[i]);
                     }
                 }
                 if (cvars.Count == 0)
                 {
-                    entry.Error("CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist!");
+                    queue.HandleError(entry, "CVar '<{text_color.emphasis}>" + TagParser.Escape(target) + "<{text_color.base}>' does not exist!");
                 }
                 else
                 {
-                    entry.Info("Listing <{text_color.emphasis}>" + cvars.Count + "<{text_color.base}> CVars...");
+                    entry.Info(queue, "Listing <{text_color.emphasis}>" + cvars.Count + "<{text_color.base}> CVars...");
                     for (int i = 0; i < cvars.Count; i++)
                     {
                         CVar cvar = cvars[i];
-                        entry.Info("<{text_color.emphasis}>" + (i + 1).ToString() + "<{text_color.simple}>)<{text_color.emphasis}> " + TagParser.Escape(cvar.Info()));
+                        entry.Info(queue, "<{text_color.emphasis}>" + (i + 1).ToString() + "<{text_color.simple}>)<{text_color.emphasis}> " + TagParser.Escape(cvar.Info()));
                     }
                 }
             }
