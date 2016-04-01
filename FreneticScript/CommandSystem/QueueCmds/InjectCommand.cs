@@ -61,7 +61,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.Good(queue, "Injecting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
             CommandStackEntry cse = queue.CommandStack.Peek();
-            queue.PushToStack(script.Commands, cse.Debug, cse.Variables);
+            CommandStackEntry tcse = script.Created.Duplicate();
+            tcse.Debug = cse.Debug;
+            tcse.Variables = cse.Variables;
+            queue.CommandStack.Push(tcse);
             queue.CommandStack.Peek().Determinations = cse.Determinations;
         }
     }

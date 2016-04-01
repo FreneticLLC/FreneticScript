@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="queue">The queue to run under.</param>
         /// <returns>Whether to continue looping.</returns>
-        public bool Run(CommandQueue queue)
+        public virtual bool Run(CommandQueue queue)
         {
             while (Index < Entries.Length)
             {
@@ -118,7 +118,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="queue">The associated queue.</param>
         /// <param name="entry">The command entry that errored.</param>
         /// <param name="message">The error message.</param>
-        public void HandleError(CommandQueue queue, CommandEntry entry, string message)
+        public virtual void HandleError(CommandQueue queue, CommandEntry entry, string message)
         {
             StringBuilder stacktrace = new StringBuilder();
             stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
@@ -182,5 +182,14 @@ namespace FreneticScript.CommandSystem
         /// What was returned by the determine command for this portion of the stack.
         /// </summary>
         public List<TemplateObject> Determinations = new List<TemplateObject>();
+
+        /// <summary>
+        /// Perfectly duplicates this stack entry.
+        /// </summary>
+        /// <returns>The newly duplicated stack entry.</returns>
+        public CommandStackEntry Duplicate()
+        {
+            return (CommandStackEntry)MemberwiseClone();
+        }
     }
 }

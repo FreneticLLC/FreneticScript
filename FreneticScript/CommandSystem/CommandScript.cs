@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -269,8 +271,8 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// All commands in the script.
         /// </summary>
-        public List<CommandEntry> Commands;
-
+        public CommandStackEntry Created;
+        
         /// <summary>
         /// Constructs a new command script.
         /// </summary>
@@ -281,22 +283,53 @@ namespace FreneticScript.CommandSystem
         public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, bool compile = false)
         {
             Name = _name.ToLowerFast();
-            Commands = _commands;
-            if (adj != 0)
+            List<CommandEntry> Commands = _commands;
+            Commands = new List<CommandEntry>(_commands);
+            for (int i = 0; i < Commands.Count; i++)
             {
-                Commands = new List<CommandEntry>(_commands);
-                for (int i = 0; i < Commands.Count; i++)
-                {
-                    Commands[i] = _commands[i].Duplicate();
-                    Commands[i].BlockStart -= adj;
-                    Commands[i].BlockEnd -= adj;
-                }
+                Commands[i] = _commands[i].Duplicate();
+                Commands[i].BlockStart -= adj;
+                Commands[i].BlockEnd -= adj;
             }
             if (compile)
             {
-
+                Created = new CompiledCommandStackEntry();
+            }
+            else
+            {
+                Created = new CommandStackEntry();
+            }
+            Created.Debug = Debug;
+            Created.Variables = new Dictionary<string, TemplateObject>();
+            Created.Entries = Commands.ToArray();
+            Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
+            Created.Determinations = new List<TemplateObject>();
+            string tname = "__script__" + IDINCR++;
+            AssemblyName asmname = new AssemblyName(tname);
+            asmname.Name = tname;
+            AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.Run); // TODO: RunAndCollect in .NET 4
+            ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
+            if (compile)
+            {
+                CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
+                ccse.EntryCommands = new CompiledCommandRunnable[ccse.Entries.Length];
+                for (int i = 0; i < ccse.Entries.Length; i++)
+                {
+                    TypeBuilder typebuild = modbuild.DefineType(tname + "__" + i, TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
+                    MethodBuilder methodbuild = typebuild.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue) });
+                    CILAdaptationValues values = new CILAdaptationValues();
+                    values.Entry = ccse.Entries[i];
+                    values.Script = this;
+                    values.ILGen = methodbuild.GetILGenerator();
+                    ccse.Entries[i].Command.AdaptToCIL(values);
+                    typebuild.DefineMethodOverride(methodbuild, CompiledCommandRunnable.RunMethod);
+                    Type t = typebuild.CreateType();
+                    ccse.EntryCommands[i] = (CompiledCommandRunnable)Activator.CreateInstance(t);
+                }
             }
         }
+
+        static long IDINCR = 0;
         
         /// <summary>
         /// Creates a new queue for this script.
@@ -305,8 +338,12 @@ namespace FreneticScript.CommandSystem
         /// <returns>The created queue.</returns>
         public CommandQueue ToQueue(Commands system)
         {
-            CommandQueue queue = new CommandQueue(this, Commands, system);
-            queue.CommandStack.Peek().Debug = Debug;
+            CommandQueue queue = new CommandQueue(this, system);
+            if (Created == null)
+            {
+                throw new Exception("Invalid CREATED object in a CommandScript somehow?!");
+            }
+            queue.CommandStack.Push(Created.Duplicate());
             return queue;
         }
 
@@ -326,18 +363,40 @@ namespace FreneticScript.CommandSystem
         public string FullString(string tabulation = "")
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < Commands.Count; i++)
+            for (int i = 0; i < Created.Entries.Length; i++)
             {
-                if (!Commands[i].CommandLine.Contains('\0'))
+                if (!Created.Entries[i].CommandLine.Contains('\0'))
                 {
-                    sb.Append(Commands[i].FullString());
-                    if (Commands[i].InnerCommandBlock != null)
+                    sb.Append(Created.Entries[i].FullString());
+                    if (Created.Entries[i].InnerCommandBlock != null)
                     {
-                        i = Commands[i].BlockEnd;
+                        i = Created.Entries[i].BlockEnd;
                     }
                 }
             }
             return sb.ToString();
         }
+    }
+
+    /// <summary>
+    /// Abstract class for compiled runnables.
+    /// </summary>
+    public abstract class CompiledCommandRunnable
+    {
+        /// <summary>
+        /// Reference to the original entry.
+        /// </summary>
+        public CommandEntry Entry;
+
+        /// <summary>
+        /// This class's "Run(queue)" method.
+        /// </summary>
+        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue) });
+
+        /// <summary>
+        /// Runs the runnable.
+        /// </summary>
+        /// <param name="queue">The queue to run on.</param>
+        public abstract void Run(CommandQueue queue);
     }
 }

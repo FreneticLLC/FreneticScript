@@ -63,39 +63,12 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Constructs a new CommandQueue - generally kept to the FreneticScript internals.
         /// </summary>
-        public CommandQueue(CommandScript _script, IList<CommandEntry> _commands, Commands _system)
+        public CommandQueue(CommandScript _script, Commands _system)
         {
             Script = _script;
             CommandSystem = _system;
-            if (_commands != null)
-            {
-                PushToStack(_commands, DebugMode.FULL, new Dictionary<string, TemplateObject>());
-            }
         }
         
-        /// <summary>
-        /// Pushes a list of semi-calculated commands to the command stack.
-        /// </summary>
-        /// <param name="_commands">The commands to push.</param>
-        /// <param name="mode">What debug mode to use.</param>
-        /// <param name="vars">What variables to use.</param>
-        public void PushToStack(IList<CommandEntry> _commands, DebugMode mode, Dictionary<string, TemplateObject> vars)
-        {
-            CommandEntry[] cmds = new CommandEntry[_commands.Count];
-            for (int i = 0; i < _commands.Count; i++)
-            {
-                cmds[i] = _commands[i];
-                cmds[i].OwnIndex = i;
-            }
-            CommandStackEntry cse = new CommandStackEntry();
-            cse.Index = 0;
-            cse.Entries = cmds;
-            cse.Debug = mode;
-            cse.Variables = vars;
-            cse.EntryData = new AbstractCommandEntryData[cmds.Length];
-            CommandStack.Push(cse);
-        }
-
         /// <summary>
         /// Called when the queue is completed.
         /// </summary>

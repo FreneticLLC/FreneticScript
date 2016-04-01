@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.Arguments;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -120,6 +122,16 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        public virtual void AdaptToCIL(CILAdaptationValues values)
+        {
+            values.CallExecute();
+            values.ILGen.Emit(OpCodes.Ret);
+        }
+
+        /// <summary>
         /// Adjust list of commands that formed by an inner block.
         /// </summary>
         /// <param name="entry">The producing entry.</param>
@@ -155,6 +167,65 @@ namespace FreneticScript.CommandSystem
             {
                 queue.HandleError(entry, "Invalid arguments or not enough arguments!");
             }
+        }
+    }
+
+    /// <summary>
+    /// Holds all data needed for CIL adaptation.
+    /// </summary>
+    public class CILAdaptationValues
+    {
+        /// <summary>
+        /// The entry being compiled.
+        /// </summary>
+        public CommandEntry Entry;
+
+        /// <summary>
+        /// The compiling script.
+        /// </summary>
+        public CommandScript Script;
+
+        /// <summary>
+        /// Represents the field "Entry" in the class CompiledCommandRunnable.
+        /// </summary>
+        public static FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("Entry");
+
+        /// <summary>
+        /// Represents the "Execute(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo ExecuteMethod = typeof(AbstractCommand).GetMethod("Execute", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
+
+        /// <summary>
+        /// The IL code generator.
+        /// </summary>
+        public ILGenerator ILGen;
+
+        /// <summary>
+        /// Load the entry onto the stack.
+        /// </summary>
+        public void LoadEntry()
+        {
+            ILGen.Emit(OpCodes.Ldarg_0);
+            ILGen.Emit(OpCodes.Ldfld, EntryField);
+        }
+
+        /// <summary>
+        /// Load the queue variable onto the stack.
+        /// </summary>
+        public void LoadQueue()
+        {
+            ILGen.Emit(OpCodes.Ldarg_1);
+        }
+
+        /// <summary>
+        /// Call the "Execute(queue, entry)" method with appropriate parameters.
+        /// </summary>
+        public void CallExecute()
+        {
+            LoadQueue();
+            LoadEntry();
+            LoadEntry();
+            ILGen.Emit(OpCodes.Callvirt, ExecuteMethod);
         }
     }
 }

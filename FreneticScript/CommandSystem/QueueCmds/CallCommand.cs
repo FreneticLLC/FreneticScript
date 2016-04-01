@@ -70,7 +70,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 vars[var] = entry.GetNamedArgumentObject(queue, var);
             }
-            queue.PushToStack(script.Commands, DebugMode.MINIMAL, vars);
+            CommandStackEntry cse = script.Created.Duplicate();
+            cse.Variables = vars;
+            cse.Debug = DebugMode.MINIMAL;
+            queue.CommandStack.Push(cse);
         }
     }
 }
