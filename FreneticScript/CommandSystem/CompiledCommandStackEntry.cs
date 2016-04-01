@@ -34,64 +34,46 @@ namespace FreneticScript.CommandSystem
                 {
                     queue.WaitingOn = CurrentCommand;
                 }
-                if (CurrentCommand.Command == queue.CommandSystem.DebugInvalidCommand)
+                try
                 {
-                    // Last try - perhaps a command was registered after the script was loaded.
-                    // TODO: Do we even want this? Command registration should be high-priority auto-run.
-                    AbstractCommand cmd;
-                    if (queue.CommandSystem.RegisteredCommands.TryGetValue(CurrentCommand.Name.ToLowerFast(), out cmd))
-                    {
-                        CurrentCommand.Command = cmd;
-                    }
-                    if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
-                    {
-                        queue.WaitingOn = CurrentCommand;
-                    }
-                    CurrentCommand.Command.Execute(queue, CurrentCommand);
+                    Runnable.Run(queue);
                 }
-                else
+                catch (Exception ex)
                 {
-                    try
+                    if (!(ex is ErrorInducedException))
                     {
-                        Runnable.Run(queue);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (!(ex is ErrorInducedException))
+                        try
                         {
-                            try
+                            queue.HandleError(CurrentCommand, "Internal exception: " + ex.ToString());
+                        }
+                        catch (Exception ex2)
+                        {
+                            string message = ex2.ToString();
+                            if (Debug <= DebugMode.MINIMAL)
                             {
-                                queue.HandleError(CurrentCommand, "Internal exception: " + ex.ToString());
-                            }
-                            catch (Exception ex2)
-                            {
-                                string message = ex2.ToString();
-                                if (Debug <= DebugMode.MINIMAL)
+                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                                if (queue.Outputsystem != null)
                                 {
-                                    queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
-                                    if (queue.Outputsystem != null)
-                                    {
-                                        queue.Outputsystem.Invoke(message, MessageType.BAD);
-                                    }
-                                    Index = Entries.Length + 1;
-                                    queue.CommandStack.Clear();
+                                    queue.Outputsystem.Invoke(message, MessageType.BAD);
                                 }
+                                Index = Entries.Length + 1;
+                                queue.CommandStack.Clear();
                             }
                         }
                     }
                 }
-                if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
-                {
-                    return false;
-                }
-                if (queue.CommandStack.Count == 0)
-                {
-                    return false;
-                }
-                if (queue.CommandStack.Peek() != this)
-                {
-                    return true;
-                }
+            }
+            if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
+            {
+                return false;
+            }
+            if (queue.CommandStack.Count == 0)
+            {
+                return false;
+            }
+            if (queue.CommandStack.Peek() != this)
+            {
+                return true;
             }
             if (queue.CommandStack.Count > 0)
             {
