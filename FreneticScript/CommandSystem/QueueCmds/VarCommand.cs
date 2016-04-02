@@ -13,11 +13,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public VarCommand()
         {
             Name = "var";
-            Arguments = "<variable> <setter> <value>";
+            Arguments = "<variable> '=' <value> ['as' <type>]";
             Description = "Modifies a variable in the current queue.";
             IsFlow = true;
             MinimumArguments = 3;
-            MaximumArguments = 3;
+            MaximumArguments = 5;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
                 (input) =>
@@ -26,11 +26,27 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 },
                 (input) =>
                 {
-                    return new TextTag(input.ToString());
+                    if (input.ToString() == "=")
+                    {
+                        return new TextTag("=");
+                    }
+                    return null;
                 },
                 (input) =>
                 {
                     return input;
+                },
+                (input) =>
+                {
+                    if (input.ToString() == "as")
+                    {
+                        return new TextTag("as");
+                    }
+                    return null;
+                },
+                (input) =>
+                {
+                    return input; // TODO: TagTypeTag?
                 }
             };
         }
@@ -41,37 +57,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             TemplateObject varb = queue.GetVariable(variable);
             string setter = entry.GetArgument(queue, 1);
             TemplateObject value = entry.GetArgumentObject(queue, 2);
-            CommandStackEntry cse = queue.CommandStack.Peek();
-            // TODO: Fix the below
-            TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(entry, o), null);
-            switch (setter)
+            if (entry.Arguments.Count == 5)
             {
-                case "=":
-                    queue.SetVariable(variable, value);
-                    break;
-                case "+=":
-                    double added = NumberTag.For(dat, varb).Internal + NumberTag.For(dat, value).Internal;
-                    queue.SetVariable(variable, new NumberTag(added));
-                    break;
-                case "-=":
-                    double subbed = NumberTag.For(dat, varb).Internal - NumberTag.For(dat, value).Internal;
-                    queue.SetVariable(variable, new NumberTag(subbed));
-                    break;
-                case "/=":
-                    double divd = NumberTag.For(dat, varb).Internal / NumberTag.For(dat, value).Internal;
-                    queue.SetVariable(variable, new NumberTag(divd));
-                    break;
-                case "*=":
-                    double multd = NumberTag.For(dat, varb).Internal + NumberTag.For(dat, value).Internal;
-                    queue.SetVariable(variable, new NumberTag(multd));
-                    break;
-                case ".=":
-                    string combined = varb.ToString() + value.ToString();
-                    queue.SetVariable(variable, new TextTag(combined));
-                    break;
-                default:
-                    queue.HandleError(entry, "Invalid setter!");
+                // TODO: Fix this tagdata nonsense
+                TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, queue.CurrentEntry.Variables, queue.CurrentEntry.Debug, (o) => queue.HandleError(entry, o), null);
+                TagTypeTag type = TagTypeTag.For(dat, entry.GetArgumentObject(queue, 4));
+                TemplateObject obj = type.Internal.TypeGetter(dat, value);
+                if (obj == null)
+                {
+                    queue.HandleError(entry, "Invalid object for specified type!");
                     return;
+                }
+                queue.SetVariable(variable, obj);
+            }
+            else
+            {
+                queue.SetVariable(variable, value);
             }
             if (entry.ShouldShowGood(queue))
             {

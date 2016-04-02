@@ -330,7 +330,14 @@ namespace FreneticScript.CommandSystem
             RegisterEvent(new ScriptRanPreScriptEvent(this));
             RegisterEvent(new ScriptRanScriptEvent(this));
             RegisterEvent(new ScriptRanPostScriptEvent(this));
+        }
 
+        /// <summary>
+        /// Final preparation for the command system, after all data has been registered.
+        /// </summary>
+        public void PostInit()
+        {
+            TagSystem.PostInit();
         }
 
         /// <summary>

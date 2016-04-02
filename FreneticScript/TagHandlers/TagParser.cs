@@ -62,6 +62,11 @@ namespace FreneticScript.TagHandlers
         public Dictionary<string, TemplateTagBase> Handlers = new Dictionary<string, TemplateTagBase>();
 
         /// <summary>
+        /// All tag types currently registered.
+        /// </summary>
+        public Dictionary<string, TagType> Types = new Dictionary<string, TagType>();
+
+        /// <summary>
         /// Registers a handler object for later usage by tags.
         /// </summary>
         /// <param name="handler">The handler object to register.</param>
@@ -71,11 +76,21 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
+        /// Registers a type object for later usage by tags.
+        /// </summary>
+        /// <param name="type">The type object to register.</param>
+        public void Register(TagType type)
+        {
+            Types.Add(type.TypeName, type);
+        }
+
+        /// <summary>
         /// Prepares the tag system.
         /// </summary>
         public void Init(Commands _system)
         {
             CommandSystem = _system;
+            // Bases
             Register(new BinaryTagBase());
             Register(new BooleanTagBase());
             Register(new CVarTagBase());
@@ -85,6 +100,7 @@ namespace FreneticScript.TagHandlers
             Register(new MapTagBase());
             Register(new NumberTagBase());
             Register(new SystemTagBase());
+            Register(new TagTypeBase());
             Register(new TernaryTagBase());
             Register(new TextColorTags());
             Register(new TextTagBase());
@@ -92,7 +108,94 @@ namespace FreneticScript.TagHandlers
             Register(new UnescapeTagBase());
             Register(new UtilTagBase());
             Register(new VarTagBase());
+            // Object types
+            Register(Type_Text = new TagType()
+            {
+                TypeName = "texttag",
+                SubTypeName = null,
+                TypeGetter = (data, obj) =>
+                {
+                    return new TextTag(obj.ToString());
+                },
+                SubHandlers = null
+            });
+            Register(Type_Integer = new TagType()
+            {
+                TypeName = "integertag",
+                SubTypeName = "numbertag",
+                TypeGetter = (data, obj) =>
+                {
+                    return IntegerTag.For(data, obj);
+                },
+                SubHandlers = null
+            });
+            Register(Type_Number = new TagType()
+            {
+                TypeName = "numbertag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return NumberTag.For(data, obj);
+                },
+                SubHandlers = null
+            });
+            Register(Type_TagType = new TagType()
+            {
+                TypeName = "tagtypetag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return TagTypeTag.For(data, obj);
+                },
+                SubHandlers = TagTypeTag.Handlers
+            });
         }
+
+        /// <summary>
+        /// Set up the tag engine after all input has be registered.
+        /// </summary>
+        public void PostInit()
+        {
+            foreach (TagType type in Types.Values)
+            {
+                if (type.SubTypeName == null)
+                {
+                    type.SubType = null;
+                }
+                else
+                {
+                    type.SubType = Types[type.SubTypeName];
+                }
+                Dictionary<string, TagSubHandler> orig = type.SubHandlers;
+                type.SubHandlers = new Dictionary<string, TagSubHandler>();
+                foreach (KeyValuePair<string, TagSubHandler> point in type.SubHandlers)
+                {
+                    TagSubHandler hand = point.Value.Duplicate();
+                    hand.ReturnType = hand.ReturnTypeString == null ? null : Types[hand.ReturnTypeString];
+                    type.SubHandlers.Add(point.Key, hand);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The TextTag type.
+        /// </summary>
+        public TagType Type_Text;
+
+        /// <summary>
+        /// The IntegerTag type.
+        /// </summary>
+        public TagType Type_Integer;
+        
+        /// <summary>
+        /// The NumberTag type.
+        /// </summary>
+        public TagType Type_Number;
+
+        /// <summary>
+        /// The TagTypeTag type.
+        /// </summary>
+        public TagType Type_TagType;
 
         /// <summary>
         /// Splits text into an Argument, for preparsing.
@@ -284,7 +387,7 @@ namespace FreneticScript.TagHandlers
                 {
                     if (mode <= DebugMode.MINIMAL)
                     {
-                        error("Failed to fill tag tag " + Escape(bits.ToString()) + ": nonexistant tag handler!");
+                        error("Failed to fill tag " + Escape(bits.ToString()) + ": nonexistant tag handler!");
                     }
                     return null;
                 }
@@ -295,7 +398,7 @@ namespace FreneticScript.TagHandlers
                 {
                     throw ex;
                 }
-                error("Failed to fill tag tag " + Escape(bits.ToString()) + ": " + ex.ToString());
+                error("Failed to fill tag " + Escape(bits.ToString()) + ": " + ex.ToString());
                 return null;
             }
         }
