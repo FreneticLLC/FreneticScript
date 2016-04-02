@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticScript.CommandSystem.QueueCmds;
 
 namespace FreneticScript.CommandSystem
 {
@@ -109,7 +112,8 @@ namespace FreneticScript.CommandSystem
                 CommandList.Add(commands.Substring(start).Trim());
             }
             bool herr;
-            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr), 0, compile);
+            Dictionary<string, TagType> types = new Dictionary<string, TagType>();
+            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, types, out herr), 0, types, compile);
         }
 
         /// <summary>
@@ -123,8 +127,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="tabs">How far out tabulation should go.</param>
         /// <param name="had_error">Whether there was a compile error.</param>
         /// <param name="istart">The starting index.</param>
+        /// <param name="types">All known variable definite types.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, string tabs, int istart, out bool had_error)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, string tabs, int istart, Dictionary<string, TagType> types, out bool had_error)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
             List<string> Temp = null;
@@ -154,7 +159,7 @@ namespace FreneticScript.CommandSystem
                         if (toret.Count == 0)
                         {
                             bool err;
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, types, out err);
                             if (err)
                             {
                                 had_error = true;
@@ -167,7 +172,7 @@ namespace FreneticScript.CommandSystem
                         {
                             bool err;
                             CommandEntry cent = toret[toret.Count - 1];
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, types, out err);
                             if (err)
                             {
                                 had_error = true;
@@ -204,11 +209,29 @@ namespace FreneticScript.CommandSystem
                 }
                 else
                 {
-                    CommandEntry centry = CommandEntry.FromInput(from[i], system, name, lines[i], tabs);
+                    CommandEntry centry = CommandEntry.FromInput(from[i], system, name, lines[i], tabs, types);
                     if (centry != null)
                     {
                         istart++;
                         toret.Add(centry);
+                        if (centry.Command is VarCommand && centry.Arguments.Count == 5)
+                        {
+                            string argname = centry.Arguments[0].ToString().ToLowerFast();
+                            string argtype = centry.Arguments[4].ToString().ToLowerFast();
+                            if (types.ContainsKey(argname) || !system.TagSystem.Types.ContainsKey(argtype))
+                            {
+                                string fullmsg = "FAILED TO COMPILE SCRIPT '" + TagParser.Escape(name) + "': (line " + toret[i].ScriptLine + "): duplicate or invalid definite variable";
+                                system.Output.Bad(fullmsg, DebugMode.FULL);
+                                had_error = true;
+                                toret.Clear();
+                                toret.Add(CommandEntry.CreateErrorOutput(fullmsg, system, name, tabs));
+                                return toret;
+                            }
+                            types[argname] = system.TagSystem.Types[argtype];
+                            TextArgumentBit tab = new TextArgumentBit(argtype, false);
+                            tab.InputValue = new TagTypeTag(types[argname]);
+                            centry.Arguments[4] = new Argument() { Bits = new List<ArgumentBit>() { tab } };
+                        }
                     }
 
                 }
@@ -279,8 +302,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="_name">The name of the script.</param>
         /// <param name="_commands">All commands in the script.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
+        /// <param name="types">The variable type predefinitions.</param>
         /// <param name="compile">Whether the script should be compiled.</param>
-        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, bool compile = false)
+        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, Dictionary<string, TagType> types = null, bool compile = false)
         {
             Name = _name.ToLowerFast();
             List<CommandEntry> Commands = _commands;
@@ -299,6 +323,7 @@ namespace FreneticScript.CommandSystem
             {
                 Created = new CommandStackEntry();
             }
+            Created.Types = types ?? new Dictionary<string, TagType>();
             Created.Debug = Debug;
             Created.Variables = new Dictionary<string, TemplateObject>();
             Created.Entries = Commands.ToArray();

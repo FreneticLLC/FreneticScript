@@ -25,13 +25,6 @@ namespace FreneticScript.CommandSystem.Arguments
         {
             Bits = bits;
             CommandSystem = system;
-            if (bits.Length > 0)
-            {
-                if (!CommandSystem.TagSystem.Handlers.TryGetValue(bits[0].Key.ToLowerFast(), out Start))
-                {
-                    Start = null;
-                }
-            }
         }
 
         /// <summary>
@@ -54,7 +47,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The parsed final text.</returns>
         public override TemplateObject Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
-            return CommandSystem.TagSystem.ParseTags(this, base_color, vars, mode, error, Start);
+            return CommandSystem.TagSystem.ParseTags(this, base_color, vars, mode, error);
         }
 
         /// <summary>

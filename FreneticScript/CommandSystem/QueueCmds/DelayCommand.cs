@@ -55,7 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return;
             }
             // TODO: Don't regenerate constantly!
-            CommandScript script = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, false);
+            CommandScript script = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, queue.CurrentEntry.Types, false);
             CommandQueue nqueue = script.ToQueue(entry.Command.CommandSystem);
             nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;
             nqueue.Outputsystem = queue.Outputsystem;

@@ -168,11 +168,21 @@ namespace FreneticScript.TagHandlers
                 }
                 Dictionary<string, TagSubHandler> orig = type.SubHandlers;
                 type.SubHandlers = new Dictionary<string, TagSubHandler>();
-                foreach (KeyValuePair<string, TagSubHandler> point in type.SubHandlers)
+                if (orig != null)
                 {
-                    TagSubHandler hand = point.Value.Duplicate();
-                    hand.ReturnType = hand.ReturnTypeString == null ? null : Types[hand.ReturnTypeString];
-                    type.SubHandlers.Add(point.Key, hand);
+                    foreach (KeyValuePair<string, TagSubHandler> point in orig)
+                    {
+                        TagSubHandler hand = point.Value.Duplicate();
+                        if (!Types.ContainsKey(hand.ReturnTypeString))
+                        {
+                            CommandSystem.Output.Bad("Unrecognized type string: " + hand.ReturnTypeString, DebugMode.FULL);
+                        }
+                        else
+                        {
+                            hand.ReturnType = hand.ReturnTypeString == null ? null : Types[hand.ReturnTypeString];
+                            type.SubHandlers.Add(point.Key, hand);
+                        }
+                    }
                 }
             }
         }
@@ -202,8 +212,9 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="input">The original text.</param>
         /// <param name="wasquoted">Whether the argument was input with "quotes".</param>
+        /// <param name="types">What types are predefined.</param>
         /// <returns>The parsed Argument.</returns>
-        public Argument SplitToArgument(string input, bool wasquoted)
+        public Argument SplitToArgument(string input, bool wasquoted, Dictionary<string, TagType> types)
         {
             if (input.Length == 0)
             {
@@ -276,7 +287,7 @@ namespace FreneticScript.TagHandlers
                             if (split[x].Length > 1 && split[x].Contains('[') && split[x][split[x].Length - 1] == ']')
                             {
                                 int index = split[x].IndexOf('[');
-                                bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
+                                bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted, types);
                                 split[x] = split[x].Substring(0, index).ToLowerFast();
                                 if (split[x].Length == 0)
                                 {
@@ -299,7 +310,39 @@ namespace FreneticScript.TagHandlers
                             bits.Add(bit);
                         }
                         TagArgumentBit tab = new TagArgumentBit(CommandSystem, bits.ToArray());
-                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
+                        if (tab.Bits.Length > 0)
+                        {
+                            TemplateTagBase start;
+                            if (CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out start))
+                            {
+                                tab.Start = start;
+                            }
+                            else
+                            {
+                                tab.Start = null;
+                            }
+                            if (start is VarTagBase && tab.Bits.Length > 1)
+                            {
+                                string modif = tab.Bits[0].Variable.ToString().ToString();
+                                TagType type;
+                                if (types.TryGetValue(modif, out type))
+                                {
+                                    for (int x = 1; x < tab.Bits.Length; x++)
+                                    {
+                                        if (type != null)
+                                        {
+                                            TagSubHandler subby;
+                                            if (type.SubHandlers.TryGetValue(tab.Bits[x].Key.ToLowerFast(), out subby))
+                                            {
+                                                tab.Bits[x].Handler = subby;
+                                                type = subby.ReturnType;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false, types);
                         arg.Bits.Add(tab);
                         blockbuilder = new StringBuilder();
                         i++;
@@ -356,21 +399,43 @@ namespace FreneticScript.TagHandlers
         /// <param name="bits">The tag data.</param>
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
-        /// <param name="starter">A preparsed start location.</param>
         /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, TemplateTagBase starter)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
         {
             if (bits.Bits.Length == 0)
             {
                 return new TextTag("");
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback);
-            TemplateTagBase handler = starter;
+            TemplateTagBase handler = bits.Start;
             try
             {
                 if (handler != null || Handlers.TryGetValue(data[0], out handler))
                 {
-                    TemplateObject res = handler.Handle(data) ?? new TextTag("");
+                    TemplateObject res;
+                    if (handler.CanSingle)
+                    {
+                        res = handler.HandleOne(data) ?? new NullTag();
+                        data.Shrink();
+                        while (data.Remaining > 0)
+                        {
+                            TagSubHandler hd = data.InputKeys[data.cInd].Handler;
+                            if (hd == null)
+                            {
+                                res = res.Handle(data);
+                                break;
+                            }
+                            else
+                            {
+                                res = hd.Handle(data, res);
+                            }
+                            data.Shrink();
+                        }
+                    }
+                    else
+                    {
+                        res = handler.Handle(data) ?? new NullTag();
+                    }
                     if (mode <= DebugMode.FULL)
                     {
                         CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
@@ -415,7 +480,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The string with tags parsed.</returns>
         public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, bool wasquoted)
         {
-            return Unescape((SplitToArgument(input, wasquoted).Parse(base_color, vars, mode, error) ?? new TextTag("&{NULL}")).ToString());
+            return Unescape((SplitToArgument(input, wasquoted, null).Parse(base_color, vars, mode, error) ?? new NullTag()).ToString());
         }
     }
 }

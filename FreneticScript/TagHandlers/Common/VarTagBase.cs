@@ -20,16 +20,17 @@ namespace FreneticScript.TagHandlers.Common
         // <--[tagbase]
         // @Base var[<TextTag>]
         // @Group Variables
-        // @ReturnType VariableTag
+        // @ReturnType Dynamic
         // @Returns the specified variable from the queue.
         // <@link explanation Queue Variables>What are queue variables?<@/link>
         // -->
         public VarTagBase()
         {
             Name = "var";
+            CanSingle = true;
         }
 
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
             string modif = data.GetModifier(0).ToLowerFast();
             if (data.Variables != null)
@@ -37,38 +38,16 @@ namespace FreneticScript.TagHandlers.Common
                 TemplateObject value;
                 if (data.Variables.TryGetValue(modif, out value))
                 {
-                    data.Shrink();
-                    if (data.Remaining == 0)
-                    {
-                        return value;
-                    }
-                    // <--[tag]
-                    // @Name VariableTag.exists
-                    // @Group Variables
-                    // @ReturnType BooleanTag
-                    // @Returns whether the specified variable exists.
-                    // Specifically for the tag <@link tag var[<TextTag>]><{var[<TextTag>]}><@/link>.
-                    // -->
-                    if (data[0] == "exists")
-                    {
-                        return new BooleanTag(true).Handle(data.Shrink());
-                    }
-                    else
-                    {
-                        return value.Handle(data);
-                    }
+                    return value;
                 }
             }
-            data.Shrink();
-            if (data.Remaining > 0 && data[0] == "exists")
-            {
-                return new BooleanTag(false).Handle(data.Shrink());
-            }
-            else
-            {
-                data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");
-                return new NullTag().Handle(data);
-            }
+            data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");
+            return new NullTag();
+        }
+
+        public override TemplateObject Handle(TagData data)
+        {
+            return HandleOne(data).Handle(data.Shrink());
         }
     }
 }

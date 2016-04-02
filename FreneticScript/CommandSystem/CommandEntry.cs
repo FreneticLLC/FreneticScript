@@ -20,8 +20,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="script">The name of the creating script.</param>
         /// <param name="line">The line in the creating script.</param>
         /// <param name="tabs">What tabulation to use when outputting this entry.</param>
+        /// <param name="types">What types are predefined.</param>
         /// <returns>The command system.</returns>
-        public static CommandEntry FromInput(string command, Commands system, string script, int line, string tabs)
+        public static CommandEntry FromInput(string command, Commands system, string script, int line, string tabs, Dictionary<string, TagType> types)
         {
             if (command.StartsWith("/"))
             {
@@ -56,7 +57,7 @@ namespace FreneticScript.CommandSystem
                     if (i - start > 0)
                     {
                         string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
-                        args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
+                        args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted, types));
                         start = i + 1;
                         thisArgQuoted = false;
                     }
@@ -69,7 +70,7 @@ namespace FreneticScript.CommandSystem
             if (command.Length - start > 0)
             {
                 string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
-                args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
+                args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted, types));
             }
             if (args.Count == 0)
             {
@@ -147,7 +148,7 @@ namespace FreneticScript.CommandSystem
         public static CommandEntry CreateInvalidOutput(string name, List<Argument> _arguments,
             Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs, Dictionary<string, Argument> nameds)
         {
-            _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false));
+            _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false, null));
             return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs, nameds) { WaitFor = waitfor };
                 
         }
