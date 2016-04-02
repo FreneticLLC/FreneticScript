@@ -98,25 +98,28 @@ namespace FreneticScript.TagHandlers.Objects
             Internal = _val;
         }
 
-        static Dictionary<string, Func<TagData, IntegerTag, TemplateObject>> Handlers = new Dictionary<string, Func<TagData, IntegerTag, TemplateObject>>();
+        /// <summary>
+        /// All tag handlers for this tag type.
+        /// </summary>
+        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
 
-        static void RegisterTag(string name, Func<TagData, IntegerTag, TemplateObject> method)
+        static void RegisterTag(string name, Func<TagData, TemplateObject, TemplateObject> method, string rettype)
         {
-            Handlers.Add(name.ToLowerFast(), method);
+            Handlers.Add(name.ToLowerFast(), new TagSubHandler() { Handle = method, ReturnTypeString = rettype });
         }
 
         static IntegerTag()
         {
             // Documented in NumberTag.
-            RegisterTag("is_greater_than", (data, obj) => new BooleanTag(obj.Internal > For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("is_greater_than", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal > For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in NumberTag.
-            RegisterTag("is_greater_than_or_equal_to", (data, obj) => new BooleanTag(obj.Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("is_greater_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in NumberTag.
-            RegisterTag("is_less_than", (data, obj) => new BooleanTag(obj.Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("is_less_than", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in NumberTag.
-            RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(obj.Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in TextTag.
-            RegisterTag("equals", (data, obj) => new BooleanTag(obj.Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("equals", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // <--[tag]
             // @Name IntegerTag.add_int[<IntegerTag>]
             // @Group Mathematics
@@ -125,7 +128,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Commonly shortened to "+".
             // @Example "1" .add_int[1] returns "2".
             // -->
-            RegisterTag("add_int", (data, obj) => new IntegerTag(obj.Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("add_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.subtract_int[<IntegerTag>]
             // @Group Mathematics
@@ -134,7 +137,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Commonly shortened to "-".
             // @Example "1" .subtract_int[1] returns "0".
             // -->
-            RegisterTag("subtract_int", (data, obj) => new IntegerTag(obj.Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("subtract_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.multiply_int[<IntegerTag>]
             // @Group Mathematics
@@ -143,7 +146,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Commonly shortened to "*".
             // @Example "2" .multiply_int[2] returns "4".
             // -->
-            RegisterTag("multiply_int", (data, obj) => new IntegerTag(obj.Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("multiply_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.divide_int[<IntegerTag>]
             // @Group Mathematics
@@ -152,7 +155,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Commonly shortened to "/".
             // @Example "4" .divide_int[2] returns "2".
             // -->
-            RegisterTag("divide_int", (data, obj) => new IntegerTag(obj.Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("divide_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.modulo_int[<IntegerTag>]
             // @Group Mathematics
@@ -161,7 +164,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Commonly shortened to "%".
             // @Example "10" .modulo_int[3] returns "1".
             // -->
-            RegisterTag("modulo_int", (data, obj) => new IntegerTag(obj.Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()));
+            RegisterTag("modulo_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.absolute_value_int
             // @Group Mathematics
@@ -169,7 +172,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns the absolute value of the number.
             // @Example "-1" .absolute_value_int returns "1".
             // -->
-            RegisterTag("absolute_value_int", (data, obj) => new IntegerTag(Math.Abs(obj.Internal)).Handle(data.Shrink()));
+            RegisterTag("absolute_value_int", (data, obj) => new IntegerTag(Math.Abs(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name NumberTag.maximum_int[<NumberTag>]
             // @Group Mathematics
@@ -177,7 +180,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns whichever is greater: the number or the specified number.
             // @Example "10" .maximum_int[12] returns "12".
             // -->
-            RegisterTag("maximum_int", (data, obj) => new IntegerTag(Math.Max(obj.Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()));
+            RegisterTag("maximum_int", (data, obj) => new IntegerTag(Math.Max(((IntegerTag)obj).Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.minimum_int[<NumberTag>]
             // @Group Mathematics
@@ -185,9 +188,9 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns whichever is lower: the number or the specified number.
             // @Example "10" .minimum_int[12] returns "10".
             // -->
-            RegisterTag("minimum_int", (data, obj) => new IntegerTag(Math.Min(obj.Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()));
+            RegisterTag("minimum_int", (data, obj) => new IntegerTag(Math.Min(((IntegerTag)obj).Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()), "integertag");
             // Documented in NumberTag.
-            RegisterTag("sign", (data, obj) => new IntegerTag(Math.Sign(obj.Internal)).Handle(data.Shrink()));
+            RegisterTag("sign", (data, obj) => new IntegerTag(Math.Sign(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.to_binary
             // @Group Mathematics
@@ -195,13 +198,15 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns a binary representation of this integer.
             // @Example "1" .to_binary returns "0100000000000000".
             // -->
-            RegisterTag("to_binary", (data, obj) => new BinaryTag(BitConverter.GetBytes(obj.Internal)).Handle(data.Shrink()));
+            RegisterTag("to_binary", (data, obj) => new BinaryTag(BitConverter.GetBytes(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "binarytag");
             // Documented in TextTag.
-            RegisterTag("to_integer", (data, obj) => obj.Handle(data.Shrink()));
+            RegisterTag("to_integer", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
             // Documented in TextTag.
-            RegisterTag("to_number", (data, obj) => new NumberTag(obj.Internal).Handle(data.Shrink()));
+            RegisterTag("to_number", (data, obj) => new NumberTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "numbertag");
             // Documented in TextTag.
-            RegisterTag("duplicate", (data, obj) => new IntegerTag(obj.Internal).Handle(data.Shrink()));
+            RegisterTag("duplicate", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
+            // Documented in TextTag.
+            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Integer), ReturnTypeString = "tagtypetag" });
         }
 
         /// <summary>
@@ -214,10 +219,10 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            Func<TagData, IntegerTag, TemplateObject> handler;
+            TagSubHandler handler;
             if (Handlers.TryGetValue(data[0], out handler))
             {
-                return handler.Invoke(data, this);
+                return handler.Handle(data, this);
             }
             return new NumberTag(Internal).Handle(data); // TODO: is this best? Perhaps a BigDecimal type of tag?
         }

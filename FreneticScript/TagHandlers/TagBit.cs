@@ -22,6 +22,11 @@ namespace FreneticScript.TagHandlers
         public Argument Variable = null;
 
         /// <summary>
+        /// The handler that could handle this tag, if any is available.
+        /// </summary>
+        public TagSubHandler Handler = null;
+
+        /// <summary>
         /// Returns the tag bit as tag input text.
         /// </summary>
         /// <returns>The tag input text.</returns>

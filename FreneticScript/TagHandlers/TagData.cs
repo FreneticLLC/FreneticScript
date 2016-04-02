@@ -86,45 +86,7 @@ namespace FreneticScript.TagHandlers
             Remaining = _input.Length;
             InputKeys = _input;
         }
-
-        /// <summary>
-        /// Constructs the tag information container.
-        /// </summary>
-        /// <param name="_system">The command system to use.</param>
-        /// <param name="_input">The input tag pieces.</param>
-        /// <param name="_basecolor">The default color to use for output.</param>
-        /// <param name="_vars">Any variables involved in the queue.</param>
-        /// <param name="_mode">What debug mode to use.</param>
-        /// <param name="wasquoted">Whether the input was quoted.</param>
-        /// <param name="_error">What to invoke if there is an error.</param>
-        /// <param name="fallback">What to fall back to if the tag returns null.</param>
-        public TagData(TagParser _system, List<string> _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, bool wasquoted, Argument fallback)
-        {
-            TagSystem = _system;
-            InputKeys = new TagBit[_input.Count];
-            BaseColor = _basecolor;
-            Variables = _vars;
-            mode = _mode;
-            Error = _error;
-            Fallback = fallback;
-            Remaining = _input.Count;
-            for (int x = 0; x < _input.Count; x++)
-            {
-                InputKeys[x] = new TagBit();
-                if (_input[x].Length > 1 && _input[x].Contains('[') && _input[x][_input[x].Length - 1] == ']')
-                {
-                    int index = _input[x].IndexOf('[');
-                    InputKeys[x].Key = _input[x].Substring(0, index).ToLowerFast();
-                    InputKeys[x].Variable = TagSystem.SplitToArgument(_input[x].Substring(index + 1, _input[x].Length - (index + 2)), wasquoted);
-                }
-                else
-                {
-                    InputKeys[x].Key = _input[x].ToLowerFast();
-                    InputKeys[x].Variable = new Argument();
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Gets the key at a specified index.
         /// </summary>

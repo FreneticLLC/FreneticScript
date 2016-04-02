@@ -127,7 +127,7 @@ namespace FreneticScript.TagHandlers
                 {
                     return IntegerTag.For(data, obj);
                 },
-                SubHandlers = null
+                SubHandlers = IntegerTag.Handlers
             });
             Register(Type_Number = new TagType()
             {
