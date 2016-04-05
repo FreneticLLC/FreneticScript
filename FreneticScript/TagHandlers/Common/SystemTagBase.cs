@@ -12,7 +12,7 @@ namespace FreneticScript.TagHandlers.Common
     public class SystemTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base sytem
+        // @Base system
         // @Group Utilities
         // @ReturnType SystemTag
         // @Returns a generic utility class full of specific helpful system-related tags.

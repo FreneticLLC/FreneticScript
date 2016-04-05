@@ -23,7 +23,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="queue">The queue to run under.</param>
         /// <returns>Whether to continue looping.</returns>
-        public override bool Run(CommandQueue queue)
+        public override CommandStackRetVal Run(CommandQueue queue)
         {
             while (Index >= 0 && Index < Entries.Length)
             {
@@ -62,18 +62,18 @@ namespace FreneticScript.CommandSystem
                         }
                     }
                 }
-            }
-            if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
-            {
-                return false;
-            }
-            if (queue.CommandStack.Count == 0)
-            {
-                return false;
-            }
-            if (queue.CommandStack.Peek() != this)
-            {
-                return true;
+                if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
+                {
+                    return CommandStackRetVal.BREAK;
+                }
+                if (queue.CommandStack.Count == 0)
+                {
+                    return CommandStackRetVal.BREAK;
+                }
+                if (queue.CommandStack.Peek() != this)
+                {
+                    return CommandStackRetVal.CONTINUE;
+                }
             }
             if (queue.CommandStack.Count > 0)
             {
@@ -88,9 +88,9 @@ namespace FreneticScript.CommandSystem
                 {
                     queue.LastDeterminations = null;
                 }
-                return true;
+                return CommandStackRetVal.CONTINUE;
             }
-            return false;
+            return CommandStackRetVal.STOP;
         }
     }
 }

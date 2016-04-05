@@ -113,7 +113,12 @@ namespace FreneticScript.CommandSystem
             while (CommandStack.Count > 0)
             {
                 CurrentEntry = CommandStack.Peek();
-                if (!CurrentEntry.Run(this))
+                CommandStackRetVal ret = CurrentEntry.Run(this);
+                if (ret == CommandStackRetVal.BREAK)
+                {
+                    return;
+                }
+                else if (ret == CommandStackRetVal.STOP)
                 {
                     break;
                 }

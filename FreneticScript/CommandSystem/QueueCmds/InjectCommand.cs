@@ -14,7 +14,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
-    // @Minium 1
+    // @Minimum 1
     // @Maximum 1
     // @Description
     // Injects a function created by the <@link command function>function<@/link> command.

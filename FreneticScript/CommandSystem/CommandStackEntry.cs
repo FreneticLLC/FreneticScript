@@ -38,7 +38,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="queue">The queue to run under.</param>
         /// <returns>Whether to continue looping.</returns>
-        public virtual bool Run(CommandQueue queue)
+        public virtual CommandStackRetVal Run(CommandQueue queue)
         {
             while (Index < Entries.Length)
             {
@@ -88,15 +88,15 @@ namespace FreneticScript.CommandSystem
                 }
                 if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
                 {
-                    return false;
+                    return CommandStackRetVal.BREAK;
                 }
                 if (queue.CommandStack.Count == 0)
                 {
-                    return false;
+                    return CommandStackRetVal.BREAK;
                 }
                 if (queue.CommandStack.Peek() != this)
                 {
-                    return true;
+                    return CommandStackRetVal.CONTINUE;
                 }
             }
             if (queue.CommandStack.Count > 0)
@@ -112,9 +112,9 @@ namespace FreneticScript.CommandSystem
                 {
                     queue.LastDeterminations = null;
                 }
-                return true;
+                return CommandStackRetVal.CONTINUE;
             }
-            return false;
+            return CommandStackRetVal.STOP;
         }
 
         /// <summary>
@@ -196,5 +196,24 @@ namespace FreneticScript.CommandSystem
         {
             return (CommandStackEntry)MemberwiseClone();
         }
+    }
+
+    /// <summary>
+    /// Represents the return value from a command stack run call.
+    /// </summary>
+    public enum CommandStackRetVal : byte
+    {
+        /// <summary>
+        /// Tells the queue to continue.
+        /// </summary>
+        CONTINUE = 1,
+        /// <summary>
+        /// Tells the queue to wait a while.
+        /// </summary>
+        BREAK = 2,
+        /// <summary>
+        /// Tells the queue to stop entirely.
+        /// </summary>
+        STOP = 3
     }
 }
