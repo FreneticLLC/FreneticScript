@@ -26,9 +26,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
                 CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
-                if (cse.Index + 1 < cse.Entries.Length)
+                if (cse.Index < cse.Entries.Length)
                 {
-                    CommandEntry elseentry = cse.Entries[cse.Index + 1];
+                    CommandEntry elseentry = cse.Entries[cse.Index];
                     if (elseentry.Command is ElseCommand)
                     {
                         elseentry.SetData(queue, ifentry.GetData(queue));
@@ -38,7 +38,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (!(entry.GetData(queue) is IfCommandData))
             {
-                queue.HandleError(entry, "ELSE invalid, IF did not preceed!");
+                queue.HandleError(entry, "ELSE invalid, IF did not precede!");
                 return;
             }
             IfCommandData data = (IfCommandData)entry.GetData(queue);

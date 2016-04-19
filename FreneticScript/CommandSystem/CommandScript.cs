@@ -312,6 +312,7 @@ namespace FreneticScript.CommandSystem
             for (int i = 0; i < Commands.Count; i++)
             {
                 Commands[i] = _commands[i].Duplicate();
+                Commands[i].OwnIndex = i;
                 Commands[i].BlockStart -= adj;
                 Commands[i].BlockEnd -= adj;
             }
