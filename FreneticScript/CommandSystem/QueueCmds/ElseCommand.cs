@@ -22,6 +22,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
+            if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
+            {
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
+                if (cse.Index + 1 < cse.Entries.Length)
+                {
+                    CommandEntry elseentry = cse.Entries[cse.Index + 1];
+                    if (elseentry.Command is ElseCommand)
+                    {
+                        elseentry.SetData(queue, ifentry.GetData(queue));
+                    }
+                }
+                return;
+            }
             if (!(entry.GetData(queue) is IfCommandData))
             {
                 queue.HandleError(entry, "ELSE invalid, IF did not preceed!");
@@ -34,8 +48,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Else continuing, previous IF passed.");
                 }
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                cse.Index = entry.BlockEnd + 1;
+                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
                 return;
             }
             bool success = true;
@@ -71,8 +84,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Else continuing, ELSE-IF is false!");
                 }
-                CommandStackEntry cse = queue.CommandStack.Peek();
-               cse.Index = entry.BlockEnd + 1;
+                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
             }
         }
     }

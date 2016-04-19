@@ -80,9 +80,9 @@ namespace FreneticScript.CommandSystem
                                 {
                                     queue.Outputsystem.Invoke(message, MessageType.BAD);
                                 }
-                                Index = Entries.Length + 1;
-                                queue.CommandStack.Clear();
                             }
+                            Index = Entries.Length + 1;
+                            queue.CommandStack.Clear();
                         }
                     }
                 }

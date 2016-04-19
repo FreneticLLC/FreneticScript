@@ -29,11 +29,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            entry.SetData(queue, new IfCommandData() { Result = 0 });
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
                 CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
+                entry.SetData(queue, ifentry.GetData(queue));
                 if (cse.Index + 1 < cse.Entries.Length)
                 {
                     CommandEntry elseentry = cse.Entries[cse.Index + 1];
@@ -44,6 +44,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
+            entry.SetData(queue, new IfCommandData() { Result = 0 });
             List<string> parsedargs = new List<string>(entry.Arguments.Count);
             for (int i = 0; i < entry.Arguments.Count; i++)
             {
@@ -64,10 +65,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "If is false, doing nothing!");
                 }
+                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
             }
         }
 
-        // TODO: better comparison systme!
+        // TODO: better comparison system!
         public static bool TryIf(List<string> arguments)
         {
             if (arguments.Count == 0)
