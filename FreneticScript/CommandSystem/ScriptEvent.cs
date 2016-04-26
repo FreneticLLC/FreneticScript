@@ -168,6 +168,15 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Update all variables from a ran script onto the event itself.
+        /// </summary>
+        /// <param name="vars">The vars to update.</param>
+        public virtual void UpdateVariables(Dictionary<string, TemplateObject> vars)
+        {
+            // Do nothing if not overriden.
+        }
+        
+        /// <summary>
         /// Calls the event.
         /// </summary>
         protected void Call(int prio = int.MinValue)
@@ -179,10 +188,12 @@ namespace FreneticScript.CommandSystem
                     CommandScript script = Handlers[i].Value;
                     Dictionary<string, TemplateObject> Variables = GetVariables();
                     CommandQueue queue;
-                    foreach (TemplateObject determ in System.ExecuteScript(script, Variables, out queue))
+                    List<TemplateObject> determs = System.ExecuteScript(script, ref Variables, out queue);
+                    foreach (TemplateObject determ in determs)
                     {
                         ApplyDetermination(determ, queue.CommandStack.Peek().Debug);
                     }
+                    UpdateVariables(Variables);
                     if (i >= Handlers.Count || Handlers[i].Value != script)
                     {
                         i--;

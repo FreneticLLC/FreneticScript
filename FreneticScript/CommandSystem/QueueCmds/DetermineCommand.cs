@@ -14,7 +14,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public DetermineCommand()
         {
             Name = "determine";
-            Arguments = "[value to set on the queue]";
+            Arguments = "<value to set on the queue>";
             Description = "Sets the value determined on the queue.";
             IsFlow = true;
             Asyncable = true;

@@ -136,6 +136,11 @@ namespace FreneticScript.CommandSystem
         public List<TemplateObject> LastDeterminations = null;
 
         /// <summary>
+        /// The variables that ran on the lowest level of this queue.
+        /// </summary>
+        public Dictionary<string, TemplateObject> LowestVariables = null;
+
+        /// <summary>
         /// Whether this Queue is waiting on the last command.
         /// </summary>
         public CommandEntry WaitingOn = null;

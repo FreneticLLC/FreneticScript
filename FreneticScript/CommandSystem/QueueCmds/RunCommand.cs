@@ -121,7 +121,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good(queue, "Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
                 }
                 CommandQueue nqueue;
-                queue.CommandSystem.ExecuteScript(script, null, out nqueue);
+                Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
+                queue.CommandSystem.ExecuteScript(script, ref vars, out nqueue);
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 {
                     if (!nqueue.Running)

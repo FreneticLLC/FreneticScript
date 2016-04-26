@@ -78,6 +78,10 @@ namespace FreneticScript.CommandSystem
             if (queue.CommandStack.Count > 0)
             {
                 queue.CommandStack.Pop();
+                if (queue.CommandStack.Count > 0)
+                {
+                    queue.LowestVariables = Variables;
+                }
                 if (queue.CommandStack.Count > 0 && Determinations != null)
                 {
                     queue.LastDeterminations = Determinations;
