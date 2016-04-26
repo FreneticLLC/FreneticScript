@@ -172,24 +172,23 @@ namespace FreneticScript.TagHandlers.Objects
                         return new TextTag(Text.Replace(modif.ListEntries[0].ToString(), modif.ListEntries[1].ToString())).Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name TextTag.substring[<NumberTag>|<NumberTag>]
+                // @Name TextTag.substring[<ListTag>]
                 // @Group Text Modification
                 // @ReturnType TextTag
                 // @Returns the portion of text in the specified range.
                 // @Other note that indices are one-based.
                 // @Example "alpha" .substring[2|4] returns "lph".
+                // @Example "alpha" .substring[2|99999] will return "lpha".
                 // -->
                 case "substring":
                     {
-                        // TODO: ListTag instead of this nonsense
-                        string modif = data.GetModifier(0);
-                        string[] inputs = modif.SplitFast('|');
-                        if (inputs.Length < 2)
+                        ListTag inputs = ListTag.For(data.GetModifierObject(0));
+                        if (inputs.ListEntries.Count < 2)
                         {
                             break;
                         }
-                        int num1 = (int)NumberTag.For(data, inputs[0]).Internal - 1; // TODO: Integer tag?
-                        int num2 = (int)NumberTag.For(data, inputs[1]).Internal - 1;
+                        int num1 = (int)IntegerTag.For(data, inputs.ListEntries[0]).Internal - 1;
+                        int num2 = (int)IntegerTag.For(data, inputs.ListEntries[1]).Internal - 1;
                         if (num1 < 0)
                         {
                             num1 = 0;
