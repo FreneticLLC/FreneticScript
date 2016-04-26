@@ -155,17 +155,35 @@ namespace FreneticScript.TagHandlers.Objects
                         return new ListTag(list).Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name TextTag.substring[<NumberTag>,<NumberTag>]
+                // @Name TextTag.replace[<ListTag>]
+                // @Group Text Modification
+                // @ReturnType TextTag
+                // @Returns the text with all instances of the first text replaced with the second.
+                // @Example "alpha" .substring[a|b] returns "blphb".
+                // -->
+                case "replace":
+                    {
+                        ListTag modif = ListTag.For(data.GetModifierObject(0));
+                        if (modif.ListEntries.Count != 2)
+                        {
+                            data.Error("Invalid replace tag! Not two entries in the list!");
+                            return new NullTag();
+                        }
+                        return new TextTag(Text.Replace(modif.ListEntries[0].ToString(), modif.ListEntries[1].ToString())).Handle(data.Shrink());
+                    }
+                // <--[tag]
+                // @Name TextTag.substring[<NumberTag>|<NumberTag>]
                 // @Group Text Modification
                 // @ReturnType TextTag
                 // @Returns the portion of text in the specified range.
                 // @Other note that indices are one-based.
-                // @Example "alpha" .substring[2,4] returns "lph".
+                // @Example "alpha" .substring[2|4] returns "lph".
                 // -->
                 case "substring":
                     {
+                        // TODO: ListTag instead of this nonsense
                         string modif = data.GetModifier(0);
-                        string[] inputs = modif.SplitFast(',');
+                        string[] inputs = modif.SplitFast('|');
                         if (inputs.Length < 2)
                         {
                             break;
