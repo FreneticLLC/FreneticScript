@@ -75,13 +75,10 @@ namespace FreneticScript.CommandSystem
                     return CommandStackRetVal.CONTINUE;
                 }
             }
+            queue.LowestVariables = Variables;
             if (queue.CommandStack.Count > 0)
             {
                 queue.CommandStack.Pop();
-                if (queue.CommandStack.Count > 0)
-                {
-                    queue.LowestVariables = Variables;
-                }
                 return CommandStackRetVal.CONTINUE;
             }
             return CommandStackRetVal.STOP;
