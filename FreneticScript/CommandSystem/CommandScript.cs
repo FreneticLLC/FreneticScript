@@ -329,7 +329,6 @@ namespace FreneticScript.CommandSystem
             Created.Variables = new Dictionary<string, TemplateObject>();
             Created.Entries = Commands.ToArray();
             Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
-            Created.Determinations = new List<TemplateObject>();
             string tname = "__script__" + IDINCR++;
             AssemblyName asmname = new AssemblyName(tname);
             asmname.Name = tname;

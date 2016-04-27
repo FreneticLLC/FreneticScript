@@ -85,15 +85,5 @@ namespace FreneticScript.CommandSystem.CommandEvents
             vars.Add("script_name", ScriptName);
             return vars;
         }
-
-        /// <summary>
-        /// Applies a determination object to the event.
-        /// </summary>
-        /// <param name="determ">What was determined.</param>
-        /// <param name="mode">What debugmode to use.</param>
-        public override void ApplyDetermination(TemplateObject determ, DebugMode mode)
-        {
-            base.ApplyDetermination(determ, mode);
-        }
     }
 }

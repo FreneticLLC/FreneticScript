@@ -90,7 +90,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="Variables">What variables to add to the commandqueue.</param>
         /// <param name="queue">Outputs the generated queue (already ran or running).</param>
         /// <param name="mode">The debug mode to run it in.</param>
-        public List<TemplateObject> ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
+        public void ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
         {
             queue = script.ToQueue(this);
             if (Variables != null)
@@ -104,7 +104,6 @@ namespace FreneticScript.CommandSystem
             cse.Debug = mode;
             queue.Execute();
             Variables = queue.LowestVariables;
-            return queue.LastDeterminations;
         }
 
         /// <summary>
@@ -294,7 +293,6 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new DebugCommand());
             RegisterCommand(new DefineCommand());
             RegisterCommand(new DelayCommand());
-            RegisterCommand(new DetermineCommand());
             RegisterCommand(new ElseCommand());
             RegisterCommand(new ErrorCommand());
             RegisterCommand(new EventCommand());

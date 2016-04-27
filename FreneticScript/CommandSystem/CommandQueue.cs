@@ -129,12 +129,7 @@ namespace FreneticScript.CommandSystem
             }
             Running = false;
         }
-
-        /// <summary>
-        /// The determinations ran on the lowest level of this queue.
-        /// </summary>
-        public List<TemplateObject> LastDeterminations = null;
-
+        
         /// <summary>
         /// The variables that ran on the lowest level of this queue.
         /// </summary>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
-using FreneticScript.CommandSystem.CommandEvents;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -137,15 +136,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs();
                 args4.Script = script;
-                args4.Determinations = queue.LastDeterminations;
                 if (OnScriptRanPostEvent != null)
                 {
                     OnScriptRanPostEvent.Fire(args4);
                 }
-                if (queue.LastDeterminations != null)
-                {
-                    queue.SetVariable("run_determinations", new ListTag(queue.LastDeterminations));
-                }
+                queue.SetVariable("run_variables", new MapTag(nqueue.LowestVariables));
             }
             else
             {
@@ -229,11 +224,5 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Do not edit.
         /// </summary>
         public CommandScript Script;
-
-        /// <summary>
-        /// All determines of the script run.
-        /// Do not edit.
-        /// </summary>
-        public List<TemplateObject> Determinations;
     }
 }

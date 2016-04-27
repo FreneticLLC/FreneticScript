@@ -80,7 +80,6 @@
     <Compile Include="CommandSystem\QueueCmds\GotoCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DebugCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DefineCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\DetermineCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ElseCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\EventCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ForeachCommand.cs" />

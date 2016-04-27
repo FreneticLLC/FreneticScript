@@ -106,16 +106,6 @@ namespace FreneticScript.CommandSystem
                 {
                     queue.LowestVariables = Variables;
                 }
-                if (queue.CommandStack.Count > 0 && Determinations != null)
-                {
-                    queue.LastDeterminations = Determinations;
-                    CommandStackEntry tcse = queue.CommandStack.Peek();
-                    tcse.Variables["determinations"] = new ListTag(Determinations);
-                }
-                else
-                {
-                    queue.LastDeterminations = null;
-                }
                 return CommandStackRetVal.CONTINUE;
             }
             return CommandStackRetVal.STOP;
@@ -186,12 +176,7 @@ namespace FreneticScript.CommandSystem
         /// How much debug information this portion of the stack should show.
         /// </summary>
         public DebugMode Debug;
-
-        /// <summary>
-        /// What was returned by the determine command for this portion of the stack.
-        /// </summary>
-        public List<TemplateObject> Determinations = new List<TemplateObject>();
-
+        
         /// <summary>
         /// Perfectly duplicates this stack entry.
         /// </summary>

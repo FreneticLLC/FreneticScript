@@ -82,16 +82,6 @@ namespace FreneticScript.CommandSystem
                 {
                     queue.LowestVariables = Variables;
                 }
-                if (queue.CommandStack.Count > 0 && Determinations != null)
-                {
-                    queue.LastDeterminations = Determinations;
-                    CommandStackEntry tcse = queue.CommandStack.Peek();
-                    tcse.Variables["determinations"] = new ListTag(Determinations);
-                }
-                else
-                {
-                    queue.LastDeterminations = null;
-                }
                 return CommandStackRetVal.CONTINUE;
             }
             return CommandStackRetVal.STOP;

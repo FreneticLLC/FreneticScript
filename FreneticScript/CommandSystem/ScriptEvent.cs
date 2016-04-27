@@ -173,7 +173,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="vars">The vars to update.</param>
         public virtual void UpdateVariables(Dictionary<string, TemplateObject> vars)
         {
-            // Do nothing if not overriden.
+            Cancelled = BooleanTag.TryFor(vars["cancelled"]).Internal;
         }
         
         /// <summary>
@@ -185,14 +185,12 @@ namespace FreneticScript.CommandSystem
             {
                 if (prio == int.MinValue || Handlers[i].Key == prio)
                 {
+                    // TODO: Handle cancelling stuff here?
+                    // IE, don't fire if cancelled and we don't want to fire?
                     CommandScript script = Handlers[i].Value;
                     Dictionary<string, TemplateObject> Variables = GetVariables();
                     CommandQueue queue;
-                    List<TemplateObject> determs = System.ExecuteScript(script, ref Variables, out queue);
-                    foreach (TemplateObject determ in determs)
-                    {
-                        ApplyDetermination(determ, queue.CommandStack.Peek().Debug);
-                    }
+                    System.ExecuteScript(script, ref Variables, out queue);
                     UpdateVariables(Variables);
                     if (i >= Handlers.Count || Handlers[i].Value != script)
                     {
@@ -201,36 +199,7 @@ namespace FreneticScript.CommandSystem
                 }
             }
         }
-
-        /// <summary>
-        /// Applies a determination object to the event.
-        /// </summary>
-        /// <param name="determ">What was determined.</param>
-        /// <param name="mode">What debugmode to use.</param>
-        public virtual void ApplyDetermination(TemplateObject determ, DebugMode mode)
-        {
-            if (Cancellable)
-            {
-                switch (determ.ToString().ToLowerFast())
-                {
-                    case "cancelled:true":
-                    case "cancelled":
-                        Cancelled = true;
-                        break;
-                    case "cancelled:false":
-                        Cancelled = false;
-                        break;
-                    default:
-                        System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.base}>'.", mode);
-                        break;
-                }
-            }
-            else
-            {
-                System.Output.Bad("Unknown determination '<{color.emphasis}>" + TagParser.Escape(determ.ToString()) + "<{color.base}>'.", mode);
-            }
-        }
-
+        
         /// <summary>
         /// Get all variables according the script event's current values.
         /// </summary>
