@@ -46,6 +46,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 },
                 (input) =>
                 {
+                    return new TextTag(input.ToString());
+                },
+                (input) =>
+                {
                     return IntegerTag.TryFor(input);
                 },
                 (input) =>
