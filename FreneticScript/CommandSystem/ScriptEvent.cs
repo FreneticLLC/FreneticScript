@@ -192,7 +192,7 @@ namespace FreneticScript.CommandSystem
                     Variables["context"] = new MapTag(GetVariables());
                     CommandQueue queue;
                     System.ExecuteScript(script, ref Variables, out queue);
-                    UpdateVariables(Variables);
+                    UpdateVariables(MapTag.For(Variables["context"]).Internal);
                     if (i >= Handlers.Count || Handlers[i].Value != script)
                     {
                         i--;
