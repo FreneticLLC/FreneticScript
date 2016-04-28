@@ -9,7 +9,29 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class DebugCommand : AbstractCommand
     {
-        // TODO: Meta!
+        // <--[command]
+        // @Name debug
+        // @Arguments
+        // @Short Changes the debug mode of the current queue.
+        // @Updated 2016/04/27
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 1
+        // @Description
+        // Changes the debug mode of the current queue.
+        // Can be: full, minimal, or none.
+        // Full shows all debug, minimal shows only errors, none hides everything.
+        // Note that this technically only applies to the current stack entry, not the entire queue.
+        // Meaning, even if you <@link command call>call<@/link> a function in the current queue, debug mode for that function will not affect the debug of the calling function or script.
+        // TODO: Explain more!
+        // @Example
+        // // This example sets the debug mode to full.
+        // debug full
+        // @Example
+        // // This example sets the debug mode to minimal.
+        // debug minimal
+        // -->
         public DebugCommand()
         {
             Name = "debug";
