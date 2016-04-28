@@ -142,7 +142,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Text Modification
                 // @ReturnType ListTag
                 // @Returns the text as a list of characters.
-                // @Other can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
+                // @Other Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
                 // @Example "alpha" .to_list_of_characters returns "a|l|p|h|a".
                 // -->
                 case "to_list_of_characters":
@@ -176,7 +176,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Text Modification
                 // @ReturnType TextTag
                 // @Returns the portion of text in the specified range.
-                // @Other note that indices are one-based.
+                // @Other Note that indices are one-based.
                 // @Example "alpha" .substring[2|4] returns "lph".
                 // @Example "alpha" .substring[2|99999] will return "lpha".
                 // -->
@@ -243,7 +243,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Text Comparison
                 // @ReturnType BooleanTag
                 // @Returns whether the text matches the specified text.
-                // @Other note that this is case-sensitive.
+                // @Other Note that this is case-sensitive.
                 // @Example "alpha" .equals[alpha] returns "true".
                 // -->
                 case "equals":
@@ -253,7 +253,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Text Comparison
                 // @ReturnType BooleanTag
                 // @Returns whether the text does not match the specified text.
-                // @Other note that this is case-sensitive.
+                // @Other Note that this is case-sensitive.
                 // @Example "alpha" .does_not_equal[alpha] returns "false".
                 // -->
                 case "does_not_equal":
@@ -277,11 +277,21 @@ namespace FreneticScript.TagHandlers.Objects
                 case "does_not_equal_ignore_case":
                     return new BooleanTag(Text.ToLowerFast() != data.GetModifier(0).ToLowerFast()).Handle(data.Shrink());
                 // <--[tag]
+                // @Name TextTag.contains[<TextTag>]
+                // @Group Text Comparison
+                // @ReturnType BooleanTag
+                // @Returns whether the text contains the specified text.
+                // @Other Note that this is case-sensitive.
+                // @Example "alpha" .contains[alp] returns "true".
+                // -->
+                case "contains":
+                    return new BooleanTag(Text.Contains(data.GetModifier(0))).Handle(data.Shrink());
+                // <--[tag]
                 // @Name TextTag.to_utf8_binary
                 // @Group Conversion
                 // @ReturnType BinaryTag
                 // @Returns UTF-8 encoded binary data of the included text.
-                // @Other can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
+                // @Other Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
                 // @Example "hi" .to_utf8_binary returns "6869".
                 // -->
                 case "to_utf8_binary":
@@ -291,7 +301,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Conversion
                 // @ReturnType BinaryTag
                 // @Returns the binary data represented by this Base-64 text.
-                // @Other can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
+                // @Other Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
                 // @Example "aGk=" .from_base64 returns "6869".
                 // -->
                 case "from_base64":
