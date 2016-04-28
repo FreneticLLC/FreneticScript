@@ -191,7 +191,7 @@ namespace FreneticScript.CommandSystem
                     Dictionary<string, TemplateObject> Variables = new Dictionary<string, TemplateObject>();
                     Variables["context"] = new MapTag(GetVariables());
                     CommandQueue queue;
-                    System.ExecuteScript(script, ref Variables, out queue);
+                    System.ExecuteScript(script, ref Variables, out queue, DebugMode.MINIMAL);
                     if (Variables != null && Variables.ContainsKey("context"))
                     {
                         UpdateVariables(MapTag.For(Variables["context"]).Internal);

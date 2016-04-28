@@ -84,7 +84,6 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Executes a command script.
         /// Returns the determined value(s).
-        /// TODO: Out variables?
         /// </summary>
         /// <param name="script">The script to execute.</param>
         /// <param name="Variables">What variables to add to the commandqueue.</param>
