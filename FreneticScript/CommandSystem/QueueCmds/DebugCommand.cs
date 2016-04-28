@@ -11,7 +11,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     {
         // <--[command]
         // @Name debug
-        // @Arguments
+        // @Arguments 'full'/'minimal'/'none'
         // @Short Changes the debug mode of the current queue.
         // @Updated 2016/04/27
         // @Authors mcmonkey
@@ -27,10 +27,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // TODO: Explain more!
         // @Example
         // // This example sets the debug mode to full.
-        // debug full
+        // debug full;
         // @Example
         // // This example sets the debug mode to minimal.
-        // debug minimal
+        // debug minimal;
         // -->
         public DebugCommand()
         {

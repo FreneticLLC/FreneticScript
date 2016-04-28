@@ -23,18 +23,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // This example catches errors and echoes them to the console.
         // try
         // {
-        //     error "Hi there!"
+        //     error "Hi there!";
         // }
         // catch
         // {
-        //     echo "ERROR: <{[error_message]}>"
+        //     echo "ERROR: <{[error_message]}>";
         // }
         // @Example
-        // // This example never throws an error.
-        // assert true "Good!"
-        // @Example
-        // // This example sometimes throws an error.
-        // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!"
+        // // TODO: More examples!
         // @Var stack_trace TextTag The error message that was caught, with full script tracing information.
         // -->
         public CatchCommand()

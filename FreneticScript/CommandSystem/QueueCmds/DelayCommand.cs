@@ -10,8 +10,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class DelayCommand : AbstractCommand
     {
-        // TODO: Meta!
-
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
             entry.BlockEnd -= input.Count;
@@ -21,6 +19,30 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.Arguments, "wait", 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation));
         }
 
+        // <--[command]
+        // @Name delay
+        // @Arguments <time in secnds>
+        // @Short Delays the contained blocked of commands for the input amount of time.
+        // @Updated 2016/04/27
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 1
+        // @Description
+        // Delays the contained blocked of commands for the input amount of time.
+        // Note that this will not delay the running queue, but rather launch the command block into its own queue.
+        // TODO: Explain more!
+        // @Example
+        // // This example echos "hi", then "bye".
+        // delay 1
+        // {
+        //     echo "bye";
+        // }
+        // echo "hi";
+        // @Example
+        // // This example sets the debug mode to minimal.
+        // debug minimal
+        // -->
         public DelayCommand()
         {
             Name = "delay";
@@ -54,7 +76,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "No commands follow!");
                 return;
             }
-            // TODO: Don't regenerate constantly!
+            // TODO: Don't regenerate constantly! Pre-commandscriptify so it can compile!
             CommandScript script = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, queue.CurrentEntry.Types, false);
             CommandQueue nqueue = script.ToQueue(entry.Command.CommandSystem);
             nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;

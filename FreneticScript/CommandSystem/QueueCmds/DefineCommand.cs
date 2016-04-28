@@ -9,21 +9,21 @@ namespace FreneticScript.CommandSystem.CommonCmds
     // @Name define
     // @Arguments <variable to set> <new value>
     // @Short Modifies the value of a specified queue variable, or creates a new one.
-    // @Updated 2014/06/22
+    // @Updated 2016/04/27
     // @Authors mcmonkey
     // @Group Queue
     // @Minimum 2
     // @Maximum 2
     // @Description
-    // The define command sets a <@link explanation Queue Variables>queue variable<@/link>
-    // onto the queue it is running in.
+    // The define command sets a <@link explanation Queue Variables>variable<@/link> onto the queue it is running in.
+    // Note that it applies onto to the current stack entry (Excluding cases where injection was used).
     // TODO: Explain more!
     // @Example
     // // This example sets variable "name" to "value"
-    // define name value
+    // define name value;
     // @Example
-    // TODO: More examples!
-    // Var <Dynamic> TextTag returns the value of the set definition.
+    // // TODO: More examples!
+    // Var <Dynamic> <Dynamic> returns the value of the set definition.
     // -->
     class DefineCommand : AbstractCommand // TODO: Public!
     {

@@ -21,14 +21,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: Explain more!
     // @Example
     // // This example calls the function 'helloworld'.
-    // call helloworld
+    // call helloworld;
     // @Example
     // // This example calls the function 'outputme' with variable 'text' set to 'hello world'.
-    // call outputme -text "hello world"
+    // call outputme -text "hello world";
     // @Example
     // TODO: More examples!
-    // @Tags
-    // <{var[determinations]}> returns what the called function determined, if anything.
     // -->
 
     class CallCommand : AbstractCommand

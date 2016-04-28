@@ -22,13 +22,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // TODO: Explain more!
         // @Example
         // // This example throws an error immediately.
-        // assert false "Bad!"
+        // assert false "Bad!";
         // @Example
         // // This example never throws an error.
-        // assert true "Good!"
+        // assert true "Good!";
         // @Example
         // // This example sometimes throws an error.
-        // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!"
+        // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!";
         // -->
         public AssertCommand()
         {
