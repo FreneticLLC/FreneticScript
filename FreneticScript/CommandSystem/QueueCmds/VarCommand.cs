@@ -54,8 +54,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             string variable = entry.GetArgument(queue, 0);
-            TemplateObject varb = queue.GetVariable(variable);
-            string setter = entry.GetArgument(queue, 1);
             TemplateObject value = entry.GetArgumentObject(queue, 2);
             if (entry.Arguments.Count == 5)
             {
