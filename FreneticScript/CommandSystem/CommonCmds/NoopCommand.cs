@@ -10,6 +10,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
     class NoopCommand: AbstractCommand
     {
         // TODO: Meta!
+
         public NoopCommand()
         {
             Name = "noop";

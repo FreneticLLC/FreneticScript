@@ -11,6 +11,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
     class ToggleCommand: AbstractCommand
     {
         // TODO: Meta!
+
         public ToggleCommand()
         {
             Name = "toggle";

@@ -8,6 +8,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    // TODO: Meta!
     class UndefineCommand : AbstractCommand
     {
         public UndefineCommand()

@@ -9,6 +9,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class WaitCommand: AbstractCommand
     {
+        // TODO: Meta!
         public WaitCommand()
         {
             Name = "wait";

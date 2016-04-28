@@ -11,6 +11,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
     class SetCommand : AbstractCommand
     {
         // TODO: Meta!
+
         public SetCommand()
         {
             Name = "set";

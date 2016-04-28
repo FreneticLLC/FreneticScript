@@ -18,10 +18,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Maximum 1
     // @Description
     // Injects a function created by the <@link command function>function<@/link> command.
+    // IMPORTANT NOTE: Generally, the <@link command call>call<@/link> command should be used instead of this.
     // TODO: Explain more!
     // @Example
-    // // This example calls the function 'helloworld'.
-    // call helloworld
+    // // This example injects the function 'helloworld'.
+    // inject helloworld
     // @Example
     // TODO: More examples!
     // -->

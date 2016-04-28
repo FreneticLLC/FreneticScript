@@ -12,6 +12,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// </summary>
     public class DebugVarSetCommand : AbstractCommand
     {
+        // NOTE: Intentionally no meta!
+
         /// <summary>
         /// Constructs the command.
         /// </summary>

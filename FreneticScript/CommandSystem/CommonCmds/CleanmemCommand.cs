@@ -6,6 +6,7 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    // TODO: Meta!
     /// <summary>
     /// A command to interact with the system garbage collector.
     /// </summary>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -17,7 +19,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = -1;
-            ObjectTypes = new List<Func<TagHandlers.TemplateObject, TagHandlers.TemplateObject>>();
+            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            {
+                (input) =>
+                {
+                    string inp = input.ToString();
+                    if (inp == "\0CALLBACK")
+                    {
+                        return input;
+                    }
+                    if (inp.ToLowerFast() == "if")
+                    {
+                        return new TextTag("if");
+                    }
+                    return null;
+                }
+            };
         }
 
         public override void Execute(CommandQueue queue, CommandEntry entry)
@@ -54,21 +71,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             bool success = true;
             if (entry.Arguments.Count >= 1)
             {
-                string ifbit = entry.GetArgument(queue, 0);
-                if (ifbit.ToLowerFast() != "if")
+                List<string> parsedargs = new List<string>(entry.Arguments.Count);
+                for (int i = 1; i < entry.Arguments.Count; i++)
                 {
-                    ShowUsage(queue, entry);
-                    return;
+                    parsedargs.Add(entry.GetArgument(queue, i)); // TODO: Don't pre-parse. Parse in TryIf.
                 }
-                else
-                {
-                    List<string> parsedargs = new List<string>(entry.Arguments.Count);
-                    for (int i = 1; i < entry.Arguments.Count; i++)
-                    {
-                        parsedargs.Add(entry.GetArgument(queue, i)); // TODO: Don't pre-parse. Parse in TryIf.
-                    }
-                    success = IfCommand.TryIf(parsedargs);
-                }
+                success = IfCommand.TryIf(parsedargs);
             }
             if (success)
             {

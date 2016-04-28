@@ -38,7 +38,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 },
                 (input) =>
                 {
-                    if (input.ToString() == "as")
+                    if (input.ToString().ToLowerFast() == "as")
                     {
                         return new TextTag("as");
                     }

@@ -9,6 +9,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
 {
     class HelpCommand : AbstractCommand
     {
+        // TODO: Meta!
+
         public HelpCommand()
         {
             Name = "help";

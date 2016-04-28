@@ -7,6 +7,8 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    // TODO: Meta!
+
     class StopCommand: AbstractCommand
     {
         public StopCommand()
