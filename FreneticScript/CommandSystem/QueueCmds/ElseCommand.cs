@@ -9,7 +9,31 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class ElseCommand: AbstractCommand
     {
-        // TODO: Meta!
+        // <--[command]
+        // @Name else
+        // @Arguments ['if' <comparisons>]
+        // @Short Executes the following block of commands only if the previous if failed, and optionally if additional requirements are met.
+        // @Updated 2016/04/27
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 0
+        // @Maximum -1
+        // @Description
+        // Executes the following block of commands only if the previous if failed, and optionally if additional requirements are met.
+        // TODO: Explain more!
+        // @Example
+        // // This example echos "hi".
+        // if false
+        // {
+        //     echo "nope";
+        // }
+        // else
+        // {
+        //     echo "hi";
+        // }
+        // @Example
+        // // TODO: More examples!
+        // -->
         public ElseCommand()
         {
             Name = "else";

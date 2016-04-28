@@ -40,8 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // }
         // echo "hi";
         // @Example
-        // // This example sets the debug mode to minimal.
-        // debug minimal
+        // // TODO: More examples!
         // -->
         public DelayCommand()
         {
