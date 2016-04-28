@@ -7,7 +7,36 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class CatchCommand: AbstractCommand
     {
-        // TODO: Meta!
+        // <--[command]
+        // @Name catch
+        // @Arguments
+        // @Short Contains exception handling code, only allowed to follow a <@link command try>try<@/link> block.
+        // @Updated 2016/04/27
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 0
+        // @Maximum 1
+        // @Description
+        // Contains exception handling code, only allowed to follow a <@link command try>try<@/link> block.
+        // TODO: Explain more!
+        // @Example
+        // // This example catches errors and echoes them to the console.
+        // try
+        // {
+        //     error "Hi there!"
+        // }
+        // catch
+        // {
+        //     echo "ERROR: <{[error_message]}>"
+        // }
+        // @Example
+        // // This example never throws an error.
+        // assert true "Good!"
+        // @Example
+        // // This example sometimes throws an error.
+        // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!"
+        // @Var stack_trace TextTag The error message that was caught, with full script tracing information.
+        // -->
         public CatchCommand()
         {
             Name = "catch";
@@ -35,6 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
+            queue.CommandStack.Peek().Index = entry.BlockEnd + 2;
             if (entry.ShouldShowGood(queue))
             {
                 entry.Good(queue, "Passing catch without executing.");

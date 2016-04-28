@@ -11,7 +11,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Name call
     // @Arguments <function to call> [-variable value ...]
     // @Short Runs a function.
-    // @Updated 2014/06/23
+    // @Updated 2016/04/27
     // @Authors mcmonkey
     // @Group Queue
     // @Minimum 1

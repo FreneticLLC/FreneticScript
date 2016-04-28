@@ -126,12 +126,13 @@ namespace FreneticScript.CommandSystem
             {
                 for (int i = cse.Index; i < cse.Entries.Length; i++)
                 {
-                    if (queue.GetCommand(i).Command is TryCommand &&
-                        queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    CommandEntry entr = queue.GetCommand(i);
+                    if (entr.Command is TryCommand &&
+                        entr.Arguments[0].ToString() == "\0CALLBACK")
                     {
                         entry.Good(queue, "Force-exiting try block.");
                         queue.SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
-                        cse.Index = i;
+                        cse.Index = i + 2;
                         throw new ErrorInducedException();
                     }
                 }
