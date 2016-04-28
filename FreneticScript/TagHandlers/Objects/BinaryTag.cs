@@ -199,7 +199,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Conversion
                 // @ReturnType IntegerTag
                 // @Returns the internal data converted to an integer value.
-                // @Note currently must be of length: 1, 2, 4, or 8 bytes.
+                // @Other Note that this currently must be of length: 1, 2, 4, or 8 bytes.
                 // @Example "0100000000000000" .to_integer returns "1".
                 // -->
                 case "to_integer":
@@ -227,7 +227,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Conversion
                 // @ReturnType NumberTag
                 // @Returns the internal data converted to an floating-point number value.
-                // @Note currently must be of length: 4, or 8 bytes.
+                // @Other Note that this currently must be of length: 4, or 8 bytes.
                 // @Example "000000000000F03F" .to_number returns "1".
                 // -->
                 case "to_number":
