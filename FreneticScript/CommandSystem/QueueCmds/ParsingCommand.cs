@@ -9,7 +9,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class ParsingCommand : AbstractCommand
     {
-        // TODO: Meta!
+        // <--[command]
+        // @Name parsing
+        // @Arguments 'on'/'off'
+        // @Short Sets whether the current queue should parse tags.
+        // @Updated 2016/04/28
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 1
+        // @Description
+        // Sets whether the current queue should parse tags.
+        // TODO: Explain more!
+        // @Example
+        // // This example echos "<{wow!}>".
+        // parsing off;
+        // echo "<{wow!}>";
+        // @Example
+        // // TODO: More examples!
+        // -->
         public ParsingCommand()
         {
             Name = "parsing";

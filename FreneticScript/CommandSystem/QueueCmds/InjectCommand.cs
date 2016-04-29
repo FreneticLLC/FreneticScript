@@ -11,7 +11,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Name inject
     // @Arguments <function to inject>
     // @Short Runs a function inside the current variable base.
-    // @Updated 2014/06/23
+    // @Updated 2016/04/28
     // @Authors mcmonkey
     // @Group Queue
     // @Minimum 1
@@ -22,7 +22,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: Explain more!
     // @Example
     // // This example injects the function 'helloworld'.
-    // inject helloworld
+    // inject helloworld;
     // @Example
     // TODO: More examples!
     // -->
