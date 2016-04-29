@@ -99,7 +99,6 @@ namespace FreneticScript.CommandSystem
                     return CommandStackRetVal.CONTINUE;
                 }
             }
-            queue.LowestVariables = Variables;
             if (queue.CommandStack.Count > 0)
             {
                 queue.CommandStack.Pop();
@@ -120,8 +119,8 @@ namespace FreneticScript.CommandSystem
             stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
                 + ": (" + entry.Name + ")\n");
             queue.WaitingOn = null;
-            CommandStackEntry cse = queue.CommandStack.Peek();
-            DebugMode dbmode = cse.Debug;
+            CommandStackEntry cse = queue.CommandStack.Count > 0 ? queue.CommandStack.Peek() : null;
+            DebugMode dbmode = cse == null ? DebugMode.FULL : cse.Debug;
             while (cse != null)
             {
                 for (int i = cse.Index; i < cse.Entries.Length; i++)

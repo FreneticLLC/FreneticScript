@@ -84,6 +84,10 @@ namespace FreneticScript.CommandSystem
                 return;
             }
             Running = true;
+            if (CommandStack.Count > 0)
+            {
+                LowestVariables = CommandStack.Peek().Variables;
+            }
             Tick(0f);
             if (Running)
             {
