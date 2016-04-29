@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("mcmonkey studios")]
 [assembly: AssemblyProduct("FreneticScript")]
-[assembly: AssemblyCopyright("Copyright © FreneticXYZ 2016")]
+[assembly: AssemblyCopyright("Copyright © FreneticXYZ 2015-2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
