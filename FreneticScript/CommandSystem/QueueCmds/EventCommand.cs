@@ -15,7 +15,27 @@ namespace FreneticScript.CommandSystem.QueueCmds
             base.AdaptBlockFollowers(entry, input, fblock);
         }
 
-        // TODO: Meta!
+        // <--[command]
+        // @Name event
+        // @Arguments 'add'/'remove'/'clear' <name of event>/'all' <name of event handler> [priority] ['quiet_fail']
+        // @Short Creates a new function of the following command block, and adds it to the specified event's handler.
+        // @Updated 2016/04/28
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 5
+        // @Description
+        // Creates a new function of the following command block, and adds it to the specified event's handler.
+        // TODO: Explain more!
+        // @Example
+        // // This example echos the name of the script every time a script is ran.
+        // event add scriptranpostevent WhenAScriptIsRun 0
+        // {
+        //     echo <{[context].[script_name]}>;
+        // }
+        // @Example
+        // // TODO: More examples!
+        // -->
         public EventCommand()
         {
             Name = "event";
