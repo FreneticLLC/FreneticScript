@@ -18,7 +18,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Authors mcmonkey
         // @Group Queue
         // @Minimum 1
-        // @Maximum 5
+        // @Maximum 1
         // @Description
         // Goes to the marked location in a script.
         // See the <@link command mark>mark command<@/link>.

@@ -20,6 +20,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Maximum -1
         // @Description
         // Executes the following block of commands only if the previous if failed, and optionally if additional requirements are met.
+        // Works with the <@link command if>if command<@/link>.
         // TODO: Explain more!
         // @Example
         // // This example echos "hi".

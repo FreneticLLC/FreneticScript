@@ -18,7 +18,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Authors mcmonkey
         // @Group Queue
         // @Minimum 1
-        // @Maximum 5
+        // @Maximum 1
         // @Description
         // Marks a location in the script for the goto command.
         // See the <@link command goto>goto command<@/link>.

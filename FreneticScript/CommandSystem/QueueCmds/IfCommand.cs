@@ -14,7 +14,28 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
     class IfCommand: AbstractCommand
     {
-        // TODO: Meta!
+        // <--[command]
+        // @Name if
+        // @Arguments <comparisons>
+        // @Short Executes the following block of commands only if the input is true.
+        // @Updated 2016/04/28
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 5
+        // @Description
+        // Executes the following block of commands only if the input is true.
+        // Works with the <@link command else>else command<@/link>.
+        // TODO: Explain more!
+        // @Example
+        // // This example echos "hi".
+        // if true
+        // {
+        //     echo "hi";
+        // }
+        // @Example
+        // // TODO: More examples!
+        // -->
         public IfCommand()
         {
             Name = "if";
