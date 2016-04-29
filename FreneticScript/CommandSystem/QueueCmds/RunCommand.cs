@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <para/>Fires when a a script is going to be ran, cancellable.
         /// <para/>Contains the name of the script only.
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
-        /// <para/>Third: <see cref="OnScriptRanPostEvent"/>
+        /// <para/>Third: <see cref="OnScriptRanPostEvent"/>.
         /// </summary>
         public FreneticScriptEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent = new FreneticScriptEventHandler<ScriptRanPreEventArgs>();
 

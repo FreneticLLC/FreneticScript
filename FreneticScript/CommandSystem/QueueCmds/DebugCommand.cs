@@ -43,16 +43,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    string inp = input.ToString().ToLowerFast();
-                    if (inp == "full" || inp == "minimal" || inp == "none")
-                    {
-                        return new TextTag(inp);
-                    }
-                    return null;
-                }
+                verify
             };
+        }
+
+        TemplateObject verify(TemplateObject input)
+        {
+            string inp = input.ToString().ToLowerFast();
+            if (inp == "full" || inp == "minimal" || inp == "none")
+            {
+                return new TextTag(inp);
+            }
+            return null;
         }
 
         public override void Execute(CommandQueue queue, CommandEntry entry)

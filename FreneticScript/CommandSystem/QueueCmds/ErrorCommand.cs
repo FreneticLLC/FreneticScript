@@ -8,9 +8,26 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    // TODO: Meta!
     class ErrorCommand : AbstractCommand
     {
+        // <--[command]
+        // @Name error
+        // @Arguments <error message>
+        // @Short Throws an error on the current command queue.
+        // @Updated 2016/04/28
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 1
+        // @Description
+        // Throws an error on the current command queue.
+        // TODO: Explain more!
+        // @Example
+        // // This example throws the error "RIP".
+        // error "RIP";
+        // @Example
+        // // TODO: More examples!
+        // -->
         public ErrorCommand()
         {
             Name = "error";
