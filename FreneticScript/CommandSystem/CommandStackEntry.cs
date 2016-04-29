@@ -180,7 +180,9 @@ namespace FreneticScript.CommandSystem
         /// <returns>The newly duplicated stack entry.</returns>
         public CommandStackEntry Duplicate()
         {
-            return (CommandStackEntry)MemberwiseClone();
+            CommandStackEntry cse = (CommandStackEntry)MemberwiseClone();
+            cse.Variables = new Dictionary<string, TemplateObject>(cse.Variables);
+            return cse;
         }
     }
 
