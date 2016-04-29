@@ -106,8 +106,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 CommandStackEntry cse = queue.CommandStack.Peek();
                 ForeachCommandData dat = (ForeachCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
                 dat.Index++;
+                queue.SetVariable("foreach_total", new IntegerTag(dat.List.Count));
+                queue.SetVariable("foreach_index", new IntegerTag(dat.Index));
+                queue.SetVariable("foreach_list", new ListTag(dat.List));
                 if (dat.Index <= dat.List.Count)
                 {
+                    queue.SetVariable("foreach_value", dat.List[dat.Index - 1]);
                     if (entry.ShouldShowGood(queue))
                     {
                         entry.Good(queue, "Foreach looping...: " + dat.Index + "/" + dat.List.Count);
@@ -166,6 +170,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     return;
                 }
                 entry.SetData(queue, new ForeachCommandData() { Index = 1, List = list.ListEntries });
+                queue.SetVariable("foreach_index", new IntegerTag(1));
+                queue.SetVariable("foreach_total", new IntegerTag(target));
+                queue.SetVariable("foreach_value", list.ListEntries[0]);
+                queue.SetVariable("foreach_list", list);
                 if (entry.ShouldShowGood(queue))
                 {
                     entry.Good(queue, "Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
