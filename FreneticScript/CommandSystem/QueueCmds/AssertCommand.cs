@@ -40,14 +40,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 2;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    return BooleanTag.TryFor(input);
-                },
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                }
+                BooleanTag.TryFor,
+                TextTag.For
             };
         }
 

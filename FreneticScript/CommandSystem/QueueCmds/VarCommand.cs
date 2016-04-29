@@ -20,35 +20,30 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 5;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                },
-                (input) =>
-                {
-                    if (input.ToString() == "=")
-                    {
-                        return new TextTag("=");
-                    }
-                    return null;
-                },
-                (input) =>
-                {
-                    return input;
-                },
-                (input) =>
-                {
-                    if (input.ToString().ToLowerFast() == "as")
-                    {
-                        return new TextTag("as");
-                    }
-                    return null;
-                },
-                (input) =>
-                {
-                    return input; // TODO: TagTypeTag?
-                }
+                TextTag.For,
+                verify1,
+                TemplateObject.Basic_For,
+                verify2,
+                TemplateObject.Basic_For
             };
+        }
+
+        TemplateObject verify1(TemplateObject input)
+        {
+            if (input.ToString() == "=")
+            {
+                return new TextTag("=");
+            }
+            return null;
+        }
+
+        TemplateObject verify2(TemplateObject input)
+        {
+            if (input.ToString().ToLowerFast() == "as")
+            {
+                return new TextTag("as");
+            }
+            return null;
         }
 
         public override void Execute(CommandQueue queue, CommandEntry entry)

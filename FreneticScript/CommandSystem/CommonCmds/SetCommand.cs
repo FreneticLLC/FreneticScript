@@ -22,24 +22,20 @@ namespace FreneticScript.CommandSystem.CommonCmds
             MaximumArguments = 3;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                },
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                },
-                (input) =>
-                {
-                    string inp = input.ToString().ToLowerFast();
-                    if (inp == "force" || inp == "remove" || inp == "do_not_save")
-                    {
-                        return new TextTag(inp);
-                    }
-                    return null;
-                }
+                TextTag.For,
+                TextTag.For,
+                verify
             };
+        }
+
+        TemplateObject verify(TemplateObject input)
+        {
+            string inp = input.ToString().ToLowerFast();
+            if (inp == "force" || inp == "remove" || inp == "do_not_save")
+            {
+                return new TextTag(inp);
+            }
+            return null;
         }
 
         /// <summary>

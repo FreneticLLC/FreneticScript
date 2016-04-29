@@ -56,10 +56,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    return NumberTag.TryFor(input);
-                }
+                NumberTag.TryFor
             };
         }
         

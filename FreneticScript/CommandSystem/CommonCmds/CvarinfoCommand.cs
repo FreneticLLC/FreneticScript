@@ -21,10 +21,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                }
+                TextTag.For
             };
         }
 

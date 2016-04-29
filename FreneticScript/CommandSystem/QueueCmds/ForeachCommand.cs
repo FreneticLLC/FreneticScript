@@ -78,24 +78,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsBreakable = true;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    if (input.ToString() == "\0CALLBACK")
-                    {
-                        return input;
-                    }
-                    string inp = input.ToString().ToLowerFast();
-                    if (inp == "start" || inp == "stop" || inp == "next")
-                    {
-                        return new TextTag(input.ToString());
-                    }
-                    return null;
-                },
-                (input) =>
-                {
-                    return ListTag.For(input);
-                }
+                verify,
+                ListTag.For
             };
+        }
+
+        TemplateObject verify(TemplateObject input)
+        {
+            if (input.ToString() == "\0CALLBACK")
+            {
+                return input;
+            }
+            string inp = input.ToString().ToLowerFast();
+            if (inp == "start" || inp == "stop" || inp == "next")
+            {
+                return new TextTag(inp);
+            }
+            return null;
         }
 
         public override void Execute(CommandQueue queue, CommandEntry entry)

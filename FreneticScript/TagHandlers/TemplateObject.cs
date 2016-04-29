@@ -17,6 +17,16 @@ namespace FreneticScript.TagHandlers
         public abstract TemplateObject Handle(TagData data);
 
         /// <summary>
+        /// Returns the input as-is, for use with ObjecTypes.
+        /// </summary>
+        /// <param name="obj">The object input.</param>
+        /// <returns>The object input.</returns>
+        public static TemplateObject Basic_For(TemplateObject obj)
+        {
+            return obj;
+        }
+
+        /// <summary>
         /// Sets a value on the object.
         /// </summary>
         /// <param name="names">The name of the value.</param>

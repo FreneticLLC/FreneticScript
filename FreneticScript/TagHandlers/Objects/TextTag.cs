@@ -31,6 +31,16 @@ namespace FreneticScript.TagHandlers.Objects
         {
             Text = _text;
         }
+
+        /// <summary>
+        /// Converts a template object to a text tag.
+        /// </summary>
+        /// <param name="text">The text input.</param>
+        /// <returns>A valid text tag.</returns>
+        public static TextTag For(TemplateObject text)
+        {
+            return new TextTag(text.ToString());
+        }
         
         /// <summary>
         /// Parse any direct tag input values.

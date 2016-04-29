@@ -29,9 +29,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 3;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) => new TextTag(input.ToString()),
-                (input) => new TextTag(input.ToString()),
-                (input) => input
+                TextTag.For,
+                TextTag.For,
+                TemplateObject.Basic_For
             };
         }
 

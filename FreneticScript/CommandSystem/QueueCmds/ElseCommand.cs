@@ -45,20 +45,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = -1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    string inp = input.ToString();
-                    if (inp == "\0CALLBACK")
-                    {
-                        return input;
-                    }
-                    if (inp.ToLowerFast() == "if")
-                    {
-                        return new TextTag("if");
-                    }
-                    return null;
-                }
+                verify
             };
+        }
+
+        TemplateObject verify(TemplateObject input)
+        {
+            string inp = input.ToString();
+            if (inp == "\0CALLBACK")
+            {
+                return input;
+            }
+            if (inp.ToLowerFast() == "if")
+            {
+                return new TextTag("if");
+            }
+            return null;
         }
 
         public override void Execute(CommandQueue queue, CommandEntry entry)

@@ -60,28 +60,34 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 3;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    if (input.ToString() == "\0CALLBACK")
-                    {
-                        return input;
-                    }
-                    string inp = input.ToString().ToLowerFast();
-                    if (inp == "stop" || inp == "define" || inp == "undefine")
-                    {
-                        return new TextTag(inp);
-                    }
-                    return null;
-                },
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                },
-                (input) =>
-                {
-                    return new TextTag(input.ToString());
-                }
+                verify1,
+                TextTag.For,
+                verify2
             };
+        }
+
+        TemplateObject verify1(TemplateObject input)
+        {
+            if (input.ToString() == "\0CALLBACK")
+            {
+                return input;
+            }
+            string inp = input.ToString().ToLowerFast();
+            if (inp == "stop" || inp == "define" || inp == "undefine")
+            {
+                return new TextTag(inp);
+            }
+            return null;
+        }
+        
+        TemplateObject verify2(TemplateObject input)
+        {
+            string inp = input.ToString().ToLowerFast();
+            if (inp == "quiet_fail")
+            {
+                return new TextTag(inp);
+            }
+            return null;
         }
 
         public override void Execute(CommandQueue queue, CommandEntry entry)

@@ -76,25 +76,32 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsBreakable = true;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                (input) =>
-                {
-                    if (input.ToString() == "\0CALLBACK")
-                    {
-                        return input;
-                    }
-                    int rep;
-                    if (int.TryParse(input.ToString(), out rep))
-                    {
-                        return new IntegerTag(rep);
-                    }
-                    return new TextTag(input.ToString());
-                }
+                verify
             };
+        }
+
+        TemplateObject verify(TemplateObject input)
+        {
+            if (input.ToString() == "\0CALLBACK")
+            {
+                return input;
+            }
+            int rep;
+            if (int.TryParse(input.ToString(), out rep))
+            {
+                return new IntegerTag(rep);
+            }
+            string inp = input.ToString();
+            if (inp == "stop" || inp == "next")
+            {
+                return new TextTag(inp);
+            }
+            return null;
         }
         
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string count = entry.GetArgument(queue, 0);
+            string count = entry.GetArgument(queue, 0); // TODO: Object!
             if (count == "\0CALLBACK")
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
@@ -152,7 +159,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                int target = (int)IntegerTag.TryFor(count).Internal; // TODO: Maybe a null check?
+                int target = (int)IntegerTag.TryFor(count).Internal;
                 if (target <= 0)
                 {
                     if (entry.ShouldShowGood(queue))
