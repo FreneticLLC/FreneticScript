@@ -10,7 +10,28 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class GotoCommand : AbstractCommand
     {
-        // TODO: Meta!
+        // <--[command]
+        // @Name goto
+        // @Arguments <mark name>
+        // @Short Goes to the marked location in a script.
+        // @Updated 2016/04/28
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 5
+        // @Description
+        // Goes to the marked location in a script.
+        // See the <@link command mark>mark command<@/link>.
+        // TODO: Explain more!
+        // @Example
+        // // This example echos "hi".
+        // goto skip;
+        // echo nope;
+        // mark skip;
+        // echo hi;
+        // @Example
+        // // TODO: More examples!
+        // -->
         public GotoCommand()
         {
             Name = "goto";
