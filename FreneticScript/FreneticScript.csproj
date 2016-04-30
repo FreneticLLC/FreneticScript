@@ -44,6 +44,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet">
+      <HintPath>.\YamlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandSystem\AbstractCommand.cs" />
@@ -60,6 +63,7 @@
     <Compile Include="CommandSystem\Commands.cs" />
     <Compile Include="CommandSystem\CommandScript.cs" />
     <Compile Include="CommandSystem\CommandStackEntry.cs" />
+    <Compile Include="CommandSystem\CommonCmds\YamlCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\CleanmemCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\DebugOutputInvalidCommand.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="TagHandlers\TemplateTagBase.cs" />
     <Compile Include="TagHandlers\Variable.cs" />
     <Compile Include="TextStyle.cs" />
+    <Compile Include="YAMLConfiguration.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

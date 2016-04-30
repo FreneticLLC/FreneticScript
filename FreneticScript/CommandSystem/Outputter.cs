@@ -53,6 +53,23 @@ namespace FreneticScript.CommandSystem
         public abstract string ReadTextFile(string name);
 
         /// <summary>
+        /// Used to read a text file, generally generic data for a script.
+        /// File format is along the lines of "mymap/mydata.yml".
+        /// Throw a System.IO.FileNotFoundException if file does not exist.
+        /// </summary>
+        /// <param name="name">The filename to read.</param>
+        /// <returns>The read data file.</returns>
+        public abstract byte[] ReadDataFile(string name);
+
+        /// <summary>
+        /// Used to write a text file, generally generic data for a script.
+        /// File format is along the lines of "mymap/mydata.yml".
+        /// </summary>
+        /// <param name="name">The filename to write.</param>
+        /// <param name="data">The data to write to file.</param>
+        public abstract void WriteDataFile(string name, byte[] data);
+
+        /// <summary>
         /// Whether the game is still setting up currently.
         /// </summary>
         public bool Initializing = false;

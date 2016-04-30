@@ -70,6 +70,11 @@ namespace FreneticScript
     public class FreneticScriptUtilities
     {
         /// <summary>
+        /// The encoding used by FrenetiCScript.
+        /// </summary>
+        public static Encoding Enc = new UTF8Encoding(false);
+
+        /// <summary>
         /// Converts a string value to the long-integer value it represents.
         /// Returns 0 if the string does not represent a long-integer.
         /// </summary>
