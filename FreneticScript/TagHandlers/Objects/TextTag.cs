@@ -73,7 +73,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name TextTag.to_integer
                 // @Group Text Modification
-                // @ReturnType NumberTag
+                // @ReturnType IntegerTag
                 // @Returns the text parsed as an integer.
                 // @Example "1" .to_integer returns "1".
                 // -->
@@ -110,7 +110,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Example "1" .is_number returns "true".
                 // -->
                 case "is_number":
-                    return new BooleanTag(NumberTag.For(data, Text) != null).Handle(data.Shrink());
+                    return new BooleanTag(NumberTag.TryFor(Text) != null).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.is_integer
                 // @Group Text Modification
@@ -119,7 +119,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Example "1" .is_integer returns "true".
                 // -->
                 case "is_integer":
-                    return new BooleanTag(IntegerTag.For(data, Text) != null).Handle(data.Shrink());
+                    return new BooleanTag(IntegerTag.TryFor(Text) != null).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.is_boolean
                 // @Group Text Modification
@@ -128,7 +128,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Example "true" .is_boolean returns "true".
                 // -->
                 case "is_boolean":
-                    return new BooleanTag(BooleanTag.For(data, Text) != null).Handle(data.Shrink());
+                    return new BooleanTag(BooleanTag.TryFor(Text) != null).Handle(data.Shrink());
                 // <--[tag]
                 // @Name TextTag.to_upper
                 // @Group Text Modification
