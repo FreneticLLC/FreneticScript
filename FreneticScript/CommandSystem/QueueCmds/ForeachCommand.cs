@@ -55,7 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: More examples!
     // @Var foreach_index TextTag returns what iteration (numeric) the foreach is on.
     // @Var foreach_total TextTag returns what iteration (numeric) the foreach is aiming for, and will end on if not stopped early.
-    // @Var foreach_value Dynamic returns the current item in the list.
+    // @Var foreach_value <Dynamic> returns the current item in the list.
     // @Var foreach_list ListTag returns the full list being looped through.
     // -->
     class ForeachCommandData : AbstractCommandEntryData

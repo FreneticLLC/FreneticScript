@@ -330,7 +330,7 @@ namespace FreneticScript
                 }
                 return toret;
             }
-            if (!(tobj is Dictionary<string, dynamic> || tobj is Dictionary<string, object>))
+            if (!(tobj is Dictionary<string, object>))
             {
                 return new List<string>();
             }
@@ -394,7 +394,7 @@ namespace FreneticScript
                 object nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
                 if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
-                    nobj = new Dictionary<dynamic, dynamic>();
+                    nobj = new Dictionary<object, object>();
                     ((Dictionary<object, object>)obj)[data[i]] = nobj;
                 }
                 obj = nobj;
@@ -425,7 +425,7 @@ namespace FreneticScript
                 object nobj = ((Dictionary<object, object>)obj).ContainsKey(data[i]) ? ((Dictionary<object, object>)obj)[data[i]] : null;
                 if (nobj == null || !(nobj is Dictionary<object, object>))
                 {
-                    nobj = new Dictionary<dynamic, dynamic>();
+                    nobj = new Dictionary<object, object>();
                     ((Dictionary<object, object>)obj)[data[i]] = nobj;
                 }
                 obj = nobj;
