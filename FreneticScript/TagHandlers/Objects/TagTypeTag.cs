@@ -58,6 +58,14 @@ namespace FreneticScript.TagHandlers.Objects
 
         static TagTypeTag()
         {
+            // <--[tag]
+            // @Name TagTypeTag.for[<Tag>]
+            // @Group Tag System
+            // @ReturnType <Dynamic>
+            // @Returns a constructed instance of this tag type.
+            // @Example "numbertag" .for[3] returns "3".
+            // -->
+            Handlers.Add("for", new TagSubHandler() { Handle = (data, obj) => ((TagTypeTag)obj).Internal.TypeGetter(data, data.GetModifierObject(0)), ReturnTypeString = null });
             // Documented in TextTag.
             Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(((TagTypeTag)obj).Internal), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.

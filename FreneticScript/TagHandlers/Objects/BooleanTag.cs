@@ -155,7 +155,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType BooleanTag
                 // @Returns whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.
                 // @Example "true" .xor[true] returns "false".
-                // @Example "true" .xor[fa,se] returns "true".
+                // @Example "true" .xor[false] returns "true".
                 // -->
                 case "xor":
                     return new BooleanTag(Internal != For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());

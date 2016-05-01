@@ -20,7 +20,7 @@ namespace FreneticScript.TagHandlers.Common
         // <--[tagbase]
         // @Base var[<TextTag>]
         // @Group Variables
-        // @ReturnType Dynamic
+        // @ReturnType <Dynamic>
         // @Returns the specified variable from the queue.
         // <@link explanation Queue Variables>What are queue variables?<@/link>
         // -->

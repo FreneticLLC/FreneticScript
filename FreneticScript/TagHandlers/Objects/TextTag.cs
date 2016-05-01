@@ -333,7 +333,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name TextTag.duplicate
                 // @Group Global Usage Tags
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns a perfect duplicate of this tag.
                 // -->
                 case "duplicate":

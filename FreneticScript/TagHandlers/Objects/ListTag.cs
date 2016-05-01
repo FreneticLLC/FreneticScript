@@ -201,7 +201,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.first
                 // @Group List Entries
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns the first entry in the list.
                 // @Example "one|two|three|" .first returns "one".
                 // -->
@@ -215,7 +215,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.random
                 // @Group List Entries
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns a random entry from the list
                 // @Example "one|two|three|" .random returns "one", "two", or "three".
                 // -->
@@ -229,7 +229,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.last
                 // @Group List Entries
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns the last entry in the list.
                 // @Example "one|two|three|" .last returns "three".
                 // -->
@@ -243,7 +243,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.get[<TextTag>]
                 // @Group List Entries
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns the specified entry in the list.
                 // @Other note that indices are one-based.
                 // @Example "one|two|three|" .get[2] returns "two".

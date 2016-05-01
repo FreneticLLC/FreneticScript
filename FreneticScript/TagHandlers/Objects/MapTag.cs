@@ -127,7 +127,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name MapTag.contains[<TextTag>]
                 // @Group Map Entries
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns whether the specified entry exists in the map.
                 // @Example "one:a|two:b" .contains[one] returns "true".
                 // @Example "one:a|two:b" .contains[three] returns "false".
@@ -140,7 +140,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name MapTag.get[<TextTag>]
                 // @Group Map Entries
-                // @ReturnType Dynamic
+                // @ReturnType <Dynamic>
                 // @Returns the specified entry value in the map.
                 // @Example "one:a|two:b" .get[one] returns "a".
                 // @Example "one:a|two:b" .get[two] returns "b".

@@ -109,16 +109,6 @@ namespace FreneticScript.TagHandlers
             Register(new UtilTagBase());
             Register(new VarTagBase());
             // Object types
-            Register(Type_Text = new TagType()
-            {
-                TypeName = "texttag",
-                SubTypeName = null,
-                TypeGetter = (data, obj) =>
-                {
-                    return new TextTag(obj.ToString());
-                },
-                SubHandlers = null
-            });
             Register(Type_Integer = new TagType()
             {
                 TypeName = "integertag",
@@ -128,6 +118,16 @@ namespace FreneticScript.TagHandlers
                     return IntegerTag.For(data, obj);
                 },
                 SubHandlers = IntegerTag.Handlers
+            });
+            Register(Type_Number = new TagType()
+            {
+                TypeName = "nulltag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return new NullTag();
+                },
+                SubHandlers = null
             });
             Register(Type_Number = new TagType()
             {
@@ -148,6 +148,16 @@ namespace FreneticScript.TagHandlers
                     return TagTypeTag.For(data, obj);
                 },
                 SubHandlers = TagTypeTag.Handlers
+            });
+            Register(Type_Text = new TagType()
+            {
+                TypeName = "texttag",
+                SubTypeName = null,
+                TypeGetter = (data, obj) =>
+                {
+                    return new TextTag(obj.ToString());
+                },
+                SubHandlers = null
             });
         }
 
@@ -173,7 +183,7 @@ namespace FreneticScript.TagHandlers
                     foreach (KeyValuePair<string, TagSubHandler> point in orig)
                     {
                         TagSubHandler hand = point.Value.Duplicate();
-                        if (!Types.ContainsKey(hand.ReturnTypeString))
+                        if (hand.ReturnTypeString != null && !Types.ContainsKey(hand.ReturnTypeString))
                         {
                             CommandSystem.Output.Bad("Unrecognized type string: " + hand.ReturnTypeString, DebugMode.FULL);
                         }
@@ -188,15 +198,15 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
-        /// The TextTag type.
-        /// </summary>
-        public TagType Type_Text;
-
-        /// <summary>
         /// The IntegerTag type.
         /// </summary>
         public TagType Type_Integer;
-        
+
+        /// <summary>
+        /// The NullTag type.
+        /// </summary>
+        public TagType Type_Null;
+
         /// <summary>
         /// The NumberTag type.
         /// </summary>
@@ -206,6 +216,11 @@ namespace FreneticScript.TagHandlers
         /// The TagTypeTag type.
         /// </summary>
         public TagType Type_TagType;
+
+        /// <summary>
+        /// The TextTag type.
+        /// </summary>
+        public TagType Type_Text;
 
         /// <summary>
         /// Splits text into an Argument, for preparsing.
