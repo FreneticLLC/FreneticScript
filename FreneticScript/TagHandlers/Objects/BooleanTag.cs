@@ -162,6 +162,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // Documented in TextTag.
                 case "duplicate":
                     return new BooleanTag(Internal).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "type":
+                    return new TagTypeTag(data.TagSystem.Type_Boolean).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

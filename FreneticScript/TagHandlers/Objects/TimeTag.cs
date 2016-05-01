@@ -80,6 +80,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // Documented in TextTag.
                 case "duplicate":
                     return new TimeTag(Internal).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "type":
+                    return new TagTypeTag(data.TagSystem.Type_Time).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

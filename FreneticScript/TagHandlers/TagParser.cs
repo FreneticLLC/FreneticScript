@@ -109,6 +109,26 @@ namespace FreneticScript.TagHandlers
             Register(new UtilTagBase());
             Register(new VarTagBase());
             // Object types
+            Register(Type_Binary = new TagType()
+            {
+                TypeName = "binarytag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return BinaryTag.For(data, obj);
+                },
+                SubHandlers = null
+            });
+            Register(Type_Boolean = new TagType()
+            {
+                TypeName = "booleantag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return BooleanTag.For(data, obj);
+                },
+                SubHandlers = null
+            });
             Register(Type_Integer = new TagType()
             {
                 TypeName = "integertag",
@@ -118,6 +138,26 @@ namespace FreneticScript.TagHandlers
                     return IntegerTag.For(data, obj);
                 },
                 SubHandlers = IntegerTag.Handlers
+            });
+            Register(Type_List = new TagType()
+            {
+                TypeName = "listtag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return ListTag.For(obj);
+                },
+                SubHandlers = null
+            });
+            Register(Type_Map = new TagType()
+            {
+                TypeName = "maptag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return MapTag.For(obj);
+                },
+                SubHandlers = null
             });
             Register(Type_Number = new TagType()
             {
@@ -156,6 +196,16 @@ namespace FreneticScript.TagHandlers
                 TypeGetter = (data, obj) =>
                 {
                     return new TextTag(obj.ToString());
+                },
+                SubHandlers = null
+            });
+            Register(Type_Time = new TagType()
+            {
+                TypeName = "timetag",
+                SubTypeName = "texttag",
+                TypeGetter = (data, obj) =>
+                {
+                    return TimeTag.For(obj);
                 },
                 SubHandlers = null
             });
@@ -198,9 +248,29 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
+        /// The BinaryTag type.
+        /// </summary>
+        public TagType Type_Binary;
+
+        /// <summary>
+        /// The BooleanTag type.
+        /// </summary>
+        public TagType Type_Boolean;
+
+        /// <summary>
         /// The IntegerTag type.
         /// </summary>
         public TagType Type_Integer;
+
+        /// <summary>
+        /// The ListTag type.
+        /// </summary>
+        public TagType Type_List;
+
+        /// <summary>
+        /// The MapTag type.
+        /// </summary>
+        public TagType Type_Map;
 
         /// <summary>
         /// The NullTag type.
@@ -221,6 +291,11 @@ namespace FreneticScript.TagHandlers
         /// The TextTag type.
         /// </summary>
         public TagType Type_Text;
+
+        /// <summary>
+        /// The TimeTag type.
+        /// </summary>
+        public TagType Type_Time;
 
         /// <summary>
         /// Splits text into an Argument, for preparsing.

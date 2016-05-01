@@ -159,6 +159,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // Documented in TextTag.
                 case "duplicate":
                     return new MapTag(Internal).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "type":
+                    return new TagTypeTag(data.TagSystem.Type_Map).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

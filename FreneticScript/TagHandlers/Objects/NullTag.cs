@@ -50,6 +50,19 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// All tag handlers for this tag type.
+        /// </summary>
+        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
+
+        static NullTag()
+        {
+            // Documented in TextTag.
+            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new NullTag(), ReturnTypeString = "nulltag" });
+            // Documented in TextTag.
+            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Null), ReturnTypeString = "tagtypetag" });
+        }
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
@@ -59,14 +72,12 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            switch (data[0])
+            TagSubHandler handler;
+            if (Handlers.TryGetValue(data[0], out handler))
             {
-                // Documented in TextTag.
-                case "duplicate":
-                    return new NullTag().Handle(data.Shrink());
-                default:
-                    return new TextTag(ToString()).Handle(data);
+                return handler.Handle(data, this).Handle(data.Shrink());
             }
+            return new TextTag(ToString()).Handle(data);
         }
 
         /// <summary>

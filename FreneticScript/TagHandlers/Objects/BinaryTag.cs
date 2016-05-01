@@ -24,12 +24,11 @@ namespace FreneticScript.TagHandlers.Objects
         public byte[] Internal;
 
         /// <summary>
-        /// Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
-        /// Never null!
+        /// Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
         /// </summary>
-        /// <param name="dat">The TagData used to construct this BooleanTag.</param>
-        /// <param name="input">The input text to create a boolean from.</param>
-        /// <returns>The boolean tag.</returns>
+        /// <param name="dat">The TagData used to construct this BinaryTag.</param>
+        /// <param name="input">The input text to create binary data from.</param>
+        /// <returns>The binary tag.</returns>
         public static BinaryTag For(TagData dat, string input)
         {
             try
@@ -70,9 +69,9 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
         /// </summary>
-        /// <param name="dat">The TagData used to construct this BooleanTag.</param>
-        /// <param name="input">The input to create or get a boolean from.</param>
-        /// <returns>The boolean tag.</returns>
+        /// <param name="dat">The TagData used to construct this BinaryTag.</param>
+        /// <param name="input">The input to create or get binary data from.</param>
+        /// <returns>The binary tag.</returns>
         public static BinaryTag For(TagData dat, TemplateObject input)
         {
             return input is BinaryTag ? (BinaryTag)input : For(dat, input.ToString());
@@ -268,6 +267,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // Documented in TextTag.
                 case "duplicate":
                     return new BinaryTag(Internal).Handle(data.Shrink());
+                // Documented in TextTag.
+                case "type":
+                    return new TagTypeTag(data.TagSystem.Type_Binary).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

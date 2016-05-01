@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem.Arguments
             {
                 InputValue = new BooleanTag(false);
             }
-            else if (_text == "null")
+            else if (_text == "&{NULL}" || _text == "&{null}")
             {
                 InputValue = new NullTag();
             }
