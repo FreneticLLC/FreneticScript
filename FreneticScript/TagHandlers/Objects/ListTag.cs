@@ -257,11 +257,6 @@ namespace FreneticScript.TagHandlers.Objects
                             data.Error("Read 'get' tag on empty list!");
                             return new NullTag();
                         }
-                        if (num == null)
-                        {
-                            data.Error("Invalid integer input: '" + TagParser.Escape(modif.ToString()) + "'!");
-                            return new NullTag();
-                        }
                         int number = (int)num.Internal - 1;
                         if (number < 0)
                         {
@@ -274,37 +269,29 @@ namespace FreneticScript.TagHandlers.Objects
                         return ListEntries[number].Handle(data.Shrink());
                     }
                 // <--[tag]
-                // @Name ListTag.range[<IntegerTag>,<IntegerTag>]
+                // @Name ListTag.range[<ListTag>]
                 // @Group List Entries
                 // @ReturnType ListTag
                 // @Returns the specified set of entries in the list.
                 // @Other note that indices are one-based.
-                // @Example "one|two|three|four|" .range[2,3] returns "two|three|".
-                // @Example "one|two|three|" .range[2,2] returns "two|".
+                // @Example "one|two|three|four|" .range[2|3] returns "two|three|".
+                // @Example "one|two|three|" .range[2|2] returns "two|".
                 // -->
                 case "range":
                     {
-                        string modif = data.GetModifier(0);
-                        string[] split = modif.SplitFast(',');
-                        if (split.Length != 2)
+                        ListTag inputs = ListTag.For(data.GetModifierObject(0));
+                        if (inputs.ListEntries.Count < 2)
                         {
-                            data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
+                            data.Error("Invalid substring tag! Not two entries in the list!");
                             return new NullTag();
                         }
-                        IntegerTag num1 = IntegerTag.For(data, split[0]);
-                        IntegerTag num2 = IntegerTag.For(data, split[1]);
+                        int number = (int)IntegerTag.For(data, inputs.ListEntries[0]).Internal - 1;
+                        int number2 = (int)IntegerTag.For(data, inputs.ListEntries[1]).Internal - 1;
                         if (ListEntries.Count == 0)
                         {
                             data.Error("Read 'range' tag on empty list!");
                             return new NullTag();
                         }
-                        if (num1 == null || num2 == null)
-                        {
-                            data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
-                            return new NullTag();
-                        }
-                        int number = (int)num1.Internal - 1;
-                        int number2 = (int)num2.Internal - 1;
                         if (number < 0)
                         {
                             number = 0;
@@ -325,8 +312,7 @@ namespace FreneticScript.TagHandlers.Objects
                         }
                         if (number2 < number)
                         {
-                            data.Error("Invalid range tag!");
-                            return new NullTag();
+                            return new ListTag().Handle(data.Shrink());
                         }
                         List<TemplateObject> Entries = new List<TemplateObject>();
                         for (int i = number; i <= number2; i++)

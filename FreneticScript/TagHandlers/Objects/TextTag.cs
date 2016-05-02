@@ -195,7 +195,8 @@ namespace FreneticScript.TagHandlers.Objects
                         ListTag inputs = ListTag.For(data.GetModifierObject(0));
                         if (inputs.ListEntries.Count < 2)
                         {
-                            break;
+                            data.Error("Invalid substring tag! Not two entries in the list!");
+                            return new NullTag();
                         }
                         int num1 = (int)IntegerTag.For(data, inputs.ListEntries[0]).Internal - 1;
                         int num2 = (int)IntegerTag.For(data, inputs.ListEntries[1]).Internal - 1;

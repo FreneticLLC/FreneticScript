@@ -348,7 +348,7 @@ namespace FreneticScript.TagHandlers
                         string value = blockbuilder.ToString();
                         string fallback = null;
                         int brack = 0;
-                        for (int fb = 1; fb < value.Length; fb++)
+                        for (int fb = 0; fb < value.Length; fb++)
                         {
                             if (value[fb] == '[')
                             {
@@ -358,7 +358,7 @@ namespace FreneticScript.TagHandlers
                             {
                                 brack--;
                             }
-                            if (brack == 0 && value[fb] == '|' && value[fb - 1] == '|')
+                            if (brack == 0 && value[fb] == '|' && fb > 0 && value[fb - 1] == '|')
                             {
                                 fallback = value.Substring(fb + 1);
                                 value = value.Substring(0, fb);
