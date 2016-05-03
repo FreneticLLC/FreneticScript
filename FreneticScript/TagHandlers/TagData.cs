@@ -78,7 +78,7 @@ namespace FreneticScript.TagHandlers
         public TagData(TagParser _system, TagBit[] _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, Argument fallback)
         {
             TagSystem = _system;
-            BaseColor = _basecolor ?? "^r^7";
+            BaseColor = _basecolor ?? TextStyle.Color_Simple;
             Variables = _vars ?? new Dictionary<string, TemplateObject>();
             mode = _mode;
             Error = _error;

@@ -347,8 +347,8 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Advances any running command queues.
-        /// <param name="Delta">The time passed this tick.</param>
         /// </summary>
+        /// <param name="Delta">The time passed this tick.</param>
         public void Tick(float Delta)
         {
             for (int i = 0; i < Queues.Count; i++)
