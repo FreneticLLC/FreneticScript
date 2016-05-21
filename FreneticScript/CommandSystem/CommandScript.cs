@@ -220,6 +220,7 @@ namespace FreneticScript.CommandSystem
                             string argtype = centry.Arguments[4].ToString().ToLowerFast();
                             if (types.ContainsKey(argname) || !system.TagSystem.Types.ContainsKey(argtype))
                             {
+                                // TODO: Post-process this! It acts funky around functions!
                                 string fullmsg = "FAILED TO COMPILE SCRIPT '" + TagParser.Escape(name) + "': (line " + toret[i].ScriptLine + "): duplicate or invalid definite variable";
                                 system.Output.Bad(fullmsg, DebugMode.FULL);
                                 had_error = true;

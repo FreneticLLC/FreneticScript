@@ -75,6 +75,11 @@ namespace FreneticScript.CommandSystem
         /// All script events this command system is aware of.
         /// </summary>
         public Dictionary<string, ScriptEvent> Events;
+
+        /// <summary>
+        /// All known identifiers for the 'once' block command.
+        /// </summary>
+        public HashSet<string> OnceBlocks = new HashSet<string>();
         
         /// <summary>
         /// A random number generator.
@@ -301,6 +306,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new IfCommand());
             RegisterCommand(new InjectCommand());
             RegisterCommand(new MarkCommand());
+            RegisterCommand(new OnceCommand());
             RegisterCommand(new ParsingCommand());
             RegisterCommand(new RepeatCommand());
             RegisterCommand(new RequireCommand());

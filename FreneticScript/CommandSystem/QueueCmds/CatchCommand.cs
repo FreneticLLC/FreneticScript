@@ -15,6 +15,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Updated 2016/04/27
         // @Authors mcmonkey
         // @Group Queue
+        // @Block Always
         // @Minimum 0
         // @Maximum 1
         // @Description

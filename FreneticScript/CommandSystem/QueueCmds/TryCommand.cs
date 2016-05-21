@@ -11,7 +11,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     class TryCommand : AbstractCommand
     {
         // TODO: Meta!
-        // @Braces always
+        // @Block always
         public TryCommand()
         {
             Name = "try";

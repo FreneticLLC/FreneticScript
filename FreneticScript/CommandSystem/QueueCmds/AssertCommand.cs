@@ -54,7 +54,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "Assertion failed: " + TagParser.Escape(entry.GetArgument(queue, 1)));
                 return;
             }
-            entry.Good(queue, "Require command passed, all variables present!");
+            entry.Good(queue, "Assert command passed, assertion valid!");
         }
     }
 }

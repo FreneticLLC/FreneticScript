@@ -17,7 +17,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Group Queue
     // @Minimum 1
     // @Maximum 2
-    // @Braces allowed
+    // @Block Allowed
     // @Description
     // The foreach command will loop through the given list and run the included command block
     // once for each entry in the list.

@@ -12,7 +12,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Updated 2014/06/23
     // @Authors mcmonkey
     // @Group Queue
-    // @Braces allowed
+    // @Block Allowed
     // @Minimum 1
     // @Maximum 3
     // @Description

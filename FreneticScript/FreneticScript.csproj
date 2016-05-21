@@ -91,6 +91,7 @@
     <Compile Include="CommandSystem\QueueCmds\IfCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ErrorCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\MarkCommand.cs" />
+    <Compile Include="CommandSystem\QueueCmds\OnceCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ParsingCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\RepeatCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\AssertCommand.cs" />

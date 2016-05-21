@@ -25,6 +25,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Short Delays the contained blocked of commands for the input amount of time.
         // @Updated 2016/04/27
         // @Authors mcmonkey
+        // @Block Always
         // @Group Queue
         // @Minimum 1
         // @Maximum 1
