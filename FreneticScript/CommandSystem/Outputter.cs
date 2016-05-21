@@ -70,7 +70,12 @@ namespace FreneticScript.CommandSystem
         public abstract void WriteDataFile(string name, byte[] data);
 
         /// <summary>
-        /// Whether the game is still setting up currently.
+        /// Used when the system is reloaded, to delete any temporary script-related data.
+        /// </summary>
+        public abstract void Reload();
+
+        /// <summary>
+        /// Whether the game is still setting up currently. (Used by the InitOnly CVar system).
         /// </summary>
         public bool Initializing = false;
     }

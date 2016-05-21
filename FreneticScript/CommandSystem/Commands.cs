@@ -87,6 +87,23 @@ namespace FreneticScript.CommandSystem
         public Random random = new Random();
 
         /// <summary>
+        /// Reloads the entire command system.
+        /// </summary>
+        public void Reload()
+        {
+            OnceBlocks.Clear();
+            Functions.Clear();
+            foreach (ScriptEvent evt in Events.Values)
+            {
+                foreach (KeyValuePair<int, CommandScript> handl in new List<KeyValuePair<int, CommandScript>>(evt.Handlers))
+                {
+                    evt.RemoveEventHandler(handl.Value.Name);
+                }
+            }
+            Output.Reload();
+        }
+
+        /// <summary>
         /// Executes a command script.
         /// Returns the determined value(s).
         /// </summary>
@@ -328,6 +345,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new EchoCommand());
             RegisterCommand(new HelpCommand());
             RegisterCommand(new NoopCommand());
+            RegisterCommand(new ReloadCommand());
             RegisterCommand(new SetCommand());
             RegisterCommand(new ToggleCommand());
             RegisterCommand(new YamlCommand());
