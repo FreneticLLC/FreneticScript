@@ -78,9 +78,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "No commands follow!");
                 return;
             }
-            // TODO: Don't regenerate constantly! Pre-commandscriptify so it can compile!
-            CommandScript script = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, queue.CurrentEntry.Types, false);
-            CommandQueue nqueue = script.ToQueue(entry.Command.CommandSystem);
+            if (entry.BlockScript != null)
+            {
+                if (entry.ShouldShowGood(queue))
+                {
+                    entry.Good(queue, "Re-running delay command...");
+                }
+            }
+            else
+            {
+                if (entry.ShouldShowGood(queue))
+                {
+                    entry.Good(queue, "compiling and running delay command...");
+                }
+                entry.BlockScript = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, queue.CurrentEntry.Types /* TODO: Types required here?*/, true);
+            }
+            CommandQueue nqueue = entry.BlockScript.ToQueue(entry.Command.CommandSystem);
             nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;
             nqueue.Outputsystem = queue.Outputsystem;
             nqueue.Execute();
