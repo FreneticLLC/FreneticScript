@@ -456,7 +456,7 @@ namespace FreneticScript
         /// <returns>The string.</returns>
         public string SaveToString()
         {
-            Serializer ser = new Serializer();
+            Serializer ser = new Serializer(SerializationOptions.EmitDefaults);
             StringWriter sw = new StringWriter();
             ser.Serialize(sw, Data);
             return sw.ToString();

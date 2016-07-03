@@ -43,7 +43,7 @@ namespace FreneticScript.TagHandlers.Common
                 // @Name SystemTag.os_version
                 // @Group Utilities
                 // @ReturnType TextTag
-                // @Returns the name and version text of the operating system running this engine.s
+                // @Returns the name and version text of the operating system running this engine.
                 // -->
                 case "os_version":
                     return new TextTag(Environment.OSVersion.VersionString).Handle(data.Shrink());
