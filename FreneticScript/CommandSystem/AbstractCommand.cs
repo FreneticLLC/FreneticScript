@@ -225,9 +225,6 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void LoadEntry(int entry)
         {
-            ILGen.Emit(OpCodes.Ldarg_2);
-            ILGen.Emit(OpCodes.Ldc_I4, entry);
-            ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
             ILGen.Emit(OpCodes.Ldarg_0);
             ILGen.Emit(OpCodes.Ldfld, EntryField);
             ILGen.Emit(OpCodes.Ldfld, EntriesField);
@@ -249,6 +246,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The entry location.</param>
         public void PrepareExecutionCall(int entry)
         {
+            ILGen.Emit(OpCodes.Ldarg_2);
+            ILGen.Emit(OpCodes.Ldc_I4, entry);
+            ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
             LoadEntry(entry);
             ILGen.Emit(OpCodes.Ldfld, Entry_CommandField);
             LoadQueue();
