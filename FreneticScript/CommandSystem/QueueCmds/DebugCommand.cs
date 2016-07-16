@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         TemplateObject verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
-            if (inp == "full" || inp == "minimal" || inp == "none")
+            if (inp == "full" || inp == "minimal" || inp == "none" || inp == "exception")
             {
                 return new TextTag(inp);
             }

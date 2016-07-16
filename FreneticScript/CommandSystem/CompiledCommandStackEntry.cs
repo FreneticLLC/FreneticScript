@@ -26,10 +26,11 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether to continue looping.</returns>
         public override CommandStackRetVal Run(CommandQueue queue)
         {
+            IntHolder c = new IntHolder() { Internal = 0 };
             try
             {
                 // TODO: Delayable stuff, etc.
-                MainCompiledRunnable.Run(queue);
+                MainCompiledRunnable.Run(queue, c);
             }
             catch (Exception ex)
             {
@@ -41,8 +42,7 @@ namespace FreneticScript.CommandSystem
                 {
                     try
                     {
-                        // TODO: Determine the actual source entry that errored!
-                        queue.HandleError(Entries[0], "Internal exception: " + ex.ToString());
+                        queue.HandleError(Entries[c.Internal], "Internal exception: " + ex.ToString());
                     }
                     catch (Exception ex2)
                     {

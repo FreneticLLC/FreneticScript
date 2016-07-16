@@ -343,7 +343,7 @@ namespace FreneticScript.CommandSystem
                 ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname/*, "testmod.dll", true*/);
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
-                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue) });
+                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder) });
                 ILGenerator ilgen = methodbuild_c.GetILGenerator();
                 CILAdaptationValues values = new CILAdaptationValues();
                 values.Script = this;
@@ -419,16 +419,28 @@ namespace FreneticScript.CommandSystem
         /// The command stack entry that forms this runnable.
         /// </summary>
         public CommandStackEntry CSEntry;
-
+        
         /// <summary>
         /// This class's "Run(queue)" method.
         /// </summary>
-        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue) });
+        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder) });
 
         /// <summary>
         /// Runs the runnable.
         /// </summary>
         /// <param name="queue">The queue to run on.</param>
-        public abstract void Run(CommandQueue queue);
+        /// <param name="counter">The current command index.</param>
+        public abstract void Run(CommandQueue queue, IntHolder counter);
+    }
+
+    /// <summary>
+    /// Holds a 32-bit integer.
+    /// </summary>
+    public class IntHolder
+    {
+        /// <summary>
+        /// The actual integer.
+        /// </summary>
+        public int Internal;
     }
 }

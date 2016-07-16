@@ -31,15 +31,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public ErrorCommand()
         {
             Name = "error";
-            Arguments = "<error message>";
+            Arguments = "<error message> [exception]";
             Description = "Throws an error on the current command queue.";
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
-            MaximumArguments = 1;
+            MaximumArguments = 2;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                TextTag.For
+                TextTag.For,
+                BooleanTag.TryFor
             };
         }
 
@@ -50,7 +51,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            queue.HandleError(entry, entry.GetArgument(queue, 0));
+            if (entry.Arguments.Count > 1 && BooleanTag.TryFor(entry.GetArgumentObject(queue, 1)).Internal)
+            {
+                throw new Exception("FreneticScript induced exception: '" + entry.GetArgument(queue, 0) + "'");
+            }
+            else
+            {
+                queue.HandleError(entry, entry.GetArgument(queue, 0));
+            }
         }
     }
 }

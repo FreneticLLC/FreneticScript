@@ -191,9 +191,14 @@ namespace FreneticScript.CommandSystem
         public static FieldInfo EntriesField = typeof(CommandStackEntry).GetField("Entries");
 
         /// <summary>
-        /// Represents the field "Entry.Command" in the class CompiledCommandRunnable.
+        /// Represents the field "Command" in the class CommandEntry.
         /// </summary>
         public static FieldInfo Entry_CommandField = typeof(CommandEntry).GetField("Command");
+
+        /// <summary>
+        /// Represents the field "Internal" in the class IntHolder.
+        /// </summary>
+        public static FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField("Internal");
 
         /// <summary>
         /// Represents the "Execute(queue, entry)" method.
@@ -215,6 +220,9 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void LoadEntry(int entry)
         {
+            ILGen.Emit(OpCodes.Ldarg_2);
+            ILGen.Emit(OpCodes.Ldc_I4, entry);
+            ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
             ILGen.Emit(OpCodes.Ldarg_0);
             ILGen.Emit(OpCodes.Ldfld, EntryField);
             ILGen.Emit(OpCodes.Ldfld, EntriesField);
