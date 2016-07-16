@@ -5,6 +5,7 @@ using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -47,6 +48,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            string targ = cent.Arguments[0].ToString();
+            for (int i = 0; i < values.Entry.Entries.Length; i++)
+            {
+                if (values.Entry.Entries[i].Command is MarkCommand
+                    && values.Entry.Entries[i].Arguments[0].ToString() == targ)
+                {
+                    values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[i]);
+                    return;
+                }
+            }
+            throw new Exception("GOTO command invalid: no matching mark!");
+        }
+
         /// <summary>
         /// Executes the command.
         /// </summary>
@@ -54,14 +71,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string targ = entry.GetArgument(queue, 0);
+            string targ = entry.Arguments[0].ToString();
             CommandStackEntry cse = queue.CommandStack.Peek();
             for (int i = 0; i < cse.Entries.Length; i++)
             {
                 if (queue.GetCommand(i).Command is MarkCommand
                     && queue.GetCommand(i).Arguments[0].ToString() == targ)
                 {
-                    // TODO: Maybe parse tags in the mark commands?
+                    // TODO: Output?
                     cse.Index = i;
                     return;
                 }
