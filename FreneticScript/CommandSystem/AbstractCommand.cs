@@ -125,10 +125,10 @@ namespace FreneticScript.CommandSystem
         /// Adapts a command entry to CIL.
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
-        public virtual void AdaptToCIL(CILAdaptationValues values)
+        /// <param name="entry">The present entry ID.</param>
+        public virtual void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            values.CallExecute();
-            values.ILGen.Emit(OpCodes.Ret);
+            values.CallExecute(entry);
         }
 
         /// <summary>
@@ -176,19 +176,19 @@ namespace FreneticScript.CommandSystem
     public class CILAdaptationValues
     {
         /// <summary>
-        /// The entry being compiled.
-        /// </summary>
-        public CommandEntry Entry;
-
-        /// <summary>
         /// The compiling script.
         /// </summary>
         public CommandScript Script;
 
         /// <summary>
-        /// Represents the field "Entry" in the class CompiledCommandRunnable.
+        /// Represents the field "CSEntry" in the class CompiledCommandRunnable.
         /// </summary>
-        public static FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("Entry");
+        public static FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("CSEntry");
+
+        /// <summary>
+        /// Represents the field "Entries" in the class CommandStackEntry.
+        /// </summary>
+        public static FieldInfo EntriesField = typeof(CommandStackEntry).GetField("Entries");
 
         /// <summary>
         /// Represents the field "Entry.Command" in the class CompiledCommandRunnable.
@@ -201,6 +201,11 @@ namespace FreneticScript.CommandSystem
         public static MethodInfo ExecuteMethod = typeof(AbstractCommand).GetMethod("Execute", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
 
         /// <summary>
+        /// The type of the class CommandEntry.
+        /// </summary>
+        public static Type CommandEntryType = typeof(CommandEntry);
+
+        /// <summary>
         /// The IL code generator.
         /// </summary>
         public ILGenerator ILGen;
@@ -208,10 +213,13 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Load the entry onto the stack.
         /// </summary>
-        public void LoadEntry()
+        public void LoadEntry(int entry)
         {
             ILGen.Emit(OpCodes.Ldarg_0);
             ILGen.Emit(OpCodes.Ldfld, EntryField);
+            ILGen.Emit(OpCodes.Ldfld, EntriesField);
+            ILGen.Emit(OpCodes.Ldc_I4, entry);
+            ILGen.Emit(OpCodes.Ldelem_Ref);
         }
 
         /// <summary>
@@ -225,12 +233,12 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Call the "Execute(queue, entry)" method with appropriate parameters.
         /// </summary>
-        public void CallExecute()
+        public void CallExecute(int entry)
         {
-            LoadEntry();
+            LoadEntry(entry);
             ILGen.Emit(OpCodes.Ldfld, Entry_CommandField);
             LoadQueue();
-            LoadEntry();
+            LoadEntry(entry); // Awkward -> avoid duplicate call?
             ILGen.Emit(OpCodes.Callvirt, ExecuteMethod);
         }
     }

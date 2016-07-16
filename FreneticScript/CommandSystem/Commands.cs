@@ -210,6 +210,10 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
+                if (ex is System.Threading.ThreadAbortException)
+                {
+                    throw ex;
+                }
                 Output.Bad("Found exception while precalculating script '" + TagParser.Escape(name) + "'...: " + TagParser.Escape(ex.ToString()), DebugMode.FULL);
             }
         }
@@ -246,7 +250,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
-            CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this, false).ToQueue(this); // TODO: Compile option!
+            CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this, true).ToQueue(this); // TODO: Compile option!
             queue.Outputsystem = outputter;
             queue.Execute();
         }

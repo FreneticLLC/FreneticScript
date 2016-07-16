@@ -64,6 +64,10 @@ namespace FreneticScript.CommandSystem
                 }
                 catch (Exception ex)
                 {
+                    if (ex is System.Threading.ThreadAbortException)
+                    {
+                        throw ex;
+                    }
                     if (!(ex is ErrorInducedException))
                     {
                         try
@@ -72,6 +76,10 @@ namespace FreneticScript.CommandSystem
                         }
                         catch (Exception ex2)
                         {
+                            if (ex is System.Threading.ThreadAbortException)
+                            {
+                                throw ex;
+                            }
                             string message = ex2.ToString();
                             if (Debug <= DebugMode.MINIMAL)
                             {

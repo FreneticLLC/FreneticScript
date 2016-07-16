@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
@@ -14,9 +15,9 @@ namespace FreneticScript.CommandSystem
     public class CompiledCommandStackEntry: CommandStackEntry
     {
         /// <summary>
-        /// The compiled object.
+        /// The compiled runner object.
         /// </summary>
-        public CompiledCommandRunnable[] EntryCommands;
+        public CompiledCommandRunnable MainCompiledRunnable;
 
         /// <summary>
         /// Run this command stack.
@@ -25,60 +26,43 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether to continue looping.</returns>
         public override CommandStackRetVal Run(CommandQueue queue)
         {
-            while (Index >= 0 && Index < Entries.Length)
+            try
             {
-                CommandEntry CurrentCommand = Entries[Index];
-                CompiledCommandRunnable Runnable = EntryCommands[Index];
-                Index++;
-                if (CurrentCommand.Command.Waitable && CurrentCommand.WaitFor)
+                // TODO: Delayable stuff, etc.
+                MainCompiledRunnable.Run(queue);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ThreadAbortException)
                 {
-                    queue.WaitingOn = CurrentCommand;
+                    throw ex;
                 }
-                try
+                if (!(ex is ErrorInducedException))
                 {
-                    Runnable.Run(queue);
-                }
-                catch (Exception ex)
-                {
-                    if (!(ex is ErrorInducedException))
+                    try
                     {
-                        try
+                        // TODO: Determine the actual source entry that errored!
+                        queue.HandleError(Entries[0], "Internal exception: " + ex.ToString());
+                    }
+                    catch (Exception ex2)
+                    {
+                        if (ex is ThreadAbortException)
                         {
-                            queue.HandleError(CurrentCommand, "Internal exception: " + ex.ToString());
+                            throw ex;
                         }
-                        catch (Exception ex2)
+                        string message = ex2.ToString();
+                        if (Debug <= DebugMode.MINIMAL)
                         {
-                            string message = ex2.ToString();
-                            if (Debug <= DebugMode.MINIMAL)
+                            queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                            if (queue.Outputsystem != null)
                             {
-                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
-                                if (queue.Outputsystem != null)
-                                {
-                                    queue.Outputsystem.Invoke(message, MessageType.BAD);
-                                }
-                                Index = Entries.Length + 1;
-                                queue.CommandStack.Clear();
+                                queue.Outputsystem.Invoke(message, MessageType.BAD);
                             }
+                            Index = Entries.Length + 1;
+                            queue.CommandStack.Clear();
                         }
                     }
                 }
-                if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
-                {
-                    return CommandStackRetVal.BREAK;
-                }
-                if (queue.CommandStack.Count == 0)
-                {
-                    return CommandStackRetVal.BREAK;
-                }
-                if (queue.CommandStack.Peek() != this)
-                {
-                    return CommandStackRetVal.CONTINUE;
-                }
-            }
-            if (queue.CommandStack.Count > 0)
-            {
-                queue.CommandStack.Pop();
-                return CommandStackRetVal.CONTINUE;
             }
             return CommandStackRetVal.STOP;
         }

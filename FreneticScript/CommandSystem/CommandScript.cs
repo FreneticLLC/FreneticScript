@@ -276,6 +276,10 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
+                if (ex is System.Threading.ThreadAbortException)
+                {
+                    throw ex;
+                }
                 system.Output.Bad("Generating script for file '" + TagParser.Escape(filename)
                     + "': " + TagParser.Escape(ex.ToString()), DebugMode.NONE);
                 return null;
@@ -330,29 +334,30 @@ namespace FreneticScript.CommandSystem
             Created.Variables = new Dictionary<string, TemplateObject>();
             Created.Entries = Commands.ToArray();
             Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
-            string tname = "__script__" + IDINCR++;
-            AssemblyName asmname = new AssemblyName(tname);
-            asmname.Name = tname;
-            AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.Run); // TODO: RunAndCollect in .NET 4
-            ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             if (compile)
             {
+                string tname = "__script__" + IDINCR++;
+                AssemblyName asmname = new AssemblyName(tname);
+                asmname.Name = tname;
+                AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.Run/*AndSave*/); // TODO: RunAndCollect in .NET 4
+                ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname/*, "testmod.dll", true*/);
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
-                ccse.EntryCommands = new CompiledCommandRunnable[ccse.Entries.Length];
+                TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
+                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue) });
+                ILGenerator ilgen = methodbuild_c.GetILGenerator();
+                CILAdaptationValues values = new CILAdaptationValues();
+                values.Script = this;
+                values.ILGen = ilgen;
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
-                    TypeBuilder typebuild = modbuild.DefineType(tname + "__" + i, TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
-                    MethodBuilder methodbuild = typebuild.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue) });
-                    CILAdaptationValues values = new CILAdaptationValues();
-                    values.Entry = ccse.Entries[i];
-                    values.Script = this;
-                    values.ILGen = methodbuild.GetILGenerator();
-                    ccse.Entries[i].Command.AdaptToCIL(values);
-                    typebuild.DefineMethodOverride(methodbuild, CompiledCommandRunnable.RunMethod);
-                    Type t = typebuild.CreateType();
-                    ccse.EntryCommands[i] = (CompiledCommandRunnable)Activator.CreateInstance(t);
-                    ccse.EntryCommands[i].Entry = ccse.Entries[i];
+                    ccse.Entries[i].Command.AdaptToCIL(values, i);
                 }
+                ilgen.Emit(OpCodes.Ret);
+                typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
+                Type t_c = typebuild_c.CreateType();
+                ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
+                ccse.MainCompiledRunnable.CSEntry = ccse;
+                //asmbuild.Save("test.dll");
             }
         }
 
@@ -411,9 +416,9 @@ namespace FreneticScript.CommandSystem
     public abstract class CompiledCommandRunnable
     {
         /// <summary>
-        /// Reference to the original entry.
+        /// The command stack entry that forms this runnable.
         /// </summary>
-        public CommandEntry Entry;
+        public CommandStackEntry CSEntry;
 
         /// <summary>
         /// This class's "Run(queue)" method.
