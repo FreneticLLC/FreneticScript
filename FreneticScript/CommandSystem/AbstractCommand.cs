@@ -176,6 +176,11 @@ namespace FreneticScript.CommandSystem
     public class CILAdaptationValues
     {
         /// <summary>
+        /// The compiled CSE involved.
+        /// </summary>
+        public CompiledCommandStackEntry Entry;
+
+        /// <summary>
         /// The compiling script.
         /// </summary>
         public CommandScript Script;

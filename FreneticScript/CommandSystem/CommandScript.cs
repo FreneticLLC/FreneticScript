@@ -342,14 +342,21 @@ namespace FreneticScript.CommandSystem
                 AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.Run/*AndSave*/); // TODO: RunAndCollect in .NET 4
                 ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname/*, "testmod.dll", true*/);
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
+                ccse.AdaptedILPoints = new Label[ccse.Entries.Length];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
                 MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder) });
                 ILGenerator ilgen = methodbuild_c.GetILGenerator();
                 CILAdaptationValues values = new CILAdaptationValues();
+                values.Entry = ccse;
                 values.Script = this;
                 values.ILGen = ilgen;
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
+                    ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
+                }
+                for (int i = 0; i < ccse.Entries.Length; i++)
+                {
+                    ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
                     ccse.Entries[i].Command.AdaptToCIL(values, i);
                 }
                 ilgen.Emit(OpCodes.Ret);

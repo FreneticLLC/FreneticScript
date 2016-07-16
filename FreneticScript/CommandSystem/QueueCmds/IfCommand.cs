@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -12,7 +14,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public int Result;
     }
 
-    class IfCommand: AbstractCommand
+    /// <summary>
+    /// The if command.
+    /// </summary>
+    public class IfCommand: AbstractCommand
     {
         // <--[command]
         // @Name if
@@ -37,6 +42,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
+
+        /// <summary>
+        /// Construct the if commnad.
+        /// </summary>
         public IfCommand()
         {
             Name = "if";
@@ -49,22 +58,43 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        /// <summary>
+        /// Represents the "TryIfCIL(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo TryIfCILMethod = typeof(IfCommand).GetMethod("TryIfCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
+
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            if (entry.Arguments[0].ToString() == "\0CALLBACK")
+            CommandEntry cent = values.Entry.Entries[entry];
+            if (cent.Arguments[0].ToString() == "\0CALLBACK")
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
-                if (cse.Index < cse.Entries.Length)
-                {
-                    CommandEntry elseentry = cse.Entries[cse.Index];
-                    if (elseentry.Command is ElseCommand)
-                    {
-                        elseentry.SetData(queue, ifentry.GetData(queue));
-                    }
-                }
+                values.ILGen.Emit(OpCodes.Nop);
                 return;
             }
+            if (cent.BlockEnd <= 0)
+            {
+                throw new Exception("Incorrectly defined IF command: no block follows!");
+            }
+            values.LoadEntry(entry);
+            values.ILGen.Emit(OpCodes.Ldfld, CILAdaptationValues.Entry_CommandField);
+            values.LoadQueue();
+            values.LoadEntry(entry); // Awkward -> avoid duplicate call?
+            values.ILGen.Emit(OpCodes.Callvirt, TryIfCILMethod);
+            values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
+        }
+
+        /// <summary>
+        /// Executes the command via CIL.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        public bool TryIfCIL(CommandQueue queue, CommandEntry entry)
+        {
             entry.SetData(queue, new IfCommandData() { Result = 0 });
             List<string> parsedargs = new List<string>(entry.Arguments.Count);
             for (int i = 0; i < entry.Arguments.Count; i++)
@@ -86,11 +116,44 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "If is false, doing nothing!");
                 }
+            }
+            return success;
+        }
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        public override void Execute(CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.Arguments[0].ToString() == "\0CALLBACK")
+            {
+                CommandStackEntry cse = queue.CommandStack.Peek();
+                CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
+                if (cse.Index < cse.Entries.Length)
+                {
+                    CommandEntry elseentry = cse.Entries[cse.Index];
+                    if (elseentry.Command is ElseCommand)
+                    {
+                        elseentry.SetData(queue, ifentry.GetData(queue));
+                    }
+                }
+                return;
+            }
+            bool success = TryIfCIL(queue, entry);
+            if (!success)
+            {
                 queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
             }
         }
 
         // TODO: better comparison system!
+        /// <summary>
+        /// Tries input IF to see if it is TRUE or FALSE.
+        /// </summary>
+        /// <param name="arguments">The input arguments.</param>
+        /// <returns>Whether it is true or not.</returns>
         public static bool TryIf(List<string> arguments)
         {
             if (arguments.Count == 0)

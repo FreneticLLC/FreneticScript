@@ -6,6 +6,7 @@ using System.Threading;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -18,6 +19,11 @@ namespace FreneticScript.CommandSystem
         /// The compiled runner object.
         /// </summary>
         public CompiledCommandRunnable MainCompiledRunnable;
+
+        /// <summary>
+        /// Where in the CIL code each entry starts.
+        /// </summary>
+        public Label[] AdaptedILPoints;
 
         /// <summary>
         /// Run this command stack.
