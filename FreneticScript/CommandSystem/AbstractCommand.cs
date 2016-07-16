@@ -244,14 +244,23 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// Call the "Execute(queue, entry)" method with appropriate parameters.
+        /// Loads the command, the entry, and the queue, for calling an execution function.
         /// </summary>
-        public void CallExecute(int entry)
+        /// <param name="entry">The entry location.</param>
+        public void PrepareExecutionCall(int entry)
         {
             LoadEntry(entry);
             ILGen.Emit(OpCodes.Ldfld, Entry_CommandField);
             LoadQueue();
             LoadEntry(entry); // Awkward -> avoid duplicate call?
+        }
+
+        /// <summary>
+        /// Call the "Execute(queue, entry)" method with appropriate parameters.
+        /// </summary>
+        public void CallExecute(int entry)
+        {
+            PrepareExecutionCall(entry);
             ILGen.Emit(OpCodes.Callvirt, ExecuteMethod);
         }
     }

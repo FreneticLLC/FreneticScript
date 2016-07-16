@@ -342,7 +342,7 @@ namespace FreneticScript.CommandSystem
                 AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.Run/*AndSave*/); // TODO: RunAndCollect in .NET 4
                 ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname/*, "testmod.dll", true*/);
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
-                ccse.AdaptedILPoints = new Label[ccse.Entries.Length];
+                ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
                 MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder) });
                 ILGenerator ilgen = methodbuild_c.GetILGenerator();
@@ -350,7 +350,7 @@ namespace FreneticScript.CommandSystem
                 values.Entry = ccse;
                 values.Script = this;
                 values.ILGen = ilgen;
-                for (int i = 0; i < ccse.Entries.Length; i++)
+                for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
                 {
                     ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
                 }
@@ -359,6 +359,7 @@ namespace FreneticScript.CommandSystem
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
                     ccse.Entries[i].Command.AdaptToCIL(values, i);
                 }
+                ilgen.MarkLabel(ccse.AdaptedILPoints[ccse.AdaptedILPoints.Length - 1]);
                 ilgen.Emit(OpCodes.Ret);
                 typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
                 Type t_c = typebuild_c.CreateType();

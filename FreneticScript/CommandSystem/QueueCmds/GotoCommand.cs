@@ -57,6 +57,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 if (values.Entry.Entries[i].Command is MarkCommand
                     && values.Entry.Entries[i].Arguments[0].ToString() == targ)
                 {
+                    // TODO: call Outputter function?
                     values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[i]);
                     return;
                 }

@@ -70,6 +70,14 @@ namespace FreneticScript.CommandSystem
                     }
                 }
             }
+            if (queue.CommandStack.Count > 0)
+            {
+                if (queue.CommandStack.Peek() == this)
+                {
+                    queue.CommandStack.Pop();
+                }
+                return CommandStackRetVal.CONTINUE;
+            }
             return CommandStackRetVal.STOP;
         }
     }

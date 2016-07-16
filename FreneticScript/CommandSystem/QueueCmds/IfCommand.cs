@@ -80,10 +80,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new Exception("Incorrectly defined IF command: no block follows!");
             }
-            values.LoadEntry(entry);
-            values.ILGen.Emit(OpCodes.Ldfld, CILAdaptationValues.Entry_CommandField);
-            values.LoadQueue();
-            values.LoadEntry(entry); // Awkward -> avoid duplicate call?
+            values.PrepareExecutionCall(entry);
             values.ILGen.Emit(OpCodes.Callvirt, TryIfCILMethod);
             values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
         }
