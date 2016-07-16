@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -23,6 +25,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 NumberTag.TryFor
             };
+        }
+
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            base.AdaptToCIL(values, entry);
+            values.ILGen.Emit(OpCodes.Ret);
         }
 
         public static float StringToFloat(string input)

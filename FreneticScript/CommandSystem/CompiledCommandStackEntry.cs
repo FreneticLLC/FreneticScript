@@ -24,7 +24,7 @@ namespace FreneticScript.CommandSystem
         /// Where in the CIL code each entry starts.
         /// </summary>
         public Label[] AdaptedILPoints;
-
+        
         /// <summary>
         /// Run this command stack.
         /// </summary>
@@ -35,8 +35,29 @@ namespace FreneticScript.CommandSystem
             IntHolder c = new IntHolder() { Internal = 0 };
             try
             {
-                // TODO: Delayable stuff, etc.
-                MainCompiledRunnable.Run(queue, c);
+                MainCompiledRunnable.Run(queue, c, Index);
+                Index = c.Internal + 1;
+                if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
+                {
+                    return CommandStackRetVal.BREAK;
+                }
+                if (queue.CommandStack.Count == 0)
+                {
+                    return CommandStackRetVal.BREAK;
+                }
+                if (queue.CommandStack.Peek() != this)
+                {
+                    return CommandStackRetVal.CONTINUE;
+                }
+                if (Index >= Entries.Length)
+                {
+                    queue.CommandStack.Pop();
+                }
+                if (queue.CommandStack.Count == 0)
+                {
+                    return CommandStackRetVal.STOP;
+                }
+                return CommandStackRetVal.CONTINUE;
             }
             catch (Exception ex)
             {
@@ -69,16 +90,16 @@ namespace FreneticScript.CommandSystem
                         }
                     }
                 }
-            }
-            if (queue.CommandStack.Count > 0)
-            {
-                if (queue.CommandStack.Peek() == this)
+                if (queue.CommandStack.Count > 0)
                 {
-                    queue.CommandStack.Pop();
+                    if (queue.CommandStack.Peek() == this)
+                    {
+                        queue.CommandStack.Pop();
+                    }
+                    return CommandStackRetVal.CONTINUE;
                 }
-                return CommandStackRetVal.CONTINUE;
+                return CommandStackRetVal.STOP;
             }
-            return CommandStackRetVal.STOP;
         }
     }
 }

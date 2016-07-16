@@ -344,7 +344,7 @@ namespace FreneticScript.CommandSystem
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
-                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder) });
+                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(int) });
                 ILGenerator ilgen = methodbuild_c.GetILGenerator();
                 CILAdaptationValues values = new CILAdaptationValues();
                 values.Entry = ccse;
@@ -354,6 +354,8 @@ namespace FreneticScript.CommandSystem
                 {
                     ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
                 }
+                ilgen.Emit(OpCodes.Ldarg_3);
+                ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
@@ -431,14 +433,15 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// This class's "Run(queue)" method.
         /// </summary>
-        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder) });
+        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(int) });
 
         /// <summary>
         /// Runs the runnable.
         /// </summary>
         /// <param name="queue">The queue to run on.</param>
         /// <param name="counter">The current command index.</param>
-        public abstract void Run(CommandQueue queue, IntHolder counter);
+        /// <param name="fent">The first entry (the entry to start calculating at).</param>
+        public abstract void Run(CommandQueue queue, IntHolder counter, int fent);
     }
 
     /// <summary>
