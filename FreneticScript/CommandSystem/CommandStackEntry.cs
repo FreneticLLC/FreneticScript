@@ -186,7 +186,7 @@ namespace FreneticScript.CommandSystem
         /// Perfectly duplicates this stack entry.
         /// </summary>
         /// <returns>The newly duplicated stack entry.</returns>
-        public CommandStackEntry Duplicate()
+        public virtual CommandStackEntry Duplicate()
         {
             CommandStackEntry cse = (CommandStackEntry)MemberwiseClone();
             cse.Variables = new Dictionary<string, TemplateObject>(cse.Variables);

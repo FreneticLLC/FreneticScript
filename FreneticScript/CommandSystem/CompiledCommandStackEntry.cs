@@ -24,7 +24,28 @@ namespace FreneticScript.CommandSystem
         /// Where in the CIL code each entry starts.
         /// </summary>
         public Label[] AdaptedILPoints;
-        
+
+        /// <summary>
+        /// Variables local to the compiled function.
+        /// </summary>
+        public TemplateObject[] LocalVariables;
+
+        /// <summary>
+        /// The names of local variables.
+        /// </summary>
+        public string[] LocalVarNames;
+
+        /// <summary>
+        /// Perfectly duplicates this stack entry.
+        /// </summary>
+        /// <returns>The newly duplicated stack entry.</returns>
+        public override CommandStackEntry Duplicate()
+        {
+            CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)base.Duplicate();
+            ccse.LocalVariables = new TemplateObject[LocalVariables.Length];
+            return ccse;
+        }
+
         /// <summary>
         /// Run this command stack.
         /// </summary>

@@ -198,6 +198,18 @@ namespace FreneticScript.CommandSystem
             }
             return null;
         }
+
+        /// <summary>
+        /// Sets a compiled stack entry's local variable.
+        /// </summary>
+        /// <param name="c">The location.</param>
+        /// <param name="value">The new value.</param>
+        public void SetLocalVar(int c, TemplateObject value)
+        {
+            CompiledCommandStackEntry cse = CommandStack.Peek() as CompiledCommandStackEntry;
+            cse.LocalVariables[c] = value;
+            cse.Variables[cse.LocalVarNames[c]] = value; // TODO: Remove need for this!
+        }
     }
 
     /// <summary>

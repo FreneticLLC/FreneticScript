@@ -350,10 +350,17 @@ namespace FreneticScript.CommandSystem
                 values.Entry = ccse;
                 values.Script = this;
                 values.ILGen = ilgen;
+                values.Method = methodbuild_c;
                 for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
                 {
                     ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
                 }
+                for (int i = 0; i < ccse.Entries.Length; i++)
+                {
+                    ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                }
+                ccse.LocalVariables = new TemplateObject[values.LVariables.Count];
+                ccse.LocalVarNames = values.LVariables.ToArray();
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
                 for (int i = 0; i < ccse.Entries.Length; i++)

@@ -4,12 +4,21 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class VarCommand : AbstractCommand // TODO: Public
+    /// <summary>
+    /// The var command.
+    /// </summary>
+    public class VarCommand : AbstractCommand
     {
         // TODO: Meta
+
+        /// <summary>
+        /// Construct the var command.
+        /// </summary>
         public VarCommand()
         {
             Name = "var";
@@ -20,12 +29,48 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 5;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                TextTag.For,
+                TextTag.For, // TODO: Lowercase
                 verify1,
                 TemplateObject.Basic_For,
                 verify2,
-                TemplateObject.Basic_For
+                TemplateObject.Basic_For // TODO: Lowercase
             };
+        }
+
+        /// <summary>
+        /// Prepares to adapt a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            string larg = cent.Arguments[0].ToString().ToLowerFast();
+            if (!values.LVariables.Contains(larg))
+            {
+                values.LVariables.Add(larg);
+            }
+        }
+
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            // TODO: Type verification? Or remove the 'as TYPE' system?
+            values.MarkCommand(entry);
+            CommandEntry cent = values.Entry.Entries[entry];
+            int lvarloc = values.LocalVariableLocation(cent.Arguments[0].ToString().ToLowerFast());
+            values.LoadQueue();
+            values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
+            values.LoadEntry(entry);
+            values.LoadQueue();
+            values.ILGen.Emit(OpCodes.Ldc_I4, 2);
+            // TODO: Debug this!?
+            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod);
+            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
         }
 
         TemplateObject verify1(TemplateObject input)
@@ -46,6 +91,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             string variable = entry.GetArgument(queue, 0);

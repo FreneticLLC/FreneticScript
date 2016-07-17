@@ -132,6 +132,16 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Prepares to adapt a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public virtual void PreAdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
         /// Adjust list of commands that formed by an inner block.
         /// </summary>
         /// <param name="entry">The producing entry.</param>
@@ -201,6 +211,11 @@ namespace FreneticScript.CommandSystem
         public static FieldInfo Entry_CommandField = typeof(CommandEntry).GetField("Command");
 
         /// <summary>
+        /// Represents the field "GetArgumentObject" in the class CommandEntry.
+        /// </summary>
+        public static MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod("GetArgumentObject", new Type[] { typeof(CommandQueue), typeof(int) });
+
+        /// <summary>
         /// Represents the field "Internal" in the class IntHolder.
         /// </summary>
         public static FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField("Internal");
@@ -211,6 +226,11 @@ namespace FreneticScript.CommandSystem
         public static MethodInfo ExecuteMethod = typeof(AbstractCommand).GetMethod("Execute", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
 
         /// <summary>
+        /// Represents the "SetLocalVar(c, value)" method in the class CommandQueue.
+        /// </summary>
+        public static MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod("SetLocalVar", new Type[] { typeof(int), typeof(TemplateObject) });
+        
+        /// <summary>
         /// The type of the class CommandEntry.
         /// </summary>
         public static Type CommandEntryType = typeof(CommandEntry);
@@ -219,6 +239,33 @@ namespace FreneticScript.CommandSystem
         /// The IL code generator.
         /// </summary>
         public ILGenerator ILGen;
+        
+        /// <summary>
+        /// The method being constructed.
+        /// </summary>
+        public MethodBuilder Method;
+
+        /// <summary>
+        /// Returns the location of a local variable's name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The location.</returns>
+        public int LocalVariableLocation(string name)
+        {
+            for (int i = 0; i < LVariables.Count; i++)
+            {
+                if (LVariables[i] == name)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// A map of local variables to track.
+        /// </summary>
+        public List<string> LVariables = new List<string>();
 
         /// <summary>
         /// Load the entry onto the stack.
@@ -241,14 +288,23 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Marks the command as the correct entry. Should be called with every command!
+        /// </summary>
+        /// <param name="entry">The entry location.</param>
+        public void MarkCommand(int entry)
+        {
+            ILGen.Emit(OpCodes.Ldarg_2);
+            ILGen.Emit(OpCodes.Ldc_I4, entry);
+            ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
+        }
+
+        /// <summary>
         /// Loads the command, the entry, and the queue, for calling an execution function.
         /// </summary>
         /// <param name="entry">The entry location.</param>
         public void PrepareExecutionCall(int entry)
         {
-            ILGen.Emit(OpCodes.Ldarg_2);
-            ILGen.Emit(OpCodes.Ldc_I4, entry);
-            ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
+            MarkCommand(entry);
             LoadEntry(entry);
             ILGen.Emit(OpCodes.Ldfld, Entry_CommandField);
             LoadQueue();
