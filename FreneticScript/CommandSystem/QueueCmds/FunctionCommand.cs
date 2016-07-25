@@ -25,16 +25,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // // This example creates function "helloworld" which, when called, outputs "hello world", then stops before it can output a "!"
     // function define helloworld
     // {
-    //     echo "hello world"
-    //     function stop
-    //     echo "!"
+    //     echo "hello world";
+    //     function stop;
+    //     echo "!";
     // }
     // @Example
     // // This example creates function "outputme" which, when called with variable 'text', outputs the specified text.
     // function define outputme
     // {
-    //     require text
-    //     echo <{var[text]}>
+    //     require text;
+    //     echo <{var[text]}>;
+    // }
+    // @Example
+    // // This example creates function "getinfo" which, puts the result of an information lookup in the variable 'result' for later usage.
+    // function define outputme
+    // {
+    //     var result = "This is the result!";
     // }
     // @Example
     // TODO: More examples!
@@ -95,6 +101,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string type = entry.GetArgument(queue, 0);
             if (type == "\0CALLBACK")
             {
+                // TODO: Shut up if we're just defining something?
                 if (entry.ShouldShowGood(queue))
                 {
                     entry.Good(queue, "Completed function call.");

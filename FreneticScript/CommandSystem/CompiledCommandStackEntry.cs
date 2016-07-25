@@ -62,6 +62,7 @@ namespace FreneticScript.CommandSystem
                 {
                     return CommandStackRetVal.BREAK;
                 }
+                Callback?.Invoke();
                 if (queue.CommandStack.Count == 0)
                 {
                     return CommandStackRetVal.BREAK;
@@ -98,16 +99,19 @@ namespace FreneticScript.CommandSystem
                         {
                             throw ex;
                         }
-                        string message = ex2.ToString();
-                        if (Debug <= DebugMode.MINIMAL)
+                        if (!(ex is ErrorInducedException))
                         {
-                            queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
-                            if (queue.Outputsystem != null)
+                            string message = ex2.ToString();
+                            if (Debug <= DebugMode.MINIMAL)
                             {
-                                queue.Outputsystem.Invoke(message, MessageType.BAD);
+                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                                if (queue.Outputsystem != null)
+                                {
+                                    queue.Outputsystem.Invoke(message, MessageType.BAD);
+                                }
+                                Index = Entries.Length + 1;
+                                queue.CommandStack.Clear();
                             }
-                            Index = Entries.Length + 1;
-                            queue.CommandStack.Clear();
                         }
                     }
                 }

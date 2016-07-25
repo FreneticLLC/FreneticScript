@@ -32,6 +32,11 @@ namespace FreneticScript.CommandSystem
         /// All entry data available in this CommandStackEntry.
         /// </summary>
         public AbstractCommandEntryData[] EntryData;
+
+        /// <summary>
+        /// Run this when the CommandStackEntry STOPs.
+        /// </summary>
+        public Action Callback;
         
         /// <summary>
         /// Run this command stack.
@@ -80,17 +85,20 @@ namespace FreneticScript.CommandSystem
                             {
                                 throw ex;
                             }
-                            string message = ex2.ToString();
-                            if (Debug <= DebugMode.MINIMAL)
+                            if (!(ex is ErrorInducedException))
                             {
-                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
-                                if (queue.Outputsystem != null)
+                                string message = ex2.ToString();
+                                if (Debug <= DebugMode.MINIMAL)
                                 {
-                                    queue.Outputsystem.Invoke(message, MessageType.BAD);
+                                    queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                                    if (queue.Outputsystem != null)
+                                    {
+                                        queue.Outputsystem.Invoke(message, MessageType.BAD);
+                                    }
                                 }
+                                Index = Entries.Length + 1;
+                                queue.CommandStack.Clear();
                             }
-                            Index = Entries.Length + 1;
-                            queue.CommandStack.Clear();
                         }
                     }
                 }
@@ -100,18 +108,22 @@ namespace FreneticScript.CommandSystem
                 }
                 if (queue.CommandStack.Count == 0)
                 {
+                    Callback?.Invoke();
                     return CommandStackRetVal.BREAK;
                 }
                 if (queue.CommandStack.Peek() != this)
                 {
+                    Callback?.Invoke();
                     return CommandStackRetVal.CONTINUE;
                 }
             }
             if (queue.CommandStack.Count > 0)
             {
                 queue.CommandStack.Pop();
+                Callback?.Invoke();
                 return CommandStackRetVal.CONTINUE;
             }
+            Callback?.Invoke();
             return CommandStackRetVal.STOP;
         }
 

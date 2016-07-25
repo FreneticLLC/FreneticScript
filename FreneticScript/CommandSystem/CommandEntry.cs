@@ -77,12 +77,19 @@ namespace FreneticScript.CommandSystem
             {
                 return null;
             }
-            if (args.Count == 3 && !args[1].WasQuoted)
+            Dictionary<string, Argument> nameds = new Dictionary<string, Argument>();
+            if (args.Count >= 3 && !args[1].WasQuoted)
             {
                 string a1 = args[1].ToString();
                 if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
                 {
                     return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, 0, script, line, tabs);
+                }
+                else if (a1 == "^=")
+                {
+                    Argument varname = args[0];
+                    args.RemoveRange(0, 2);
+                    nameds["\0varname"] = varname;
                 }
             }
             int marker = 0;
@@ -110,7 +117,6 @@ namespace FreneticScript.CommandSystem
             }
             string BaseCommandLow = BaseCommand.ToLowerFast();
             args.RemoveAt(0);
-            Dictionary<string, Argument> nameds = new Dictionary<string, Argument>();
             for (int i = 0; i < args.Count - 1; i++)
             {
                 if (!args[i].WasQuoted && args[i].ToString().StartsWith("-"))

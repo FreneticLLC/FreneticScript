@@ -28,6 +28,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // // This example calls the function 'outputme' with variable 'text' set to 'hello world'.
     // call outputme -text "hello world";
     // @Example
+    // This example echoes the result of the function 'getinfo', from the tracked variable 'result'. Note that unexpected functionality may occur if 'getinfo' delays the variable set.
+    // info ^= call getinfo;
+    // echo <{[info].[result]}>;
+    // @Example
+    // This example echoes the result of the function 'getinfo', from the tracked variable 'result', after its full delayed run cycle.
+    // info ^= &call getinfo;
+    // echo <{[info].[result]}>;
+    // @Example
     // TODO: More examples!
     // -->
 
@@ -68,14 +76,35 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
+            Dictionary<string, TemplateObject> existingVars = queue.CurrentEntry.Variables;
             Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
             foreach (string var in entry.NamedArguments.Keys)
             {
-                vars[var] = entry.GetNamedArgumentObject(queue, var);
+                if (!var.StartsWith("\0"))
+                {
+                    vars[var] = entry.GetNamedArgumentObject(queue, var);
+                }
             }
             CommandStackEntry cse = script.Created.Duplicate();
             cse.Variables = vars;
             cse.Debug = DebugMode.MINIMAL;
+            if (entry.NamedArguments.ContainsKey("\0varname"))
+            {
+                bool sgood = entry.ShouldShowGood(queue);
+                string vname = entry.GetNamedArgumentObject(queue, "\0varname").ToString();
+                if (sgood)
+                {
+                    entry.Good(queue, "Noticing variable track for " + vname + ".");
+                }
+                cse.Callback = () =>
+                {
+                    existingVars[vname] = new MapTag(cse.Variables);
+                    if (sgood)
+                    {
+                        entry.Good(queue, "Tracking variable " + vname + ".");
+                    }
+                };
+            }
             queue.CommandStack.Push(cse);
         }
     }

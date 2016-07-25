@@ -27,6 +27,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: More examples!
     // -->
 
+    // TODO: Remove? Make compatible with CIL update somehow?
+
     class InjectCommand : AbstractCommand
     {
         public InjectCommand()
