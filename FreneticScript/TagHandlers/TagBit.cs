@@ -22,6 +22,11 @@ namespace FreneticScript.TagHandlers
         public Argument Variable = null;
 
         /// <summary>
+        /// The original input variable.
+        /// </summary>
+        public Argument OVar = null;
+
+        /// <summary>
         /// The handler that could handle this tag, if any is available.
         /// </summary>
         public TagSubHandler Handler = null;
@@ -38,7 +43,7 @@ namespace FreneticScript.TagHandlers
             }
             else if (Key.StartsWith("\0"))
             {
-                return "[" + Variable.ToString() + "]";
+                return "[" + OVar.ToString() + "]";
             }
             else
             {

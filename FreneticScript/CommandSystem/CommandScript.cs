@@ -387,6 +387,7 @@ namespace FreneticScript.CommandSystem
                                         tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
                                         tab.Bits[0].Key = "\0lvar";
                                         tab.Bits[0].Handler = null;
+                                        tab.Bits[0].OVar = tab.Bits[0].Variable;
                                         tab.Bits[0].Variable = ccse.Entries[i].Command.CommandSystem.TagSystem.SplitToArgument(x.ToString(), false, types);
                                         break;
                                     }
