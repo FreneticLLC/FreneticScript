@@ -18,6 +18,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Group Queue
     // @Minimum 1
     // @Maximum -1
+    // @ReturnsValue true
     // @Description
     // Activates a function created by the <@link command function>function<@/link> command.
     // TODO: Explain more!
@@ -76,17 +77,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
             }
-            Dictionary<string, TemplateObject> existingVars = queue.CurrentEntry.Variables;
-            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
+            Dictionary<string, ObjectHolder> existingVars = queue.CurrentEntry.Variables;
+            Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>();
+            CommandStackEntry cse = script.Created.Duplicate();
             foreach (string var in entry.NamedArguments.Keys)
             {
                 if (!var.StartsWith("\0"))
                 {
-                    vars[var] = entry.GetNamedArgumentObject(queue, var);
+                    if (cse.Variables.ContainsKey(var))
+                    {
+                        vars[var].Internal = entry.GetNamedArgumentObject(queue, var);
+                    }
+                    else
+                    {
+                        vars[var] = new ObjectHolder() { Internal = entry.GetNamedArgumentObject(queue, var) };
+                    }
                 }
             }
-            CommandStackEntry cse = script.Created.Duplicate();
-            cse.Variables = vars;
             cse.Debug = DebugMode.MINIMAL;
             if (entry.NamedArguments.ContainsKey("\0varname"))
             {
@@ -98,7 +105,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 cse.Callback = () =>
                 {
-                    existingVars[vname] = new MapTag(cse.Variables);
+                    if (existingVars.ContainsKey(vname))
+                    {
+                        existingVars[vname].Internal = new MapTag(cse.Variables);
+                    }
+                    else
+                    {
+                        existingVars[vname] = new ObjectHolder() { Internal = new MapTag(cse.Variables) };
+                    }
                     if (sgood)
                     {
                         entry.Good(queue, "Tracking variable " + vname + ".");

@@ -111,14 +111,14 @@ namespace FreneticScript.CommandSystem
         /// <param name="Variables">What variables to add to the commandqueue.</param>
         /// <param name="queue">Outputs the generated queue (already ran or running).</param>
         /// <param name="mode">The debug mode to run it in.</param>
-        public void ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
+        public void ExecuteScript(CommandScript script, ref Dictionary<string, ObjectHolder> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
         {
             queue = script.ToQueue(this);
             if (Variables != null)
             {
-                foreach (KeyValuePair<string, TemplateObject> variable in Variables)
+                foreach (KeyValuePair<string, ObjectHolder> variable in Variables)
                 {
-                    queue.SetVariable(variable.Key, variable.Value);
+                    queue.SetVariable(variable.Key, variable.Value.Internal);
                 }
             }
             CommandStackEntry cse = queue.CommandStack.Peek();

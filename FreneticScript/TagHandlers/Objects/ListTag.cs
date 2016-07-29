@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Common;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -163,15 +164,22 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType ListTag
                 // @Returns the list modified such that each entry is only included if the input modifier would return true for it.
                 // @Example "one|two|three|" .filter[true] returns "one|two|three|".
-                // @Example "1|2|3|" .filter[<{var[value].equals[2]}>] returns "2|".
+                // @Example "1|2|3|" .filter[<{[value].equals[2]}>] returns "2|".
                 // -->
                 case "filter":
                     {
                         ListTag newlist = new ListTag();
                         for (int i = 0; i < ListEntries.Count; i++)
                         {
-                            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
-                            vars.Add("value", ListEntries[i]);
+                            Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>(data.Variables);
+                            if (vars.ContainsKey("value"))
+                            {
+                                vars["value"].Internal = ListEntries[i];
+                            }
+                            else
+                            {
+                                vars["value"] = new ObjectHolder() { Internal = ListEntries[i] };
+                            }
                             TemplateObject tobj = data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, vars, data.mode, data.Error);
                             if ((tobj is BooleanTag ? (BooleanTag)tobj : BooleanTag.For(data, tobj.ToString())).Internal)
                             {
@@ -185,15 +193,22 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group List Attributes
                 // @ReturnType ListTag
                 // @Returns the list modified such that each entry is modified to be what the input modifier would return for it.
-                // @Example "one|two|three|" .parse[<{var[value].to_upper}>] returns "ONE|TWO|THREE|".
+                // @Example "one|two|three|" .parse[<{[value].to_upper}>] returns "ONE|TWO|THREE|".
                 // -->
                 case "parse":
                     {
                         ListTag newlist = new ListTag();
                         for (int i = 0; i < ListEntries.Count; i++)
                         {
-                            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>(data.Variables);
-                            vars.Add("value", ListEntries[i]);
+                            Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>(data.Variables);
+                            if (vars.ContainsKey("value"))
+                            {
+                                vars["value"].Internal = ListEntries[i];
+                            }
+                            else
+                            {
+                                vars["value"] = new ObjectHolder() { Internal = ListEntries[i] };
+                            }
                             newlist.ListEntries.Add(data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, vars, data.mode, data.Error));
                         }
                         return newlist.Handle(data.Shrink());

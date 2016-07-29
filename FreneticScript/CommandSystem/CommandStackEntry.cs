@@ -187,7 +187,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// All variables available in this portion of the stack.
         /// </summary>
-        public Dictionary<string, TemplateObject> Variables;
+        public Dictionary<string, ObjectHolder> Variables;
 
         /// <summary>
         /// How much debug information this portion of the stack should show.
@@ -201,7 +201,12 @@ namespace FreneticScript.CommandSystem
         public virtual CommandStackEntry Duplicate()
         {
             CommandStackEntry cse = (CommandStackEntry)MemberwiseClone();
-            cse.Variables = new Dictionary<string, TemplateObject>(cse.Variables);
+            Dictionary<string, ObjectHolder> temp = new Dictionary<string, ObjectHolder>();
+            foreach (KeyValuePair<string, ObjectHolder> obj in cse.Variables)
+            {
+                temp[obj.Key] = new ObjectHolder() { Internal = obj.Value.Internal };
+            }
+            cse.Variables = temp;
             return cse;
         }
     }

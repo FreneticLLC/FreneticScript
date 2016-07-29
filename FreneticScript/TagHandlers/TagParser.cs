@@ -490,7 +490,7 @@ namespace FreneticScript.TagHandlers
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
         /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error)
         {
             if (bits.Bits.Length == 0)
             {
@@ -568,7 +568,7 @@ namespace FreneticScript.TagHandlers
         /// <param name="error">What to invoke if there's an error.</param>
         /// <param name="wasquoted">Whether the input had "quotes".</param>
         /// <returns>The string with tags parsed.</returns>
-        public string ParseTagsFromText(string input, string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error, bool wasquoted)
+        public string ParseTagsFromText(string input, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, bool wasquoted)
         {
             return Unescape((SplitToArgument(input, wasquoted, null).Parse(base_color, vars, mode, error) ?? new NullTag()).ToString());
         }

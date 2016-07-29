@@ -28,7 +28,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Variables local to the compiled function.
         /// </summary>
-        public TemplateObject[] LocalVariables;
+        public ObjectHolder[] LocalVariables;
 
         /// <summary>
         /// The names of local variables.
@@ -42,7 +42,11 @@ namespace FreneticScript.CommandSystem
         public override CommandStackEntry Duplicate()
         {
             CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)base.Duplicate();
-            ccse.LocalVariables = new TemplateObject[LocalVariables.Length];
+            ccse.LocalVariables = new ObjectHolder[LocalVariables.Length];
+            for (int i = 0; i < ccse.LocalVariables.Length; i++)
+            {
+                ccse.LocalVariables[i] = ccse.Variables[LocalVarNames[i]];
+            }
             return ccse;
         }
 

@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
         /// <returns>The parsed final text.</returns>
-        public override TemplateObject Parse(string base_color, Dictionary<string, TemplateObject> vars, DebugMode mode, Action<string> error)
+        public override TemplateObject Parse(string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error)
         {
             return CommandSystem.TagSystem.ParseTags(this, base_color, vars, mode, error);
         }

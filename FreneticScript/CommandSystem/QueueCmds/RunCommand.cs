@@ -117,7 +117,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good(queue, "Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
                 }
                 CommandQueue nqueue;
-                Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
+                Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>();
                 queue.CommandSystem.ExecuteScript(script, ref vars, out nqueue);
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 {
@@ -137,7 +137,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     OnScriptRanPostEvent.Fire(args4);
                 }
-                queue.SetVariable("run_variables", new MapTag(nqueue.LowestVariables));
+                queue.SetVariable("run_variables", new MapTag(nqueue.LowestVariables)); // TODO: use the ^= syntax here.
             }
             else
             {

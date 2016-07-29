@@ -331,7 +331,7 @@ namespace FreneticScript.CommandSystem
             }
             Created.Types = types ?? new Dictionary<string, TagType>();
             Created.Debug = Debug;
-            Created.Variables = new Dictionary<string, TemplateObject>();
+            Created.Variables = new Dictionary<string, ObjectHolder>();
             Created.Entries = Commands.ToArray();
             Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
             if (compile)
@@ -359,8 +359,13 @@ namespace FreneticScript.CommandSystem
                 {
                     ccse.Entries[i].Command.PreAdaptToCIL(values, i);
                 }
-                ccse.LocalVariables = new TemplateObject[values.LVariables.Count];
+                ccse.LocalVariables = new ObjectHolder[values.LVariables.Count];
                 ccse.LocalVarNames = values.LVariables.ToArray();
+                for (int i = 0; i < ccse.LocalVariables.Length; i++)
+                {
+                    ccse.LocalVariables[i] = new ObjectHolder();
+                    ccse.Variables[ccse.LocalVarNames[i]] = ccse.LocalVariables[i];
+                }
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
                 for (int i = 0; i < ccse.Entries.Length; i++)

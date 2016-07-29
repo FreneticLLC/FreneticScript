@@ -48,7 +48,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// All variables waiting in this tag's context.
         /// </summary>
-        public Dictionary<string, TemplateObject> Variables = null;
+        public Dictionary<string, ObjectHolder> Variables = null;
 
         /// <summary>
         /// The tag system this tag data is used for.
@@ -75,11 +75,11 @@ namespace FreneticScript.TagHandlers
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
-        public TagData(TagParser _system, TagBit[] _input, string _basecolor, Dictionary<string, TemplateObject> _vars, DebugMode _mode, Action<string> _error, Argument fallback)
+        public TagData(TagParser _system, TagBit[] _input, string _basecolor, Dictionary<string, ObjectHolder> _vars, DebugMode _mode, Action<string> _error, Argument fallback)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;
-            Variables = _vars ?? new Dictionary<string, TemplateObject>();
+            Variables = _vars ?? new Dictionary<string, ObjectHolder>();
             mode = _mode;
             Error = _error;
             Fallback = fallback;

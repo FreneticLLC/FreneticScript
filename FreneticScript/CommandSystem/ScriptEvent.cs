@@ -185,24 +185,35 @@ namespace FreneticScript.CommandSystem
             {
                 if (prio == int.MinValue || Handlers[i].Key == prio)
                 {
-                    // TODO: Handle cancelling stuff here?
-                    // IE, don't fire if cancelled and we don't want to fire?
-                    CommandScript script = Handlers[i].Value;
-                    Dictionary<string, TemplateObject> Variables = new Dictionary<string, TemplateObject>();
-                    Variables["context"] = new MapTag(GetVariables());
-                    CommandQueue queue;
-                    System.ExecuteScript(script, ref Variables, out queue, DebugMode.MINIMAL);
-                    if (Variables != null && Variables.ContainsKey("context"))
+                    try
                     {
-                        UpdateVariables(MapTag.For(Variables["context"]).Internal);
+                        // TODO: Handle cancelling stuff here?
+                        // IE, don't fire if cancelled and we don't want to fire?
+                        CommandScript script = Handlers[i].Value;
+                        Dictionary<string, ObjectHolder> Variables = new Dictionary<string, ObjectHolder>();
+                        Variables["context"].Internal = new MapTag(GetVariables());
+                        CommandQueue queue;
+                        System.ExecuteScript(script, ref Variables, out queue, DebugMode.MINIMAL);
+                        if (Variables != null && Variables.ContainsKey("context"))
+                        {
+                            UpdateVariables(MapTag.For(Variables["context"].Internal).Internal);
+                        }
+                        else
+                        {
+                            System.Output.Bad("Context undefined for script event '" + TagParser.Escape(Name) + "'?", DebugMode.FULL);
+                        }
+                        if (i >= Handlers.Count || Handlers[i].Value != script)
+                        {
+                            i--;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        System.Output.Bad("Context undefined for script event '" + TagParser.Escape(Name) + "'?", DebugMode.FULL);
-                    }
-                    if (i >= Handlers.Count || Handlers[i].Value != script)
-                    {
-                        i--;
+                        if (ex is System.Threading.ThreadAbortException)
+                        {
+                            throw ex;
+                        }
+                        System.Output.Bad("Exception running script event: " + TagParser.Escape(ex.ToString()), DebugMode.FULL);
                     }
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -35,10 +36,10 @@ namespace FreneticScript.TagHandlers.Common
             string modif = data.GetModifier(0).ToLowerFast();
             if (data.Variables != null)
             {
-                TemplateObject value;
+                ObjectHolder value;
                 if (data.Variables.TryGetValue(modif, out value))
                 {
-                    return value;
+                    return value.Internal;
                 }
             }
             data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");

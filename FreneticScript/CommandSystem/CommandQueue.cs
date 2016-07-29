@@ -127,17 +127,14 @@ namespace FreneticScript.CommandSystem
                     break;
                 }
             }
-            if (Complete != null)
-            {
-                Complete(this, new CommandQueueEventArgs(this));
-            }
+            Complete?.Invoke(this, new CommandQueueEventArgs(this));
             Running = false;
         }
         
         /// <summary>
         /// The variables that ran on the lowest level of this queue.
         /// </summary>
-        public Dictionary<string, TemplateObject> LowestVariables = null;
+        public Dictionary<string, ObjectHolder> LowestVariables = null;
 
         /// <summary>
         /// Whether this Queue is waiting on the last command.
@@ -180,7 +177,13 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The value to set on the variable.</param>
         public void SetVariable(string name, TemplateObject value)
         {
-            CommandStack.Peek().Variables[name.ToLowerFast()] = value;
+            CommandStackEntry cse = CommandStack.Peek();
+            string nl = name.ToLowerFast();
+            if (cse.Variables.ContainsKey(nl))
+            {
+                cse.Variables[nl].Internal = value;
+            }
+            CommandStack.Peek().Variables[nl] = new ObjectHolder() { Internal = value };
         }
 
         /// <summary>
@@ -191,10 +194,10 @@ namespace FreneticScript.CommandSystem
         public TemplateObject GetVariable(string name)
         {
             string namelow = name.ToLowerFast();
-            TemplateObject value;
+            ObjectHolder value;
             if (CommandStack.Peek().Variables.TryGetValue(namelow, out value))
             {
-                return value;
+                return value.Internal;
             }
             return null;
         }
@@ -206,10 +209,19 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The new value.</param>
         public void SetLocalVar(int c, TemplateObject value)
         {
-            CompiledCommandStackEntry cse = CommandStack.Peek() as CompiledCommandStackEntry;
-            cse.LocalVariables[c] = value;
-            cse.Variables[cse.LocalVarNames[c]] = value; // TODO: Remove need for this!
+            (CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[c].Internal = value;
         }
+    }
+
+    /// <summary>
+    /// Holds an object.
+    /// </summary>
+    public class ObjectHolder
+    {
+        /// <summary>
+        /// The held object.
+        /// </summary>
+        public TemplateObject Internal;
     }
 
     /// <summary>
