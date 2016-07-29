@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// The starting point for this tag.
         /// </summary>
         public TemplateTagBase Start = null;
-        
+
         /// <summary>
         /// Parse the argument part, reading any tags.
         /// </summary>
@@ -44,10 +44,11 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="vars">The variables for var tags.</param>
         /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
+        /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The parsed final text.</returns>
-        public override TemplateObject Parse(string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error)
+        public override TemplateObject Parse(string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
-            return CommandSystem.TagSystem.ParseTags(this, base_color, vars, mode, error);
+            return CommandSystem.TagSystem.ParseTags(this, base_color, vars, mode, error, cse);
         }
 
         /// <summary>

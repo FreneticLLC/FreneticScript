@@ -66,6 +66,11 @@ namespace FreneticScript.TagHandlers
         public Action<string> Error;
 
         /// <summary>
+        /// The relevant command stack entry, if any.
+        /// </summary>
+        public CommandStackEntry CSE;
+
+        /// <summary>
         /// Constructs the tag information container.
         /// </summary>
         /// <param name="_system">The command system to use.</param>
@@ -75,7 +80,8 @@ namespace FreneticScript.TagHandlers
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
-        public TagData(TagParser _system, TagBit[] _input, string _basecolor, Dictionary<string, ObjectHolder> _vars, DebugMode _mode, Action<string> _error, Argument fallback)
+        /// <param name="_cse">The relevant command stack entry, if any.</param>
+        public TagData(TagParser _system, TagBit[] _input, string _basecolor, Dictionary<string, ObjectHolder> _vars, DebugMode _mode, Action<string> _error, Argument fallback, CommandStackEntry _cse)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;
@@ -85,6 +91,7 @@ namespace FreneticScript.TagHandlers
             Fallback = fallback;
             Remaining = _input.Length;
             InputKeys = _input;
+            CSE = _cse;
         }
         
         /// <summary>
@@ -128,7 +135,7 @@ namespace FreneticScript.TagHandlers
             {
                 throw new ArgumentOutOfRangeException("place");
             }
-            return (InputKeys[place].Variable.Parse(BaseColor, Variables, mode, Error) ?? new TextTag("")).ToString();
+            return (InputKeys[place].Variable.Parse(BaseColor, Variables, mode, Error, CSE) ?? new TextTag("")).ToString();
         }
 
         /// <summary>
@@ -143,7 +150,7 @@ namespace FreneticScript.TagHandlers
             {
                 throw new ArgumentOutOfRangeException("place");
             }
-            return (InputKeys[place].Variable.Parse(BaseColor, Variables, mode, Error) ?? new TextTag(""));
+            return (InputKeys[place].Variable.Parse(BaseColor, Variables, mode, Error, CSE) ?? new TextTag(""));
         }
     }
 }

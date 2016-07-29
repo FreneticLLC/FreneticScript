@@ -85,6 +85,11 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
+        /// Local variable tag base.
+        /// </summary>
+        public LvarTagBase LVar;
+
+        /// <summary>
         /// Prepares the tag system.
         /// </summary>
         public void Init(Commands _system)
@@ -97,6 +102,7 @@ namespace FreneticScript.TagHandlers
             Register(new EscapeTagBase());
             Register(new IntegerTagBase());
             Register(new ListTagBase());
+            Register(LVar = new LvarTagBase());
             Register(new MapTagBase());
             Register(new NumberTagBase());
             Register(new SystemTagBase());
@@ -489,14 +495,15 @@ namespace FreneticScript.TagHandlers
         /// <param name="bits">The tag data.</param>
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
+        /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
             if (bits.Bits.Length == 0)
             {
                 return new TextTag("");
             }
-            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback);
+            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse);
             TemplateTagBase handler = bits.Start;
             try
             {
@@ -536,7 +543,7 @@ namespace FreneticScript.TagHandlers
                 }
                 else if (data.HasFallback)
                 {
-                    return data.Fallback.Parse(base_color, vars, mode, error);
+                    return data.Fallback.Parse(base_color, vars, mode, error, cse);
                 }
                 else
                 {
@@ -559,7 +566,7 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
-        /// Reads and parses all tags inside a string.
+        /// Reads and parses all tags inside a string. Note: Avoid this where possible. Use SplitToArgument instead!
         /// </summary>
         /// <param name="base_color">The base color for tags to use.</param>
         /// <param name="vars">Any variables in this tag's context.</param>
@@ -570,7 +577,8 @@ namespace FreneticScript.TagHandlers
         /// <returns>The string with tags parsed.</returns>
         public string ParseTagsFromText(string input, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, bool wasquoted)
         {
-            return Unescape((SplitToArgument(input, wasquoted, null).Parse(base_color, vars, mode, error) ?? new NullTag()).ToString());
+            // TODO: Unescape need?
+            return Unescape((SplitToArgument(input, wasquoted, null).Parse(base_color, vars, mode, error, null) ?? new NullTag()).ToString());
         }
     }
 }

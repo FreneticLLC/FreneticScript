@@ -8,6 +8,7 @@ using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
 using FreneticScript.CommandSystem.QueueCmds;
+using FreneticScript.TagHandlers.Common;
 
 namespace FreneticScript.CommandSystem
 {
@@ -370,6 +371,29 @@ namespace FreneticScript.CommandSystem
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
+                    for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
+                    {
+                        Argument arg = ccse.Entries[i].Arguments[a];
+                        if (arg.Bits.Count > 0 && arg.Bits[0] is TagArgumentBit)
+                        {
+                            TagArgumentBit tab = ((TagArgumentBit)arg.Bits[0]);
+                            if (tab.Start is VarTagBase)
+                            {
+                                string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
+                                for (int x = 0; x < ccse.LocalVarNames.Length; x++)
+                                {
+                                    if (ccse.LocalVarNames[x] == vn)
+                                    {
+                                        tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
+                                        tab.Bits[0].Key = "\0lvar";
+                                        tab.Bits[0].Handler = null;
+                                        tab.Bits[0].Variable = ccse.Entries[i].Command.CommandSystem.TagSystem.SplitToArgument(x.ToString(), false, types);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
                     ccse.Entries[i].Command.AdaptToCIL(values, i);
                 }

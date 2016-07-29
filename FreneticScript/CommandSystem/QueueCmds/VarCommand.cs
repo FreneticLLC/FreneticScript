@@ -103,7 +103,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (entry.Arguments.Count == 5)
             {
                 // TODO: Fix this tagdata nonsense
-                TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, queue.CurrentEntry.Variables, queue.CurrentEntry.Debug, (o) => queue.HandleError(entry, o), null);
+                TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, queue.CurrentEntry.Variables,
+                    queue.CurrentEntry.Debug, (o) => queue.HandleError(entry, o), null, queue.CommandStack.Peek());
                 TagTypeTag type = TagTypeTag.For(dat, entry.GetArgumentObject(queue, 4));
                 TemplateObject obj = type.Internal.TypeGetter(dat, value);
                 if (obj == null)

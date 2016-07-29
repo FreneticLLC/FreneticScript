@@ -29,17 +29,18 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="vars">The variables for var tags.</param>
         /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
+        /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The parsed final text.</returns>
-        public TemplateObject Parse(string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error)
+        public TemplateObject Parse(string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
             if (Bits.Count == 1)
             {
-                return Bits[0].Parse(base_color, vars, mode, error);
+                return Bits[0].Parse(base_color, vars, mode, error, cse);
             }
             StringBuilder built = new StringBuilder();
             for (int i = 0; i < Bits.Count; i++)
             {
-                built.Append(Bits[i].Parse(base_color, vars, mode, error).ToString());
+                built.Append(Bits[i].Parse(base_color, vars, mode, error, cse).ToString());
             }
             return new TextTag(built.ToString());
         }
