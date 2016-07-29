@@ -36,6 +36,10 @@ namespace FreneticScript.TagHandlers
             {
                 return Key;
             }
+            else if (Key.StartsWith("\0"))
+            {
+                return "[" + Variable.ToString() + "]";
+            }
             else
             {
                 return Key + "[" + Variable.ToString() + "]";
