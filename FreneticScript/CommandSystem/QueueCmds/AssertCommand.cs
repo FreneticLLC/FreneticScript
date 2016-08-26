@@ -18,7 +18,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Maximum 2
         // @Description
         // Throws an error if a requirement is not 'true'.
-        // Effectively equivalent to: "if !<requirement> { error <error message> }".
+        // Effectively equivalent to: "if !<requirement> { error <error message>; }".
         // TODO: Explain more!
         // @Example
         // // This example throws an error immediately.

@@ -22,7 +22,7 @@ namespace FreneticScript.TagHandlers
         public Argument Variable = null;
 
         /// <summary>
-        /// The original input variable.
+        /// The original input variable. (For use with compiled data).
         /// </summary>
         public Argument OVar = null;
 

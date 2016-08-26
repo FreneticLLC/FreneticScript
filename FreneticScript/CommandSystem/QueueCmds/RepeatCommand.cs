@@ -130,6 +130,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 values.PrepareExecutionCall(entry);
                 values.ILGen.Emit(OpCodes.Callvirt, TryRepeatCILMethod);
+                // TODO: Simplify to a single brtrue?
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
                 values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
@@ -202,6 +203,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Repeat stopping.");
             }
+            // TODO: Bump repeat_* variables back to what they were?
             return false;
         }
 
@@ -255,6 +257,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         if (entry.ShouldShowGood(queue))
                         {
                             entry.Good(queue, "Stopping a repeat loop.");
+                            // TODO: Bump repeat_* variables back to what they were?
                         }
                         cse.Index = i + 2;
                         return;

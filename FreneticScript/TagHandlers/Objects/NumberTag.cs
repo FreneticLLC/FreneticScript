@@ -279,7 +279,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Name NumberTag.atan2[<NumberTag>]
                 // @Group Mathematics
                 // @ReturnType NumberTag
-                // @Returns the inverse of the tangent that is the text divided by the specified text.
+                // @Returns the inverse of the tangent that is the number divided by the specified number.
                 // @Example "0" .atan2[1] returns "0".
                 // -->
                 case "atan2":
@@ -345,7 +345,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Returns the number to the power of the specified number.
                 // @Example "2" .to_the_power_of[2] returns "4".
                 // -->
-                case "to_the_power_of":
+                case "power":
                     return new NumberTag(Math.Pow(Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink());
                 // <--[tag]
                 // @Name NumberTag.sign

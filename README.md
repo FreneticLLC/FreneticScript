@@ -17,7 +17,7 @@ You can do basically whatever you want, except you may not hold any developer li
 
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 Frenetic XYZ
+Copyright (c) 2015-2016 FreneticXYZ
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ SOFTWARE.
 
 ![YourKit](https://www.yourkit.com/images/yklogo.png)
 
-The Frenetic team uses YourKit .NET Profiler to improve performance. We'd like to thank them for their amazing tool and recommend them to all .NET developers!
+The FreneticXYZ team uses YourKit .NET Profiler to improve performance. We'd like to thank them for their amazing tool and recommend them to all .NET developers!
 
 YourKit supports open source projects with its full-featured .NET Profiler.  
 YourKit, LLC is the creator of [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/index.jsp)  
