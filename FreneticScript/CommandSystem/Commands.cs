@@ -352,7 +352,6 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new ReloadCommand());
             RegisterCommand(new SetCommand());
             RegisterCommand(new ToggleCommand());
-            RegisterCommand(new YamlCommand());
 
             // Command-Related Events
             RegisterEvent(new ScriptRanPreScriptEvent(this));

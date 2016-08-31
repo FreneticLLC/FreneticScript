@@ -340,7 +340,7 @@ namespace FreneticScript.TagHandlers.Objects
                 case "duplicate":
                     return new TextTag(Text).Handle(data.Shrink());
                 // <--[tag]
-                // @Name TextTag.duplicate
+                // @Name TextTag.type
                 // @Group Global Usage Tags
                 // @ReturnType TagTypeTag
                 // @Returns the actual type of this tag.
