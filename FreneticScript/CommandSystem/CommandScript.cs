@@ -398,7 +398,13 @@ namespace FreneticScript.CommandSystem
                                         throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
                                             + "): Invalid tag sub-handler " + tab.Bits[x].Key + " for tag " + tab.ToString());
                                     }
-                                    TagSubHandler tsh = returnable.SubHandlers[tab.Bits[x].Key];
+                                    TagType temptype = returnable;
+                                    TagSubHandler tsh = null;
+                                    while (tsh == null && temptype != null)
+                                    {
+                                        tsh = temptype.SubHandlers[tab.Bits[x].Key];
+                                        temptype = temptype.SubType;
+                                    }
                                     tab.Bits[x].Handler = tsh;
                                     if (tsh == null)
                                     {
