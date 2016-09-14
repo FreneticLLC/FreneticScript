@@ -18,12 +18,12 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// What type this returns as. Null means dynamic return.
         /// </summary>
-        public TagType ReturnType;
+        public TagType ReturnType = null;
 
         /// <summary>
         /// What type this returns as. Specify null for dynamic return.
         /// </summary>
-        public string ReturnTypeString;
+        public string ReturnTypeString = null;
 
         /// <summary>
         /// Returns a perfect duplicate of this tag sub-handler.

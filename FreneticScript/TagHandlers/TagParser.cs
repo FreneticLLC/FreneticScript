@@ -119,100 +119,79 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = "binarytag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return BinaryTag.For(data, obj);
-                },
+                TypeGetter = BinaryTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Boolean = new TagType()
             {
                 TypeName = "booleantag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return BooleanTag.For(data, obj);
-                },
+                TypeGetter = BooleanTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Integer = new TagType()
             {
                 TypeName = "integertag",
                 SubTypeName = "numbertag",
-                TypeGetter = (data, obj) =>
-                {
-                    return IntegerTag.For(data, obj);
-                },
+                TypeGetter = IntegerTag.For,
+                GetNextTypeDown = (obj) => new NumberTag(((IntegerTag)obj).Internal),
                 SubHandlers = IntegerTag.Handlers
             });
             Register(Type_List = new TagType()
             {
                 TypeName = "listtag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return ListTag.For(obj);
-                },
+                TypeGetter = ListTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Map = new TagType()
             {
                 TypeName = "maptag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return MapTag.For(obj);
-                },
+                TypeGetter = MapTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Number = new TagType()
             {
                 TypeName = "nulltag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return new NullTag();
-                },
+                TypeGetter = (data, obj) => new NullTag(),
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Number = new TagType()
             {
                 TypeName = "numbertag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return NumberTag.For(data, obj);
-                },
+                TypeGetter = NumberTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_TagType = new TagType()
             {
                 TypeName = "tagtypetag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return TagTypeTag.For(data, obj);
-                },
+                TypeGetter = TagTypeTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = TagTypeTag.Handlers
             });
             Register(Type_Text = new TagType()
             {
                 TypeName = "texttag",
                 SubTypeName = null,
-                TypeGetter = (data, obj) =>
-                {
-                    return new TextTag(obj.ToString());
-                },
+                TypeGetter = (data, obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Time = new TagType()
             {
                 TypeName = "timetag",
                 SubTypeName = "texttag",
-                TypeGetter = (data, obj) =>
-                {
-                    return TimeTag.For(obj);
-                },
+                TypeGetter = TimeTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
         }
@@ -222,6 +201,13 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public void PostInit()
         {
+            foreach (TemplateTagBase tagbase in Handlers.Values)
+            {
+                if (tagbase.ResultTypeString != null)
+                {
+                    tagbase.ResultType = Types[tagbase.ResultTypeString];
+                }
+            }
             foreach (TagType type in Types.Values)
             {
                 if (type.SubTypeName == null)
@@ -308,9 +294,8 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="input">The original text.</param>
         /// <param name="wasquoted">Whether the argument was input with "quotes".</param>
-        /// <param name="types">What types are predefined.</param>
         /// <returns>The parsed Argument.</returns>
-        public Argument SplitToArgument(string input, bool wasquoted, Dictionary<string, TagType> types)
+        public Argument SplitToArgument(string input, bool wasquoted)
         {
             if (input.Length == 0)
             {
@@ -383,7 +368,7 @@ namespace FreneticScript.TagHandlers
                             if (split[x].Length > 1 && split[x].Contains('[') && split[x][split[x].Length - 1] == ']')
                             {
                                 int index = split[x].IndexOf('[');
-                                bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted, types);
+                                bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
                                 split[x] = split[x].Substring(0, index).ToLowerFast();
                                 if (split[x].Length == 0)
                                 {
@@ -409,36 +394,13 @@ namespace FreneticScript.TagHandlers
                         if (tab.Bits.Length > 0)
                         {
                             TemplateTagBase start;
-                            if (CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out start))
+                            if (!CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out start))
                             {
-                                tab.Start = start;
+                                throw new ErrorInducedException("Invalid tag base '" + tab.Bits[0].Key.ToLowerFast() + "'!");
                             }
-                            else
-                            {
-                                tab.Start = null;
-                            }
-                            if (start is VarTagBase && tab.Bits.Length > 1)
-                            {
-                                string modif = tab.Bits[0].Variable.ToString().ToString();
-                                TagType type;
-                                if (types.TryGetValue(modif, out type))
-                                {
-                                    for (int x = 1; x < tab.Bits.Length; x++)
-                                    {
-                                        if (type != null)
-                                        {
-                                            TagSubHandler subby;
-                                            if (type.SubHandlers.TryGetValue(tab.Bits[x].Key.ToLowerFast(), out subby))
-                                            {
-                                                tab.Bits[x].Handler = subby;
-                                                type = subby.ReturnType;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            tab.Start = start;
                         }
-                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false, types);
+                        tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
                         arg.Bits.Add(tab);
                         blockbuilder = new StringBuilder();
                         i++;
@@ -507,52 +469,37 @@ namespace FreneticScript.TagHandlers
             TemplateTagBase handler = bits.Start;
             try
             {
-                if (handler != null || Handlers.TryGetValue(data[0], out handler))
+                TemplateObject res;
+                if (handler.CanSingle)
                 {
-                    TemplateObject res;
-                    if (handler.CanSingle)
+                    res = handler.HandleOne(data) ?? new NullTag();
+                    data.Shrink();
+                    while (data.Remaining > 0)
                     {
-                        res = handler.HandleOne(data) ?? new NullTag();
-                        data.Shrink();
-                        while (data.Remaining > 0)
+                        TagSubHandler hd = data.InputKeys[data.cInd].Handler;
+                        if (hd == null)
                         {
-                            TagSubHandler hd = data.InputKeys[data.cInd].Handler;
-                            if (hd == null)
-                            {
-                                res = res.Handle(data);
-                                break;
-                            }
-                            else
-                            {
-                                res = hd.Handle(data, res);
-                            }
-                            data.Shrink();
+                            res = res.Handle(data);
+                            break;
                         }
+                        else
+                        {
+                            res = hd.Handle(data, res);
+                        }
+                        data.Shrink();
                     }
-                    else
-                    {
-                        res = handler.Handle(data) ?? new NullTag();
-                    }
-                    if (mode <= DebugMode.FULL)
-                    {
-                        CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                            Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res.ToString())
-                            + TextStyle.Color_Outgood + "\".", mode);
-                    }
-                    return res;
-                }
-                else if (data.HasFallback)
-                {
-                    return data.Fallback.Parse(base_color, vars, mode, error, cse);
                 }
                 else
                 {
-                    if (mode <= DebugMode.MINIMAL)
-                    {
-                        error("Failed to fill tag " + Escape(bits.ToString()) + ": nonexistant tag handler!");
-                    }
-                    return null;
+                    res = handler.Handle(data) ?? new NullTag();
                 }
+                if (mode <= DebugMode.FULL)
+                {
+                    CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
+                        Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res.ToString())
+                        + TextStyle.Color_Outgood + "\".", mode);
+                }
+                return res;
             }
             catch (Exception ex)
             {
@@ -578,7 +525,7 @@ namespace FreneticScript.TagHandlers
         public string ParseTagsFromText(string input, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, bool wasquoted)
         {
             // TODO: Unescape need?
-            return Unescape((SplitToArgument(input, wasquoted, null).Parse(base_color, vars, mode, error, null) ?? new NullTag()).ToString());
+            return Unescape((SplitToArgument(input, wasquoted).Parse(base_color, vars, mode, error, null) ?? new NullTag()).ToString());
         }
     }
 }

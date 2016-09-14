@@ -78,5 +78,10 @@ namespace FreneticScript.CommandSystem
         /// Whether the game is still setting up currently. (Used by the InitOnly CVar system).
         /// </summary>
         public bool Initializing = false;
+
+        /// <summary>
+        /// Whether the system should error when an invalid command is detected.
+        /// </summary>
+        public abstract bool ShouldErrorOnInvalidCommand();
     }
 }

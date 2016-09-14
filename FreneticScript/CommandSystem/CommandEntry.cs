@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
@@ -20,123 +19,133 @@ namespace FreneticScript.CommandSystem
         /// <param name="system">The command system to work from.</param>
         /// <param name="script">The name of the creating script.</param>
         /// <param name="line">The line in the creating script.</param>
-        /// <param name="tabs">What tabulation to use when outputting this entry.</param>
-        /// <param name="types">What types are predefined.</param>
+        /// <param name="tabs">How much tabulation tihs command had.</param>
         /// <returns>The command system.</returns>
-        public static CommandEntry FromInput(string command, Commands system, string script, int line, string tabs, Dictionary<string, TagType> types)
+        public static CommandEntry FromInput(string command, Commands system, string script, int line, string tabs)
         {
-            if (command.StartsWith("/"))
+            try
             {
-                command = command.Substring(1);
-            }
-            command = command.Replace('\0', ' ');
-            List<Argument> args = new List<Argument>();
-            int start = 0;
-            bool quoted = false;
-            bool qtype = false;
-            bool thisArgQuoted = false;
-            for (int i = 0; i < command.Length; i++)
-            {
-                if (command[i] == '"' && (!quoted || qtype))
+                if (command.StartsWith("/"))
                 {
-                    qtype = true;
-                    quoted = !quoted;
-                    thisArgQuoted = true;
+                    command = command.Substring(1);
                 }
-                else if (command[i] == '\'' && (!quoted || !qtype))
+                command = command.Replace('\0', ' ');
+                List<Argument> args = new List<Argument>();
+                int start = 0;
+                bool quoted = false;
+                bool qtype = false;
+                bool thisArgQuoted = false;
+                for (int i = 0; i < command.Length; i++)
                 {
-                    qtype = false;
-                    quoted = !quoted;
-                    thisArgQuoted = true;
-                }
-                else if (command[i] == '\n' && !quoted)
-                {
-                    command = (i + 1 < command.Length) ? command.Substring(0, i) + command.Substring(i + 1) : command.Substring(0, i);
-                }
-                else if (!quoted && command[i] == ' ')
-                {
-                    if (i - start > 0)
+                    if (command[i] == '"' && (!quoted || qtype))
                     {
-                        string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
-                        args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted, types));
-                        start = i + 1;
-                        thisArgQuoted = false;
+                        qtype = true;
+                        quoted = !quoted;
+                        thisArgQuoted = true;
                     }
-                    else
+                    else if (command[i] == '\'' && (!quoted || !qtype))
                     {
-                        start = i + 1;
+                        qtype = false;
+                        quoted = !quoted;
+                        thisArgQuoted = true;
+                    }
+                    else if (command[i] == '\n' && !quoted)
+                    {
+                        command = (i + 1 < command.Length) ? command.Substring(0, i) + command.Substring(i + 1) : command.Substring(0, i);
+                    }
+                    else if (!quoted && command[i] == ' ')
+                    {
+                        if (i - start > 0)
+                        {
+                            string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
+                            args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
+                            start = i + 1;
+                            thisArgQuoted = false;
+                        }
+                        else
+                        {
+                            start = i + 1;
+                        }
                     }
                 }
-            }
-            if (command.Length - start > 0)
-            {
-                string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
-                args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted, types));
-            }
-            if (args.Count == 0)
-            {
-                return null;
-            }
-            Dictionary<string, Argument> nameds = new Dictionary<string, Argument>();
-            if (args.Count >= 3 && !args[1].WasQuoted)
-            {
-                string a1 = args[1].ToString();
-                if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
+                if (command.Length - start > 0)
                 {
-                    return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, 0, script, line, tabs);
+                    string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
+                    args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
                 }
-                else if (a1 == "^=")
+                if (args.Count == 0)
                 {
-                    Argument varname = args[0];
-                    args.RemoveRange(0, 2);
-                    nameds["\0varname"] = varname;
+                    return null;
                 }
-            }
-            int marker = 0;
-            string BaseCommand = args[0].ToString();
-            if (BaseCommand.StartsWith("+") && BaseCommand.Length > 1)
-            {
-                marker = 1;
-                BaseCommand = BaseCommand.Substring(1);
-            }
-            else if (BaseCommand.StartsWith("-") && BaseCommand.Length > 1)
-            {
-                marker = 2;
-                BaseCommand = BaseCommand.Substring(1);
-            }
-            else if (BaseCommand.StartsWith("!") && BaseCommand.Length > 1)
-            {
-                marker = 3;
-                BaseCommand = BaseCommand.Substring(1);
-            }
-            bool waitfor = false;
-            if (BaseCommand.StartsWith("&") && BaseCommand.Length > 1)
-            {
-                waitfor = true;
-                BaseCommand = BaseCommand.Substring(1);
-            }
-            string BaseCommandLow = BaseCommand.ToLowerFast();
-            args.RemoveAt(0);
-            for (int i = 0; i < args.Count - 1; i++)
-            {
-                if (!args[i].WasQuoted && args[i].ToString().StartsWith("-"))
+                Dictionary<string, Argument> nameds = new Dictionary<string, Argument>();
+                if (args.Count >= 3 && !args[1].WasQuoted)
                 {
-                    nameds[args[i].ToString().Substring(1).ToLowerFast()] = args[i + 1];
-                    args.RemoveRange(i, 2);
-                    i -= 2;
+                    string a1 = args[1].ToString();
+                    if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
+                    {
+                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, 0, script, line, tabs, system);
+                    }
+                    else if (a1 == "^=")
+                    {
+                        Argument varname = args[0];
+                        args.RemoveRange(0, 2);
+                        nameds["\0varname"] = varname;
+                    }
                 }
+                int marker = 0;
+                string BaseCommand = args[0].ToString();
+                if (BaseCommand.StartsWith("+") && BaseCommand.Length > 1)
+                {
+                    marker = 1;
+                    BaseCommand = BaseCommand.Substring(1);
+                }
+                else if (BaseCommand.StartsWith("-") && BaseCommand.Length > 1)
+                {
+                    marker = 2;
+                    BaseCommand = BaseCommand.Substring(1);
+                }
+                else if (BaseCommand.StartsWith("!") && BaseCommand.Length > 1)
+                {
+                    marker = 3;
+                    BaseCommand = BaseCommand.Substring(1);
+                }
+                bool waitfor = false;
+                if (BaseCommand.StartsWith("&") && BaseCommand.Length > 1)
+                {
+                    waitfor = true;
+                    BaseCommand = BaseCommand.Substring(1);
+                }
+                string BaseCommandLow = BaseCommand.ToLowerFast();
+                args.RemoveAt(0);
+                for (int i = 0; i < args.Count - 1; i++)
+                {
+                    if (!args[i].WasQuoted && args[i].ToString().StartsWith("-"))
+                    {
+                        nameds[args[i].ToString().Substring(1).ToLowerFast()] = args[i + 1];
+                        args.RemoveRange(i, 2);
+                        i -= 2;
+                    }
+                }
+                AbstractCommand cmd;
+                CommandEntry entry;
+                if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
+                {
+                    entry = new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs, nameds, system) { WaitFor = waitfor };
+                }
+                else
+                {
+                    entry = CreateInvalidOutput(BaseCommand, args, system, command, marker, waitfor, script, line, tabs, nameds, system);
+                }
+                return entry;
             }
-            AbstractCommand cmd;
-            CommandEntry entry;
-            if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
+            catch (Exception ex)
             {
-                entry = new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs, nameds) { WaitFor = waitfor };
+                if (ex is ErrorInducedException)
+                {
+                    throw new ErrorInducedException("Error on script line: " + line + "(" + command + "): " + ex.Message);
+                }
+                throw new ErrorInducedException("Internal exception occured on script line: " + line + "(" + command + ")", ex);
             }
-            else
-            {
-                entry = CreateInvalidOutput(BaseCommand, args, system, command, marker, waitfor, script, line, tabs, nameds);
-            }
-            return entry;
         }
 
         /// <summary>
@@ -145,7 +154,7 @@ namespace FreneticScript.CommandSystem
         public static CommandEntry CreateErrorOutput(string message, Commands system, string script, string tabs)
         {
             return new CommandEntry("error \"" + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
-                new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs);
+                new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs, system);
 
         }
 
@@ -153,12 +162,21 @@ namespace FreneticScript.CommandSystem
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutput(string name, List<Argument> _arguments,
-            Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs, Dictionary<string, Argument> nameds)
+            Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs, Dictionary<string, Argument> nameds, Commands sys)
         {
-            _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false, null));
-            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs, nameds) { WaitFor = waitfor };
+            if (sys.Output.ShouldErrorOnInvalidCommand())
+            {
+                throw new ErrorInducedException("Unknown command '" + name + "'!");
+            }
+            _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false));
+            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs, nameds, sys) { WaitFor = waitfor };
                 
         }
+
+        /// <summary>
+        /// The system controlling this CommandEntry.
+        /// </summary>
+        public Commands System;
 
         /// <summary>
         /// The index of this entry in its block.
@@ -214,8 +232,8 @@ namespace FreneticScript.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
-            string _name, int _marker, string _script, int _line, string fairtabs)
-            : this(_commandline, bstart, bend, _command, _arguments, _name, _marker, _script, _line, fairtabs, new Dictionary<string, Argument>())
+            string _name, int _marker, string _script, int _line, string fairtabs, Commands sys)
+            : this(_commandline, bstart, bend, _command, _arguments, _name, _marker, _script, _line, fairtabs, new Dictionary<string, Argument>(), sys)
         {
         }
 
@@ -223,7 +241,7 @@ namespace FreneticScript.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
-            string _name, int _marker, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds)
+            string _name, int _marker, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds, Commands sys)
         {
             BlockStart = bstart;
             BlockEnd = bend;
@@ -236,6 +254,7 @@ namespace FreneticScript.CommandSystem
             ScriptLine = _line;
             FairTabulation = fairtabs;
             NamedArguments = nameds;
+            System = sys;
             if (Command == null)
             {
                 throw new Exception("Invalid Command (null!)");

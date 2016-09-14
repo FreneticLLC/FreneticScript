@@ -118,7 +118,7 @@ namespace FreneticScript.CommandSystem
         public CommandEntry GetFollower(CommandEntry entry)
         {
             return new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() {
-                new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ");
+                new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace FreneticScript.CommandSystem
         {
             for (int i = 0; i < LVariables.Count; i++)
             {
-                if (LVariables[i] == name)
+                if (LVariables[i].Key == name)
                 {
                     return i;
                 }
@@ -265,7 +265,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// A map of local variables to track.
         /// </summary>
-        public List<string> LVariables = new List<string>();
+        public List<KeyValuePair<string, TagType>> LVariables = new List<KeyValuePair<string, TagType>>();
 
         /// <summary>
         /// Load the entry onto the stack.

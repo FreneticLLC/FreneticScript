@@ -196,6 +196,10 @@ namespace FreneticScript.CommandSystem
                 if (shouldarun)
                 {
                     CommandScript cscript = CommandScript.SeparateCommands(name, script, this, shouldcompile);
+                    if (cscript == null)
+                    {
+                        return;
+                    }
                     for (int i = 0; i < scriptsToRun.Count; i++)
                     {
                         if (scriptsToRun[i].Key == arun)
@@ -250,7 +254,13 @@ namespace FreneticScript.CommandSystem
         /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
-            CommandQueue queue = CommandScript.SeparateCommands("command_line", commands, this, true).ToQueue(this); // TODO: Compile option!
+            CommandScript cs = CommandScript.SeparateCommands("command_line", commands, this, true); // TODO: Compile option!
+            if (cs == null)
+            {
+                outputter?.Invoke("Invalid commands specified, error outputted to logs.", MessageType.BAD);
+                return;
+            }
+            CommandQueue queue = cs.ToQueue(this);
             queue.Outputsystem = outputter;
             queue.Execute();
         }

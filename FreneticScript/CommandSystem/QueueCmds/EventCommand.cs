@@ -194,7 +194,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 else
                 {
                     // NOTE: Events are compiled!
-                    theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, entry.InnerCommandBlock, entry.BlockStart, queue.CurrentEntry.Types, true) { Debug = DebugMode.MINIMAL });
+                    theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, entry.InnerCommandBlock, entry.BlockStart, true) { Debug = DebugMode.MINIMAL });
                     entry.Good(queue, "Handler '<{text_color.emphasis}>" + TagParser.Escape(name) +
                         "<{text_color.base}>' defined for event '<{text_color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{text_color.base}>'.");
                 }

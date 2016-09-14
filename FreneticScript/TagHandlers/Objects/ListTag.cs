@@ -76,6 +76,17 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return tlist;
         }
+
+        /// <summary>
+        /// Constructs a list tag from text input.
+        /// </summary>
+        /// <param name="data">The relevant tag data, if any.</param>
+        /// <param name="list">The list input.</param>
+        /// <returns>A valid list.</returns>
+        public static ListTag For(TagData data, TemplateObject list)
+        {
+            return For(list);
+        }
         
         /// <summary>
         /// Constructs a list tag from text input.
@@ -172,14 +183,7 @@ namespace FreneticScript.TagHandlers.Objects
                         for (int i = 0; i < ListEntries.Count; i++)
                         {
                             Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>(data.Variables);
-                            if (vars.ContainsKey("value"))
-                            {
-                                vars["filter_value"].Internal = ListEntries[i];
-                            }
-                            else
-                            {
-                                vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                            }
+                             vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
                             TemplateObject tobj = data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, vars, data.mode, data.Error, data.CSE);
                             if ((tobj is BooleanTag ? (BooleanTag)tobj : BooleanTag.For(data, tobj.ToString())).Internal)
                             {
@@ -201,18 +205,12 @@ namespace FreneticScript.TagHandlers.Objects
                         for (int i = 0; i < ListEntries.Count; i++)
                         {
                             Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>(data.Variables);
-                            if (vars.ContainsKey("value"))
-                            {
-                                vars["parse_value"].Internal = ListEntries[i];
-                            }
-                            else
-                            {
-                                vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                            }
+                            vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
                             newlist.ListEntries.Add(data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, vars, data.mode, data.Error, data.CSE));
                         }
                         return newlist.Handle(data.Shrink());
                     }
+                    // TODO: Sort, styled like filter/parse tags
                 // <--[tag]
                 // @Name ListTag.first
                 // @Group List Entries

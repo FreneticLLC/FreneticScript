@@ -16,7 +16,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             input.Clear();
             base.AdaptBlockFollowers(entry, input, fblock);
             fblock.Insert(0, new CommandEntry("WAIT " + entry.Arguments[0].ToString(), 0, 0, entry.Command.CommandSystem.RegisteredCommands["wait"],
-                entry.Arguments, "wait", 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation));
+                entry.Arguments, "wait", 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation, entry.System));
         }
 
         // <--[command]
@@ -91,7 +91,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "compiling and running delay command...");
                 }
-                entry.BlockScript = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, queue.CurrentEntry.Types /* TODO: Types required here?*/, true);
+                entry.BlockScript = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart, true);
             }
             CommandQueue nqueue = entry.BlockScript.ToQueue(entry.Command.CommandSystem);
             nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;

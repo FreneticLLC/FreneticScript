@@ -22,12 +22,7 @@ namespace FreneticScript.CommandSystem
         /// All available commands.
         /// </summary>
         public CommandEntry[] Entries;
-
-        /// <summary>
-        /// All variable predefinition types.
-        /// </summary>
-        public Dictionary<string, TagType> Types;
-
+        
         /// <summary>
         /// All entry data available in this CommandStackEntry.
         /// </summary>

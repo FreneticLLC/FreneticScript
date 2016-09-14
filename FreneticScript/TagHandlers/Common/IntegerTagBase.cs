@@ -18,6 +18,13 @@ namespace FreneticScript.TagHandlers.Common
         public IntegerTagBase()
         {
             Name = "integer";
+            CanSingle = true;
+            ResultTypeString = "integertag";
+        }
+
+        public override TemplateObject HandleOne(TagData data)
+        {
+            return IntegerTag.For(data, data.GetModifierObject(0));
         }
 
         public override TemplateObject Handle(TagData data)

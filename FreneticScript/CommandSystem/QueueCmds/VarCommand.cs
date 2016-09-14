@@ -46,10 +46,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             CommandEntry cent = values.Entry.Entries[entry];
             string larg = cent.Arguments[0].ToString().ToLowerFast();
-            if (!values.LVariables.Contains(larg))
+            for (int i = 0; i < values.LVariables.Count; i++)
             {
-                values.LVariables.Add(larg);
+                if (values.LVariables[i].Key == larg)
+                {
+                    throw new ErrorInducedException("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Duplicate local variable: " + larg + "!");
+                }
             }
+            TagType t = null;
+            if (cent.Arguments.Count >= 5)
+            {
+                string tname = cent.Arguments[4].ToString();
+                t = cent.System.TagSystem.Types[tname];
+            }
+            values.LVariables.Add(new KeyValuePair<string, TagType>(larg, t));
         }
 
         /// <summary>

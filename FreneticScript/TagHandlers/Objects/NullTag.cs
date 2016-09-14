@@ -61,7 +61,7 @@ namespace FreneticScript.TagHandlers.Objects
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Null), ReturnTypeString = "tagtypetag" });
         }
-
+        
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>

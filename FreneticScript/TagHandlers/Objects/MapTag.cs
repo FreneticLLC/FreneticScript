@@ -85,6 +85,18 @@ namespace FreneticScript.TagHandlers.Objects
         /// Converts a generic object to a map tag.
         /// Never null. Will ignore invalid entries.
         /// </summary>
+        /// <param name="data">The relevant tag data, if any.</param>
+        /// <param name="input">The input object.</param>
+        /// <returns>The map represented by the input object.</returns>
+        public static MapTag For(TagData data, TemplateObject input)
+        {
+            return For(input);
+        }
+        
+        /// <summary>
+        /// Converts a generic object to a map tag.
+        /// Never null. Will ignore invalid entries.
+        /// </summary>
         /// <param name="input">The input object.</param>
         /// <returns>The map represented by the input object.</returns>
         public static MapTag For(TemplateObject input)

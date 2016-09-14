@@ -28,93 +28,107 @@ namespace FreneticScript.CommandSystem
         /// <returns>A list of command strings.</returns>
         public static CommandScript SeparateCommands(string name, string commands, Commands system, bool compile)
         {
-            List<string> CommandList = new List<string>();
-            List<int> Lines = new List<int>();
-            int start = 0;
-            bool quoted = false;
-            bool qtype = false;
-            int line = 0;
-            for (int i = 0; i < commands.Length; i++)
+            try
             {
-                if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '/')
+                List<string> CommandList = new List<string>();
+                List<int> Lines = new List<int>();
+                int start = 0;
+                bool quoted = false;
+                bool qtype = false;
+                int line = 0;
+                for (int i = 0; i < commands.Length; i++)
                 {
-                    int x = i;
-                    while (x < commands.Length && commands[x] != '\n')
+                    if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '/')
                     {
-                        x++;
-                    }
-                    if (x < commands.Length)
-                    {
-                        commands = commands.Substring(0, i) + commands.Substring(x);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '*')
-                {
-                    int x;
-                    for (x = i; x < commands.Length && !(commands[x] == '*' && x + 1 < commands.Length && commands[x + 1] == '/'); x++)
-                    {
-                        if (commands[x] == '\n')
+                        int x = i;
+                        while (x < commands.Length && commands[x] != '\n')
                         {
-                            line++;
+                            x++;
+                        }
+                        if (x < commands.Length)
+                        {
+                            commands = commands.Substring(0, i) + commands.Substring(x);
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
-                    if (x + 1 < commands.Length)
+                    else if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '*')
                     {
-                        commands = commands.Substring(0, i) + commands.Substring(x + 1);
+                        int x;
+                        for (x = i; x < commands.Length && !(commands[x] == '*' && x + 1 < commands.Length && commands[x + 1] == '/'); x++)
+                        {
+                            if (commands[x] == '\n')
+                            {
+                                line++;
+                            }
+                        }
+                        if (x + 1 < commands.Length)
+                        {
+                            commands = commands.Substring(0, i) + commands.Substring(x + 1);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                    else if (commands[i] == '"' && (!quoted || qtype))
                     {
-                        break;
+                        qtype = true;
+                        quoted = !quoted;
                     }
-                }
-                else if (commands[i] == '"' && (!quoted || qtype))
-                {
-                    qtype = true;
-                    quoted = !quoted;
-                }
-                else if (commands[i] == '\'' && (!quoted || !qtype))
-                {
-                    qtype = false;
-                    quoted = !quoted;
-                }
-                else if (!quoted && commands[i] == ';')
-                {
-                    if (start < i)
+                    else if (commands[i] == '\'' && (!quoted || !qtype))
                     {
+                        qtype = false;
+                        quoted = !quoted;
+                    }
+                    else if (!quoted && commands[i] == ';')
+                    {
+                        if (start < i)
+                        {
+                            Lines.Add(line);
+                            CommandList.Add(commands.Substring(start, i - start).Trim());
+                        }
+                        start = i + 1;
+                    }
+                    else if (((commands[i] == '{' && (i == 0 || commands[i - 1] != '<')) || (commands[i] == '}' && (i + 1 >= commands.Length || commands[i + 1] != '>'))) && !quoted)
+                    {
+                        if (start < i)
+                        {
+                            Lines.Add(line);
+                            CommandList.Add(commands.Substring(start, i - start).Trim());
+                        }
                         Lines.Add(line);
-                        CommandList.Add(commands.Substring(start, i - start).Trim());
+                        CommandList.Add(commands[i].ToString());
+                        start = i + 1;
+                        continue;
                     }
-                    start = i + 1;
-                }
-                else if (((commands[i] == '{' && (i == 0 || commands[i - 1] != '<')) || (commands[i] == '}' && (i + 1 >= commands.Length || commands[i + 1] != '>'))) && !quoted)
-                {
-                    if (start < i)
+                    if (commands[i] == '\n')
                     {
-                        Lines.Add(line);
-                        CommandList.Add(commands.Substring(start, i - start).Trim());
+                        line++;
                     }
+                }
+                if (start < commands.Length)
+                {
                     Lines.Add(line);
-                    CommandList.Add(commands[i].ToString());
-                    start = i + 1;
-                    continue;
+                    CommandList.Add(commands.Substring(start).Trim());
                 }
-                if (commands[i] == '\n')
-                {
-                    line++;
-                }
+                bool herr;
+                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr), 0, compile);
             }
-            if (start < commands.Length)
+            catch (Exception ex)
             {
-                Lines.Add(line);
-                CommandList.Add(commands.Substring(start).Trim());
+                if (ex is ErrorInducedException)
+                {
+                    system.Output.Bad("Error parsing script: " + TagParser.Escape(ex.Message), DebugMode.FULL);
+                }
+                else
+                {
+                    system.Output.Bad("Exception parsing script: " + TagParser.Escape(ex.ToString()), DebugMode.FULL);
+                }
+                return null;
             }
-            bool herr;
-            Dictionary<string, TagType> types = new Dictionary<string, TagType>();
-            return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, types, out herr), 0, types, compile);
         }
 
         /// <summary>
@@ -128,9 +142,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="tabs">How far out tabulation should go.</param>
         /// <param name="had_error">Whether there was a compile error.</param>
         /// <param name="istart">The starting index.</param>
-        /// <param name="types">All known variable definite types.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, string tabs, int istart, Dictionary<string, TagType> types, out bool had_error)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, string tabs, int istart, out bool had_error)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
             List<string> Temp = null;
@@ -160,7 +173,7 @@ namespace FreneticScript.CommandSystem
                         if (toret.Count == 0)
                         {
                             bool err;
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, types, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, out err);
                             if (err)
                             {
                                 had_error = true;
@@ -173,7 +186,7 @@ namespace FreneticScript.CommandSystem
                         {
                             bool err;
                             CommandEntry cent = toret[toret.Count - 1];
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, types, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, out err);
                             if (err)
                             {
                                 had_error = true;
@@ -210,32 +223,12 @@ namespace FreneticScript.CommandSystem
                 }
                 else
                 {
-                    CommandEntry centry = CommandEntry.FromInput(from[i], system, name, lines[i], tabs, types);
+                    CommandEntry centry = CommandEntry.FromInput(from[i], system, name, lines[i], tabs);
                     if (centry != null)
                     {
                         istart++;
                         toret.Add(centry);
-                        if (centry.Command is VarCommand && centry.Arguments.Count == 5)
-                        {
-                            string argname = centry.Arguments[0].ToString().ToLowerFast();
-                            string argtype = centry.Arguments[4].ToString().ToLowerFast();
-                            if (types.ContainsKey(argname) || !system.TagSystem.Types.ContainsKey(argtype))
-                            {
-                                // TODO: Post-process this! It acts funky around functions!
-                                string fullmsg = "FAILED TO COMPILE SCRIPT '" + TagParser.Escape(name) + "': (line " + toret[i].ScriptLine + "): duplicate or invalid definite variable";
-                                system.Output.Bad(fullmsg, DebugMode.FULL);
-                                had_error = true;
-                                toret.Clear();
-                                toret.Add(CommandEntry.CreateErrorOutput(fullmsg, system, name, tabs));
-                                return toret;
-                            }
-                            types[argname] = system.TagSystem.Types[argtype];
-                            TextArgumentBit tab = new TextArgumentBit(argtype, false);
-                            tab.InputValue = new TagTypeTag(types[argname]);
-                            centry.Arguments[4] = new Argument() { Bits = new List<ArgumentBit>() { tab } };
-                        }
                     }
-
                 }
             }
             for (int i = 0; i < toret.Count; i++)
@@ -269,7 +262,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 string fname = filename + ".cfg";
-                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system, false); // TODO: Compile optional
+                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system, true); // TODO: Compile optional
             }
             catch (System.IO.FileNotFoundException)
             {
@@ -308,9 +301,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="_name">The name of the script.</param>
         /// <param name="_commands">All commands in the script.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
-        /// <param name="types">The variable type predefinitions.</param>
         /// <param name="compile">Whether the script should be compiled.</param>
-        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, Dictionary<string, TagType> types = null, bool compile = false)
+        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, bool compile = false)
         {
             Name = _name.ToLowerFast();
             List<CommandEntry> Commands = _commands;
@@ -330,7 +322,6 @@ namespace FreneticScript.CommandSystem
             {
                 Created = new CommandStackEntry();
             }
-            Created.Types = types ?? new Dictionary<string, TagType>();
             Created.Debug = Debug;
             Created.Variables = new Dictionary<string, ObjectHolder>();
             Created.Entries = Commands.ToArray();
@@ -361,11 +352,14 @@ namespace FreneticScript.CommandSystem
                     ccse.Entries[i].Command.PreAdaptToCIL(values, i);
                 }
                 ccse.LocalVariables = new ObjectHolder[values.LVariables.Count];
-                ccse.LocalVarNames = values.LVariables.ToArray();
+                ccse.LocalVarNames = new string[values.LVariables.Count];
+                Dictionary<string, TagType> types = new Dictionary<string, TagType>();
                 for (int i = 0; i < ccse.LocalVariables.Length; i++)
                 {
+                    ccse.LocalVarNames[i] = values.LVariables[i].Key;
                     ccse.LocalVariables[i] = new ObjectHolder();
                     ccse.Variables[ccse.LocalVarNames[i]] = ccse.LocalVariables[i];
+                    types[values.LVariables[i].Key] = values.LVariables[i].Value;
                 }
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
@@ -377,6 +371,7 @@ namespace FreneticScript.CommandSystem
                         if (arg.Bits.Count > 0 && arg.Bits[0] is TagArgumentBit)
                         {
                             TagArgumentBit tab = ((TagArgumentBit)arg.Bits[0]);
+                            TagType returnable = tab.Start.ResultType;
                             if (tab.Start is VarTagBase)
                             {
                                 string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
@@ -388,9 +383,28 @@ namespace FreneticScript.CommandSystem
                                         tab.Bits[0].Key = "\0lvar";
                                         tab.Bits[0].Handler = null;
                                         tab.Bits[0].OVar = tab.Bits[0].Variable;
-                                        tab.Bits[0].Variable = ccse.Entries[i].Command.CommandSystem.TagSystem.SplitToArgument(x.ToString(), false, types);
+                                        tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new List<ArgumentBit>() { new TextArgumentBit( x.ToString(), false) } };
+                                        types.TryGetValue(vn, out returnable);
                                         break;
                                     }
+                                }
+                            }
+                            if (returnable != null)
+                            {
+                                for (int x = 1; x < tab.Bits.Length; x++)
+                                {
+                                    if (!returnable.SubHandlers.ContainsKey(tab.Bits[x].Key))
+                                    {
+                                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                                            + "): Invalid tag sub-handler " + tab.Bits[x].Key + " for tag " + tab.ToString());
+                                    }
+                                    TagSubHandler tsh = returnable.SubHandlers[tab.Bits[x].Key];
+                                    tab.Bits[x].Handler = tsh;
+                                    if (tsh == null)
+                                    {
+                                        break;
+                                    }
+                                    returnable = tsh.ReturnType;
                                 }
                             }
                         }

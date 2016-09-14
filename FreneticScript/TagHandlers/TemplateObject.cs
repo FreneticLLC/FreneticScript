@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
@@ -15,7 +16,7 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="data">The input tag data.</param>
         public abstract TemplateObject Handle(TagData data);
-
+        
         /// <summary>
         /// Returns the input as-is, for use with ObjecTypes.
         /// </summary>

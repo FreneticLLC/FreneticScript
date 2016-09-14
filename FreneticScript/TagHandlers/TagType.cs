@@ -36,6 +36,11 @@ namespace FreneticScript.TagHandlers
         public Dictionary<string, TagSubHandler> SubHandlers;
 
         /// <summary>
+        /// Gets the boject of the next type down the tree of types.
+        /// </summary>
+        public Func<TemplateObject, TemplateObject> GetNextTypeDown;
+
+        /// <summary>
         /// Duplicates a tag type object.
         /// </summary>
         /// <returns>The new duplicate.</returns>
