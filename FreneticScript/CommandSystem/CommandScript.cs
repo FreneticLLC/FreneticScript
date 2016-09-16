@@ -331,7 +331,13 @@ namespace FreneticScript.CommandSystem
                 string tname = "__script__" + IDINCR++;
                 AssemblyName asmname = new AssemblyName(tname);
                 asmname.Name = tname;
-                AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.Run/*AndSave*/); // TODO: RunAndCollect in .NET 4
+                AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
+#if NET_4_5
+                    AssemblyBuilderAccess.RunAndCollect
+#else
+                    AssemblyBuilderAccess.Run/*AndSave*/
+#endif
+                    );
                 ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname/*, "testmod.dll", true*/);
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
