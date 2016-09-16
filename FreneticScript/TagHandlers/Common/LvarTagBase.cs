@@ -36,7 +36,10 @@ namespace FreneticScript.TagHandlers.Common
             {
                 return ccse.LocalVariables[itag.Internal].Internal;
             }
-            data.Error("Invalid local variable ID '" + itag.Internal + "'!");
+            if (!data.HasFallback)
+            {
+                data.Error("Invalid local variable ID '" + itag.Internal + "'!");
+            }
             return new NullTag();
         }
 

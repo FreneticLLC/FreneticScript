@@ -12,7 +12,7 @@ namespace FreneticScript.TagHandlers.Objects
     {
         // <--[object]
         // @Type NullTag
-        // @SubType TextTag
+        // @SubType NONE
         // @Group Mathematics
         // @Description Represents a null value.
         // -->
@@ -60,8 +60,10 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new NullTag(), ReturnTypeString = "nulltag" });
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Null), ReturnTypeString = "tagtypetag" });
+            // Documented in TextTag.
+            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => data.GetModifierObject(0) });
         }
-        
+
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -77,7 +79,11 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return handler.Handle(data, this).Handle(data.Shrink());
             }
-            return new TextTag(ToString()).Handle(data);
+            if (!data.HasFallback)
+            {
+                data.Error("Invalid tag bit: '" + TagParser.Escape(data[0]) + "'!");
+            }
+            return new NullTag();
         }
 
         /// <summary>

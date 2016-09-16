@@ -16,10 +16,10 @@ namespace FreneticScript.TagHandlers.Common
         // @Group Text Comparison
         // @ReturnType TernaryPassTag
         // @Returns the specified pass or fail value.
-        // The full tag is formatted as <{ternary[<TextTag>].pass[<TextTag>].fail[<TextTag>]}>
-        // Using <@link tag TernaryPassTag.pass[<TextTag>]>Pass<@/link> and <@link tag TernaryFailTag.fail[<TextTag>]>fail<@/link> sub-tags.
+        // The full tag is formatted as <{ternary[<BooleanTag>].pass[<Dynamic>].or_else[<Dynamic>]}>
+        // Using <@link tag TernaryPassTag.pass[<Dynamic>]>Pass<@/link> and <@link tag TextTag.or_else[<Dynamic>]>or_else<@/link> sub-tags.
         // If the value in ternary[...] is "true", then the contents of .pass[...] will be returned.
-        // Otherwise, the contents of .fail[...] will be returned.
+        // Otherwise, the contents of .or_else[...] will be returned.
         // -->
 
         /// <summary>
@@ -31,58 +31,63 @@ namespace FreneticScript.TagHandlers.Common
         }
 
         /// <summary>
-        /// Handles the 'ternary' tag.
+        /// Handles the 'ternary[]' tag.
+        /// </summary>
+        /// <param name="data">The data to be handled.</param>
+        public override TemplateObject HandleOne(TagData data)
+        {
+            bool basevalue = (BooleanTag.TryFor(data.GetModifierObject(0)) ?? new BooleanTag(false)).Internal;
+            return new TernaryPassTag() { Passed = basevalue };
+        }
+
+        /// <summary>
+        /// Handles the 'ternary[]' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
         public override TemplateObject Handle(TagData data)
         {
-            bool basevalue = data.GetModifier(0).ToLowerFast() == "true";
-            data.Shrink();
-            if (data.Remaining == 0)
+            return HandleOne(data).Handle(data.Shrink());
+        }
+
+        /// <summary>
+        /// Handles Ternary calculations.
+        /// </summary>
+        public class TernaryPassTag : TemplateObject
+        {
+            // TODO: Fully update to new tag system.
+
+            /// <summary>
+            /// Whether this ternary tag passed.
+            /// </summary>
+            public bool Passed = false;
+
+            /// <summary>
+            /// Handles the 'ternary[].pass[]' tag.
+            /// </summary>
+            /// <param name="data">The data to be handled.</param>
+            public override TemplateObject Handle(TagData data)
             {
-                data.Error("Invalid ternary tag!");
-                return new NullTag();
+                // <--[tag]
+                // @Name TernaryPassTag.pass[<TextTag>]
+                // @Group Text Comparison
+                // @ReturnType TernaryFailTag
+                // @Returns a step in the ternary pass/fail tag.
+                // Used as a part of the <@link tag Ternary[<TextTag>]>Ternary<@/link> tag.
+                // -->
+                if (Passed)
+                {
+                    return data.GetModifierObject(0).Handle(data.Shrink());
+                }
+                return new NullTag().Handle(data.Shrink());
             }
-            // <--[tag]
-            // @Name TernaryPassTag.pass[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType TernaryFailTag
-            // @Returns a step in the ternary pass/fail tag.
-            // Used as a part of the <@link tag Ternary[<TextTag>]>Ternary<@/link> tag.
-            // -->
-            if (data[0] != "pass")
+
+            /// <summary>
+            /// Returns NullTag.ToString.
+            /// </summary>
+            public override string ToString()
             {
-                data.Error("Invalid ternary tag!");
-                return new NullTag();
+                return new NullTag().ToString();
             }
-            string result = "";
-            if (basevalue)
-            {
-                result = data.GetModifier(0);
-            }
-            data.Shrink();
-            if (data.Remaining == 0)
-            {
-                data.Error("Invalid ternary tag!");
-                return new NullTag();
-            }
-            // <--[tag]
-            // @Name TernaryFailTag.fail[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType TextTag
-            // @Returns a step in the ternary pass/fail tag.
-            // Used as a part of the <@link tag Ternary[<TextTag>]>Ternary<@/link> tag.
-            // -->
-            if (data[0] != "fail")
-            {
-                data.Error("Invalid ternary tag!");
-                return new NullTag();
-            }
-            if (!basevalue)
-            {
-                result = data.GetModifier(0);
-            }
-            return new TextTag(result).Handle(data.Shrink());
         }
     }
 }

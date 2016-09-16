@@ -192,7 +192,7 @@ namespace FreneticScript.TagHandlers.Common
             }
             else
             {
-                return new NullTag().Handle(data);
+                return new NullTag().Handle(data.Shrink());
             }
         }
     }

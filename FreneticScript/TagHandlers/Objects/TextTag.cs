@@ -347,6 +347,14 @@ namespace FreneticScript.TagHandlers.Objects
                 // -->
                 case "type":
                     return new TagTypeTag(data.TagSystem.Type_Text).Handle(data.Shrink());
+                // <--[tag]
+                // @Name TextTag.or_else[<Dynamic>]
+                // @Group Global Usage Tags
+                // @ReturnType Dynamic
+                // @Returns this tag's value if present, otherwise (if it is null), returns the input value.
+                // -->
+                case "or_else":
+                    return Handle(data.Shrink());
                 default:
                     break;
             }

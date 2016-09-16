@@ -26,6 +26,11 @@ namespace FreneticScript.TagHandlers
         public string ReturnTypeString = null;
 
         /// <summary>
+        /// Whether this tag is for null checks.
+        /// </summary>
+        public bool IsNullTyped = false;
+
+        /// <summary>
         /// Returns a perfect duplicate of this tag sub-handler.
         /// </summary>
         /// <returns>The duplicate.</returns>
