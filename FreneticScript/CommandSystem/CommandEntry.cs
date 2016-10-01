@@ -153,7 +153,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public static CommandEntry CreateErrorOutput(string message, Commands system, string script, string tabs)
         {
-            return new CommandEntry("error \"" + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
+            return new CommandEntry("error \"" + TagParser.Escape(message.Replace('\"', '\'')) + "\"", 0, 0, system.RegisteredCommands["error"],
                 new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs, system);
 
         }
@@ -422,10 +422,10 @@ namespace FreneticScript.CommandSystem
         /// Used to output requested information.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
-        /// <param name="text">The text to output, with tags included.</param>
-        public void Info(CommandQueue queue, string text)
+        /// <param name="text">The text to output.</param>
+        public void InfoOutput(CommandQueue queue, string text)
         {
-            queue.CommandSystem.Output.Good(text, DebugMode.MINIMAL);
+            queue.CommandSystem.Output.WriteLine(text);
             if (queue.Outputsystem != null)
             {
                 queue.Outputsystem.Invoke(text, MessageType.INFO);
@@ -436,12 +436,12 @@ namespace FreneticScript.CommandSystem
         /// Used to output a success message.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
-        /// <param name="text">The text to output, with tags included.</param>
-        public void Good(CommandQueue queue, string text)
+        /// <param name="text">The text to output.</param>
+        public void GoodOutput(CommandQueue queue, string text)
         {
             if (queue.CommandStack.Peek().Debug == DebugMode.FULL)
             {
-                queue.CommandSystem.Output.Good(text, DebugMode.MINIMAL);
+                queue.CommandSystem.Output.GoodOutput(text);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(text, MessageType.GOOD);
@@ -484,12 +484,12 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="text">The text to output, with tags included.</param>
-        public void Bad(CommandQueue queue, string text)
+        public void BadOutput(CommandQueue queue, string text)
         {
             if (queue.CommandStack.Peek().Debug <= DebugMode.MINIMAL)
             {
-                text = "WARNING in script '" + TagParser.Escape(ScriptName) + "' on line " + (ScriptLine + 1) + ": " + text;
-                queue.CommandSystem.Output.Bad(text, DebugMode.MINIMAL);
+                text = "WARNING in script '" + ScriptName + "' on line " + (ScriptLine + 1) + ": " + text;
+                queue.CommandSystem.Output.BadOutput(text);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(text, MessageType.BAD);
@@ -497,6 +497,23 @@ namespace FreneticScript.CommandSystem
             }
         }
 
+        // TODO: Remove this!
+        public void Bad(CommandQueue queue, string text)
+        {
+            BadOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
+        }
+
+        // TODO: Remove this!
+        public void Good(CommandQueue queue, string text)
+        {
+            GoodOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
+        }
+
+        // TODO: Remove this!
+        public void Info(CommandQueue queue, string text)
+        {
+             InfoOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
+        }
         /// <summary>
         /// Perfectly duplicates the command entry.
         /// </summary>

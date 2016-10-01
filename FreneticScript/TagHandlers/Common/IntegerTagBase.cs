@@ -18,7 +18,6 @@ namespace FreneticScript.TagHandlers.Common
         public IntegerTagBase()
         {
             Name = "integer";
-            CanSingle = true;
             ResultTypeString = "integertag";
         }
         

@@ -16,11 +16,6 @@ namespace FreneticScript.TagHandlers
         public string Name = null;
         
         /// <summary>
-        /// TEMPORARY. // TODO: REMOVE ME!
-        /// </summary>
-        public bool CanSingle = false;
-
-        /// <summary>
         /// What type this tag handler will return. Null for dynamic.
         /// </summary>
         public TagType ResultType = null;

@@ -70,12 +70,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {
-                queue.HandleError(entry, "Cannot call function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
+                queue.HandleError(entry, "Cannot call function '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>': it does not exist!");
                 return;
             }
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Calling '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                entry.Good(queue, "Calling '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
             Dictionary<string, ObjectHolder> existingVars = queue.CurrentEntry.Variables;
             Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>();

@@ -53,12 +53,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {
-                queue.HandleError(entry, "Cannot inject function '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': it does not exist!");
+                queue.HandleError(entry, "Cannot inject function '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>': it does not exist!");
                 return;
             }
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Injecting '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                entry.Good(queue, "Injecting '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
             CommandStackEntry cse = queue.CommandStack.Peek();
             CommandStackEntry tcse = script.Created.Duplicate();

@@ -228,7 +228,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             queue.SetVariable("repeat_total", new IntegerTag(target));
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Repeating <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                entry.Good(queue, "Repeating <{text_color[emphasis]}>" + target + "<{text_color[base]}> times...");
             }
             return true;
         }

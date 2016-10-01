@@ -59,7 +59,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             queue.ParseTags = modechoice;
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Queue parsing now <{text_color.emphasis}>" + modechoice + "<{text_color.base}>.");
+                entry.Good(queue, "Queue parsing now <{text_color[emphasis]}>" + modechoice + "<{text_color[base]}>.");
             }
         }
     }

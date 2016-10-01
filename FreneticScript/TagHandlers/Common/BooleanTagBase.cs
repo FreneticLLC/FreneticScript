@@ -24,6 +24,7 @@ namespace FreneticScript.TagHandlers.Common
         public BooleanTagBase()
         {
             Name = "boolean";
+            ResultTypeString = "booleantag";
         }
 
         /// <summary>

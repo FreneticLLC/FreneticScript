@@ -24,6 +24,7 @@ namespace FreneticScript.TagHandlers.Common
         public ListTagBase()
         {
             Name = "list";
+            ResultTypeString = "listtag";
         }
 
         public override TemplateObject HandleOne(TagData data)

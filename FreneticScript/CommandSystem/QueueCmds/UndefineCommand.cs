@@ -34,12 +34,12 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>' removed'.");
+                    entry.Good(queue, "Queue variable '<{text_color[emphasis]}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color[base]}>' removed'.");
                 }
             }
             else
             {
-                queue.HandleError(entry, "Unknown queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color.base}>'.");
+                queue.HandleError(entry, "Unknown queue variable '<{text_color[emphasis]}>" + TagParser.Escape(target.ToLowerFast()) + "<{text_color[base]}>'.");
             }
         }
     }

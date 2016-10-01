@@ -108,7 +108,7 @@ namespace FreneticScript.CommandSystem
                             string message = ex2.ToString();
                             if (Debug <= DebugMode.MINIMAL)
                             {
-                                queue.CommandSystem.Output.Bad(message, DebugMode.MINIMAL);
+                                queue.CommandSystem.Output.BadOutput(message);
                                 if (queue.Outputsystem != null)
                                 {
                                     queue.Outputsystem.Invoke(message, MessageType.BAD);

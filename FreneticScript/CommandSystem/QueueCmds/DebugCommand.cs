@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         TemplateObject verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
-            if (inp == "full" || inp == "minimal" || inp == "none" || inp == "exception")
+            if (inp == "full" || inp == "minimal" || inp == "none")
             {
                 return new TextTag(inp);
             }
@@ -67,25 +67,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     cse.Debug = DebugMode.FULL;
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Queue debug mode set to <{text_color.emphasis}>full<{text_color.base}>.");
+                        entry.Good(queue, "Queue debug mode set to <{text_color[emphasis]}>full<{text_color[base]}>.");
                     }
                     break;
                 case "minimal":
                     cse.Debug = DebugMode.MINIMAL;
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Queue debug mode set to <{text_color.emphasis}>minimal<{text_color.base}>.");
+                        entry.Good(queue, "Queue debug mode set to <{text_color[emphasis]}>minimal<{text_color[base]}>.");
                     }
                     break;
                 case "none":
                     cse.Debug = DebugMode.NONE;
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Queue debug mode set to <{text_color.emphasis}>none<{text_color.base}>.");
+                        entry.Good(queue, "Queue debug mode set to <{text_color[emphasis]}>none<{text_color[base]}>.");
                     }
                     break;
                 default:
-                    queue.HandleError(entry, "Unknown debug mode '<{text_color.emphasis}>" + modechoice + "<{text_color.base}>'.");
+                    queue.HandleError(entry, "Unknown debug mode '<{text_color[emphasis]}>" + modechoice + "<{text_color[base]}>'.");
                     break;
             }
         }

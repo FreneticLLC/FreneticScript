@@ -28,7 +28,6 @@ namespace FreneticScript.TagHandlers.Common
         public VarTagBase()
         {
             Name = "var";
-            CanSingle = true;
         }
 
         public override TemplateObject HandleOne(TagData data)

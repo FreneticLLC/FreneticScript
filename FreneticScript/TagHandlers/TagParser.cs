@@ -108,11 +108,10 @@ namespace FreneticScript.TagHandlers
             Register(new SystemTagBase());
             Register(new TagTypeBase());
             Register(new TernaryTagBase());
-            Register(new TextColorTags());
+            Register(new TextColorTagBase());
             Register(new TextTagBase());
             Register(new TimeTagBase());
             Register(new UnescapeTagBase());
-            Register(new UtilTagBase());
             Register(new VarTagBase());
             // Object types
             Register(Type_Binary = new TagType()
@@ -130,6 +129,14 @@ namespace FreneticScript.TagHandlers
                 TypeGetter = BooleanTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
+            });
+            Register(Type_Cvar = new TagType()
+            {
+                TypeName = "cvartag",
+                SubTypeName = "texttag",
+                TypeGetter = CVarTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                SubHandlers = CVarTag.Handlers
             });
             Register(Type_Integer = new TagType()
             {
@@ -171,6 +178,14 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
+            Register(Type_System = new TagType()
+            {
+                TypeName = "systemtag",
+                SubTypeName = "texttag",
+                TypeGetter = SystemTagBase.SystemTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                SubHandlers = SystemTagBase.SystemTag.Handlers
+            });
             Register(Type_TagType = new TagType()
             {
                 TypeName = "tagtypetag",
@@ -178,6 +193,14 @@ namespace FreneticScript.TagHandlers
                 TypeGetter = TagTypeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = TagTypeTag.Handlers
+            });
+            Register(Type_TernayPass = new TagType()
+            {
+                TypeName = "ternarypasstag",
+                SubTypeName = "texttag",
+                TypeGetter = TernaryTagBase.TernaryPassTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                SubHandlers = null
             });
             Register(Type_Text = new TagType()
             {
@@ -227,7 +250,7 @@ namespace FreneticScript.TagHandlers
                         TagSubHandler hand = point.Value.Duplicate();
                         if (hand.ReturnTypeString != null && !Types.ContainsKey(hand.ReturnTypeString))
                         {
-                            CommandSystem.Output.Bad("Unrecognized type string: " + hand.ReturnTypeString, DebugMode.FULL);
+                            CommandSystem.Output.BadOutput("Unrecognized type string: " + hand.ReturnTypeString);
                         }
                         else
                         {
@@ -248,6 +271,11 @@ namespace FreneticScript.TagHandlers
         /// The BooleanTag type.
         /// </summary>
         public TagType Type_Boolean;
+
+        /// <summary>
+        /// The CVar tag type.
+        /// </summary>
+        public TagType Type_Cvar;
 
         /// <summary>
         /// The IntegerTag type.
@@ -275,9 +303,19 @@ namespace FreneticScript.TagHandlers
         public TagType Type_Number;
 
         /// <summary>
+        /// The SystemTag type.
+        /// </summary>
+        public TagType Type_System;
+
+        /// <summary>
         /// The TagTypeTag type.
         /// </summary>
         public TagType Type_TagType;
+
+        /// <summary>
+        /// The TernaryPassTag type.
+        /// </summary>
+        public TagType Type_TernayPass;
 
         /// <summary>
         /// The TextTag type.
@@ -488,9 +526,9 @@ namespace FreneticScript.TagHandlers
                 }
                 if (mode <= DebugMode.FULL)
                 {
-                    CommandSystem.Output.Good("Filled tag " + TextStyle.Color_Separate +
-                        Escape(bits.ToString()) + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + Escape(res.ToString())
-                        + TextStyle.Color_Outgood + "\".", mode);
+                    CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
+                        bits.ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
+                        + TextStyle.Color_Outgood + "\".");
                 }
                 return res;
             }

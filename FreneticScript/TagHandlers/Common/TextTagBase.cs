@@ -26,6 +26,7 @@ namespace FreneticScript.TagHandlers.Common
         public TextTagBase()
         {
             Name = "text";
+            ResultTypeString = "texttag";
         }
 
         public override TemplateObject HandleOne(TagData data)

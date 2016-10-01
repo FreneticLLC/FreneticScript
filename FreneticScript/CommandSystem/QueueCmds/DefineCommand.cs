@@ -50,8 +50,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
             queue.SetVariable(target, newvalue);
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Queue variable '<{text_color.emphasis}>" + TagParser.Escape(target.ToLowerFast()) +
-                    "<{text_color.base}>' set to '<{text_color.emphasis}>" + TagParser.Escape(newvalue.ToString()) + "<{text_color.base}>'.");
+                entry.Good(queue, "Queue variable '<{text_color[emphasis]}>" + TagParser.Escape(target.ToLowerFast()) +
+                    "<{text_color[base]}>' set to '<{text_color[emphasis]}>" + TagParser.Escape(newvalue.ToString()) + "<{text_color[base]}>'.");
             }
         }
     }

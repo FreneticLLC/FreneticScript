@@ -18,6 +18,7 @@ namespace FreneticScript.TagHandlers.Common
         public NumberTagBase()
         {
             Name = "number";
+            ResultTypeString = "numbertag";
         }
 
         public override TemplateObject HandleOne(TagData data)

@@ -119,7 +119,7 @@
     <Compile Include="TagHandlers\Common\IntegerTagBase.cs" />
     <Compile Include="TagHandlers\Common\MapTagBase.cs" />
     <Compile Include="TagHandlers\Common\NumberTagBase.cs" />
-    <Compile Include="TagHandlers\Common\TextColorTags.cs" />
+    <Compile Include="TagHandlers\Common\TextColorTagBase.cs" />
     <Compile Include="TagHandlers\Common\CVarTagBase.cs" />
     <Compile Include="TagHandlers\Common\EscapeTagBase.cs" />
     <Compile Include="TagHandlers\Common\ListTagBase.cs" />
@@ -127,9 +127,9 @@
     <Compile Include="TagHandlers\Common\BooleanTagBase.cs" />
     <Compile Include="TagHandlers\Common\TextTagBase.cs" />
     <Compile Include="TagHandlers\Common\UnescapeTagBase.cs" />
-    <Compile Include="TagHandlers\Common\UtilTagBase.cs" />
     <Compile Include="TagHandlers\Common\VarTagBase.cs" />
     <Compile Include="TagHandlers\Objects\BinaryTag.cs" />
+    <Compile Include="TagHandlers\Objects\CVarTag.cs" />
     <Compile Include="TagHandlers\Objects\IntegerTag.cs" />
     <Compile Include="TagHandlers\Objects\MapTag.cs" />
     <Compile Include="TagHandlers\Objects\NullTag.cs" />

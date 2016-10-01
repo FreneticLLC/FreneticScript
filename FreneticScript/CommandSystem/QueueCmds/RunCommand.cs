@@ -114,7 +114,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 script = args2.Script;
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Running '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>'...");
+                    entry.Good(queue, "Running '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
                 }
                 CommandQueue nqueue;
                 Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>();
@@ -141,7 +141,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                queue.HandleError(entry, "Cannot run script '<{text_color.emphasis}>" + TagParser.Escape(fname) + "<{text_color.base}>': file does not exist!");
+                queue.HandleError(entry, "Cannot run script '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>': file does not exist!");
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 { 
                     queue.WaitingOn = null;

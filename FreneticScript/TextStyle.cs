@@ -47,5 +47,7 @@ namespace FreneticScript
         public static string Color_Outbad = "^r^1";
         /// <summary>Important information style: ^r^3</summary>
         public static string Color_Importantinfo = "^r^3";
+        /// <summary>Base coloring style: ^B</summary>
+        public static string Color_Base = "^B";
     }
 }

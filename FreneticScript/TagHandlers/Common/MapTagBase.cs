@@ -24,6 +24,7 @@ namespace FreneticScript.TagHandlers.Common
         public MapTagBase()
         {
             Name = "map";
+            ResultTypeString = "maptag";
         }
 
         public override TemplateObject HandleOne(TagData data)

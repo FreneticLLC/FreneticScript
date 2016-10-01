@@ -103,7 +103,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ScriptEvent theEvent;
             if (!queue.CommandSystem.Events.TryGetValue(eventname, out theEvent))
             {
-                queue.HandleError(entry, "Unknown event '<{text_color.emphasis}>" + TagParser.Escape(eventname) + "<{text_color.base}>'.");
+                queue.HandleError(entry, "Unknown event '<{text_color[emphasis]}>" + TagParser.Escape(eventname) + "<{text_color[base]}>'.");
                 return;
             }
             if (type == "clear")
@@ -112,7 +112,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 theEvent.Handlers.Clear();
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Cleared <{text_color.emphasis}>" + count + "<{text_color.base}> event handler" + (count == 1 ? "." : "s."));
+                    entry.Good(queue, "Cleared <{text_color[emphasis]}>" + count + "<{text_color[base]}> event handler" + (count == 1 ? "." : "s."));
                 }
             }
             else if (type == "remove")
@@ -128,7 +128,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Removed event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                        entry.Good(queue, "Removed event handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>'.");
                     }
                 }
                 else
@@ -137,12 +137,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                            entry.Good(queue, "Unknown event handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>'.");
                         }
                     }
                     else
                     {
-                        queue.HandleError(entry, "Unknown event handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>'.");
+                        queue.HandleError(entry, "Unknown event handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>'.");
                     }
                 }
             }
@@ -183,20 +183,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                            entry.Good(queue, "Handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' already exists!");
                         }
                     }
                     else
                     {
-                        queue.HandleError(entry, "Handler '<{text_color.emphasis}>" + TagParser.Escape(name) + "<{text_color.base}>' already exists!");
+                        queue.HandleError(entry, "Handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' already exists!");
                     }
                 }
                 else
                 {
                     // NOTE: Events are compiled!
                     theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, entry.InnerCommandBlock, entry.BlockStart, true) { Debug = DebugMode.MINIMAL });
-                    entry.Good(queue, "Handler '<{text_color.emphasis}>" + TagParser.Escape(name) +
-                        "<{text_color.base}>' defined for event '<{text_color.emphasis}>" + TagParser.Escape(theEvent.Name) + "<{text_color.base}>'.");
+                    entry.Good(queue, "Handler '<{text_color[emphasis]}>" + TagParser.Escape(name) +
+                        "<{text_color[base]}>' defined for event '<{text_color[emphasis]}>" + TagParser.Escape(theEvent.Name) + "<{text_color[base]}>'.");
                 }
             }
             else

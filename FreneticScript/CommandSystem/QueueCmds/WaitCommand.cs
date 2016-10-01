@@ -48,7 +48,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Delaying for <{text_color.emphasis}>" + seconds + "<{text_color.base}> seconds.");
+                    entry.Good(queue, "Delaying for <{text_color[emphasis]}>" + seconds + "<{text_color[base]}> seconds.");
                 }
                 queue.Wait = seconds;
             }

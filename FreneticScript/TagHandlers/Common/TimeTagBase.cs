@@ -24,6 +24,7 @@ namespace FreneticScript.TagHandlers.Common
         public TimeTagBase()
         {
             Name = "time";
+            ResultTypeString = "timetag";
         }
 
         /// <summary>

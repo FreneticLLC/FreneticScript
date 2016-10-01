@@ -48,6 +48,7 @@ namespace FreneticScript.TagHandlers.Common
         public EscapeTagBase()
         {
             Name = "escape";
+            ResultTypeString = "texttag";
         }
 
         /// <summary>

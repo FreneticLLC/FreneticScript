@@ -18,6 +18,7 @@ namespace FreneticScript.TagHandlers.Common
         public BinaryTagBase()
         {
             Name = "binary";
+            ResultTypeString = "binarytag";
         }
 
         public override TemplateObject HandleOne(TagData data)

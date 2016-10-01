@@ -175,7 +175,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.SetVariable("foreach_list", list);
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Foreach looping <{text_color.emphasis}>" + target + "<{text_color.base}> times...");
+                    entry.Good(queue, "Foreach looping <{text_color[emphasis]}>" + target + "<{text_color[base]}> times...");
                 }
             }
             else

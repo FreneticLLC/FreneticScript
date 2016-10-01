@@ -218,7 +218,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw ex;
                 }
-                Output.Bad("Found exception while precalculating script '" + TagParser.Escape(name) + "'...: " + TagParser.Escape(ex.ToString()), DebugMode.FULL);
+                Output.BadOutput("Found exception while precalculating script '" + name + "'...: " + ex.ToString());
             }
         }
 
@@ -260,6 +260,7 @@ namespace FreneticScript.CommandSystem
                 outputter?.Invoke("Invalid commands specified, error outputted to logs.", MessageType.BAD);
                 return;
             }
+            cs.Debug = DebugMode.FULL;
             CommandQueue queue = cs.ToQueue(this);
             queue.Outputsystem = outputter;
             queue.Execute();
@@ -275,7 +276,7 @@ namespace FreneticScript.CommandSystem
             command.CommandSystem = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
-                Output.Bad("Multiply registered command: " + TagParser.Escape(command.Name) + "!", DebugMode.FULL);
+                Output.BadOutput("Multiply registered command: " + command.Name + "!");
                 return;
             }
             RegisteredCommands.Add(command.Name, command);
@@ -386,7 +387,7 @@ namespace FreneticScript.CommandSystem
         /// Advances any running command queues.
         /// </summary>
         /// <param name="Delta">The time passed this tick.</param>
-        public void Tick(float Delta)
+        public void Tick(double Delta)
         {
             for (int i = 0; i < Queues.Count; i++)
             {

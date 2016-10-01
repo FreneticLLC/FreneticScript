@@ -47,7 +47,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Stopping <{text_color.emphasis}>" + qCount + "<{text_color.base}> queue" + (qCount == 1 ? "." : "s."));
+                    entry.Good(queue, "Stopping <{text_color[emphasis]}>" + qCount + "<{text_color[base]}> queue" + (qCount == 1 ? "." : "s."));
                 }
                 foreach (CommandQueue tqueue in queue.CommandSystem.Queues)
                 {

@@ -20,7 +20,6 @@ namespace FreneticScript.TagHandlers.Common
         public LvarTagBase()
         {
             Name = "\0lvar";
-            CanSingle = true;
         }
 
         /// <summary>

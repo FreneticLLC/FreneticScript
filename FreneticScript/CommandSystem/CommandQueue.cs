@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// How long until the queue may continue.
         /// </summary>
-        public float Wait = 0;
+        public double Wait = 0;
 
         /// <summary>
         /// Whether the queue is running.
@@ -99,7 +99,7 @@ namespace FreneticScript.CommandSystem
         /// Recalculates and advances the command queue.
         /// <param name="Delta">The time that passed this tick.</param>
         /// </summary>
-        public void Tick(float Delta)
+        public void Tick(double Delta)
         {
             if (Delayable && WaitingOn != null)
             {

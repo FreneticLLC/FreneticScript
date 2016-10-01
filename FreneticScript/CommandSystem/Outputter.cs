@@ -11,7 +11,7 @@ namespace FreneticScript.CommandSystem
     public abstract class Outputter
     {
         /// <summary>
-        /// Writes a line of text to the console.
+        /// Writes a line of text to the console or text window. Used for informational output.
         /// </summary>
         /// <param name="text">The line of text.</param>
         public abstract void WriteLine(string text);
@@ -19,16 +19,14 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Used to output a failure message.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included.</param>
-        /// <param name="mode">What debug mode is currently in use.</param>
-        public abstract void Bad(string tagged_text, DebugMode mode);
+        /// <param name="text">The text to output.</param>
+        public abstract void BadOutput(string text);
 
         /// <summary>
         /// Used to output a success message.
         /// </summary>
-        /// <param name="tagged_text">The text to output, with tags included.</param>
-        /// <param name="mode">What debug mode is currently in use.</param>
-        public abstract void Good(string tagged_text, DebugMode mode);
+        /// <param name="text">The text to output.</param>
+        public abstract void GoodOutput(string text);
 
         /// <summary>
         /// Used to properly handle an unknown command.

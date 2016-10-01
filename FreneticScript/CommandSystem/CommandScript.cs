@@ -19,7 +19,7 @@ namespace FreneticScript.CommandSystem
     {
         /// <summary>
         /// Separates a string list of command inputs (separated by newlines, semicolons, ...)
-        /// and returns a queue object containing all the input commands
+        /// and returns a command script object containing all the input commands.
         /// </summary>
         /// <param name="name">The name of the script.</param>
         /// <param name="commands">The command string to parse.</param>
@@ -121,11 +121,11 @@ namespace FreneticScript.CommandSystem
             {
                 if (ex is ErrorInducedException)
                 {
-                    system.Output.Bad("Error parsing script: " + TagParser.Escape(ex.Message), DebugMode.FULL);
+                    system.Output.BadOutput("Error parsing script: " + ex.Message);
                 }
                 else
                 {
-                    system.Output.Bad("Exception parsing script: " + TagParser.Escape(ex.ToString()), DebugMode.FULL);
+                    system.Output.BadOutput("Exception parsing script: " + ex.ToString());
                 }
                 return null;
             }
@@ -238,10 +238,11 @@ namespace FreneticScript.CommandSystem
                     string msg = toret[i].Command.TestForValidity(toret[i]);
                     if (msg != null)
                     {
-                        string fullmsg = "FAILED TO COMPILE SCRIPT '" + TagParser.Escape(name) + "': (line " + toret[i].ScriptLine + "): " + msg;
-                        system.Output.Bad(fullmsg, DebugMode.FULL);
+                        string fullmsg = "FAILED TO COMPILE SCRIPT '" + name + "': (line " + toret[i].ScriptLine + "): " + msg;
+                        system.Output.BadOutput(fullmsg);
                         had_error = true;
                         toret.Clear();
+                        // TODO: Maybe throw an exception?
                         toret.Add(CommandEntry.CreateErrorOutput(fullmsg, system, name, tabs));
                         return toret;
                     }
@@ -274,8 +275,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw ex;
                 }
-                system.Output.Bad("Generating script for file '" + TagParser.Escape(filename)
-                    + "': " + TagParser.Escape(ex.ToString()), DebugMode.NONE);
+                system.Output.BadOutput("Generating script for file '" + filename + "': " + ex.ToString());
                 return null;
             }
         }

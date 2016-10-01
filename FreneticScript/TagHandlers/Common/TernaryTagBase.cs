@@ -28,6 +28,7 @@ namespace FreneticScript.TagHandlers.Common
         public TernaryTagBase()
         {
             Name = "ternary";
+            ResultTypeString = "ternarypasstag";
         }
 
         /// <summary>
@@ -45,12 +46,30 @@ namespace FreneticScript.TagHandlers.Common
         /// </summary>
         public class TernaryPassTag : TemplateObject
         {
-            // TODO: Fully update to new tag system.
-
             /// <summary>
             /// Whether this ternary tag passed.
             /// </summary>
             public bool Passed = false;
+
+            /// <summary>
+            /// Gets a ternary pass tag. Shouldn't be used.
+            /// </summary>
+            /// <param name="data">The data.</param>
+            /// <param name="input">The input.</param>
+            public static TernaryPassTag For(TagData data, string input)
+            {
+                return new TernaryPassTag() { Passed = BooleanTag.For(data, input).Internal };
+            }
+
+            /// <summary>
+            /// Gets a ternary pass tag. Shouldn't be used.
+            /// </summary>
+            /// <param name="data">The data.</param>
+            /// <param name="input">The input.</param>
+            public static TernaryPassTag For(TagData data, TemplateObject input)
+            {
+                return input is TernaryPassTag ? (TernaryPassTag)input : For(data, input.ToString());
+            }
 
             /// <summary>
             /// Handles the 'ternary[].pass[]' tag.
@@ -71,13 +90,13 @@ namespace FreneticScript.TagHandlers.Common
                 }
                 return new NullTag().Handle(data.Shrink());
             }
-
+            
             /// <summary>
-            /// Returns NullTag.ToString.
+            /// Returns a boolean true or false as text.
             /// </summary>
             public override string ToString()
             {
-                return new NullTag().ToString();
+                return new BooleanTag(Passed).ToString();
             }
         }
     }
