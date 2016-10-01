@@ -21,15 +21,10 @@ namespace FreneticScript.TagHandlers.Common
             CanSingle = true;
             ResultTypeString = "integertag";
         }
-
+        
         public override TemplateObject HandleOne(TagData data)
         {
             return IntegerTag.For(data, data.GetModifierObject(0));
-        }
-
-        public override TemplateObject Handle(TagData data)
-        {
-            return IntegerTag.For(data, data.GetModifierObject(0)).Handle(data.Shrink());
         }
     }
 }

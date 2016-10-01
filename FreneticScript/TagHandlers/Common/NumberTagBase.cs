@@ -20,9 +20,9 @@ namespace FreneticScript.TagHandlers.Common
             Name = "number";
         }
 
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
-            return NumberTag.For(data, data.GetModifierObject(0)).Handle(data.Shrink());
+            return NumberTag.For(data, data.GetModifierObject(0));
         }
     }
 }

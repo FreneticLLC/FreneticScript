@@ -26,10 +26,9 @@ namespace FreneticScript.TagHandlers.Common
             Name = "list";
         }
 
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
-            TemplateObject modif = data.GetModifierObject(0);
-            return (modif is ListTag ? modif: ListTag.For(modif.ToString())).Handle(data.Shrink());
+            return ListTag.For(data.GetModifierObject(0));
         }
     }
 }

@@ -30,15 +30,9 @@ namespace FreneticScript.TagHandlers.Common
         /// Handles the 'time' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
-            TimeTag time = TimeTag.For(data.GetModifierObject(0));
-            if (time == null)
-            {
-                data.Error("Invalid time object!");
-                return null;
-            }
-            return time.Handle(data.Shrink());
+            return TimeTag.For(data, data.GetModifierObject(0));
         }
     }
 }

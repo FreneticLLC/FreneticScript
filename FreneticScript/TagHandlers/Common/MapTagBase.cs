@@ -26,10 +26,9 @@ namespace FreneticScript.TagHandlers.Common
             Name = "map";
         }
 
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
-            TemplateObject modif = data.GetModifierObject(0);
-            return (modif is MapTag ? modif: MapTag.For(modif.ToString())).Handle(data.Shrink());
+            return MapTag.For(data.GetModifierObject(0));
         }
     }
 }

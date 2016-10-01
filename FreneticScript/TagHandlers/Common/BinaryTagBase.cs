@@ -20,9 +20,9 @@ namespace FreneticScript.TagHandlers.Common
             Name = "binary";
         }
 
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
-            return BinaryTag.For(data, data.GetModifierObject(0)).Handle(data.Shrink());
+            return BinaryTag.For(data, data.GetModifierObject(0));
         }
     }
 }

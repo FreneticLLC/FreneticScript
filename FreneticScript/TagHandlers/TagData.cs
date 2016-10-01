@@ -130,12 +130,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier as a string.</returns>
         public string GetModifier(int place)
         {
-            place += cInd;
-            if (place < 0 || place >= InputKeys.Length)
-            {
-                throw new ArgumentOutOfRangeException("place");
-            }
-            return (InputKeys[place].Variable.Parse(BaseColor, Variables, mode, Error, CSE) ?? new TextTag("")).ToString();
+            return GetModifierObject(place).ToString();
         }
 
         /// <summary>

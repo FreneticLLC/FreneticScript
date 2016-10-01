@@ -45,10 +45,5 @@ namespace FreneticScript.TagHandlers.Common
             data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");
             return new NullTag();
         }
-
-        public override TemplateObject Handle(TagData data)
-        {
-            return HandleOne(data).Handle(data.Shrink());
-        }
     }
 }

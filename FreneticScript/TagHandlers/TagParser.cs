@@ -470,28 +470,21 @@ namespace FreneticScript.TagHandlers
             try
             {
                 TemplateObject res;
-                if (handler.CanSingle)
+                res = handler.HandleOne(data) ?? new NullTag();
+                data.Shrink();
+                while (data.Remaining > 0)
                 {
-                    res = handler.HandleOne(data) ?? new NullTag();
-                    data.Shrink();
-                    while (data.Remaining > 0)
+                    TagSubHandler hd = data.InputKeys[data.cInd].Handler;
+                    if (hd == null)
                     {
-                        TagSubHandler hd = data.InputKeys[data.cInd].Handler;
-                        if (hd == null)
-                        {
-                            res = res.Handle(data);
-                            break;
-                        }
-                        else
-                        {
-                            res = hd.Handle(data, res);
-                        }
-                        data.Shrink();
+                        res = res.Handle(data);
+                        break;
                     }
-                }
-                else
-                {
-                    res = handler.Handle(data) ?? new NullTag();
+                    else
+                    {
+                        res = hd.Handle(data, res);
+                    }
+                    data.Shrink();
                 }
                 if (mode <= DebugMode.FULL)
                 {

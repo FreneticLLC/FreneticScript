@@ -30,9 +30,9 @@ namespace FreneticScript.TagHandlers.Common
         /// Handles the 'boolean' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override TemplateObject Handle(TagData data)
+        public override TemplateObject HandleOne(TagData data)
         {
-            return BooleanTag.For(data, data.GetModifierObject(0)).Handle(data.Shrink());
+            return BooleanTag.For(data, data.GetModifierObject(0));
         }
     }
 }

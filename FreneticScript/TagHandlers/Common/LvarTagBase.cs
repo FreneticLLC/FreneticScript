@@ -42,15 +42,5 @@ namespace FreneticScript.TagHandlers.Common
             }
             return new NullTag();
         }
-
-        /// <summary>
-        /// Handles the entire tag.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>The result.</returns>
-        public override TemplateObject Handle(TagData data)
-        {
-            return HandleOne(data).Handle(data.Shrink());
-        }
     }
 }
