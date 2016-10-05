@@ -399,24 +399,44 @@ namespace FreneticScript.CommandSystem
                             {
                                 for (int x = 1; x < tab.Bits.Length; x++)
                                 {
-                                    if (!returnable.SubHandlers.ContainsKey(tab.Bits[x].Key))
+                                    string key = tab.Bits[x].Key;
+                                    if (returnable.TagHelpers.ContainsKey(key))
                                     {
-                                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                                            + "): Invalid tag sub-handler " + tab.Bits[x].Key + " for tag " + tab.ToString());
+                                        TagType temptype = returnable;
+                                        TagHelpInfo tsh = null;
+                                        while (tsh == null && temptype != null)
+                                        {
+                                            tsh = temptype.TagHelpers[key];
+                                            temptype = temptype.SubType;
+                                        }
+                                        tab.Bits[x].TagHandler = tsh;
+                                        if (tsh == null || tsh.Meta.ReturnTypeResult == null)
+                                        {
+                                            break;
+                                        }
+                                        returnable = tsh.Meta.ReturnTypeResult;
                                     }
-                                    TagType temptype = returnable;
-                                    TagSubHandler tsh = null;
-                                    while (tsh == null && temptype != null)
+                                    else
                                     {
-                                        tsh = temptype.SubHandlers[tab.Bits[x].Key];
-                                        temptype = temptype.SubType;
+                                        if (!returnable.SubHandlers.ContainsKey(key))
+                                        {
+                                            throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                                                + "): Invalid tag sub-handler " + key + " for tag " + tab.ToString());
+                                        }
+                                        TagType temptype = returnable;
+                                        TagSubHandler tsh = null;
+                                        while (tsh == null && temptype != null)
+                                        {
+                                            tsh = temptype.SubHandlers[key];
+                                            temptype = temptype.SubType;
+                                        }
+                                        tab.Bits[x].Handler = tsh;
+                                        if (tsh == null || tsh.ReturnType == null)
+                                        {
+                                            break;
+                                        }
+                                        returnable = tsh.ReturnType;
                                     }
-                                    tab.Bits[x].Handler = tsh;
-                                    if (tsh == null)
-                                    {
-                                        break;
-                                    }
-                                    returnable = tsh.ReturnType;
                                 }
                             }
                         }

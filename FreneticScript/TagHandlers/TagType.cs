@@ -21,6 +21,11 @@ namespace FreneticScript.TagHandlers
         public string SubTypeName;
 
         /// <summary>
+        /// The raw C# / .NET type of the tag type.
+        /// </summary>
+        public Type RawType;
+
+        /// <summary>
         /// The type upon which this tag type is based.
         /// </summary>
         public TagType SubType;
@@ -34,6 +39,11 @@ namespace FreneticScript.TagHandlers
         /// The tag sub-handler for all possible tags.
         /// </summary>
         public Dictionary<string, TagSubHandler> SubHandlers;
+        
+        /// <summary>
+        /// Contains a mapping of tag names to their helper data.
+        /// </summary>
+        public Dictionary<string, TagHelpInfo> TagHelpers;
 
         /// <summary>
         /// Gets the boject of the next type down the tree of types.

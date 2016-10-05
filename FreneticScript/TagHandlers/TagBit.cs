@@ -32,6 +32,11 @@ namespace FreneticScript.TagHandlers
         public TagSubHandler Handler = null;
 
         /// <summary>
+        /// The help info that could handle this tag, if any is available.
+        /// </summary>
+        public TagHelpInfo TagHandler = null;
+
+        /// <summary>
         /// Returns the tag bit as tag input text.
         /// </summary>
         /// <returns>The tag input text.</returns>

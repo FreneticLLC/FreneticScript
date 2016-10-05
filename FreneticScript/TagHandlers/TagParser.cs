@@ -6,6 +6,7 @@ using FreneticScript.TagHandlers.Common;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers
 {
@@ -215,7 +216,8 @@ namespace FreneticScript.TagHandlers
                 TypeName = "texttag",
                 SubTypeName = null,
                 TypeGetter = (data, obj) => new TextTag(obj.ToString()),
-                SubHandlers = TextTag.Handlers
+                SubHandlers = TextTag.Handlers,
+                RawType = typeof(TextTag)
             });
             Register(Type_Time = new TagType()
             {
@@ -249,6 +251,20 @@ namespace FreneticScript.TagHandlers
                 {
                     type.SubType = Types[type.SubTypeName];
                 }
+                type.TagHelpers = new Dictionary<string, TagHelpInfo>();
+                if (type.RawType != null)
+                {
+                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic))
+                    {
+                        TagMeta tm = method.GetCustomAttribute<TagMeta>();
+                        if (tm != null)
+                        {
+                            tm.Ready(this);
+                            type.TagHelpers.Add(tm.Name, new TagHelpInfo(method));
+                        }
+                    }
+                }
+                // TODO: this line: else { error(); }
                 Dictionary<string, TagSubHandler> orig = type.SubHandlers;
                 type.SubHandlers = new Dictionary<string, TagSubHandler>();
                 if (orig != null)
@@ -525,15 +541,23 @@ namespace FreneticScript.TagHandlers
                 data.Shrink();
                 while (data.Remaining > 0)
                 {
-                    TagSubHandler hd = data.InputKeys[data.cInd].Handler;
-                    if (hd == null)
+                    TagHelpInfo thi = data.InputKeys[data.cInd].TagHandler;
+                    if (thi != null)
                     {
-                        res = res.Handle(data);
-                        break;
+                        res = thi.TEMP_MethodCaller(data, res);
                     }
                     else
                     {
-                        res = hd.Handle(data, res);
+                        TagSubHandler hd = data.InputKeys[data.cInd].Handler;
+                        if (hd == null)
+                        {
+                            res = res.Handle(data);
+                            break;
+                        }
+                        else
+                        {
+                            res = hd.Handle(data, res);
+                        }
                     }
                     data.Shrink();
                 }

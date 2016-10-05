@@ -43,14 +43,24 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The TextTag type.
+        /// </summary>
+        public const string TYPE = "texttag";
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
+            Examples = new string[] { "'Hello' .duplicate returns 'Hello'." })]
+        static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new TextTag(obj.ToString());
+        }
+
+        /// <summary>
         /// All tag handlers for this tag type.
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
 
         static TextTag()
         {
-            // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString()), ReturnTypeString = "texttag" });
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Text), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.
@@ -280,7 +290,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
             // @Example "aGk=" .from_base64 returns "6869".
             // -->
-            Handlers.Add("substring", new TagSubHandler() { Handle = (data, obj) =>
+            Handlers.Add("from_base64", new TagSubHandler() { Handle = (data, obj) =>
             {
                 string Text = obj.ToString();
                 try
