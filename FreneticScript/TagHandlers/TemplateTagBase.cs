@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers
 {
@@ -10,6 +11,11 @@ namespace FreneticScript.TagHandlers
     /// </summary>
     public abstract class TemplateTagBase
     {
+        /// <summary>
+        /// Represents the HandleOne(...) method.
+        /// </summary>
+        public static MethodInfo Method_HandleOne = typeof(TemplateTagBase).GetMethod("HandleOne", BindingFlags.Public | BindingFlags.Instance);
+
         /// <summary>
         /// The name of the tag base.
         /// </summary>

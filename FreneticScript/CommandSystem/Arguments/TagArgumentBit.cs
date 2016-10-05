@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
+using System.Reflection;
 
 namespace FreneticScript.CommandSystem.Arguments
 {
@@ -15,6 +16,23 @@ namespace FreneticScript.CommandSystem.Arguments
         /// The pieces that make up the tag.
         /// </summary>
         public TagBit[] Bits;
+
+        /// <summary>
+        /// The method that gets the result of this TagArgumentBit.
+        /// </summary>
+        public MethodInfo GetResultMethod;
+
+        /// <summary>
+        /// Calls the method directly.
+        /// </summary>
+        public MethodHandler GetResultHelper;
+
+        /// <summary>
+        /// Parse the tag.
+        /// </summary>
+        /// <param name="data">The relevant tag data.</param>
+        /// <returns>The parsed final object.</returns>
+        public delegate TemplateObject MethodHandler(TagData data);
 
         /// <summary>
         /// Constructs a TagArgumentBit.
@@ -45,7 +63,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="cse">The relevant command stack entry, if any.</param>
-        /// <returns>The parsed final text.</returns>
+        /// <returns>The parsed final object.</returns>
         public override TemplateObject Parse(string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
             return CommandSystem.TagSystem.ParseTags(this, base_color, vars, mode, error, cse);

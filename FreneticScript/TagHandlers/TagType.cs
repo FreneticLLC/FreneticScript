@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers
 {
@@ -31,6 +32,11 @@ namespace FreneticScript.TagHandlers
         public TagType SubType;
 
         /// <summary>
+        /// The method that creates this tag. Set automatically based on raw type.
+        /// </summary>
+        public MethodInfo CreatorMethod = null;
+
+        /// <summary>
         /// This function should take the two inputs and return a valid object of the relevant type.
         /// </summary>
         public Func<TagData, TemplateObject, TemplateObject> TypeGetter;
@@ -39,9 +45,9 @@ namespace FreneticScript.TagHandlers
         /// The tag sub-handler for all possible tags.
         /// </summary>
         public Dictionary<string, TagSubHandler> SubHandlers;
-        
+
         /// <summary>
-        /// Contains a mapping of tag names to their helper data.
+        /// Contains a mapping of tag names to their helper data. Set automatically based on raw type.
         /// </summary>
         public Dictionary<string, TagHelpInfo> TagHelpers;
 
@@ -49,14 +55,5 @@ namespace FreneticScript.TagHandlers
         /// Gets the boject of the next type down the tree of types.
         /// </summary>
         public Func<TemplateObject, TemplateObject> GetNextTypeDown;
-
-        /// <summary>
-        /// Duplicates a tag type object.
-        /// </summary>
-        /// <returns>The new duplicate.</returns>
-        public TagType Duplicate()
-        {
-            return (TagType)MemberwiseClone();
-        }
     }
 }

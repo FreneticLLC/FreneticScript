@@ -369,6 +369,7 @@ namespace FreneticScript.CommandSystem
                 }
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
+                int tagID = 0;
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
                     for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
@@ -377,68 +378,9 @@ namespace FreneticScript.CommandSystem
                         if (arg.Bits.Count > 0 && arg.Bits[0] is TagArgumentBit)
                         {
                             TagArgumentBit tab = ((TagArgumentBit)arg.Bits[0]);
-                            TagType returnable = tab.Start.ResultType;
-                            if (tab.Start is VarTagBase)
-                            {
-                                string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
-                                for (int x = 0; x < ccse.LocalVarNames.Length; x++)
-                                {
-                                    if (ccse.LocalVarNames[x] == vn)
-                                    {
-                                        tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
-                                        tab.Bits[0].Key = "\0lvar";
-                                        tab.Bits[0].Handler = null;
-                                        tab.Bits[0].OVar = tab.Bits[0].Variable;
-                                        tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new List<ArgumentBit>() { new TextArgumentBit( x.ToString(), false) } };
-                                        types.TryGetValue(vn, out returnable);
-                                        break;
-                                    }
-                                }
-                            }
-                            if (returnable != null)
-                            {
-                                for (int x = 1; x < tab.Bits.Length; x++)
-                                {
-                                    string key = tab.Bits[x].Key;
-                                    if (returnable.TagHelpers.ContainsKey(key))
-                                    {
-                                        TagType temptype = returnable;
-                                        TagHelpInfo tsh = null;
-                                        while (tsh == null && temptype != null)
-                                        {
-                                            tsh = temptype.TagHelpers[key];
-                                            temptype = temptype.SubType;
-                                        }
-                                        tab.Bits[x].TagHandler = tsh;
-                                        if (tsh == null || tsh.Meta.ReturnTypeResult == null)
-                                        {
-                                            break;
-                                        }
-                                        returnable = tsh.Meta.ReturnTypeResult;
-                                    }
-                                    else
-                                    {
-                                        if (!returnable.SubHandlers.ContainsKey(key))
-                                        {
-                                            throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                                                + "): Invalid tag sub-handler " + key + " for tag " + tab.ToString());
-                                        }
-                                        TagType temptype = returnable;
-                                        TagSubHandler tsh = null;
-                                        while (tsh == null && temptype != null)
-                                        {
-                                            tsh = temptype.SubHandlers[key];
-                                            temptype = temptype.SubType;
-                                        }
-                                        tab.Bits[x].Handler = tsh;
-                                        if (tsh == null || tsh.ReturnType == null)
-                                        {
-                                            break;
-                                        }
-                                        returnable = tsh.ReturnType;
-                                    }
-                                }
-                            }
+                            MethodBuilder mbt = GenerateTagData(typebuild_c, tab, tagID++, values);
+                            tab.GetResultMethod = mbt;
+                            tab.GetResultHelper = (TagArgumentBit.MethodHandler)mbt.CreateDelegate(typeof(TagArgumentBit.MethodHandler));
                         }
                     }
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
@@ -452,6 +394,22 @@ namespace FreneticScript.CommandSystem
                 ccse.MainCompiledRunnable.CSEntry = ccse;
                 //asmbuild.Save("test.dll");
             }
+        }
+
+        /// <summary>
+        /// Generates tag CIL.
+        /// </summary>
+        /// <param name="typeBuild_c">The type to contain this tag.</param>
+        /// <param name="tab">The tag data.</param>
+        /// <param name="id">The ID of the tag.</param>
+        /// <param name="values">The helper values.</param>
+        /// <returns></returns>
+        public static MethodBuilder GenerateTagData(TypeBuilder typeBuild_c, TagArgumentBit tab, int id, CILAdaptationValues values)
+        {
+            MethodBuilder methodbuild_c = typeBuild_c.DefineMethod("TagParse_" + id, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), new Type[] { typeof(TagData) });
+            ILGenerator ilgen = methodbuild_c.GetILGenerator();
+            // TODO: This method!
+            return methodbuild_c;
         }
 
         static long IDINCR = 0;

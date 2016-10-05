@@ -254,13 +254,21 @@ namespace FreneticScript.TagHandlers
                 type.TagHelpers = new Dictionary<string, TagHelpInfo>();
                 if (type.RawType != null)
                 {
-                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic))
+                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
                     {
                         TagMeta tm = method.GetCustomAttribute<TagMeta>();
                         if (tm != null)
                         {
                             tm.Ready(this);
                             type.TagHelpers.Add(tm.Name, new TagHelpInfo(method));
+                        }
+                        else if (method.Name == "CreateFor")
+                        {
+                            ParameterInfo[] prms = method.GetParameters();
+                            if (prms.Length == 2 && prms[0].ParameterType == typeof(TagData) && prms[1].ParameterType == typeof(TemplateObject))
+                            {
+                                type.CreatorMethod = method;
+                            }
                         }
                     }
                 }
@@ -533,6 +541,10 @@ namespace FreneticScript.TagHandlers
                 return new TextTag("");
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse);
+            if (bits.GetResultHelper != null)
+            {
+               return bits.GetResultHelper(data);
+            }
             TemplateTagBase handler = bits.Start;
             try
             {

@@ -43,6 +43,17 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Creates a TextTag for the given input data.
+        /// </summary>
+        /// <param name="data">The tag data.</param>
+        /// <param name="text">The text input.</param>
+        /// <returns>A valid text tag.</returns>
+        public static TemplateObject CreateFor(TagData data, TemplateObject text)
+        {
+            return new TextTag(text.ToString());
+        }
+
+        /// <summary>
         /// The TextTag type.
         /// </summary>
         public const string TYPE = "texttag";
@@ -61,9 +72,9 @@ namespace FreneticScript.TagHandlers.Objects
 
         static TextTag()
         {
-            // Documented in TextTag.
+            // Needs docs!
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Text), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
+            // Needs docs!
             Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "texttag" });
             // <--[tag]
             // @Name TextTag.to_number
