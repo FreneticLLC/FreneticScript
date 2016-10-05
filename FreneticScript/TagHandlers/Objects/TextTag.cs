@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The text this TextTag represents.
         /// </summary>
-        string Text = null;
+        string Internal = null;
 
         /// <summary>
         /// Constructs a text tag.
@@ -29,7 +29,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="_text">The text to construct it from.</param>
         public TextTag(string _text)
         {
-            Text = _text;
+            Internal = _text;
         }
 
         /// <summary>
@@ -41,7 +41,266 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return new TextTag(text.ToString());
         }
-        
+
+        /// <summary>
+        /// All tag handlers for this tag type.
+        /// </summary>
+        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
+
+        static TextTag()
+        {
+            // Documented in TextTag.
+            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString()), ReturnTypeString = "texttag" });
+            // Documented in TextTag.
+            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Text), ReturnTypeString = "tagtypetag" });
+            // Documented in TextTag.
+            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.to_number
+            // @Group Text Modification
+            // @ReturnType NumberTag
+            // @Returns the text parsed as a number.
+            // @Example "1" .to_number returns "1".
+            // -->
+            Handlers.Add("to_number", new TagSubHandler() { Handle = (data, obj) => NumberTag.For(data, obj), ReturnTypeString = "numbertag" });
+            // <--[tag]
+            // @Name TextTag.to_integer
+            // @Group Text Modification
+            // @ReturnType IntegerTag
+            // @Returns the text parsed as an integer.
+            // @Example "1" .to_integer returns "1".
+            // -->
+            Handlers.Add("to_integer", new TagSubHandler() { Handle = (data, obj) => IntegerTag.For(data, obj), ReturnTypeString = "integertag" });
+            // <--[tag]
+            // @Name TextTag.to_boolean
+            // @Group Text Modification
+            // @ReturnType BooleanTag
+            // @Returns the text parsed as a boolean.
+            // @Example "true" .to_boolean returns "true".
+            // -->
+            Handlers.Add("to_boolean", new TagSubHandler() { Handle = (data, obj) => BooleanTag.For(data, obj), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.is_number
+            // @Group Text Modification
+            // @ReturnType BooleanTag
+            // @Returns whether the text represents a valid number.
+            // @Example "1" .is_number returns "true".
+            // -->
+            Handlers.Add("is_number", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(NumberTag.TryFor(obj) != null), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.is_integer
+            // @Group Text Modification
+            // @ReturnType BooleanTag
+            // @Returns whether the text represents a valid integer.
+            // @Example "1" .is_integer returns "true".
+            // -->
+            Handlers.Add("is_integer", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(IntegerTag.TryFor(obj) != null), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.is_boolean
+            // @Group Text Modification
+            // @ReturnType BooleanTag
+            // @Returns whether the text represents a valid boolean.
+            // @Example "true" .is_boolean returns "true".
+            // -->
+            Handlers.Add("is_boolean", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(BooleanTag.TryFor(obj) != null), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.to_upper
+            // @Group Text Modification
+            // @ReturnType TextTag
+            // @Returns the text in full upper-case.
+            // @Example "alpha" .to_upper returns "ALPHA".
+            // -->
+            Handlers.Add("to_upper", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString().ToUpperInvariant()), ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.to_lower
+            // @Group Text Modification
+            // @ReturnType TextTag
+            // @Returns the text in full lower-case.
+            // @Example "ALPHA" .to_lower returns "alpha".
+            // -->
+            Handlers.Add("to_lower", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString().ToLowerFast()), ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.to_list_of_characters
+            // @Group Text Modification
+            // @ReturnType ListTag
+            // @Returns the text as a list of characters.
+            // @Other Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
+            // @Example "alpha" .to_list_of_characters returns "a|l|p|h|a".
+            // -->
+            Handlers.Add("to_list_of_characters", new TagSubHandler() { Handle = (data, obj) =>
+            {
+                string Text = obj.ToString();
+                List<TemplateObject> list = new List<TemplateObject>(Text.Length);
+                for (int i = 0; i < Text.Length; i++)
+                {
+                    list.Add(new TextTag(Text[i].ToString()));
+                }
+                return new ListTag(list).Handle(data.Shrink());
+            }, ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.replace[<ListTag>]
+            // @Group Text Modification
+            // @ReturnType TextTag
+            // @Returns the text with all instances of the first text replaced with the second.
+            // @Example "alpha" .replace[a|b] returns "blphb".
+            // -->
+            Handlers.Add("replace", new TagSubHandler() { Handle = (data, obj) =>
+                {
+                    ListTag modif = ListTag.For(data.GetModifierObject(0));
+                    if (modif.ListEntries.Count != 2)
+                    {
+                        data.Error("Invalid replace tag! Not two entries in the list!");
+                        return new NullTag();
+                    }
+                    return new TextTag(obj.ToString().Replace(modif.ListEntries[0].ToString(), modif.ListEntries[1].ToString()));
+                },  ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.substring[<ListTag>]
+            // @Group Text Modification
+            // @ReturnType TextTag
+            // @Returns the portion of text in the specified range.
+            // @Other Note that indices are one-based.
+            // @Example "alpha" .substring[2|4] returns "lph".
+            // @Example "alpha" .substring[2|99999] will return "lpha".
+            // -->
+            Handlers.Add("substring", new TagSubHandler() { Handle = (data, obj) =>
+            {
+                string Text = obj.ToString();
+                ListTag inputs = ListTag.For(data.GetModifierObject(0));
+                if (inputs.ListEntries.Count < 2)
+                {
+                    data.Error("Invalid substring tag! Not two entries in the list!");
+                    return new NullTag();
+                }
+                int num1 = (int)IntegerTag.For(data, inputs.ListEntries[0]).Internal - 1;
+                int num2 = (int)IntegerTag.For(data, inputs.ListEntries[1]).Internal - 1;
+                if (num1 < 0)
+                {
+                    num1 = 0;
+                }
+                if (num1 > Text.Length - 1)
+                {
+                    num1 = Text.Length - 1;
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (num2 > Text.Length - 1)
+                {
+                    num2 = Text.Length - 1;
+                }
+                if (num2 < num1)
+                {
+                    return new TextTag("").Handle(data.Shrink());
+                }
+                return new TextTag(Text.Substring(num1, (num2 - num1) + 1));
+            },  ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.append[<TextTag>]
+            // @Group Text Modification
+            // @ReturnType TextTag
+            // @Returns the text with the input text appended.
+            // @Example "alpha" .append[bet] returns "alphabet".
+            // -->
+            Handlers.Add("append", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString() + data.GetModifier(0)), ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.prepend[<TextTag>]
+            // @Group Text Modification
+            // @ReturnType TextTag
+            // @Returns the text with the input text prepended.
+            // @Example "alpha" .prepend[bet] returns "betalpha".
+            // -->
+            Handlers.Add("prepend", new TagSubHandler() { Handle = (data, obj) => new TextTag(data.GetModifier(0) + obj.ToString()), ReturnTypeString = "texttag" });
+            // <--[tag]
+            // @Name TextTag.length
+            // @Group Text Attributes
+            // @ReturnType NumberTag
+            // @Returns the number of characters in the text.
+            // @Example "alpha" .length returns "5".
+            // -->
+            Handlers.Add("length", new TagSubHandler() { Handle = (data, obj) => new IntegerTag(obj.ToString().Length), ReturnTypeString = "integertag" });
+            // <--[tag]
+            // @Name TextTag.equals[<TextTag>]
+            // @Group Text Comparison
+            // @ReturnType BooleanTag
+            // @Returns whether the text matches the specified text.
+            // @Other Note that this is case-sensitive.
+            // @Example "alpha" .equals[alpha] returns "true".
+            // -->
+            Handlers.Add("equals", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString() == data.GetModifier(0)), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.does_not_equal[<TextTag>]
+            // @Group Text Comparison
+            // @ReturnType BooleanTag
+            // @Returns whether the text does not match the specified text.
+            // @Other Note that this is case-sensitive.
+            // @Example "alpha" .does_not_equal[alpha] returns "false".
+            // -->
+            Handlers.Add("does_not_equal", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString() != data.GetModifier(0)), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.equals_ignore_case[<TextTag>]
+            // @Group Text Comparison
+            // @ReturnType BooleanTag
+            // @Returns whether the text matches the specified text, ignoring letter casing.
+            // @Example "alpha" .equals_ignore_case[ALPHA] returns "true".
+            // -->
+            Handlers.Add("equals_ignore_case", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString().ToLowerFast() == data.GetModifier(0).ToLowerFast()), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.does_not_equal_ignore_case[<TextTag>]
+            // @Group Text Comparison
+            // @ReturnType BooleanTag
+            // @Returns whether the text matches the specified text, ignoring letter casing.
+            // @Example "alpha" .does_not_equal_ignore_case[ALPHA] returns "false".
+            // -->
+            Handlers.Add("dos_not_equal_ignore_case", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString().ToLowerFast() != data.GetModifier(0).ToLowerFast()), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.contains[<TextTag>]
+            // @Group Text Comparison
+            // @ReturnType BooleanTag
+            // @Returns whether the text contains the specified text.
+            // @Other Note that this is case-sensitive.
+            // @Example "alpha" .contains[alp] returns "true".
+            // -->
+            Handlers.Add("contains", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString().Contains(data.GetModifier(0))), ReturnTypeString = "booleantag" });
+            // <--[tag]
+            // @Name TextTag.to_utf8_binary
+            // @Group Conversion
+            // @ReturnType BinaryTag
+            // @Returns UTF-8 encoded binary data of the included text.
+            // @Other Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
+            // @Example "hi" .to_utf8_binary returns "6869".
+            // -->
+            Handlers.Add("to_utf8_binary", new TagSubHandler() { Handle = (data, obj) => new BinaryTag(new UTF8Encoding(false).GetBytes(obj.ToString())), ReturnTypeString = "binarytag" });
+            // <--[tag]
+            // @Name TextTag.from_base64
+            // @Group Conversion
+            // @ReturnType BinaryTag
+            // @Returns the binary data represented by this Base-64 text.
+            // @Other Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
+            // @Example "aGk=" .from_base64 returns "6869".
+            // -->
+            Handlers.Add("substring", new TagSubHandler() { Handle = (data, obj) =>
+            {
+                string Text = obj.ToString();
+                try
+                {
+                    byte[] bits = Convert.FromBase64String(Text);
+                    if (bits == null)
+                    {
+                        data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "'!");
+                        return new NullTag();
+                    }
+                    return new BinaryTag(bits);
+                }
+                catch (FormatException ex)
+                {
+                    data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
+                    return new NullTag();
+                }
+            },  ReturnTypeString = "texttag" });
+        }
+
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -52,311 +311,10 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            switch (data[0])
+            TagSubHandler handler;
+            if (Handlers.TryGetValue(data[0], out handler))
             {
-                // <--[tag]
-                // @Name TextTag.to_number
-                // @Group Text Modification
-                // @ReturnType NumberTag
-                // @Returns the text parsed as a number.
-                // @Example "1" .to_number returns "1".
-                // -->
-                case "to_number":
-                    {
-                        NumberTag numtag = NumberTag.For(data, Text);
-                        if (numtag == null)
-                        {
-                            return new NullTag();
-                        }
-                        return numtag.Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name TextTag.to_integer
-                // @Group Text Modification
-                // @ReturnType IntegerTag
-                // @Returns the text parsed as an integer.
-                // @Example "1" .to_integer returns "1".
-                // -->
-                case "to_integer":
-                    {
-                        IntegerTag numtag = IntegerTag.For(data, Text);
-                        if (numtag == null)
-                        {
-                            return new NullTag();
-                        }
-                        return numtag.Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name TextTag.to_boolean
-                // @Group Text Modification
-                // @ReturnType BooleanTag
-                // @Returns the text parsed as a boolean.
-                // @Example "true" .to_boolean returns "true".
-                // -->
-                case "to_boolean":
-                    {
-                        BooleanTag booltag = BooleanTag.For(data, Text);
-                        if (booltag == null)
-                        {
-                            return new NullTag();
-                        }
-                        return booltag.Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name TextTag.is_number
-                // @Group Text Modification
-                // @ReturnType BooleanTag
-                // @Returns whether the text represents a valid number.
-                // @Example "1" .is_number returns "true".
-                // -->
-                case "is_number":
-                    return new BooleanTag(NumberTag.TryFor(Text) != null).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.is_integer
-                // @Group Text Modification
-                // @ReturnType BooleanTag
-                // @Returns whether the text represents a valid integer.
-                // @Example "1" .is_integer returns "true".
-                // -->
-                case "is_integer":
-                    return new BooleanTag(IntegerTag.TryFor(Text) != null).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.is_boolean
-                // @Group Text Modification
-                // @ReturnType BooleanTag
-                // @Returns whether the text represents a valid boolean.
-                // @Example "true" .is_boolean returns "true".
-                // -->
-                case "is_boolean":
-                    return new BooleanTag(BooleanTag.TryFor(Text) != null).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.to_upper
-                // @Group Text Modification
-                // @ReturnType TextTag
-                // @Returns the text in full upper-case.
-                // @Example "alpha" .to_upper returns "ALPHA".
-                // -->
-                case "to_upper":
-                    return new TextTag(Text.ToUpper()).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.to_lower
-                // @Group Text Modification
-                // @ReturnType TextTag
-                // @Returns the text in full lower-case.
-                // @Example "ALPHA" .to_lower returns "alpha".
-                // -->
-                case "to_lower":
-                    return new TextTag(Text.ToLowerFast()).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.to_list_of_characters
-                // @Group Text Modification
-                // @ReturnType ListTag
-                // @Returns the text as a list of characters.
-                // @Other Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
-                // @Example "alpha" .to_list_of_characters returns "a|l|p|h|a".
-                // -->
-                case "to_list_of_characters":
-                    {
-                        List<TemplateObject> list = new List<TemplateObject>(Text.Length);
-                        for (int i = 0; i < Text.Length; i++)
-                        {
-                            list.Add(new TextTag(Text[i].ToString()));
-                        }
-                        return new ListTag(list).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name TextTag.replace[<ListTag>]
-                // @Group Text Modification
-                // @ReturnType TextTag
-                // @Returns the text with all instances of the first text replaced with the second.
-                // @Example "alpha" .substring[a|b] returns "blphb".
-                // -->
-                case "replace":
-                    {
-                        ListTag modif = ListTag.For(data.GetModifierObject(0));
-                        if (modif.ListEntries.Count != 2)
-                        {
-                            data.Error("Invalid replace tag! Not two entries in the list!");
-                            return new NullTag();
-                        }
-                        return new TextTag(Text.Replace(modif.ListEntries[0].ToString(), modif.ListEntries[1].ToString())).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name TextTag.substring[<ListTag>]
-                // @Group Text Modification
-                // @ReturnType TextTag
-                // @Returns the portion of text in the specified range.
-                // @Other Note that indices are one-based.
-                // @Example "alpha" .substring[2|4] returns "lph".
-                // @Example "alpha" .substring[2|99999] will return "lpha".
-                // -->
-                case "substring":
-                    {
-                        ListTag inputs = ListTag.For(data.GetModifierObject(0));
-                        if (inputs.ListEntries.Count < 2)
-                        {
-                            data.Error("Invalid substring tag! Not two entries in the list!");
-                            return new NullTag();
-                        }
-                        int num1 = (int)IntegerTag.For(data, inputs.ListEntries[0]).Internal - 1;
-                        int num2 = (int)IntegerTag.For(data, inputs.ListEntries[1]).Internal - 1;
-                        if (num1 < 0)
-                        {
-                            num1 = 0;
-                        }
-                        if (num1 > Text.Length - 1)
-                        {
-                            num1 = Text.Length - 1;
-                        }
-                        if (num2 < 0)
-                        {
-                            num2 = 0;
-                        }
-                        if (num2 > Text.Length - 1)
-                        {
-                            num2 = Text.Length - 1;
-                        }
-                        if (num2 < num1)
-                        {
-                            return new TextTag("").Handle(data.Shrink());
-                        }
-                        return new TextTag(Text.Substring(num1, (num2 - num1) + 1)).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name TextTag.append[<TextTag>]
-                // @Group Text Modification
-                // @ReturnType TextTag
-                // @Returns the text with the input text appended.
-                // @Example "alpha" .append[bet] returns "alphabet".
-                // -->
-                case "append":
-                    return new TextTag(Text + data.GetModifier(0)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.prepend[<TextTag>]
-                // @Group Text Modification
-                // @ReturnType TextTag
-                // @Returns the text with the input text prepended.
-                // @Example "alpha" .prepend[bet] returns "betalpha".
-                // -->
-                case "prepend":
-                    return new TextTag(data.GetModifier(0) + Text).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.length
-                // @Group Text Attributes
-                // @ReturnType NumberTag
-                // @Returns the number of characters in the text.
-                // @Example "alpha" .length returns "5".
-                // -->
-                case "length":
-                    return new NumberTag(Text.Length).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.equals[<TextTag>]
-                // @Group Text Comparison
-                // @ReturnType BooleanTag
-                // @Returns whether the text matches the specified text.
-                // @Other Note that this is case-sensitive.
-                // @Example "alpha" .equals[alpha] returns "true".
-                // -->
-                case "equals":
-                    return new BooleanTag(Text == data.GetModifier(0)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.does_not_equal[<TextTag>]
-                // @Group Text Comparison
-                // @ReturnType BooleanTag
-                // @Returns whether the text does not match the specified text.
-                // @Other Note that this is case-sensitive.
-                // @Example "alpha" .does_not_equal[alpha] returns "false".
-                // -->
-                case "does_not_equal":
-                    return new BooleanTag(Text != data.GetModifier(0)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.equals_ignore_case[<TextTag>]
-                // @Group Text Comparison
-                // @ReturnType BooleanTag
-                // @Returns whether the text matches the specified text, ignoring letter casing.
-                // @Example "alpha" .equals_ignore_case[ALPHA] returns "true".
-                // -->
-                case "equals_ignore_case":
-                    return new BooleanTag(Text.ToLowerFast() == data.GetModifier(0).ToLowerFast()).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.does_not_equal_ignore_case[<TextTag>]
-                // @Group Text Comparison
-                // @ReturnType BooleanTag
-                // @Returns whether the text matches the specified text, ignoring letter casing.
-                // @Example "alpha" .does_not_equal_ignore_case[ALPHA] returns "false".
-                // -->
-                case "does_not_equal_ignore_case":
-                    return new BooleanTag(Text.ToLowerFast() != data.GetModifier(0).ToLowerFast()).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.contains[<TextTag>]
-                // @Group Text Comparison
-                // @ReturnType BooleanTag
-                // @Returns whether the text contains the specified text.
-                // @Other Note that this is case-sensitive.
-                // @Example "alpha" .contains[alp] returns "true".
-                // -->
-                case "contains":
-                    return new BooleanTag(Text.Contains(data.GetModifier(0))).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.to_utf8_binary
-                // @Group Conversion
-                // @ReturnType BinaryTag
-                // @Returns UTF-8 encoded binary data of the included text.
-                // @Other Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
-                // @Example "hi" .to_utf8_binary returns "6869".
-                // -->
-                case "to_utf8_binary":
-                    return new BinaryTag(new UTF8Encoding(false).GetBytes(Text)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.from_base64
-                // @Group Conversion
-                // @ReturnType BinaryTag
-                // @Returns the binary data represented by this Base-64 text.
-                // @Other Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
-                // @Example "aGk=" .from_base64 returns "6869".
-                // -->
-                case "from_base64":
-                    try
-                    {
-                        byte[] bits = Convert.FromBase64String(Text);
-                        if (bits == null)
-                        {
-                            data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "'!");
-                            return new NullTag();
-                        }
-                        return new BinaryTag(bits).Handle(data.Shrink());
-                    }
-                    catch (FormatException ex)
-                    {
-                        data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
-                        return new NullTag();
-                    }
-                // <--[tag]
-                // @Name TextTag.duplicate
-                // @Group Global Usage Tags
-                // @ReturnType <Dynamic>
-                // @Returns a perfect duplicate of this tag.
-                // -->
-                case "duplicate":
-                    return new TextTag(Text).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.type
-                // @Group Global Usage Tags
-                // @ReturnType TagTypeTag
-                // @Returns the actual type of this tag.
-                // -->
-                case "type":
-                    return new TagTypeTag(data.TagSystem.Type_Text).Handle(data.Shrink());
-                // <--[tag]
-                // @Name TextTag.or_else[<Dynamic>]
-                // @Group Global Usage Tags
-                // @ReturnType Dynamic
-                // @Returns this tag's value if present, otherwise (if it is null), returns the input value.
-                // -->
-                case "or_else":
-                    return Handle(data.Shrink());
-                default:
-                    break;
+                return handler.Handle(data, this).Handle(data.Shrink());
             }
             if (!data.HasFallback)
             {
@@ -364,14 +322,14 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return new NullTag();
         }
-
+        
         /// <summary>
         /// Converts the text tag to a string by returning the internal text.
         /// </summary>
         /// <returns>A string representation of this text tag.</returns>
         public override string ToString()
         {
-            return Text;
+            return Internal;
         }
 
         /// <summary>
@@ -383,7 +341,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             if (names == null || names.Length == 0)
             {
-                Text = val.ToString();
+                Internal = val.ToString();
                 return;
             }
             base.Set(names, val);
@@ -398,7 +356,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             if (names == null || names.Length == 0)
             {
-                Text += val.ToString();
+                Internal += val.ToString();
                 return;
             }
             base.Add(names, val);

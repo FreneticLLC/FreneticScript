@@ -214,9 +214,9 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name ListTag.first
                 // @Group List Entries
-                // @ReturnType <Dynamic>
+                // @ReturnType DynamicTag
                 // @Returns the first entry in the list.
-                // @Example "one|two|three|" .first returns "one".
+                // @Example "one|two|three|" .first.as[TextTag] returns "one".
                 // -->
                 case "first":
                     if (ListEntries.Count == 0)
@@ -224,11 +224,11 @@ namespace FreneticScript.TagHandlers.Objects
                         data.Error("Read 'first' tag on empty list!");
                         return new NullTag();
                     }
-                    return ListEntries[0].Handle(data.Shrink());
+                    return new DynamicTag(ListEntries[0]).Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.random
                 // @Group List Entries
-                // @ReturnType <Dynamic>
+                // @ReturnType DynamicTag
                 // @Returns a random entry from the list
                 // @Example "one|two|three|" .random returns "one", "two", or "three".
                 // -->
@@ -238,11 +238,11 @@ namespace FreneticScript.TagHandlers.Objects
                         data.Error("Read 'random' tag on empty list!");
                         return new NullTag();
                     }
-                    return ListEntries[data.TagSystem.CommandSystem.random.Next(ListEntries.Count)].Handle(data.Shrink());
+                    return new DynamicTag(ListEntries[data.TagSystem.CommandSystem.random.Next(ListEntries.Count)]).Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.last
                 // @Group List Entries
-                // @ReturnType <Dynamic>
+                // @ReturnType DynamicTag
                 // @Returns the last entry in the list.
                 // @Example "one|two|three|" .last returns "three".
                 // -->
@@ -252,11 +252,11 @@ namespace FreneticScript.TagHandlers.Objects
                         data.Error("Read 'last' tag on empty list!");
                         return new NullTag();
                     }
-                    return ListEntries[ListEntries.Count - 1].Handle(data.Shrink());
+                    return new DynamicTag(ListEntries[ListEntries.Count - 1]).Handle(data.Shrink());
                 // <--[tag]
                 // @Name ListTag.get[<TextTag>]
                 // @Group List Entries
-                // @ReturnType <Dynamic>
+                // @ReturnType DynamicTag
                 // @Returns the specified entry in the list.
                 // @Other note that indices are one-based.
                 // @Example "one|two|three|" .get[2] returns "two".
@@ -279,7 +279,7 @@ namespace FreneticScript.TagHandlers.Objects
                         {
                             number = ListEntries.Count - 1;
                         }
-                        return ListEntries[number].Handle(data.Shrink());
+                        return new DynamicTag(ListEntries[number]).Handle(data.Shrink());
                     }
                 // <--[tag]
                 // @Name ListTag.range[<ListTag>]

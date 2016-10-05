@@ -130,6 +130,7 @@
     <Compile Include="TagHandlers\Common\VarTagBase.cs" />
     <Compile Include="TagHandlers\Objects\BinaryTag.cs" />
     <Compile Include="TagHandlers\Objects\CVarTag.cs" />
+    <Compile Include="TagHandlers\Objects\DynamicTag.cs" />
     <Compile Include="TagHandlers\Objects\IntegerTag.cs" />
     <Compile Include="TagHandlers\Objects\MapTag.cs" />
     <Compile Include="TagHandlers\Objects\NullTag.cs" />

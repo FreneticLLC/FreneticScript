@@ -207,6 +207,8 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("duplicate", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Integer), ReturnTypeString = "tagtypetag" });
+            // Documented in TextTag.
+            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "integertag" });
         }
 
         /// <summary>

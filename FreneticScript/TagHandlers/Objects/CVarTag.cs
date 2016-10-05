@@ -49,11 +49,11 @@ namespace FreneticScript.TagHandlers.Objects
         static CVarTag()
         {
             // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new NullTag(), ReturnTypeString = "cvartag" });
+            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new CVarTag(((CVarTag)obj).Internal), ReturnTypeString = "cvartag" });
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Cvar), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj });
+            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "cvartag" });
             // <--[tag]
             // @Name CVarTag.value_boolean
             // @Group Variables

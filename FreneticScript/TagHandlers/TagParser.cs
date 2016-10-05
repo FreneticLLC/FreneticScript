@@ -138,6 +138,14 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = CVarTag.Handlers
             });
+            Register(Type_Dynamic = new TagType()
+            {
+                TypeName = "dynamictag",
+                SubTypeName = "texttag",
+                TypeGetter = DynamicTag.For,
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                SubHandlers = DynamicTag.Handlers
+            });
             Register(Type_Integer = new TagType()
             {
                 TypeName = "integertag",
@@ -162,13 +170,13 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
-            Register(Type_Number = new TagType()
+            Register(Type_Null = new TagType()
             {
                 TypeName = "nulltag",
                 SubTypeName = "texttag",
                 TypeGetter = (data, obj) => new NullTag(),
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = null
+                SubHandlers = NullTag.Handlers
             });
             Register(Type_Number = new TagType()
             {
@@ -207,7 +215,7 @@ namespace FreneticScript.TagHandlers
                 TypeName = "texttag",
                 SubTypeName = null,
                 TypeGetter = (data, obj) => new TextTag(obj.ToString()),
-                SubHandlers = null
+                SubHandlers = TextTag.Handlers
             });
             Register(Type_Time = new TagType()
             {
@@ -215,7 +223,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = "texttag",
                 TypeGetter = TimeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = null
+                SubHandlers = TimeTag.Handlers
             });
         }
 
@@ -276,6 +284,11 @@ namespace FreneticScript.TagHandlers
         /// The CVar tag type.
         /// </summary>
         public TagType Type_Cvar;
+
+        /// <summary>
+        /// The DynamicTag type.
+        /// </summary>
+        public TagType Type_Dynamic;
 
         /// <summary>
         /// The IntegerTag type.

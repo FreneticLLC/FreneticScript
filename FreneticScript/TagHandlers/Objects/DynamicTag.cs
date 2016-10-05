@@ -6,27 +6,29 @@ using System.Text;
 namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
-    /// Represents a TagType, as a tag.
+    /// Represents a tag object of unknown type.
     /// </summary>
-    public class TagTypeTag : TemplateObject
+    public class DynamicTag : TemplateObject
     {
         // <--[object]
-        // @Type TagTypeTag
+        // @Type DynamicTag
         // @SubType TextTag
         // @Group Tag System
-        // @Description Represents the type of a tag.
+        // @Description Represents any object, dynamically.
         // -->
 
-        /// <summary>
-        /// The represented tag type.
-        /// </summary>
-        public TagType Internal;
+        // TODO: Explanation of dynamics!
 
         /// <summary>
-        /// Constructs a new TagTypeTag.
+        /// The represented tag object.
         /// </summary>
-        /// <param name="type">The TagType to base this TagTypeTag off of.</param>
-        public TagTypeTag(TagType type)
+        public TemplateObject Internal;
+
+        /// <summary>
+        /// Constructs a new DynamicTag.
+        /// </summary>
+        /// <param name="type">The TemplateObject to base this DynamicTag off of.</param>
+        public DynamicTag(TemplateObject type)
         {
             Internal = type;
         }
@@ -63,22 +65,26 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
 
-        static TagTypeTag()
+        static DynamicTag()
         {
             // <--[tag]
-            // @Name TagTypeTag.for[<Tag>]
+            // @Name DynamicTag.as[<TagTypeTag>]
             // @Group Tag System
-            // @ReturnType DynamicTag
-            // @Returns a constructed instance of this tag type.
-            // @Example "numbertag" .for[3] returns "3".
+            // @ReturnType <Dynamic:SpecifiedType>
+            // @Returns this tag as the specified type.
+            // @Example "32" .as[IntegerTag] returns "32".
             // -->
-            Handlers.Add("for", new TagSubHandler() { Handle = (data, obj) => new DynamicTag(((TagTypeTag)obj).Internal.TypeGetter(data, data.GetModifierObject(0))), ReturnTypeString = "dynamictag" });
+            Handlers.Add("as", new TagSubHandler() { Handle = (data, obj) =>
+            {
+                TagTypeTag ttt = TagTypeTag.For(data, data.GetModifierObject(0));
+                return ttt.Internal.TypeGetter(data, ((DynamicTag)obj).Internal);
+            }, ReturnTypeString = null });
             // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(((TagTypeTag)obj).Internal), ReturnTypeString = "tagtypetag" });
+            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new DynamicTag(((DynamicTag)obj).Internal), ReturnTypeString = "dynamictag" });
             // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_TagType), ReturnTypeString = "tagtypetag" });
+            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Dynamic), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "tagtypetag" });
+            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "dynamictag" });
         }
 
         /// <summary>
@@ -105,7 +111,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The name.</returns>
         public override string ToString()
         {
-            return Internal.TypeName;
+            return Internal.ToString();
         }
     }
 }

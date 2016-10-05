@@ -55,7 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: More examples!
     // @Var foreach_index TextTag returns what iteration (numeric) the foreach is on.
     // @Var foreach_total TextTag returns what iteration (numeric) the foreach is aiming for, and will end on if not stopped early.
-    // @Var foreach_value <Dynamic> returns the current item in the list.
+    // @Var foreach_value DynamicTag returns the current item in the list.
     // @Var foreach_list ListTag returns the full list being looped through.
     // -->
     class ForeachCommandData : AbstractCommandEntryData
@@ -110,7 +110,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.SetVariable("foreach_list", new ListTag(dat.List));
                 if (dat.Index <= dat.List.Count)
                 {
-                    queue.SetVariable("foreach_value", dat.List[dat.Index - 1]);
+                    queue.SetVariable("foreach_value", new DynamicTag(dat.List[dat.Index - 1]));
                     if (entry.ShouldShowGood(queue))
                     {
                         entry.Good(queue, "Foreach looping...: " + dat.Index + "/" + dat.List.Count);
@@ -171,7 +171,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.SetData(queue, new ForeachCommandData() { Index = 1, List = list.ListEntries });
                 queue.SetVariable("foreach_index", new IntegerTag(1));
                 queue.SetVariable("foreach_total", new IntegerTag(target));
-                queue.SetVariable("foreach_value", list.ListEntries[0]);
+                queue.SetVariable("foreach_value", new DynamicTag(list.ListEntries[0]));
                 queue.SetVariable("foreach_list", list);
                 if (entry.ShouldShowGood(queue))
                 {

@@ -155,7 +155,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name MapTag.contains[<TextTag>]
                 // @Group Map Entries
-                // @ReturnType <Dynamic>
+                // @ReturnType BooleanTag
                 // @Returns whether the specified entry exists in the map.
                 // @Example "one:a|two:b" .contains[one] returns "true".
                 // @Example "one:a|two:b" .contains[three] returns "false".
@@ -168,7 +168,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // <--[tag]
                 // @Name MapTag.get[<TextTag>]
                 // @Group Map Entries
-                // @ReturnType <Dynamic>
+                // @ReturnType DynamicTag
                 // @Returns the specified entry value in the map.
                 // @Example "one:a|two:b" .get[one] returns "a".
                 // @Example "one:a|two:b" .get[two] returns "b".
@@ -179,7 +179,7 @@ namespace FreneticScript.TagHandlers.Objects
                         TemplateObject outp;
                         if (Internal.TryGetValue(modif, out outp))
                         {
-                            return outp.Handle(data.Shrink());
+                            return new DynamicTag(outp).Handle(data.Shrink());
                         }
                         data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
                         return new NullTag();
