@@ -429,7 +429,7 @@ namespace FreneticScript.CommandSystem
             if (returnable == null)
             {
                 throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                    + "): Invalid (overly dynamic!) tag top-handler " + tab.Start.Name + " for tag " + tab.ToString());
+                    + "): Invalid tag top-handler '" + tab.Start.Name + "' for tag :" + tab.ToString());
             }
             for (int x = 1; x < tab.Bits.Length; x++)
             {
@@ -446,30 +446,15 @@ namespace FreneticScript.CommandSystem
                     tab.Bits[x].TagHandler = tsh;
                     if (tsh == null || tsh.Meta.ReturnTypeResult == null)
                     {
-                        break;
+                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                            + "): Invalid tag ReturnType '" + tsh.Meta.ReturnType + "' for tag: " + tab.ToString());
                     }
                     returnable = tsh.Meta.ReturnTypeResult;
                 }
                 else
                 {
-                    if (!returnable.SubHandlers.ContainsKey(key))
-                    {
-                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                            + "): Invalid tag sub-handler " + key + " for tag " + tab.ToString());
-                    }
-                    TagType temptype = returnable;
-                    TagSubHandler tsh = null;
-                    while (tsh == null && temptype != null)
-                    {
-                        tsh = temptype.SubHandlers[key];
-                        temptype = temptype.SubType;
-                    }
-                    tab.Bits[x].Handler = tsh;
-                    if (tsh == null || tsh.ReturnType == null)
-                    {
-                        break;
-                    }
-                    returnable = tsh.ReturnType;
+                    throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                        + "): Invalid sub-tag '" + key + "' for tag: " + tab.ToString());
                 }
             }
             ilgen.DeclareLocal(typeof(TemplateObject)); // TemplateObject 'o'.

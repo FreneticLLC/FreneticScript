@@ -261,7 +261,13 @@ namespace FreneticScript.TagHandlers
                         if (tm != null)
                         {
                             tm.Ready(this);
-                            type.TagHelpers.Add(tm.Name, new TagHelpInfo(method));
+                            TagHelpInfo thi = new TagHelpInfo(method);
+                            thi.Meta.ReturnTypeResult = Types[thi.Meta.ReturnType];
+                            if (thi.Meta.ReturnTypeResult == null)
+                            {
+                                CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                            }
+                            type.TagHelpers.Add(tm.Name, thi);
                         }
                         else if (method.Name == "CreateFor")
                         {
