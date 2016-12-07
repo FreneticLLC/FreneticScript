@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem.Arguments;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers
 {
@@ -11,6 +12,11 @@ namespace FreneticScript.TagHandlers
     /// </summary>
     public class TagBit
     {
+        /// <summary>
+        /// The 'Handler' field.
+        /// </summary>
+        public static FieldInfo Field_Handler = typeof(TagBit).GetField("Handler");
+
         /// <summary>
         /// The main portion of the tag.
         /// </summary>

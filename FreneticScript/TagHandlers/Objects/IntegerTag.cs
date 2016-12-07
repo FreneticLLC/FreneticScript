@@ -128,7 +128,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Other Commonly shortened to "+".
             // @Example "1" .add_int[1] returns "2".
             // -->
-            RegisterTag("add_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
+            RegisterTag("add_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal), "integertag");
             // <--[tag]
             // @Name IntegerTag.subtract_int[<IntegerTag>]
             // @Group Mathematics

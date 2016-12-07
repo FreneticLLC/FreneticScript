@@ -176,7 +176,7 @@ namespace FreneticScript.CommandSystem
                     queue.Outputsystem.Invoke(message, MessageType.BAD);
                 }
             }
-            throw new ErrorInducedException();
+            throw new ErrorInducedException("");
         }
 
         /// <summary>

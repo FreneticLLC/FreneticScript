@@ -6,6 +6,7 @@ using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers
 {
@@ -14,6 +15,26 @@ namespace FreneticScript.TagHandlers
     /// </summary>
     public class TagData
     {
+        /// <summary>
+        /// The "Start" field.
+        /// </summary>
+        public static FieldInfo Field_Start = typeof(TagData).GetField("Start");
+
+        /// <summary>
+        /// The "InputKeys" field.
+        /// </summary>
+        public static FieldInfo Field_InputKeys = typeof(TagData).GetField("InputKeys");
+
+        /// <summary>
+        /// The "ShrinkQuick" method.
+        /// </summary>
+        public static MethodInfo Method_ShrinkQuick = typeof(TagData).GetMethod("ShrinkQuick");
+
+        /// <summary>
+        /// The start of this data.
+        /// </summary>
+        public TemplateTagBase Start;
+
         /// <summary>
         /// What debug mode to use while filling tags.
         /// </summary>
@@ -105,6 +126,16 @@ namespace FreneticScript.TagHandlers
             {
                 return InputKeys[ind + cInd].Key;
             }
+        }
+
+        /// <summary>
+        /// Shrinks the data amount by one at the start, and returns itself.
+        /// </summary>
+        /// <returns>This object.</returns>
+        public void ShrinkQuick()
+        {
+            cInd++;
+            Remaining--;
         }
 
         /// <summary>

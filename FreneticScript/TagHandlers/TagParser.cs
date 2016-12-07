@@ -540,12 +540,12 @@ namespace FreneticScript.TagHandlers
             {
                 return new TextTag("");
             }
-            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse);
+            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse) { Start = bits.Start };
             if (bits.GetResultHelper != null)
             {
                return bits.GetResultHelper(data);
             }
-            TemplateTagBase handler = bits.Start;
+            TemplateTagBase handler = data.Start;
             try
             {
                 TemplateObject res;

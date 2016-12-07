@@ -333,12 +333,20 @@ namespace FreneticScript.CommandSystem
                 asmname.Name = tname;
                 AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
 #if NET_4_5
+#if OUTPUT
+                    AssemblyBuilderAccess.RunAndSave
+#else
                     AssemblyBuilderAccess.RunAndCollect
+#endif
 #else
                     AssemblyBuilderAccess.Run/*AndSave*/
 #endif
                     );
-                ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname/*, "testmod.dll", true*/);
+                ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname
+#if OUTPUT
+                    , "testmod.dll", true
+#endif
+                    );
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
@@ -370,6 +378,8 @@ namespace FreneticScript.CommandSystem
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
                 int tagID = 0;
+                List<TagArgumentBit> toClean = new List<TagArgumentBit>();
+                TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
                     for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
@@ -378,9 +388,12 @@ namespace FreneticScript.CommandSystem
                         if (arg.Bits.Count > 0 && arg.Bits[0] is TagArgumentBit)
                         {
                             TagArgumentBit tab = ((TagArgumentBit)arg.Bits[0]);
-                            MethodBuilder mbt = GenerateTagData(typebuild_c, tab, tagID++, values);
-                            tab.GetResultMethod = mbt;
-                            tab.GetResultHelper = (TagArgumentBit.MethodHandler)mbt.CreateDelegate(typeof(TagArgumentBit.MethodHandler));
+                            MethodBuilder mbt = GenerateTagData(typebuild_c2, ccse, types, tab, tagID++, values, i, a);
+                            if (mbt != null)
+                            {
+                                tab.GetResultMethod = mbt;
+                                toClean.Add(tab);
+                            }
                         }
                     }
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
@@ -390,9 +403,17 @@ namespace FreneticScript.CommandSystem
                 ilgen.Emit(OpCodes.Ret);
                 typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
                 Type t_c = typebuild_c.CreateType();
+                Type tP_c2 = typebuild_c2.CreateType();
+                for (int i = 0; i < toClean.Count; i++)
+                {
+                    toClean[i].GetResultMethod = tP_c2.GetMethod(toClean[i].GetResultMethod.Name);
+                    toClean[i].GetResultHelper = (TagArgumentBit.MethodHandler)toClean[i].GetResultMethod.CreateDelegate(typeof(TagArgumentBit.MethodHandler));
+                }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
-                //asmbuild.Save("test.dll");
+#if OUTPUT
+                asmbuild.Save("local.dll");
+#endif
             }
         }
 
@@ -400,17 +421,103 @@ namespace FreneticScript.CommandSystem
         /// Generates tag CIL.
         /// </summary>
         /// <param name="typeBuild_c">The type to contain this tag.</param>
+        /// <param name="ccse">The CCSE available.</param>
+        /// <param name="types">The set of types available.</param>
         /// <param name="tab">The tag data.</param>
         /// <param name="id">The ID of the tag.</param>
         /// <param name="values">The helper values.</param>
-        /// <returns></returns>
-        public static MethodBuilder GenerateTagData(TypeBuilder typeBuild_c, TagArgumentBit tab, int id, CILAdaptationValues values)
+        /// <param name="i">The command entry index.</param>
+        /// <param name="a">The argument index.</param>
+        public static MethodBuilder GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab, int id, CILAdaptationValues values, int i, int a)
         {
             MethodBuilder methodbuild_c = typeBuild_c.DefineMethod("TagParse_" + id, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), new Type[] { typeof(TagData) });
             ILGenerator ilgen = methodbuild_c.GetILGenerator();
-            // TODO: This method!
+            TagType returnable = tab.Start.ResultType;
+            if (returnable == null)
+            {
+                returnable = tab.Start.Adapt(ccse, types, tab, i, a);
+            }
+            if (returnable == null)
+            {
+                throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                    + "): Invalid (overly dynamic!) tag top-handler " + tab.Start.Name + " for tag " + tab.ToString());
+            }
+            for (int x = 1; x < tab.Bits.Length; x++)
+            {
+                string key = tab.Bits[x].Key;
+                if (returnable.TagHelpers.ContainsKey(key))
+                {
+                    TagType temptype = returnable;
+                    TagHelpInfo tsh = null;
+                    while (tsh == null && temptype != null)
+                    {
+                        tsh = temptype.TagHelpers[key];
+                        temptype = temptype.SubType;
+                    }
+                    tab.Bits[x].TagHandler = tsh;
+                    if (tsh == null || tsh.Meta.ReturnTypeResult == null)
+                    {
+                        break;
+                    }
+                    returnable = tsh.Meta.ReturnTypeResult;
+                }
+                else
+                {
+                    if (!returnable.SubHandlers.ContainsKey(key))
+                    {
+                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                            + "): Invalid tag sub-handler " + key + " for tag " + tab.ToString());
+                    }
+                    TagType temptype = returnable;
+                    TagSubHandler tsh = null;
+                    while (tsh == null && temptype != null)
+                    {
+                        tsh = temptype.SubHandlers[key];
+                        temptype = temptype.SubType;
+                    }
+                    tab.Bits[x].Handler = tsh;
+                    if (tsh == null || tsh.ReturnType == null)
+                    {
+                        break;
+                    }
+                    returnable = tsh.ReturnType;
+                }
+            }
+            ilgen.DeclareLocal(typeof(TagBit[])); // TagBit[] 't'.
+            ilgen.DeclareLocal(typeof(TemplateObject)); // TemplateObject 'o'.
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            ilgen.Emit(OpCodes.Ldfld, TagData.Field_InputKeys); // Load field: TagData -> InputKeys.
+            ilgen.Emit(OpCodes.Stloc_0); // Store into 't'.
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            ilgen.Emit(OpCodes.Callvirt, TemplateTagBase.Method_HandleOne); // Run method: TemplateTagBase -> HandleOne.
+            ilgen.Emit(OpCodes.Stloc_1); // Store into 'o'.
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkQuick); // Run method: TagData -> ShrinkQuick.
+            for (int x = 1; x < tab.Bits.Length; x++)
+            {
+                ilgen.Emit(OpCodes.Ldloc_0); // Load 't'.
+                ilgen.Emit(OpCodes.Ldc_I4, x); // Load loop-index integer.
+                ilgen.Emit(OpCodes.Ldelem, typeof(TagBit)); // Load t[loop-index].
+                ilgen.Emit(OpCodes.Ldfld, TagBit.Field_Handler);// Load TagBit -> Handler
+                ilgen.Emit(OpCodes.Ldfld, TagSubHandler.Field_Handle); // Load TagSubHandler -> Handle
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                ilgen.Emit(OpCodes.Ldloc_1); // Load 'o'.
+                ilgen.Emit(OpCodes.Call, Method_Func_TD_TO_TO_Invoke); // Run method Func<...> -> Invoke(TagData, object).
+                ilgen.Emit(OpCodes.Stloc_1);  // Store into 'o'.
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkQuick); // Run method: TagData -> ShrinkQuick.
+            }
+            ilgen.Emit(OpCodes.Ldloc_1); // Load 'o'.
+            ilgen.Emit(OpCodes.Ret); // Return.
             return methodbuild_c;
         }
+
+        /// <summary>
+        /// The method Func[TagData, TemplateObject, TemplateObject] -> Invoke.
+        /// </summary>
+        public static MethodInfo Method_Func_TD_TO_TO_Invoke = typeof(Func<TagData, TemplateObject, TemplateObject>).GetMethod("Invoke");
 
         static long IDINCR = 0;
         

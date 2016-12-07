@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers
 {
@@ -10,6 +11,11 @@ namespace FreneticScript.TagHandlers
     /// </summary>
     public class TagSubHandler
     {
+        /// <summary>
+        /// The 'Handle' field.
+        /// </summary>
+        public static FieldInfo Field_Handle = typeof(TagSubHandler).GetField("Handle");
+
         /// <summary>
         /// This function should take the input and output the result of the tag handling.
         /// </summary>

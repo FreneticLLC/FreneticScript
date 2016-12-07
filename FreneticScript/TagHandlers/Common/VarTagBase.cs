@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -43,6 +44,26 @@ namespace FreneticScript.TagHandlers.Common
             }
             data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");
             return new NullTag();
+        }
+
+        public override TagType Adapt(CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab, int i, int a)
+        {
+            TagType returnable = null;
+            string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
+            for (int x = 0; x < ccse.LocalVarNames.Length; x++)
+            {
+                if (ccse.LocalVarNames[x] == vn)
+                {
+                    tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
+                    tab.Bits[0].Key = "\0lvar";
+                    tab.Bits[0].Handler = null;
+                    tab.Bits[0].OVar = tab.Bits[0].Variable;
+                    tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new List<ArgumentBit>() { new TextArgumentBit(x.ToString(), false) } };
+                    types.TryGetValue(vn, out returnable);
+                    break;
+                }
+            }
+            return returnable;
         }
     }
 }
