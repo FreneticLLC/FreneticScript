@@ -548,55 +548,14 @@ namespace FreneticScript.TagHandlers
                 return new TextTag("");
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse) { Start = bits.Start };
-            if (bits.GetResultHelper != null)
+            TemplateObject res = bits.GetResultHelper(data);
+            if (mode <= DebugMode.FULL)
             {
-               return bits.GetResultHelper(data);
+                CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
+                    bits.ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
+                    + TextStyle.Color_Outgood + "\".");
             }
-            TemplateTagBase handler = data.Start;
-            try
-            {
-                TemplateObject res;
-                res = handler.HandleOne(data) ?? new NullTag();
-                data.Shrink();
-                while (data.Remaining > 0)
-                {
-                    TagHelpInfo thi = data.InputKeys[data.cInd].TagHandler;
-                    if (thi != null)
-                    {
-                        res = thi.TEMP_MethodCaller(data, res);
-                    }
-                    else
-                    {
-                        TagSubHandler hd = data.InputKeys[data.cInd].Handler;
-                        if (hd == null)
-                        {
-                            res = res.Handle(data);
-                            break;
-                        }
-                        else
-                        {
-                            res = hd.Handle(data, res);
-                        }
-                    }
-                    data.Shrink();
-                }
-                if (mode <= DebugMode.FULL)
-                {
-                    CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
-                        bits.ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
-                        + TextStyle.Color_Outgood + "\".");
-                }
-                return res;
-            }
-            catch (Exception ex)
-            {
-                if (ex is ErrorInducedException)
-                {
-                    throw ex;
-                }
-                error("Failed to fill tag " + Escape(bits.ToString()) + ": " + ex.ToString());
-                return null;
-            }
+            return res;
         }
 
         /// <summary>

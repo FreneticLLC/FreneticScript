@@ -57,7 +57,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (cent.Arguments.Count >= 5)
             {
                 string tname = cent.Arguments[4].ToString();
-                t = cent.System.TagSystem.Types[tname];
+                if (!cent.System.TagSystem.Types.TryGetValue(tname, out t))
+                {
+                    throw new ErrorInducedException("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + larg + "!");
+                }
             }
             values.LVariables.Add(new KeyValuePair<string, TagType>(larg, t));
         }
