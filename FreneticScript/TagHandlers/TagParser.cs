@@ -545,10 +545,6 @@ namespace FreneticScript.TagHandlers
         /// <returns>The string with tags parsed.</returns>
         public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
-            if (bits.Bits.Length == 0)
-            {
-                return new TextTag("");
-            }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse) { Start = bits.Start };
 #if EXTRA_CHECKS
             if (bits.GetResultHelper == null)
