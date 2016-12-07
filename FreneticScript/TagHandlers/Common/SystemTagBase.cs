@@ -82,6 +82,33 @@ namespace FreneticScript.TagHandlers.Common
             }
 
             /// <summary>
+            /// The SystemTag type.
+            /// </summary>
+            public const string TYPE = "systemtag";
+
+            /// <summary>
+            /// Creates a SystemTag for the given input data.
+            /// </summary>
+            /// <param name="data">The tag data.</param>
+            /// <param name="text">The text input.</param>
+            /// <returns>A valid system tag.</returns>
+            public static TemplateObject CreateFor(TagData data, TemplateObject text)
+            {
+                return new SystemTag();
+            }
+
+#pragma warning disable 1591
+
+            [TagMeta(TagType = TYPE, Name = "current_time_utc", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current system time (UTC).",
+                Examples = new string[] { }, Others = new string[] { "Preferred for time-related calculations." })]
+            public static TemplateObject Tag_Current_Time_UTC(TagData data, TemplateObject obj)
+            {
+                return new TimeTag(DateTimeOffset.UtcNow);
+            }
+
+#pragma warning restore 1591
+            
+            /// <summary>
             /// All tag handlers for this tag type.
             /// </summary>
             public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
@@ -129,14 +156,6 @@ namespace FreneticScript.TagHandlers.Common
                 // @Returns the system's .NET (CLR) version string.
                 // -->
                 Handlers.Add("dotnet_version", new TagSubHandler() { Handle = (data, obj) => new TextTag(Environment.Version.ToString()), ReturnTypeString = "texttag" });
-                // <--[tag]
-                // @Name SystemTag.current_time_utc
-                // @Group Utilities
-                // @ReturnType TimeTag
-                // @Returns the current system time (UTC).
-                // @Other preferred for time-related calculations.
-                // -->
-                Handlers.Add("current_time_utc", new TagSubHandler() { Handle = (data, obj) => new TimeTag(DateTimeOffset.UtcNow), ReturnTypeString = "timetag" });
                 // TODO: Meta: Link the two current_time's at each other!
                 // <--[tag]
                 // @Name SystemTag.current_time_local

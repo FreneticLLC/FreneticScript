@@ -119,7 +119,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_Binary = new TagType()
             {
                 TypeName = "binarytag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = BinaryTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
@@ -127,7 +127,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_Boolean = new TagType()
             {
                 TypeName = "booleantag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = BooleanTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
@@ -135,7 +135,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_Cvar = new TagType()
             {
                 TypeName = "cvartag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = CVarTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = CVarTag.Handlers
@@ -143,14 +143,14 @@ namespace FreneticScript.TagHandlers
             Register(Type_Dynamic = new TagType()
             {
                 TypeName = "dynamictag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = DynamicTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = DynamicTag.Handlers
             });
             Register(Type_Integer = new TagType()
             {
-                TypeName = "integertag",
+                TypeName = IntegerTag.TYPE,
                 SubTypeName = "numbertag",
                 TypeGetter = IntegerTag.For,
                 GetNextTypeDown = (obj) => new NumberTag(((IntegerTag)obj).Internal),
@@ -160,7 +160,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_List = new TagType()
             {
                 TypeName = "listtag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = ListTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
@@ -168,7 +168,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_Map = new TagType()
             {
                 TypeName = "maptag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = MapTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
@@ -176,7 +176,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_Null = new TagType()
             {
                 TypeName = "nulltag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = (data, obj) => new NullTag(),
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = NullTag.Handlers
@@ -184,23 +184,24 @@ namespace FreneticScript.TagHandlers
             Register(Type_Number = new TagType()
             {
                 TypeName = "numbertag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = NumberTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_System = new TagType()
             {
-                TypeName = "systemtag",
-                SubTypeName = "texttag",
+                TypeName = SystemTagBase.SystemTag.TYPE,
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = SystemTagBase.SystemTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = SystemTagBase.SystemTag.Handlers
+                SubHandlers = SystemTagBase.SystemTag.Handlers,
+                RawType = typeof(SystemTagBase.SystemTag)
             });
             Register(Type_TagType = new TagType()
             {
                 TypeName = "tagtypetag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = TagTypeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = TagTypeTag.Handlers
@@ -208,14 +209,14 @@ namespace FreneticScript.TagHandlers
             Register(Type_TernayPass = new TagType()
             {
                 TypeName = "ternarypasstag",
-                SubTypeName = "texttag",
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = TernaryTagBase.TernaryPassTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null
             });
             Register(Type_Text = new TagType()
             {
-                TypeName = "texttag",
+                TypeName = TextTag.TYPE,
                 SubTypeName = null,
                 TypeGetter = (data, obj) => new TextTag(obj.ToString()),
                 SubHandlers = TextTag.Handlers,
@@ -223,11 +224,12 @@ namespace FreneticScript.TagHandlers
             });
             Register(Type_Time = new TagType()
             {
-                TypeName = "timetag",
-                SubTypeName = "texttag",
+                TypeName = TimeTag.TYPE,
+                SubTypeName = TextTag.TYPE,
                 TypeGetter = TimeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = TimeTag.Handlers
+                SubHandlers = TimeTag.Handlers,
+                RawType = typeof(TimeTag)
             });
         }
         /// <summary>

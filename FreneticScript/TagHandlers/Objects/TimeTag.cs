@@ -68,6 +68,33 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The SystemTag type.
+        /// </summary>
+        public const string TYPE = "timetag";
+
+        /// <summary>
+        /// Creates a SystemTag for the given input data.
+        /// </summary>
+        /// <param name="data">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid time tag.</returns>
+        public static TemplateObject CreateFor(TagData data, TemplateObject input)
+        {
+            return (input is TimeTag) ? (TimeTag)input : For(input.ToString());
+        }
+
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "total_milliseconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE, Returns = "The total number of milliseconds since Jan 1st, 0001 (UTC).",
+            Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns 0." })]
+        public static TemplateObject Tag_Current_Time_UTC(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(((TimeTag)obj).Internal.ToUniversalTime().Ticks / 10000L);
+        }
+
+#pragma warning restore 1591
+
+        /// <summary>
         /// All tag handlers for this tag type.
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
@@ -80,14 +107,6 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Time), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.
             Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "timetag" });
-            // <--[tag]
-            // @Name TimeTag.total_milliseconds
-            // @Group Time Parts
-            // @ReturnType NumberTag
-            // @Returns the total number of milliseconds since Jan 1st, 0001 (UTC).
-            // @Example "0001/01/01 00:00:00:0000 UTC+00:00" .total_milliseconds returns 0.
-            // -->
-            Handlers.Add("total_milliseconds", new TagSubHandler() { Handle = (data, obj) => new IntegerTag(((TimeTag)obj).Internal.ToUniversalTime().Ticks / 10000L), ReturnTypeString = "integertag" });
         }
 
         /// <summary>

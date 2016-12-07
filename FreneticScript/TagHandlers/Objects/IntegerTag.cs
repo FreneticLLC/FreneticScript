@@ -123,8 +123,15 @@ namespace FreneticScript.TagHandlers.Objects
             return new TextTag(obj.ToString());
         }
 
+        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number plus the specified number.",
+            Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
+        public static TemplateObject Tag_Add_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal);
+        }
+
         [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number minus the specified number.",
-            Examples = new string[] { "'2' .subtract_int[1] returns '1'." })]
+            Examples = new string[] { "'2' .subtract_int[1] returns '1'." }, Others = new string[] { "Commonly shortened to '-'." })]
         public static TemplateObject Tag_Subtract_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag(((IntegerTag)obj).Internal - For(data, data.GetModifierObject(0)).Internal);
@@ -154,15 +161,6 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in TextTag.
             RegisterTag("equals", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // <--[tag]
-            // @Name IntegerTag.add_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number plus the specified number.
-            // @Other Commonly shortened to "+".
-            // @Example "1" .add_int[1] returns "2".
-            // -->
-            RegisterTag("add_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal), "integertag");
             // <--[tag]
             // @Name IntegerTag.multiply_int[<IntegerTag>]
             // @Group Mathematics

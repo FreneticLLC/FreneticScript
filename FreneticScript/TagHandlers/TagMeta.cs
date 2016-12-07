@@ -64,5 +64,10 @@ namespace FreneticScript.TagHandlers
         /// The examples for the tag.
         /// </summary>
         public string[] Examples;
+
+        /// <summary>
+        /// Other data for the tag.
+        /// </summary>
+        public string[] Others;
     }
 }

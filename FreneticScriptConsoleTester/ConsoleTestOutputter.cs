@@ -25,9 +25,14 @@ namespace FreneticScriptConsoleTester
             throw new NotImplementedException();
         }
 
+        string Clean(string inp)
+        {
+            return Environment.CurrentDirectory + "/data/" + inp.Replace("..", "/").Replace('\\', '/');
+        }
+
         public override string ReadTextFile(string name)
         {
-            throw new NotImplementedException();
+            return System.IO.File.ReadAllText(Clean(name));
         }
 
         public override void Reload()
