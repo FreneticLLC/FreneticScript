@@ -99,6 +99,40 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The IntegerTag type.
+        /// </summary>
+        public const string TYPE = "integertag";
+
+        /// <summary>
+        /// Creates an IntegerTag for the given input data.
+        /// </summary>
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid integer tag.</returns>
+        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        {
+            return input is IntegerTag ? (IntegerTag)input : For(dat, input.ToString());
+        }
+
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
+            Examples = new string[] { "'1' .duplicate returns '1'." })]
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new TextTag(obj.ToString());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number minus the specified number.",
+            Examples = new string[] { "'2' .subtract_int[1] returns '1'." })]
+        public static TemplateObject Tag_Subtract_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(((IntegerTag)obj).Internal - For(data, data.GetModifierObject(0)).Internal);
+        }
+
+#pragma warning restore 1591
+
+        /// <summary>
         /// All tag handlers for this tag type.
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
@@ -129,15 +163,6 @@ namespace FreneticScript.TagHandlers.Objects
             // @Example "1" .add_int[1] returns "2".
             // -->
             RegisterTag("add_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.subtract_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number minus the specified number.
-            // @Other Commonly shortened to "-".
-            // @Example "1" .subtract_int[1] returns "0".
-            // -->
-            RegisterTag("subtract_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal - For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
             // <--[tag]
             // @Name IntegerTag.multiply_int[<IntegerTag>]
             // @Group Mathematics
@@ -203,8 +228,6 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("to_integer", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
             // Documented in TextTag.
             RegisterTag("to_number", (data, obj) => new NumberTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "numbertag");
-            // Documented in TextTag.
-            RegisterTag("duplicate", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Integer), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.

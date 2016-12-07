@@ -7,6 +7,7 @@ using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.TagHandlers
 {
@@ -153,7 +154,8 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = "numbertag",
                 TypeGetter = IntegerTag.For,
                 GetNextTypeDown = (obj) => new NumberTag(((IntegerTag)obj).Internal),
-                SubHandlers = IntegerTag.Handlers
+                SubHandlers = IntegerTag.Handlers,
+                RawType = typeof(IntegerTag)
             });
             Register(Type_List = new TagType()
             {
@@ -228,7 +230,6 @@ namespace FreneticScript.TagHandlers
                 SubHandlers = TimeTag.Handlers
             });
         }
-
         /// <summary>
         /// Set up the tag engine after all input has be registered.
         /// </summary>

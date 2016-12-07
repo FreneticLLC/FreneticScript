@@ -18,6 +18,11 @@ namespace FreneticScript.TagHandlers
         public static FieldInfo Field_Handler = typeof(TagBit).GetField("Handler");
 
         /// <summary>
+        /// The 'TagHandler' field.
+        /// </summary>
+        public static FieldInfo Field_TagHandler = typeof(TagBit).GetField("TagHandler");
+
+        /// <summary>
         /// The main portion of the tag.
         /// </summary>
         public string Key = null;

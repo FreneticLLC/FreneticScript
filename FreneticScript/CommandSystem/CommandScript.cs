@@ -333,20 +333,12 @@ namespace FreneticScript.CommandSystem
                 asmname.Name = tname;
                 AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
 #if NET_4_5
-#if OUTPUT
-                    AssemblyBuilderAccess.RunAndSave
-#else
                     AssemblyBuilderAccess.RunAndCollect
-#endif
 #else
-                    AssemblyBuilderAccess.Run/*AndSave*/
+                    AssemblyBuilderAccess.Run
 #endif
                     );
-                ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname
-#if OUTPUT
-                    , "testmod.dll", true
-#endif
-                    );
+                ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
                 CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
@@ -411,9 +403,6 @@ namespace FreneticScript.CommandSystem
                 }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
-#if OUTPUT
-                asmbuild.Save("local.dll");
-#endif
             }
         }
 
@@ -483,33 +472,22 @@ namespace FreneticScript.CommandSystem
                     returnable = tsh.ReturnType;
                 }
             }
-            ilgen.DeclareLocal(typeof(TagBit[])); // TagBit[] 't'.
             ilgen.DeclareLocal(typeof(TemplateObject)); // TemplateObject 'o'.
-            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            ilgen.Emit(OpCodes.Ldfld, TagData.Field_InputKeys); // Load field: TagData -> InputKeys.
-            ilgen.Emit(OpCodes.Stloc_0); // Store into 't'.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
             ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            // TODO: maybe pre-read HandleOne to not need a virt instruction or the TagData->Start read?
             ilgen.Emit(OpCodes.Callvirt, TemplateTagBase.Method_HandleOne); // Run method: TemplateTagBase -> HandleOne.
-            ilgen.Emit(OpCodes.Stloc_1); // Store into 'o'.
-            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkQuick); // Run method: TagData -> ShrinkQuick.
+            ilgen.Emit(OpCodes.Stloc_0); // Store into 'o'.
             for (int x = 1; x < tab.Bits.Length; x++)
             {
-                ilgen.Emit(OpCodes.Ldloc_0); // Load 't'.
-                ilgen.Emit(OpCodes.Ldc_I4, x); // Load loop-index integer.
-                ilgen.Emit(OpCodes.Ldelem, typeof(TagBit)); // Load t[loop-index].
-                ilgen.Emit(OpCodes.Ldfld, TagBit.Field_Handler);// Load TagBit -> Handler
-                ilgen.Emit(OpCodes.Ldfld, TagSubHandler.Field_Handle); // Load TagSubHandler -> Handle
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                ilgen.Emit(OpCodes.Ldloc_1); // Load 'o'.
-                ilgen.Emit(OpCodes.Call, Method_Func_TD_TO_TO_Invoke); // Run method Func<...> -> Invoke(TagData, object).
-                ilgen.Emit(OpCodes.Stloc_1);  // Store into 'o'.
-                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkQuick); // Run method: TagData -> ShrinkQuick.
+                ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink.
+                ilgen.Emit(OpCodes.Ldloc_0); // Load 'o'.
+                ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
+                ilgen.Emit(OpCodes.Stloc_0);  // Store into 'o'.
             }
-            ilgen.Emit(OpCodes.Ldloc_1); // Load 'o'.
+            ilgen.Emit(OpCodes.Ldloc_0); // Load 'o'.
             ilgen.Emit(OpCodes.Ret); // Return.
             return methodbuild_c;
         }

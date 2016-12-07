@@ -31,6 +31,11 @@ namespace FreneticScript.TagHandlers
         public static MethodInfo Method_ShrinkQuick = typeof(TagData).GetMethod("ShrinkQuick");
 
         /// <summary>
+        /// The "Shrink" method.
+        /// </summary>
+        public static MethodInfo Method_Shrink = typeof(TagData).GetMethod("Shrink");
+
+        /// <summary>
         /// The start of this data.
         /// </summary>
         public TemplateTagBase Start;

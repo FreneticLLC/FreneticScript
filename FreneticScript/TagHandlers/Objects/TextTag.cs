@@ -58,12 +58,16 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public const string TYPE = "texttag";
 
+#pragma warning disable 1591
+
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'Hello' .duplicate returns 'Hello'." })]
-        static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
         {
             return new TextTag(obj.ToString());
         }
+
+#pragma warning restore 1591
 
         /// <summary>
         /// All tag handlers for this tag type.
