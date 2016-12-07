@@ -377,14 +377,13 @@ namespace FreneticScript.CommandSystem
                     for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
                     {
                         Argument arg = ccse.Entries[i].Arguments[a];
-                        if (arg.Bits.Count > 0 && arg.Bits[0] is TagArgumentBit)
+                        for (int b = 0; b < arg.Bits.Count; b++)
                         {
-                            TagArgumentBit tab = ((TagArgumentBit)arg.Bits[0]);
-                            MethodBuilder mbt = GenerateTagData(typebuild_c2, ccse, types, tab, tagID++, values, i, a);
-                            if (mbt != null)
+                            if (arg.Bits[b] is TagArgumentBit)
                             {
-                                tab.GetResultMethod = mbt;
-                                toClean.Add(tab);
+                                TagArgumentBit tab = ((TagArgumentBit)arg.Bits[b]);
+                                tagID++;
+                                GenerateTagData(typebuild_c2, ccse, types, tab, ref tagID, values, i, a, toClean);
                             }
                         }
                     }
@@ -413,12 +412,38 @@ namespace FreneticScript.CommandSystem
         /// <param name="ccse">The CCSE available.</param>
         /// <param name="types">The set of types available.</param>
         /// <param name="tab">The tag data.</param>
-        /// <param name="id">The ID of the tag.</param>
+        /// <param name="tID">The ID of the tag.</param>
         /// <param name="values">The helper values.</param>
         /// <param name="i">The command entry index.</param>
         /// <param name="a">The argument index.</param>
-        public static MethodBuilder GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab, int id, CILAdaptationValues values, int i, int a)
+        /// <param name="toClean">Cleanable tag bits.</param>
+        public static void GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab,
+            ref int tID, CILAdaptationValues values, int i, int a, List<TagArgumentBit> toClean)
         {
+            int id = tID;
+            List<Argument> altArgs = new List<Argument>();
+            for (int sub = 0; sub < tab.Bits.Length; sub++)
+            {
+                if (tab.Bits[sub].Variable != null)
+                {
+                    altArgs.Add(tab.Bits[sub].Variable);
+                }
+            }
+            if (tab.Fallback != null)
+            {
+                altArgs.Add(tab.Fallback);
+            }
+            for (int sx = 0; sx < altArgs.Count; sx++)
+            {
+                for (int b = 0; b < altArgs[sx].Bits.Count; b++)
+                {
+                    if (altArgs[sx].Bits[b] is TagArgumentBit)
+                    {
+                        tID++;
+                        GenerateTagData(typeBuild_c, ccse, types, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, i, a, toClean);
+                    }
+                }
+            }
             MethodBuilder methodbuild_c = typeBuild_c.DefineMethod("TagParse_" + id, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), new Type[] { typeof(TagData) });
             ILGenerator ilgen = methodbuild_c.GetILGenerator();
             TagType returnable = tab.Start.ResultType;
@@ -474,7 +499,8 @@ namespace FreneticScript.CommandSystem
             }
             ilgen.Emit(OpCodes.Ldloc_0); // Load 'o'.
             ilgen.Emit(OpCodes.Ret); // Return.
-            return methodbuild_c;
+            tab.GetResultMethod = methodbuild_c;
+            toClean.Add(tab);
         }
 
         /// <summary>

@@ -550,6 +550,13 @@ namespace FreneticScript.TagHandlers
                 return new TextTag("");
             }
             TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse) { Start = bits.Start };
+#if EXTRA_CHECKS
+            if (bits.GetResultHelper == null)
+            {
+                CommandSystem.Output.BadOutput("Failed to processes tag: " + bits.ToString());
+                return new NullTag();
+            }
+#endif
             TemplateObject res = bits.GetResultHelper(data);
             if (mode <= DebugMode.FULL)
             {
