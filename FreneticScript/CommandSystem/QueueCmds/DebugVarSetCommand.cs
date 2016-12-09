@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -13,8 +15,59 @@ namespace FreneticScript.CommandSystem.QueueCmds
     public class DebugVarSetCommand : AbstractCommand
     {
         // NOTE: Intentionally no meta!
+        
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            // TODO: Debug this!
+            // TODO: Type verification?
+            values.MarkCommand(entry);
+            CommandEntry cent = values.Entry.Entries[entry];
+            string vn = cent.Arguments[0].ToString().ToLowerFast();
+            string[] dat = vn.SplitFast('.');
+            StringBuilder res = new StringBuilder(vn.Length);
+            for (int i = 1; i < dat.Length; i++)
+            {
+                res.Append(dat[i]);
+                if (i + 1 < dat.Length)
+                {
+                    res.Append('.');
+                }
+            }
+            vn = dat[0];
+            int lvarloc = values.LocalVariableLocation(vn);
+            string mode = cent.Arguments[1].ToString();
+            values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
+            values.ILGen.Emit(OpCodes.Ldstr, res.ToString());
+            values.LoadQueue();
+            values.LoadEntry(entry);
+            switch (mode)
+            {
+                case "=":
+                    values.ILGen.Emit(OpCodes.Call, Method_SetImmediate);
+                    break;
+                default:
+                    throw new NotSupportedException("That setter mode (" + mode + ") has not yet been added!");
+            }
+        }
 
-        // TODO: Compile this as much as possible!
+        static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
+
+        /// <summary>
+        /// Immediately sets a var, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="sdat">The split data variable.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
+        {
+            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Set(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+        }
 
         /// <summary>
         /// Constructs the command.
@@ -37,6 +90,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        /// <summary>
+        /// Pre-lowers the base variable.
+        /// </summary>
+        /// <param name="inp">The input variable block.</param>
         public TemplateObject PreLowerBaseVar(TemplateObject inp)
         {
             string ins = inp.ToString();
@@ -54,6 +111,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return new TextTag(sb.ToString());
         }
 
+        /// <summary>
+        /// Represents all possible setter actions.
+        /// </summary>
         public static Dictionary<string, Action<TemplateObject, string[], TemplateObject>> Setters = new Dictionary<string, Action<TemplateObject, string[], TemplateObject>>();
 
         static DebugVarSetCommand()
