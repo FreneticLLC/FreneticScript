@@ -53,7 +53,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The integer tag.</returns>
         public static IntegerTag For(TagData dat, TemplateObject input)
         {
-            return input is IntegerTag ? (IntegerTag)input : For(dat, input.ToString());
+            return input as IntegerTag ?? For(dat, input.ToString());
         }
 
         /// <summary>
