@@ -51,6 +51,10 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The plain input text.</returns>
         public override string ToString()
         {
+            if (Bits.Count == 1)
+            {
+                return Bits[0].ToString();
+            }
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < Bits.Count; i++)
             {

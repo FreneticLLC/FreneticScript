@@ -366,7 +366,7 @@ namespace FreneticScript.CommandSystem
         {
             if (place >= Arguments.Count || place < 0)
             {
-                throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
+                throw new ArgumentOutOfRangeException("place", "Value must be greater than or equal to 0 and less than command input argument count");
             }
             if (queue.ParseTags != TagParseMode.OFF)
             {
@@ -506,6 +506,7 @@ namespace FreneticScript.CommandSystem
         // TODO: Remove this!
         public void Good(CommandQueue queue, string text)
         {
+            GoodOutput(queue, text); return; // TODO: Temporary!
             GoodOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
         }
 

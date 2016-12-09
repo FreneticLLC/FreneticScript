@@ -188,8 +188,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandStackEntry cse = queue.CommandStack.Peek();
             RepeatCommandData dat = (RepeatCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
             dat.Index++;
-            queue.SetVariable("repeat_index", new IntegerTag(dat.Index));
-            queue.SetVariable("repeat_total", new IntegerTag(dat.Total));
+            queue.SetVariablePreLowered("repeat_index", new IntegerTag(dat.Index));
+            queue.SetVariablePreLowered("repeat_total", new IntegerTag(dat.Total));
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue))

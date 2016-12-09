@@ -120,21 +120,21 @@ namespace FreneticScript.TagHandlers.Objects
             Examples = new string[] { "'1' .duplicate returns '1'." })]
         public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
         {
-            return new TextTag(obj.ToString());
+            return new IntegerTag((obj as IntegerTag).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number plus the specified number.",
             Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
         public static TemplateObject Tag_Add_Int(TagData data, TemplateObject obj)
         {
-            return new IntegerTag(((IntegerTag)obj).Internal + For(data, data.GetModifierObject(0)).Internal);
+            return new IntegerTag((obj as IntegerTag).Internal + For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number minus the specified number.",
             Examples = new string[] { "'2' .subtract_int[1] returns '1'." }, Others = new string[] { "Commonly shortened to '-'." })]
         public static TemplateObject Tag_Subtract_Int(TagData data, TemplateObject obj)
         {
-            return new IntegerTag(((IntegerTag)obj).Internal - For(data, data.GetModifierObject(0)).Internal);
+            return new IntegerTag((obj as IntegerTag).Internal - For(data, data.GetModifierObject(0)).Internal);
         }
 
 #pragma warning restore 1591

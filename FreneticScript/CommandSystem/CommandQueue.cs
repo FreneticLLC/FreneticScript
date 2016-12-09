@@ -171,6 +171,26 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Adds or sets a variable for tags in this queue to use, assuming the input is lowered already.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <param name="value">The value to set on the variable.</param>
+        public void SetVariablePreLowered(string name, TemplateObject value)
+        {
+            // TODO: Preparse into ID #'s
+            CommandStackEntry cse = CommandStack.Peek();
+            ObjectHolder oh;
+            if (cse.Variables.TryGetValue(name, out oh))
+            {
+                oh.Internal = value;
+            }
+            else
+            {
+                cse.Variables[name] = new ObjectHolder() { Internal = value };
+            }
+        }
+
+        /// <summary>
         /// Adds or sets a variable for tags in this queue to use.
         /// </summary>
         /// <param name="name">The name of the variable.</param>
@@ -179,11 +199,30 @@ namespace FreneticScript.CommandSystem
         {
             CommandStackEntry cse = CommandStack.Peek();
             string nl = name.ToLowerFast();
-            if (cse.Variables.ContainsKey(nl))
+            ObjectHolder oh;
+            if (cse.Variables.TryGetValue(nl, out oh))
             {
-                cse.Variables[nl].Internal = value;
+                oh.Internal = value;
             }
-            CommandStack.Peek().Variables[nl] = new ObjectHolder() { Internal = value };
+            else
+            {
+                cse.Variables[nl] = new ObjectHolder() { Internal = value };
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of a variable saved on the queue, assuming the input is lowered already.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <returns>The variable's value.</returns>
+        public TemplateObject GetVariablePreLowered(string name)
+        {
+            ObjectHolder value;
+            if (CommandStack.Peek().Variables.TryGetValue(name, out value))
+            {
+                return value.Internal;
+            }
+            return null;
         }
 
         /// <summary>
