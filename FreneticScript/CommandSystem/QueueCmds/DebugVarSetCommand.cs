@@ -50,12 +50,28 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 case "=":
                     values.ILGen.Emit(OpCodes.Call, Method_SetImmediate);
                     break;
+                case "+=":
+                    values.ILGen.Emit(OpCodes.Call, Method_AddImmediate);
+                    break;
+                case "-=":
+                    values.ILGen.Emit(OpCodes.Call, Method_SubtractImmediate);
+                    break;
+                case "*=":
+                    values.ILGen.Emit(OpCodes.Call, Method_MultiplyImmediate);
+                    break;
+                case "/=":
+                    values.ILGen.Emit(OpCodes.Call, Method_DivideImmediate);
+                    break;
                 default:
-                    throw new NotSupportedException("That setter mode (" + mode + ") has not yet been added!");
+                    throw new NotSupportedException("That setter mode (" + mode + ") is not available!");
             }
         }
 
         static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
+        static MethodInfo Method_AddImmediate = typeof(DebugVarSetCommand).GetMethod("AddImmediate");
+        static MethodInfo Method_SubtractImmediate = typeof(DebugVarSetCommand).GetMethod("SubtractImmediate");
+        static MethodInfo Method_MultiplyImmediate = typeof(DebugVarSetCommand).GetMethod("MultiplyImmediate");
+        static MethodInfo Method_DivideImmediate = typeof(DebugVarSetCommand).GetMethod("DivideImmediate");
 
         /// <summary>
         /// Immediately sets a var, for compiler reasons.
@@ -67,6 +83,54 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Set(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+        }
+
+        /// <summary>
+        /// Immediately adds a var, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="sdat">The split data variable.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void AddImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
+        {
+            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Add(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+        }
+
+        /// <summary>
+        /// Immediately subtracts a var, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="sdat">The split data variable.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void SubtractImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
+        {
+            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+        }
+
+        /// <summary>
+        /// Immediately multiplies a var, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="sdat">The split data variable.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void MultiplyImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
+        {
+            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+        }
+
+        /// <summary>
+        /// Immediately divides a var, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="sdat">The split data variable.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void DIvideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
+        {
+            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
