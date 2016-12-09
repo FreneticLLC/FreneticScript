@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (values.LVariables[i].Key == larg)
                 {
-                    throw new ErrorInducedException("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Duplicate local variable: " + larg + "!");
+                    throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Duplicate local variable: " + larg + "!");
                 }
             }
             TagType t = null;
@@ -59,7 +59,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 string tname = cent.Arguments[4].ToString();
                 if (!cent.System.TagSystem.Types.TryGetValue(tname, out t))
                 {
-                    throw new ErrorInducedException("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + larg + "!");
+                    throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + larg + "!");
                 }
             }
             values.LVariables.Add(new KeyValuePair<string, TagType>(larg, t));

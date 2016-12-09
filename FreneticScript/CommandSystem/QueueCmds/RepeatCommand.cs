@@ -110,12 +110,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Represents the "TryRepeatCIL(queue, entry)" method.
         /// </summary>
-        public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
+        public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatCIL");
 
         /// <summary>
         /// Represents the "TryRepeatNumberedCIL(queue, entry)" method.
         /// </summary>
-        public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatNumberedCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
+        public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatNumberedCIL");
 
         /// <summary>
         /// Adapts a command entry to CIL.
@@ -124,11 +124,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
+            int lvar_ind_loc = values.LocalVariableLocation("repeat_index");
+            int lvar_tot_loc = values.LocalVariableLocation("repeat_total");
             CommandEntry cent = values.Entry.Entries[entry];
             string arg = cent.Arguments[0].ToString();
             if (arg == "\0CALLBACK")
             {
                 values.PrepareExecutionCall(entry);
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
                 values.ILGen.Emit(OpCodes.Callvirt, TryRepeatCILMethod);
                 // TODO: Simplify to a single brtrue?
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
@@ -173,9 +177,38 @@ namespace FreneticScript.CommandSystem.QueueCmds
             else
             {
                 values.PrepareExecutionCall(entry);
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
                 values.ILGen.Emit(OpCodes.Callvirt, TryRepeatNumberedCILMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
+        }
+
+        /// <summary>
+        /// Prepares to adapt a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            string arg = cent.Arguments[0].ToString();
+            if (arg == "\0CALLBACK" || arg == "next" || arg == "stop")
+            {
+                return;
+            }
+            // TODO: scope properly!
+            if (values.LocalVariableLocation("repeat_index") >= 0)
+            {
+                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_index var?!");
+            }
+            if (values.LocalVariableLocation("repeat_total") >= 0)
+            {
+                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_total var?!");
+            }
+            TagType type = cent.System.TagSystem.Type_Integer;
+            values.LVariables.Add(new KeyValuePair<string, TagType>("repeat_index", type));
+            values.LVariables.Add(new KeyValuePair<string, TagType>("repeat_total", type));
         }
 
         /// <summary>
@@ -183,13 +216,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public bool TryRepeatCIL(CommandQueue queue, CommandEntry entry)
+        /// <param name="ri">Repeat Index location.</param>
+        /// <param name="rt">Repeat Total Location.</param>
+        public bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
             CommandStackEntry cse = queue.CommandStack.Peek();
             RepeatCommandData dat = (RepeatCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
             dat.Index++;
-            queue.SetVariablePreLowered("repeat_index", new IntegerTag(dat.Index));
-            queue.SetVariablePreLowered("repeat_total", new IntegerTag(dat.Total));
+            CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
+            ccse.LocalVariables[ri].Internal = new IntegerTag(dat.Index);
+            ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue))
@@ -212,7 +248,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry)
+        /// <param name="ri">Repeat Index location.</param>
+        /// <param name="rt">Repeat Total Location.</param>
+        public bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
             int target = (int)IntegerTag.TryFor(entry.GetArgumentObject(queue, 0)).Internal;
             if (target <= 0)
@@ -224,8 +262,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
-            queue.SetVariable("repeat_index", new IntegerTag(1));
-            queue.SetVariable("repeat_total", new IntegerTag(target));
+            CompiledCommandStackEntry ccse = queue.CommandStack.Peek() as CompiledCommandStackEntry;
+            ccse.LocalVariables[ri].Internal = new IntegerTag(1);
+            ccse.LocalVariables[rt].Internal = new IntegerTag(target);
             if (entry.ShouldShowGood(queue))
             {
                 entry.Good(queue, "Repeating <{text_color[emphasis]}>" + target + "<{text_color[base]}> times...");
@@ -240,56 +279,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments[0].ToString() == "\0CALLBACK")
-            {
-                TryRepeatCIL(queue, entry);
-                return;
-            }
-            string clow = entry.Arguments[0].ToString().ToLowerFast();
-            if (clow == "stop")
-            {
-                // TODO: ???
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                for (int i = 0; i < cse.Entries.Length; i++)
-                {
-                    if (queue.GetCommand(i).Command is RepeatCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
-                    {
-                        if (entry.ShouldShowGood(queue))
-                        {
-                            entry.Good(queue, "Stopping a repeat loop.");
-                            // TODO: Bump repeat_* variables back to what they were?
-                        }
-                        cse.Index = i + 2;
-                        return;
-                    }
-                }
-                queue.HandleError(entry, "Cannot stop repeat: not in one!");
-                return;
-            }
-            else if (clow == "next")
-            {
-                // TODO: ???
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                for (int i = cse.Index - 1; i > 0; i--)
-                {
-                    if (queue.GetCommand(i).Command is RepeatCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
-                    {
-                        if (entry.ShouldShowGood(queue))
-                        {
-                            entry.Good(queue, "Jumping forward in a repeat loop.");
-                        }
-                        cse.Index = i + 1;
-                        return;
-                    }
-                }
-                queue.HandleError(entry, "Cannot advance repeat: not in one!");
-                return;
-            }
-            if (!TryRepeatNumberedCIL(queue, entry))
-            {
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                cse.Index = entry.BlockEnd + 1;
-            }
+            queue.HandleError(entry, "Cannot Execute() a repeat, must compile!");
         }
     }
 }
