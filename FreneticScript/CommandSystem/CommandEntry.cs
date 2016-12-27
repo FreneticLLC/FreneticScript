@@ -483,7 +483,7 @@ namespace FreneticScript.CommandSystem
         /// Used to output a failure message. This is considered a 'warning' and will not induce an error.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
-        /// <param name="text">The text to output, with tags included.</param>
+        /// <param name="text">The text to output.</param>
         public void BadOutput(CommandQueue queue, string text)
         {
             if (queue.CommandStack.Peek().Debug <= DebugMode.MINIMAL)
@@ -497,20 +497,33 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        // TODO: Remove this!
+#warning Remove These Bad/Good/Info old versions
+
+        /// <summary>
+        /// TODO: Remove this!
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="text">The text to output, with tags included.</param>
         public void Bad(CommandQueue queue, string text)
         {
             BadOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
         }
 
-        // TODO: Remove this!
+        /// <summary>
+        /// TODO: Remove this!
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="text">The text to output, with tags included.</param>
         public void Good(CommandQueue queue, string text)
         {
-            GoodOutput(queue, text); return; // TODO: Temporary!
             GoodOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
         }
 
-        // TODO: Remove this!
+        /// <summary>
+        /// TODO: Remove this!
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="text">The text to output, with tags included.</param>
         public void Info(CommandQueue queue, string text)
         {
              InfoOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));

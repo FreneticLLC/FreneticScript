@@ -167,11 +167,14 @@ namespace FreneticScript.CommandSystem
         /// <param name="doError">Whether to end with an error.</param>
         public void ShowUsage(CommandQueue queue, CommandEntry entry, bool doError = true)
         {
-            entry.BadOutput(queue, TextStyle.Color_Separate + Name + TextStyle.Color_Base + ": " + Description);
-            entry.BadOutput(queue, TextStyle.Color_Commandhelp + "Usage: /" + Name + " " + Arguments);
-            if (IsDebug)
+            if (entry.ShouldShowGood(queue))
             {
-                entry.BadOutput(queue, "Note: This command is intended for debugging purposes.");
+                entry.InfoOutput(queue, TextStyle.Color_Separate + Name + TextStyle.Color_Base + ": " + Description);
+                entry.InfoOutput(queue, TextStyle.Color_Commandhelp + "Usage: /" + Name + " " + Arguments);
+                if (IsDebug)
+                {
+                    entry.InfoOutput(queue, "Note: This command is intended for debugging purposes.");
+                }
             }
             if (doError)
             {

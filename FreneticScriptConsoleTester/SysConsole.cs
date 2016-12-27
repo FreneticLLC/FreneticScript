@@ -339,6 +339,7 @@ namespace FreneticScriptConsoleTester
             "^r^7^h^0",
             "^r^7",
             "^7^&",
+            "^r^2"
         };
 
         static string[] OutputNames = new string[]
@@ -350,6 +351,7 @@ namespace FreneticScriptConsoleTester
             "ERROR",
             "INFO",
             "DEBUG",
+            "GOOD"
         };
     }
 
@@ -393,6 +395,10 @@ namespace FreneticScriptConsoleTester
         /// Disable-able minor debug information.
         /// </summary>
         DEBUG = 6,
+        /// <summary>
+        /// Good information, a positive output.
+        /// </summary>
+        GOOD = 7,
         // TODO: More?
     }
 }

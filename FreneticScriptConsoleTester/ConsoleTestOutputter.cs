@@ -12,12 +12,12 @@ namespace FreneticScriptConsoleTester
     {
         public override void BadOutput(string text)
         {
-            SysConsole.Output(OutputType.WARNING, "[BAD] " + text);
+            SysConsole.Output(OutputType.WARNING, text);
         }
 
         public override void GoodOutput(string text)
         {
-            SysConsole.Output(OutputType.INFO, "[GOOD] " + text);
+            SysConsole.Output(OutputType.GOOD, text);
         }
 
         public override byte[] ReadDataFile(string name)
@@ -56,7 +56,7 @@ namespace FreneticScriptConsoleTester
 
         public override void WriteLine(string text)
         {
-            SysConsole.Output(OutputType.INFO, "[INFO] " + text);
+            SysConsole.Output(OutputType.INFO, text);
         }
     }
 }
