@@ -38,6 +38,7 @@ namespace FreneticScript.TagHandlers
 
         /// <summary>
         /// This function should take the two inputs and return a valid object of the relevant type.
+        /// TODO: Remove in favor of CreatorMethod!
         /// </summary>
         public Func<TagData, TemplateObject, TemplateObject> TypeGetter;
 

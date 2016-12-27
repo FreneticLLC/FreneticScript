@@ -152,7 +152,7 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = IntegerTag.TYPE,
                 SubTypeName = "numbertag",
-                TypeGetter = IntegerTag.For,
+                TypeGetter = IntegerTag.CreateFor,
                 GetNextTypeDown = (obj) => new NumberTag(((IntegerTag)obj).Internal),
                 SubHandlers = IntegerTag.Handlers,
                 RawType = typeof(IntegerTag)
@@ -218,7 +218,7 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = TextTag.TYPE,
                 SubTypeName = null,
-                TypeGetter = (data, obj) => new TextTag(obj.ToString()),
+                TypeGetter =  TextTag.CreateFor,
                 SubHandlers = TextTag.Handlers,
                 RawType = typeof(TextTag)
             });
@@ -367,7 +367,7 @@ namespace FreneticScript.TagHandlers
         /// The TextTag type.
         /// </summary>
         public TagType Type_Text;
-
+        
         /// <summary>
         /// The TimeTag type.
         /// </summary>
