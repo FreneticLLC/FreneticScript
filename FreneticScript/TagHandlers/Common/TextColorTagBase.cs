@@ -26,7 +26,19 @@ namespace FreneticScript.TagHandlers.Common
         {
             Name = "text_color";
             ResultTypeString = "texttag";
+            Colors.Add("emphasis", () => TextStyle.Color_Separate);
+            Colors.Add("cmdhelp", () => TextStyle.Color_Commandhelp);
+            Colors.Add("simple", () => TextStyle.Color_Simple);
+            Colors.Add("info", () => TextStyle.Color_Importantinfo);
+            Colors.Add("standout", () => TextStyle.Color_Standout);
+            Colors.Add("warning", () => TextStyle.Color_Warning);
+            Colors.Add("base", () => TextStyle.Color_Base);
         }
+
+        /// <summary>
+        /// All colors known by this tag.
+        /// </summary>
+        public Dictionary<string, Func<string>> Colors = new Dictionary<string, Func<string>>();
 
         /// <summary>
         /// Handles a 'color' tag.
@@ -34,75 +46,13 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public override TemplateObject HandleOne(TagData data)
         {
-            switch (data.GetModifier(0).ToLowerFast())
+            Func<string> getter;
+            if (Colors.TryGetValue(data.GetModifier(0).ToLowerFast(), out getter))
             {
-                // <--[tag]
-                // @Name TextColorTag.emphasis
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the color codes for 'emphasis' (default: ^r^5).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "emphasis":
-                    return new TextTag(TextStyle.Color_Separate);
-                // <--[tag]
-                // @Name TextColorTag.cmdhelp
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the color codes for 'command help' (default: ^r^0^h^1).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "cmdhelp":
-                    return new TextTag(TextStyle.Color_Commandhelp);
-                // <--[tag]
-                // @Name TextColorTag.simple
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the 'simple default' color code (default: ^r^7).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "simple":
-                    return new TextTag(TextStyle.Color_Simple);
-                // <--[tag]
-                // @Name TextColorTag.info
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the 'important information' color code (default: ^r^3).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "info":
-                    return new TextTag(TextStyle.Color_Importantinfo);
-                // <--[tag]
-                // @Name TextColorTag.standout
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the 'standout' color code (default: ^r^0^h^5).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "standout":
-                    return new TextTag(TextStyle.Color_Standout);
-                // <--[tag]
-                // @Name TextColorTag.warning
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the 'warning' color code (default: ^r^0^h^1).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "warning":
-                    return new TextTag(TextStyle.Color_Warning);
-                // <--[tag]
-                // @Name TextColorTag.base
-                // @Group Colors
-                // @ReturnType TextTag
-                // @Returns the base/default color code (depends on situation where tag is called).
-                // @Other TODO: Link full rundown of text colors.
-                // -->
-                case "base":
-                    return new TextTag(data.BaseColor);
-                default:
-                    data.Error("Invalid text color specified!");
-                    return new NullTag();
+                return new TextTag(getter());
             }
+            data.Error("Invalid text color specified!");
+            return new NullTag();
         }
     }
 }

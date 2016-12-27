@@ -230,14 +230,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Repeating...: " + dat.Index + "/" + dat.Total);
+                    entry.GoodOutput(queue, "Repeating...: " + TextStyle.Color_Separate + dat.Index +  TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.Total);
                 }
                 cse.Index = entry.BlockStart;
                 return true;
             }
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Repeat stopping.");
+                entry.GoodOutput(queue, "Repeat stopping.");
             }
             // TODO: Bump repeat_* variables back to what they were?
             return false;
@@ -257,7 +257,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Not repeating.");
+                    entry.GoodOutput(queue, "Not repeating.");
                 }
                 return false;
             }
@@ -267,7 +267,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ccse.LocalVariables[rt].Internal = new IntegerTag(target);
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Repeating <{text_color[emphasis]}>" + target + "<{text_color[base]}> times...");
+                entry.GoodOutput(queue, "Repeating " + TextStyle.Color_Separate + target + TextStyle.Color_Base + " times...");
             }
             return true;
         }
