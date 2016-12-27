@@ -3,6 +3,10 @@ FreneticScript
 
 The Frenetic Scripting Engine (dll)
 
+### Status
+
+This project was stable for a time, but is now under a rewrite. The rewrite is far from complete and current builds are not usable!
+
 ### Licensing pre-note:
 
 This is an open source project, provided entirely freely, for everyone to use and contribute to.

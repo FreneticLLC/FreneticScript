@@ -549,7 +549,7 @@ namespace FreneticScript.TagHandlers
 #if EXTRA_CHECKS
             if (bits.GetResultHelper == null)
             {
-                CommandSystem.Output.BadOutput("Failed to processes tag: " + bits.ToString());
+                CommandSystem.Output.BadOutput("Failed to process tag: " + bits.ToString());
                 return new NullTag();
             }
 #endif
