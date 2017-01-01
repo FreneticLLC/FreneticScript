@@ -72,6 +72,32 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+
+        public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            string arg0 = cent.Arguments[0].ToString();
+            // TODO: Compile this fully!
+            if (arg0 == "\0CALLBACK")
+            {
+                values.PopVarSet();
+                // ...
+            }
+            else if (arg0 == "stop")
+            {
+                // ...
+            }
+            else if (arg0 == "undefine")
+            {
+                // ...
+            }
+            else
+            {
+                values.PushVarSet();
+                // ...
+            }
+        }
+
         TemplateObject verify1(TemplateObject input)
         {
             if (input.ToString() == "\0CALLBACK")
@@ -186,7 +212,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    // NOTE: Always compile a function!
                     queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart));
                     if (entry.ShouldShowGood(queue))
                     {
