@@ -33,37 +33,30 @@ namespace FreneticScript.TagHandlers.Common
 
         public override TemplateObject HandleOne(TagData data)
         {
-            string modif = data.GetModifier(0).ToLowerFast();
-            if (data.Variables != null)
-            {
-                ObjectHolder value;
-                if (data.Variables.TryGetValue(modif, out value))
-                {
-                    return value.Internal;
-                }
-            }
-            data.Error("Invalid variable name '" + TagParser.Escape(modif) + "'!");
+            data.Error("Var tag MUST be compiled!");
             return new NullTag();
         }
 
         public override TagType Adapt(CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab, int i, int a)
         {
-            TagType returnable = null;
             string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
-            for (int x = 0; x < ccse.LocalVarNames.Length; x++)
+            CommandEntry entry = ccse.Entries[i];
+            for (int n = 0; n < entry.CILVars.Length; n++)
             {
-                if (ccse.LocalVarNames[x] == vn)
+                for (int x = 0; x < entry.CILVars[n].LVariables.Count; x++)
                 {
-                    tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
-                    tab.Bits[0].Key = "\0lvar";
-                    tab.Bits[0].Handler = null;
-                    tab.Bits[0].OVar = tab.Bits[0].Variable;
-                    tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new List<ArgumentBit>() { new TextArgumentBit(x.ToString(), false) } };
-                    types.TryGetValue(vn, out returnable);
-                    break;
+                    if (entry.CILVars[n].LVariables[x].Item2 == vn)
+                    {
+                        tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
+                        tab.Bits[0].Key = "\0lvar";
+                        tab.Bits[0].Handler = null;
+                        tab.Bits[0].OVar = tab.Bits[0].Variable;
+                        tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new List<ArgumentBit>() { new TextArgumentBit(entry.CILVars[n].LVariables[x].Item1.ToString(), false) } };
+                        return entry.CILVars[n].LVariables[x].Item3;
+                    }
                 }
             }
-            return returnable;
+            return null;
         }
     }
 }

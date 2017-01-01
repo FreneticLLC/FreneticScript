@@ -137,7 +137,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     OnScriptRanPostEvent.Fire(args4);
                 }
-                queue.SetVariable("run_variables", new MapTag(nqueue.LowestVariables)); // TODO: use the ^= syntax here.
+                // TODO: queue.SetVariable("run_variables", new MapTag(nqueue.LowestVariables)); // TODO: use the ^= syntax here.
             }
             else
             {

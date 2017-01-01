@@ -46,12 +46,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             CommandEntry cent = values.Entry.Entries[entry];
             string larg = cent.Arguments[0].ToString().ToLowerFast();
-            for (int i = 0; i < values.LVariables.Count; i++)
+            if (values.LocalVariableLocation(larg) >= 0)
             {
-                if (values.LVariables[i].Key == larg)
-                {
-                    throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Duplicate local variable: " + larg + "!");
-                }
+                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Duplicate local variable: " + larg + "!");
             }
             TagType t = null;
             if (cent.Arguments.Count >= 5)
@@ -62,7 +59,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + larg + "!");
                 }
             }
-            values.LVariables.Add(new KeyValuePair<string, TagType>(larg, t));
+            values.AddVariable(larg, t);
         }
 
         /// <summary>
@@ -75,7 +72,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // TODO: Type verification? Or remove the 'as TYPE' system?
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
-            int lvarloc = values.LocalVariableLocation(cent.Arguments[0].ToString().ToLowerFast());
+            int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
             values.LoadQueue();
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
             values.LoadEntry(entry);
@@ -111,30 +108,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string variable = entry.GetArgument(queue, 0);
-            TemplateObject value = entry.GetArgumentObject(queue, 2);
-            if (entry.Arguments.Count == 5)
-            {
-                // TODO: Fix this tagdata nonsense
-                TagData dat = new TagData(entry.Command.CommandSystem.TagSystem, new TagBit[0], TextStyle.Color_Simple, queue.CurrentEntry.Variables,
-                    queue.CurrentEntry.Debug, (o) => queue.HandleError(entry, o), null, queue.CommandStack.Peek());
-                TagTypeTag type = TagTypeTag.For(dat, entry.GetArgumentObject(queue, 4));
-                TemplateObject obj = type.Internal.TypeGetter(dat, value);
-                if (obj == null)
-                {
-                    queue.HandleError(entry, "Invalid object for specified type!");
-                    return;
-                }
-                queue.SetVariable(variable, obj);
-            }
-            else
-            {
-                queue.SetVariable(variable, value);
-            }
-            if (entry.ShouldShowGood(queue))
-            {
-                entry.Good(queue, "Variable updated!");
-            }
+            queue.HandleError(entry, "The var command MUST be compiled!");
         }
     }
 }

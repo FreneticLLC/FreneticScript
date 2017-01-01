@@ -11,7 +11,7 @@ namespace FreneticScript.CommandSystem
     /// <summary>
     /// Represents a single entry in a command stack.
     /// </summary>
-    public class CommandStackEntry
+    public abstract class CommandStackEntry
     {
         /// <summary>
         /// The index of the currently running command.
@@ -145,7 +145,7 @@ namespace FreneticScript.CommandSystem
                         entr.Arguments[0].ToString() == "\0CALLBACK")
                     {
                         entry.Good(queue, "Force-exiting try block.");
-                        queue.SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
+                        // TODO: queue.SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
                         cse.Index = i + 2;
                         throw new ErrorInducedException();
                     }
@@ -178,32 +178,17 @@ namespace FreneticScript.CommandSystem
             }
             throw new ErrorInducedException("");
         }
-
-        /// <summary>
-        /// All variables available in this portion of the stack.
-        /// </summary>
-        public Dictionary<string, ObjectHolder> Variables;
-
+        
         /// <summary>
         /// How much debug information this portion of the stack should show.
         /// </summary>
         public DebugMode Debug;
-        
+
         /// <summary>
         /// Perfectly duplicates this stack entry.
         /// </summary>
         /// <returns>The newly duplicated stack entry.</returns>
-        public virtual CommandStackEntry Duplicate()
-        {
-            CommandStackEntry cse = (CommandStackEntry)MemberwiseClone();
-            Dictionary<string, ObjectHolder> temp = new Dictionary<string, ObjectHolder>();
-            foreach (KeyValuePair<string, ObjectHolder> obj in cse.Variables)
-            {
-                temp[obj.Key] = new ObjectHolder() { Internal = obj.Value.Internal };
-            }
-            cse.Variables = temp;
-            return cse;
-        }
+        public abstract CommandStackEntry Duplicate();
     }
 
     /// <summary>

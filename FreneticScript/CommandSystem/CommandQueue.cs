@@ -84,10 +84,6 @@ namespace FreneticScript.CommandSystem
                 return;
             }
             Running = true;
-            if (CommandStack.Count > 0)
-            {
-                LowestVariables = CommandStack.Peek().Variables;
-            }
             Tick(0f);
             if (Running)
             {
@@ -130,11 +126,6 @@ namespace FreneticScript.CommandSystem
             Complete?.Invoke(this, new CommandQueueEventArgs(this));
             Running = false;
         }
-        
-        /// <summary>
-        /// The variables that ran on the lowest level of this queue.
-        /// </summary>
-        public Dictionary<string, ObjectHolder> LowestVariables = null;
 
         /// <summary>
         /// Whether this Queue is waiting on the last command.
@@ -169,78 +160,7 @@ namespace FreneticScript.CommandSystem
             CommandStack.Peek().Index = CommandStack.Peek().Entries.Length + 1;
             CommandStack.Clear();
         }
-
-        /// <summary>
-        /// Adds or sets a variable for tags in this queue to use, assuming the input is lowered already.
-        /// </summary>
-        /// <param name="name">The name of the variable.</param>
-        /// <param name="value">The value to set on the variable.</param>
-        public void SetVariablePreLowered(string name, TemplateObject value)
-        {
-            // TODO: Preparse into ID #'s
-            CommandStackEntry cse = CommandStack.Peek();
-            ObjectHolder oh;
-            if (cse.Variables.TryGetValue(name, out oh))
-            {
-                oh.Internal = value;
-            }
-            else
-            {
-                cse.Variables[name] = new ObjectHolder() { Internal = value };
-            }
-        }
-
-        /// <summary>
-        /// Adds or sets a variable for tags in this queue to use.
-        /// </summary>
-        /// <param name="name">The name of the variable.</param>
-        /// <param name="value">The value to set on the variable.</param>
-        public void SetVariable(string name, TemplateObject value)
-        {
-            CommandStackEntry cse = CommandStack.Peek();
-            string nl = name.ToLowerFast();
-            ObjectHolder oh;
-            if (cse.Variables.TryGetValue(nl, out oh))
-            {
-                oh.Internal = value;
-            }
-            else
-            {
-                cse.Variables[nl] = new ObjectHolder() { Internal = value };
-            }
-        }
-
-        /// <summary>
-        /// Gets the value of a variable saved on the queue, assuming the input is lowered already.
-        /// </summary>
-        /// <param name="name">The name of the variable.</param>
-        /// <returns>The variable's value.</returns>
-        public TemplateObject GetVariablePreLowered(string name)
-        {
-            ObjectHolder value;
-            if (CommandStack.Peek().Variables.TryGetValue(name, out value))
-            {
-                return value.Internal;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the value of a variable saved on the queue.
-        /// </summary>
-        /// <param name="name">The name of the variable.</param>
-        /// <returns>The variable's value.</returns>
-        public TemplateObject GetVariable(string name)
-        {
-            string namelow = name.ToLowerFast();
-            ObjectHolder value;
-            if (CommandStack.Peek().Variables.TryGetValue(namelow, out value))
-            {
-                return value.Internal;
-            }
-            return null;
-        }
-
+        
         /// <summary>
         /// Sets a compiled stack entry's local variable.
         /// </summary>

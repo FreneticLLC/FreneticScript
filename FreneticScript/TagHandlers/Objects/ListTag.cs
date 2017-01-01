@@ -182,9 +182,8 @@ namespace FreneticScript.TagHandlers.Objects
                         ListTag newlist = new ListTag();
                         for (int i = 0; i < ListEntries.Count; i++)
                         {
-                            Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>(data.Variables);
-                             vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                            TemplateObject tobj = data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, vars, data.mode, data.Error, data.CSE);
+                            // TODO: Restore: vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
+                            TemplateObject tobj = data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, data.mode, data.Error, data.CSE);
                             if ((tobj is BooleanTag ? (BooleanTag)tobj : BooleanTag.For(data, tobj.ToString())).Internal)
                             {
                                 newlist.ListEntries.Add(ListEntries[i]);
@@ -204,9 +203,8 @@ namespace FreneticScript.TagHandlers.Objects
                         ListTag newlist = new ListTag();
                         for (int i = 0; i < ListEntries.Count; i++)
                         {
-                            Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>(data.Variables);
-                            vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                            newlist.ListEntries.Add(data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, vars, data.mode, data.Error, data.CSE));
+                            // TODO: Restore: vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
+                            newlist.ListEntries.Add(data.InputKeys[data.cInd].Variable.Parse(data.BaseColor, data.mode, data.Error, data.CSE));
                         }
                         return newlist.Handle(data.Shrink());
                     }

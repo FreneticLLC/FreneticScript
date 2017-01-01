@@ -63,7 +63,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandStackEntry cse = queue.CommandStack.Peek();
             CommandStackEntry tcse = script.Created.Duplicate();
             tcse.Debug = cse.Debug;
-            tcse.Variables = cse.Variables;
             queue.CommandStack.Push(tcse);
         }
     }

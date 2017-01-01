@@ -60,8 +60,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // -->
     class ForeachCommandData : AbstractCommandEntryData
     {
-        public List<TemplateObject> List;
-        public int Index;
+        //public List<TemplateObject> List;
+        //public int Index;
     }
 
     class ForeachCommand : AbstractCommand
@@ -99,6 +99,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
+            // TODO: Restore, compile!
+            queue.HandleError(entry, "Foreach is non-functional at this time!");
+            /*
             string type = entry.GetArgument(queue, 0);
             if (type == "\0CALLBACK")
             {
@@ -182,6 +185,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 ShowUsage(queue, entry);
             }
+            */
         }
     }
 }

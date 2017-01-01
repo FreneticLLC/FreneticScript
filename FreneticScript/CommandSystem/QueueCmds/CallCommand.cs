@@ -77,13 +77,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Calling '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
-            Dictionary<string, ObjectHolder> existingVars = queue.CurrentEntry.Variables;
-            Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>();
+            // TODO: Restore variable sending!
             CommandStackEntry cse = script.Created.Duplicate();
             foreach (string var in entry.NamedArguments.Keys)
             {
                 if (!var.StartsWith("\0"))
                 {
+                    /*
                     if (cse.Variables.ContainsKey(var))
                     {
                         vars[var].Internal = entry.GetNamedArgumentObject(queue, var);
@@ -92,6 +92,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         vars[var] = new ObjectHolder() { Internal = entry.GetNamedArgumentObject(queue, var) };
                     }
+                    */
                 }
             }
             cse.Debug = DebugMode.MINIMAL;
@@ -105,6 +106,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 cse.Callback = () =>
                 {
+                    /*
                     if (existingVars.ContainsKey(vname))
                     {
                         existingVars[vname].Internal = new MapTag(cse.Variables);
@@ -113,6 +115,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         existingVars[vname] = new ObjectHolder() { Internal = new MapTag(cse.Variables) };
                     }
+                    */
                     if (sgood)
                     {
                         entry.Good(queue, "Tracking variable " + vname + ".");

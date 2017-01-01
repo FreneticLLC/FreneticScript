@@ -46,7 +46,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 for (int i = 0; i < dat.ComparisonArgs.Count; i++)
                 {
                     // TODO: Preparse arguments less!
-                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, cse.Variables, cse.Debug, (o) => queue.HandleError(entry, o), cse).ToString());
+                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, cse.Debug, (o) => queue.HandleError(entry, o), cse).ToString());
                 }
                 if (IfCommand.TryIf(comp))
                 {

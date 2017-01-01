@@ -82,7 +82,6 @@
     <Compile Include="CommandSystem\QueueCmds\DelayCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\GotoCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\DebugCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\DefineCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ElseCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\EventCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\ForeachCommand.cs" />
@@ -98,7 +97,6 @@
     <Compile Include="CommandSystem\QueueCmds\RunCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\StopCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\TryCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\UndefineCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\VarCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\WaitCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />

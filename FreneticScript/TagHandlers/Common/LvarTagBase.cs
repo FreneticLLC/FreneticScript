@@ -31,15 +31,7 @@ namespace FreneticScript.TagHandlers.Common
         {
             IntegerTag itag = IntegerTag.For(data, data.GetModifierObject(0));
             CompiledCommandStackEntry ccse = data.CSE as CompiledCommandStackEntry;
-            if (ccse != null)
-            {
-                return ccse.LocalVariables[itag.Internal].Internal;
-            }
-            if (!data.HasFallback)
-            {
-                data.Error("Invalid local variable ID '" + itag.Internal + "'!");
-            }
-            return new NullTag();
+            return ccse.LocalVariables[itag.Internal].Internal;
         }
     }
 }

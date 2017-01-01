@@ -70,12 +70,7 @@ namespace FreneticScript.TagHandlers
                 return Fallback != null;
             }
         }
-
-        /// <summary>
-        /// All variables waiting in this tag's context.
-        /// </summary>
-        public Dictionary<string, ObjectHolder> Variables = null;
-
+        
         /// <summary>
         /// The tag system this tag data is used for.
         /// </summary>
@@ -102,16 +97,14 @@ namespace FreneticScript.TagHandlers
         /// <param name="_system">The command system to use.</param>
         /// <param name="_input">The input tag pieces.</param>
         /// <param name="_basecolor">The default color to use for output.</param>
-        /// <param name="_vars">Any variables involved in the queue.</param>
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
         /// <param name="_cse">The relevant command stack entry, if any.</param>
-        public TagData(TagParser _system, TagBit[] _input, string _basecolor, Dictionary<string, ObjectHolder> _vars, DebugMode _mode, Action<string> _error, Argument fallback, CommandStackEntry _cse)
+        public TagData(TagParser _system, TagBit[] _input, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CommandStackEntry _cse)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;
-            Variables = _vars ?? new Dictionary<string, ObjectHolder>();
             mode = _mode;
             Error = _error;
             Fallback = fallback;
@@ -181,7 +174,7 @@ namespace FreneticScript.TagHandlers
             {
                 throw new ArgumentOutOfRangeException("place");
             }
-            return (InputKeys[place].Variable.Parse(BaseColor, Variables, mode, Error, CSE) ?? new TextTag(""));
+            return (InputKeys[place].Variable.Parse(BaseColor, mode, Error, CSE) ?? new TextTag(""));
         }
     }
 }

@@ -328,7 +328,7 @@ namespace FreneticScript.CommandSystem
             if (NamedArguments.TryGetValue(name, out arg))
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
-                return arg.Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek());
+                return arg.Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek());
             }
             return null;
         }
@@ -341,14 +341,10 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument.</returns>
         public TemplateObject GetArgumentObject(CommandQueue queue, int place)
         {
-            if (place >= Arguments.Count || place < 0)
-            {
-                throw new ArgumentOutOfRangeException("place", "Value must be greater than 0 and less than command input argument count");
-            }
             if (queue.ParseTags != TagParseMode.OFF)
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek());
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek());
             }
             else
             {
@@ -364,14 +360,10 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument as a string.</returns>
         public string GetArgument(CommandQueue queue, int place)
         {
-            if (place >= Arguments.Count || place < 0)
-            {
-                throw new ArgumentOutOfRangeException("place", "Value must be greater than or equal to 0 and less than command input argument count");
-            }
             if (queue.ParseTags != TagParseMode.OFF)
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Variables, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek()).ToString();
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek()).ToString();
             }
             else
             {
@@ -497,7 +489,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-#warning Remove These Bad/Good/Info old versions
+#warning Remove these Bad/Good/Info old versions
 
         /// <summary>
         /// TODO: Remove this!
@@ -506,7 +498,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Bad(CommandQueue queue, string text)
         {
-            BadOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
+            BadOutput(queue, text);
         }
 
         /// <summary>
@@ -516,7 +508,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Good(CommandQueue queue, string text)
         {
-            GoodOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
+            GoodOutput(queue, text);
         }
 
         /// <summary>
@@ -526,8 +518,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output, with tags included.</param>
         public void Info(CommandQueue queue, string text)
         {
-             InfoOutput(queue, System.TagSystem.ParseTagsFromText(text, TextStyle.Color_Base, null, queue.CommandStack.Peek().Debug, (e) => { throw new ErrorInducedException(e); }, false));
+             InfoOutput(queue, text);
         }
+
         /// <summary>
         /// Perfectly duplicates the command entry.
         /// </summary>
@@ -535,6 +528,31 @@ namespace FreneticScript.CommandSystem
         public CommandEntry Duplicate()
         {
             return (CommandEntry)MemberwiseClone();
+        }
+
+        /// <summary>
+        /// A stack of all CIL Variables, for compilation reasons.
+        /// </summary>
+        public CILVariables[] CILVars;
+
+        /// <summary>
+        /// Gets the location of a variable from its name.
+        /// </summary>
+        /// <param name="name">The name of the variable.</param>
+        /// <returns>The location of the variable.</returns>
+        public int VarLoc(string name)
+        {
+            for (int i = 0; i < CILVars.Length; i++)
+            {
+                for (int x = 0; x < CILVars[i].LVariables.Count; x++)
+                {
+                    if (CILVars[i].LVariables[x].Item2 == name)
+                    {
+                        return CILVars[i].LVariables[x].Item1;
+                    }
+                }
+            }
+            return -1;
         }
     }
 }

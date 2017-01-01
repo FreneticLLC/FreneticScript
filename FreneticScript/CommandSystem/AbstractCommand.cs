@@ -184,6 +184,17 @@ namespace FreneticScript.CommandSystem
     }
 
     /// <summary>
+    /// Holder of CIL Variable data.
+    /// </summary>
+    public class CILVariables
+    {
+        /// <summary>
+        /// A map of local variables to track.
+        /// </summary>
+        public List<Tuple<int, string, TagType>> LVariables = new List<Tuple<int, string, TagType>>();
+    }
+
+    /// <summary>
     /// Holds all data needed for CIL adaptation.
     /// </summary>
     public class CILAdaptationValues
@@ -255,20 +266,60 @@ namespace FreneticScript.CommandSystem
         /// <returns>The location.</returns>
         public int LocalVariableLocation(string name)
         {
-            for (int i = 0; i < LVariables.Count; i++)
+            foreach (int i in LVarIDs)
             {
-                if (LVariables[i].Key == name)
+                for (int x = 0; x < CLVariables[i].LVariables.Count; x++)
                 {
-                    return i;
+                    if (CLVariables[i].LVariables[x].Item2 == name)
+                    {
+                        return CLVariables[i].LVariables[x].Item1;
+                    }
                 }
             }
             return -1;
         }
 
         /// <summary>
-        /// A map of local variables to track.
+        /// Pushes a new set of variables, to start a scope.
         /// </summary>
-        public List<KeyValuePair<string, TagType>> LVariables = new List<KeyValuePair<string, TagType>>();
+        public void PushVarSet()
+        {
+            LVarIDs.Push(CLVariables.Count);
+            CLVariables.Add(new CILVariables());
+        }
+
+        /// <summary>
+        /// Pops the newest set of variables, to end a scope.
+        /// </summary>
+        public void PopVarSet()
+        {
+            LVarIDs.Pop();
+        }
+
+        /// <summary>
+        /// Adds a variable at the highest scope.
+        /// </summary>
+        /// <param name="var">The variable name.</param>
+        /// <param name="type">The variable value.</param>
+        public void AddVariable(string var, TagType type)
+        {
+            CLVariables[LVarIDs.Peek()].LVariables.Add(new Tuple<int, string, TagType>(CLVarID++, var, type));
+        }
+
+        /// <summary>
+        /// All known CIL Variable data sets.
+        /// </summary>
+        public List<CILVariables> CLVariables = new List<CILVariables>();
+
+        /// <summary>
+        /// The current stackl of LVarIDs.
+        /// </summary>
+        public Stack<int> LVarIDs = new Stack<int>();
+        
+        /// <summary>
+        /// The current CIL Var ID.
+        /// </summary>
+        public int CLVarID = 0;
 
         /// <summary>
         /// Load the entry onto the stack.

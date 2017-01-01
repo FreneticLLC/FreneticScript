@@ -124,9 +124,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            int lvar_ind_loc = values.LocalVariableLocation("repeat_index");
-            int lvar_tot_loc = values.LocalVariableLocation("repeat_total");
             CommandEntry cent = values.Entry.Entries[entry];
+            int lvar_ind_loc = cent.VarLoc("repeat_index");
+            int lvar_tot_loc = cent.VarLoc("repeat_total");
             string arg = cent.Arguments[0].ToString();
             if (arg == "\0CALLBACK")
             {
@@ -193,10 +193,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             CommandEntry cent = values.Entry.Entries[entry];
             string arg = cent.Arguments[0].ToString();
-            if (arg == "\0CALLBACK" || arg == "next" || arg == "stop")
+            if (arg == "\0CALLBACK")
+            {
+                values.PopVarSet();
+                return;
+            }
+            if (arg == "next" || arg == "stop")
             {
                 return;
             }
+            values.PushVarSet();
             // TODO: scope properly!
             if (values.LocalVariableLocation("repeat_index") >= 0)
             {
@@ -207,8 +213,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_total var?!");
             }
             TagType type = cent.System.TagSystem.Type_Integer;
-            values.LVariables.Add(new KeyValuePair<string, TagType>("repeat_index", type));
-            values.LVariables.Add(new KeyValuePair<string, TagType>("repeat_total", type));
+            values.AddVariable("repeat_index", type);
+            values.AddVariable("repeat_total", type);
         }
 
         /// <summary>

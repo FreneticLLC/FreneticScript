@@ -24,9 +24,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="name">The name of the script.</param>
         /// <param name="commands">The command string to parse.</param>
         /// <param name="system">The command system to create the script within.</param>
-        /// <param name="compile">Whether the script should be compiled.</param>
         /// <returns>A list of command strings.</returns>
-        public static CommandScript SeparateCommands(string name, string commands, Commands system, bool compile)
+        public static CommandScript SeparateCommands(string name, string commands, Commands system)
         {
             try
             {
@@ -115,7 +114,7 @@ namespace FreneticScript.CommandSystem
                     CommandList.Add(commands.Substring(start).Trim());
                 }
                 bool herr;
-                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr), 0, compile);
+                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr), 0);
             }
             catch (Exception ex)
             {
@@ -263,7 +262,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 string fname = filename + ".cfg";
-                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system, true); // TODO: Compile optional
+                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system);
             }
             catch (System.IO.FileNotFoundException)
             {
@@ -301,8 +300,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="_name">The name of the script.</param>
         /// <param name="_commands">All commands in the script.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
-        /// <param name="compile">Whether the script should be compiled.</param>
-        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, bool compile = false)
+        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0)
         {
             Name = _name.ToLowerFast();
             List<CommandEntry> Commands = _commands;
@@ -314,19 +312,10 @@ namespace FreneticScript.CommandSystem
                 Commands[i].BlockStart -= adj;
                 Commands[i].BlockEnd -= adj;
             }
-            if (compile)
-            {
-                Created = new CompiledCommandStackEntry();
-            }
-            else
-            {
-                Created = new CommandStackEntry();
-            }
+            Created = new CompiledCommandStackEntry();
             Created.Debug = Debug;
-            Created.Variables = new Dictionary<string, ObjectHolder>();
             Created.Entries = Commands.ToArray();
             Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
-            if (compile)
             {
                 string tname = "__script__" + IDINCR++;
                 AssemblyName asmname = new AssemblyName(tname);
@@ -349,23 +338,45 @@ namespace FreneticScript.CommandSystem
                 values.Script = this;
                 values.ILGen = ilgen;
                 values.Method = methodbuild_c;
+                values.PushVarSet();
                 for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
                 {
                     ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
                 }
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
-                    ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                    bool isCallback = ccse.Entries[i].Arguments.Count > 0 && ccse.Entries[i].Arguments[0].ToString() == "\0CALLBACK";
+                    if (!isCallback)
+                    {
+                        ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                    }
+                    CILVariables[] tvars = new CILVariables[values.LVarIDs.Count];
+                    int counter = 0;
+                    foreach (int tv in values.LVarIDs)
+                    {
+                        tvars[counter] = values.CLVariables[tv];
+                        counter++;
+                    }
+                    ccse.Entries[i].CILVars = tvars;
+                    if (isCallback)
+                    {
+                        ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                    }
                 }
-                ccse.LocalVariables = new ObjectHolder[values.LVariables.Count];
-                ccse.LocalVarNames = new string[values.LVariables.Count];
+                ccse.LocalVariables = new ObjectHolder[values.CLVarID];
+                ccse.LocalVarNames = new string[values.CLVarID];
                 Dictionary<string, TagType> types = new Dictionary<string, TagType>();
-                for (int i = 0; i < ccse.LocalVariables.Length; i++)
+                for (int i = 0; i < values.CLVariables.Count; i++)
                 {
-                    ccse.LocalVarNames[i] = values.LVariables[i].Key;
-                    ccse.LocalVariables[i] = new ObjectHolder();
-                    ccse.Variables[ccse.LocalVarNames[i]] = ccse.LocalVariables[i];
-                    types[values.LVariables[i].Key] = values.LVariables[i].Value;
+                    for (int x = 0; x <  values.CLVariables[i].LVariables.Count; x++)
+                    {
+                        int ind = values.CLVariables[i].LVariables[x].Item1;
+                        string name = i + "#" + values.CLVariables[i].LVariables[x].Item2;
+                        ccse.LocalVarNames[ind] = name;
+                        ccse.LocalVariables[ind] = new ObjectHolder();
+                        types[name] = values.CLVariables[i].LVariables[x].Item3;
+                        ind++;
+                    }
                 }
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
@@ -454,7 +465,7 @@ namespace FreneticScript.CommandSystem
             if (returnable == null)
             {
                 throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                    + "): Invalid tag top-handler '" + tab.Start.Name + "' for tag :" + tab.ToString());
+                    + "): Invalid tag top-handler '" + tab.Start.Name + "' for tag: " + tab.ToString());
             }
             for (int x = 1; x < tab.Bits.Length; x++)
             {

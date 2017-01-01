@@ -41,11 +41,11 @@ namespace FreneticScript.CommandSystem
         /// <returns>The newly duplicated stack entry.</returns>
         public override CommandStackEntry Duplicate()
         {
-            CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)base.Duplicate();
+            CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)MemberwiseClone();
             ccse.LocalVariables = new ObjectHolder[LocalVariables.Length];
             for (int i = 0; i < ccse.LocalVariables.Length; i++)
             {
-                ccse.LocalVariables[i] = ccse.Variables[LocalVarNames[i]];
+                ccse.LocalVariables[i] = new ObjectHolder() { Internal = ccse.LocalVariables[i]?.Internal };
             }
             return ccse;
         }

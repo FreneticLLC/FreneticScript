@@ -116,15 +116,16 @@ namespace FreneticScript.CommandSystem
             queue = script.ToQueue(this);
             if (Variables != null)
             {
-                foreach (KeyValuePair<string, ObjectHolder> variable in Variables)
+                // TODO: Restore variable tracking!
+                /*foreach (KeyValuePair<string, ObjectHolder> variable in Variables)
                 {
                     queue.SetVariable(variable.Key, variable.Value.Internal);
-                }
+                }*/
             }
             CommandStackEntry cse = queue.CommandStack.Peek();
             cse.Debug = mode;
             queue.Execute();
-            Variables = queue.LowestVariables;
+            //Variables = queue.LowestVariables;
         }
 
         /// <summary>
@@ -167,7 +168,6 @@ namespace FreneticScript.CommandSystem
                 script = script.Replace("\r", "").Replace("\0", "\\0");
                 string[] dat = script.SplitFast('\n');
                 bool shouldarun = false;
-                bool shouldcompile = false;
                 int arun = 0;
                 for (int i = 0; i < dat.Length; i++)
                 {
@@ -185,17 +185,13 @@ namespace FreneticScript.CommandSystem
                             shouldarun = true;
                             arun = FreneticScriptUtilities.StringToInt(args[1]);
                         }
-                        else if (mode == "compile")
-                        {
-                            shouldcompile = args[1].Trim().ToLowerFast() == "true";
-                        }
                         continue;
                     }
                     break;
                 }
                 if (shouldarun)
                 {
-                    CommandScript cscript = CommandScript.SeparateCommands(name, script, this, shouldcompile);
+                    CommandScript cscript = CommandScript.SeparateCommands(name, script, this);
                     if (cscript == null)
                     {
                         return;
@@ -254,7 +250,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
-            CommandScript cs = CommandScript.SeparateCommands("command_line", commands, this, true); // TODO: Compile option!
+            CommandScript cs = CommandScript.SeparateCommands("command_line", commands, this);
             if (cs == null)
             {
                 outputter?.Invoke("Invalid commands specified, error outputted to logs.", MessageType.BAD);
@@ -327,7 +323,6 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new CallCommand());
             RegisterCommand(new CatchCommand());
             RegisterCommand(new DebugCommand());
-            RegisterCommand(new DefineCommand());
             RegisterCommand(new DelayCommand());
             RegisterCommand(new ElseCommand());
             RegisterCommand(new ErrorCommand());
@@ -345,7 +340,6 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(TheRunCommand = new RunCommand());
             RegisterCommand(new StopCommand());
             RegisterCommand(new TryCommand());
-            RegisterCommand(new UndefineCommand());
             RegisterCommand(new VarCommand());
             RegisterCommand(new WaitCommand());
             RegisterCommand(new WhileCommand());

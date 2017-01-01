@@ -537,15 +537,14 @@ namespace FreneticScript.TagHandlers
         /// Reads and parses all tags inside a list of tag bits.
         /// </summary>
         /// <param name="base_color">The base color for tags to use.</param>
-        /// <param name="vars">Any variables in this tag's context.</param>
         /// <param name="bits">The tag data.</param>
         /// <param name="mode">What debugmode to use.</param>
         /// <param name="error">What to invoke if there's an error.</param>
         /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, CommandStackEntry cse)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
-            TagData data = new TagData(this, bits.Bits, base_color, vars, mode, error, bits.Fallback, cse) { Start = bits.Start };
+            TagData data = new TagData(this, bits.Bits, base_color, mode, error, bits.Fallback, cse) { Start = bits.Start };
 #if !EXTRA_CHECKS
             if (bits.GetResultHelper == null)
             {
@@ -561,22 +560,6 @@ namespace FreneticScript.TagHandlers
                     + TextStyle.Color_Outgood + "\".");
             }
             return res;
-        }
-
-        /// <summary>
-        /// Reads and parses all tags inside a string. Note: Avoid this where possible. Use SplitToArgument instead!
-        /// </summary>
-        /// <param name="base_color">The base color for tags to use.</param>
-        /// <param name="vars">Any variables in this tag's context.</param>
-        /// <param name="input">The tagged string.</param>
-        /// <param name="mode">What debugmode to use.</param>
-        /// <param name="error">What to invoke if there's an error.</param>
-        /// <param name="wasquoted">Whether the input had "quotes".</param>
-        /// <returns>The string with tags parsed.</returns>
-        public string ParseTagsFromText(string input, string base_color, Dictionary<string, ObjectHolder> vars, DebugMode mode, Action<string> error, bool wasquoted)
-        {
-            // TODO: Unescape need?
-            return Unescape((SplitToArgument(input, wasquoted).Parse(base_color, vars, mode, error, null) ?? new NullTag()).ToString());
         }
     }
 }

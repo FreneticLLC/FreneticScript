@@ -41,6 +41,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 string arg = entry.GetArgument(queue, i).ToLowerFast();
                 CommandStackEntry cse = queue.CommandStack.Peek();
+                // TODO: Restore this command. Use compilation!
+                /*
                 if (!cse.Variables.ContainsKey(arg))
                 {
                     if (loud == "loud")
@@ -61,7 +63,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         queue.HandleError(entry, "Missing variable '" + TagParser.Escape(arg) + "'!");
                     }
                     return;
-                }
+                }*/
             }
             entry.Good(queue, "Require command passed, all variables present!");
         }
