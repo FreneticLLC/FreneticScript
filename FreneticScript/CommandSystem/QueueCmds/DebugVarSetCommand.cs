@@ -39,7 +39,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
             }
             vn = dat[0];
-            int lvarloc = values.LocalVariableLocation(vn);
+            int lvarloc = cent.VarLoc(vn);
             string mode = cent.Arguments[1].ToString();
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
             values.ILGen.Emit(OpCodes.Ldstr, res.ToString());
