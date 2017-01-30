@@ -30,18 +30,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // // This example runs through the list and echos "1/3", then "2/3", then "3/3" back to the console.
     // repeat 3
     // {
-    //     echo "<{var[repeat_index]}>/<{var[repeat_total]}>"
+    //     echo "<{var[repeat_index]}>/<{var[repeat_total]}>";
     // }
     // @Example
     // // This example runs through the list and echos "1", then "1r", then "2", then "3", then "3r" back to the console.
     // repeat 3
     // {
-    //     echo "<{var[repeat_index]}>"
+    //     echo "<{var[repeat_index]}>";
     //     if <{var[repeat_index].equals[2]}>
     //     {
-    //         repeat next
+    //         repeat next;
     //     }
-    //     echo "<{var[repeat_index]}>r"
+    //     echo "<{var[repeat_index]}>r";
     // }
     // @Example
     // // This example runs through the list and echos "1", then "2", then stops early.
@@ -49,13 +49,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // {
     //     if <{var[repeat_index].equals[3]}>
     //     {
-    //         repeat stop
+    //         repeat stop;
     //     }
-    //     echo "<{var[repeat_index]}>"
+    //     echo "<{var[repeat_index]}>";
     // }
     // @Example
     // // TODO: More examples!
-    // @Var repeat_index IntegerTag returns what iteration (numeric) the repeat is on.
+    // @Save repeat_index IntegerTag returns what iteration (numeric) the repeat is on.
     // @Var repeat_total IntegerTag returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
     // -->
     class RepeatCommandData : AbstractCommandEntryData
@@ -125,11 +125,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            int lvar_ind_loc = cent.VarLoc("repeat_index");
             int lvar_tot_loc = cent.VarLoc("repeat_total");
             string arg = cent.Arguments[0].ToString();
             if (arg == "\0CALLBACK")
             {
+                string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_index");
+                int lvar_ind_loc = cent.VarLoc(sn);
                 values.PrepareExecutionCall(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
@@ -176,6 +177,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
+                int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_index"));
                 values.PrepareExecutionCall(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
@@ -203,17 +205,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return;
             }
             values.PushVarSet();
+            string sn = cent.GetSaveNameNoParse("repeat_index");
             // TODO: scope properly!
-            if (values.LocalVariableLocation("repeat_index") >= 0)
+            if (values.LocalVariableLocation(sn) >= 0)
             {
-                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_index var?!");
+                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_index var (labeled '" + sn + "')?!");
             }
             if (values.LocalVariableLocation("repeat_total") >= 0)
             {
                 throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_total var?!");
             }
             TagType type = cent.System.TagSystem.Type_Integer;
-            values.AddVariable("repeat_index", type);
+            values.AddVariable(sn, type);
             values.AddVariable("repeat_total", type);
         }
 

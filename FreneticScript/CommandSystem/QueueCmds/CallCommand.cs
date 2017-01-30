@@ -19,6 +19,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Minimum 1
     // @Maximum -1
     // @ReturnsValue true
+    // @VarEqual MapTag the map of variables tracked at the end of the function call.
     // @Description
     // Activates a function created by the <@link command function>function<@/link> command.
     // TODO: Explain more!
@@ -99,11 +100,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (entry.NamedArguments.ContainsKey("\0varname"))
             {
                 bool sgood = entry.ShouldShowGood(queue);
-                string vname = entry.GetNamedArgumentObject(queue, "\0varname").ToString();
+                string vname = entry.GetNamedArgumentObject(queue, "\0varname").ToString(); // TODO: Should this go through parsing at all? Probably not!
                 if (sgood)
                 {
                     entry.Good(queue, "Noticing variable track for " + vname + ".");
                 }
+                // TODO: Save the variable to the queue properly!
                 cse.Callback = () =>
                 {
                     /*
@@ -118,7 +120,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     */
                     if (sgood)
                     {
-                        entry.Good(queue, "Tracking variable " + vname + ".");
+                        entry.Good(queue, "Call complete.");
                     }
                 };
             }

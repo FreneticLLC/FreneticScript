@@ -119,9 +119,9 @@ namespace FreneticScript.CommandSystem
                 args.RemoveAt(0);
                 for (int i = 0; i < args.Count - 1; i++)
                 {
-                    if (!args[i].WasQuoted && args[i].ToString().StartsWith("-"))
+                    if (!args[i].WasQuoted && args[i].ToString().StartsWith("--"))
                     {
-                        nameds[args[i].ToString().Substring(1).ToLowerFast()] = args[i + 1];
+                        nameds[args[i].ToString().Substring(2).ToLowerFast()] = args[i + 1];
                         args.RemoveRange(i, 2);
                         i -= 2;
                     }
@@ -315,6 +315,21 @@ namespace FreneticScript.CommandSystem
         /// What marker was used. 0 = none, 1 = +, 2 = -, 3 = !
         /// </summary>
         public int Marker = 0;
+
+        /// <summary>
+        /// Gets the save name for this entry, without parsing it.
+        /// </summary>
+        /// <param name="defaultval">The default value.</param>
+        /// <returns>The save name.</returns>
+        public string GetSaveNameNoParse(string defaultval)
+        {
+            Argument arg;
+            if (NamedArguments.TryGetValue("save", out arg))
+            {
+                return arg.ToString().ToLowerFast();
+            }
+            return defaultval;
+        }
 
         /// <summary>
         /// Gets a named argument with a specified name, handling any tags.
