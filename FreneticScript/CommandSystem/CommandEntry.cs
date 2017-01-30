@@ -320,11 +320,12 @@ namespace FreneticScript.CommandSystem
         /// Gets the save name for this entry, without parsing it.
         /// </summary>
         /// <param name="defaultval">The default value.</param>
+        /// <param name="id">The ID of the saver.</param>
         /// <returns>The save name.</returns>
-        public string GetSaveNameNoParse(string defaultval)
+        public string GetSaveNameNoParse(string defaultval, string id = "save")
         {
             Argument arg;
-            if (NamedArguments.TryGetValue("save", out arg))
+            if (NamedArguments.TryGetValue(id, out arg))
             {
                 return arg.ToString().ToLowerFast();
             }

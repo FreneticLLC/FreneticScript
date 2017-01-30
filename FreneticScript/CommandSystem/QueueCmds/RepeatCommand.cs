@@ -125,12 +125,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            int lvar_tot_loc = cent.VarLoc("repeat_total");
             string arg = cent.Arguments[0].ToString();
             if (arg == "\0CALLBACK")
             {
                 string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_index");
+                string sn_tot = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_total", "save_total");
                 int lvar_ind_loc = cent.VarLoc(sn);
+                int lvar_tot_loc = cent.VarLoc(sn_tot);
                 values.PrepareExecutionCall(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
@@ -178,6 +179,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             else
             {
                 int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_index"));
+                int lvar_tot_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_total", "save_total"));
                 values.PrepareExecutionCall(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
@@ -206,18 +208,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.PushVarSet();
             string sn = cent.GetSaveNameNoParse("repeat_index");
+            string sn_tot = cent.GetSaveNameNoParse("repeat_total", "save_total");
             // TODO: scope properly!
             if (values.LocalVariableLocation(sn) >= 0)
             {
                 throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_index var (labeled '" + sn + "')?!");
             }
-            if (values.LocalVariableLocation("repeat_total") >= 0)
+            if (values.LocalVariableLocation(sn_tot) >= 0)
             {
-                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_total var?!");
+                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_total var (labeled '" + sn_tot + "')?!");
             }
             TagType type = cent.System.TagSystem.Type_Integer;
             values.AddVariable(sn, type);
-            values.AddVariable("repeat_total", type);
+            values.AddVariable(sn_tot, type);
         }
 
         /// <summary>
@@ -248,7 +251,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.GoodOutput(queue, "Repeat stopping.");
             }
-            // TODO: Bump repeat_* variables back to what they were?
             return false;
         }
 
