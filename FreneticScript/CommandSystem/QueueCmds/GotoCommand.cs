@@ -72,19 +72,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string targ = entry.Arguments[0].ToString();
-            CommandStackEntry cse = queue.CommandStack.Peek();
-            for (int i = 0; i < cse.Entries.Length; i++)
-            {
-                if (queue.GetCommand(i).Command is MarkCommand
-                    && queue.GetCommand(i).Arguments[0].ToString() == targ)
-                {
-                    // TODO: Output?
-                    cse.Index = i;
-                    return;
-                }
-            }
-            queue.HandleError(entry, "Cannot goto marked location: unknown marker!");
+            throw new NotImplementedException("Must be compiled!");
         }
     }
 }
