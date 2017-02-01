@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -73,6 +74,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandEntry cent = values.Entry.Entries[entry];
             if (cent.Arguments[0].ToString() == "\0CALLBACK")
             {
+                values.MarkCommand(entry);
                 values.ILGen.Emit(OpCodes.Nop);
                 return;
             }
@@ -80,8 +82,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new Exception("Incorrectly defined IF command: no block follows!");
             }
-            values.PrepareExecutionCall(entry);
-            values.ILGen.Emit(OpCodes.Callvirt, TryIfCILMethod);
+            values.MarkCommand(entry);
+            values.LoadQueue();
+            values.LoadEntry(entry);
+            values.ILGen.Emit(OpCodes.Call, TryIfCILMethod);
             values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
         }
 
@@ -90,15 +94,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public bool TryIfCIL(CommandQueue queue, CommandEntry entry)
+        public static bool TryIfCIL(CommandQueue queue, CommandEntry entry)
         {
             entry.SetData(queue, new IfCommandData() { Result = 0 });
-            List<string> parsedargs = new List<string>(entry.Arguments.Count);
-            for (int i = 0; i < entry.Arguments.Count; i++)
-            {
-                parsedargs.Add(entry.GetArgument(queue, i)); // TODO: Don't pre-parse. Parse in TryIf.
-            }
-            bool success = TryIf(parsedargs);
+            bool success = TryIf(queue, entry, new List<Argument>(entry.Arguments));
             if (success)
             {
                 if (entry.ShouldShowGood(queue))
@@ -124,70 +123,91 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments[0].ToString() == "\0CALLBACK")
+            throw new NotImplementedException("Unknown execution of IF command, invalid!");
+        }
+
+        /// <summary>
+        /// Gets the boolean for a string.
+        /// </summary>
+        /// <param name="error">What error method to use.</param>
+        /// <param name="str">The string.</param>
+        /// <returns>The boolean.</returns>
+        public static bool GetBool(Action<string> error, string str)
+        {
+            if (str.StartsWith("!"))
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
-                if (cse.Index < cse.Entries.Length)
-                {
-                    CommandEntry elseentry = cse.Entries[cse.Index];
-                    if (elseentry.Command is ElseCommand)
-                    {
-                        elseentry.SetData(queue, ifentry.GetData(queue));
-                    }
-                }
-                return;
+                return !GetBool(error, str.Substring(1));
             }
-            bool success = TryIfCIL(queue, entry);
-            if (!success)
+            string low = str.ToLowerFast();
+            if (low == "true")
             {
-                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
+                return true;
             }
+            else if (low == "false")
+            {
+                return false;
+            }
+            error("Invalid If: Invalid boolean input!");
+            return false;
         }
 
         // TODO: better comparison system!
         /// <summary>
         /// Tries input IF to see if it is TRUE or FALSE.
         /// </summary>
+        /// <param name="queue">The command queue of relevance.</param>
+        /// <param name="entry">The command entry of relevance.</param>
         /// <param name="arguments">The input arguments.</param>
         /// <returns>Whether it is true or not.</returns>
-        public static bool TryIf(List<string> arguments)
+        public static bool TryIf(CommandQueue queue, CommandEntry entry, List<Argument> arguments)
         {
             if (arguments.Count == 0)
             {
+                queue.HandleError(entry, "Invalid IF: No arguments!");
                 return false;
             }
+            Action<string> error = (o) => queue.HandleError(entry, o);
+            CommandStackEntry cse = queue.CommandStack.Peek();
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLowerFast() == "true";
+                TemplateObject theto = arguments[0].Parse(TextStyle.Color_Simple, cse.Debug, error, cse);
+                if (theto is BooleanTag)
+                {
+                    return (theto as BooleanTag).Internal;
+                }
+                return GetBool(error, theto.ToString());
             }
             for (int i = 0; i < arguments.Count; i++)
             {
-                if (arguments[i] == "(")
+                string astr = arguments[i].ToString();
+                if (astr == "(")
                 {
-                    List<string> subargs = new List<string>();
+                    List<Argument> subargs = new List<Argument>();
                     int count = 0;
                     bool found = false;
                     for (int x = i + 1; x < arguments.Count; x++)
                     {
-                        if (arguments[x] == "(")
+                        string xstr = arguments[x].ToString();
+                        if (xstr == "(")
                         {
                             count++;
-                            subargs.Add("(");
+                            subargs.Add(arguments[x]);
                         }
-                        else if (arguments[x] == ")")
+                        else if (xstr == ")")
                         {
                             count--;
                             if (count == -1)
                             {
-                                bool cfound = TryIf(subargs);
+                                bool cfound = TryIf(queue, entry, subargs);
                                 arguments.RemoveRange(i, (x - i) + 1);
-                                arguments.Insert(i, cfound.ToString());
+                                Argument narg = new Argument();
+                                narg.Bits = new List<ArgumentBit>() { new TextArgumentBit(cfound) };
+                                arguments.Insert(i, narg);
                                 found = true;
                             }
                             else
                             {
-                                subargs.Add(")");
+                                subargs.Add(arguments[x]);
                             }
                         }
                         else
@@ -197,87 +217,109 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (!found)
                     {
+                        queue.HandleError(entry, "Invalid IF: Inconsistent parenthesis!");
                         return false;
                     }
                 }
-                else if (arguments[i] == ")")
+                else if (astr == ")")
                 {
                     return false;
                 }
             }
             if (arguments.Count == 1)
             {
-                return arguments[0].ToLowerFast() == "true";
+                TemplateObject theto = arguments[0].Parse(TextStyle.Color_Simple, cse.Debug, error, cse);
+                if (theto is BooleanTag)
+                {
+                    return (theto as BooleanTag).Internal;
+                }
+                return GetBool(error, theto.ToString());
             }
             for (int i = 0; i < arguments.Count; i++)
             {
-                if (arguments[i] == "||")
+                string astr = arguments[i].ToString();
+                if (astr == "||")
                 {
-                    List<string> beforeargs = new List<string>(i);
+                    List<Argument> beforeargs = new List<Argument>(i);
                     for (int x = 0; x < i; x++)
                     {
                         beforeargs.Add(arguments[x]);
                     }
-                    bool before = TryIf(beforeargs);
-                    List<string> afterargs = new List<string>(i);
+                    if (TryIf(queue, entry, beforeargs))
+                    {
+                        return true;
+                    }
+                    List<Argument> afterargs = new List<Argument>(arguments.Count - i);
                     for (int x = i + 1; x < arguments.Count; x++)
                     {
                         afterargs.Add(arguments[x]);
                     }
-                    bool after = TryIf(afterargs);
-                    return before || after;
+                    return TryIf(queue, entry, afterargs);
                 }
-                else if (arguments[i] == "&&")
+                else if (astr == "&&")
                 {
-                    List<string> beforeargs = new List<string>(i);
+                    List<Argument> beforeargs = new List<Argument>(i);
                     for (int x = 0; x < i; x++)
                     {
                         beforeargs.Add(arguments[x]);
                     }
-                    bool before = TryIf(beforeargs);
-                    List<string> afterargs = new List<string>(i);
+                    if (!TryIf(queue, entry, beforeargs))
+                    {
+                        return false;
+                    }
+                    List<Argument> afterargs = new List<Argument>(arguments.Count - i);
                     for (int x = i + 1; x < arguments.Count; x++)
                     {
                         afterargs.Add(arguments[x]);
                     }
-                    bool after = TryIf(afterargs);
-                    return before && after;
+                    return TryIf(queue, entry, afterargs);
                 }
-            }
-            if (arguments.Count == 1)
-            {
-                return arguments[0].ToLowerFast() == "true";
             }
             if (arguments.Count == 2)
             {
+                queue.HandleError(entry, "Invalid IF: Two-argument input unclear in intent!");
                 return false;
             }
-            if (arguments[1] == "==")
+            TemplateObject to = arguments[0].Parse(TextStyle.Color_Simple, cse.Debug, error, cse);
+            NumberTag n1 = NumberTag.TryFor(to);
+            to = arguments[2].Parse(TextStyle.Color_Simple, cse.Debug, error, cse);
+            NumberTag n2 = NumberTag.TryFor(to);
+            string comp = arguments[1].ToString();
+            if (comp == "==")
             {
+                if (n1 != null && n2 != null)
+                {
+                    return n1.Internal == n2.Internal;
+                }
                 return arguments[0] == arguments[2];
             }
-            else if (arguments[1] == "!=")
+            else if (comp == "!=")
             {
+                if (n1 != null && n2 != null)
+                {
+                    return n1.Internal != n2.Internal;
+                }
                 return arguments[0] != arguments[2];
             }
-            else if (arguments[1] == ">=")
+            if (comp == ">=")
             {
-                return FreneticScriptUtilities.StringToDouble(arguments[0]) >= FreneticScriptUtilities.StringToDouble(arguments[2]);
+                return n1.Internal >= n2.Internal;
             }
-            else if (arguments[1] == "<=")
+            else if (comp == "<=")
             {
-                return FreneticScriptUtilities.StringToDouble(arguments[0]) <= FreneticScriptUtilities.StringToDouble(arguments[2]);
+                return n1.Internal <= n2.Internal;
             }
-            else if (arguments[1] == ">")
+            else if (comp == ">")
             {
-                return FreneticScriptUtilities.StringToDouble(arguments[0]) > FreneticScriptUtilities.StringToDouble(arguments[2]);
+                return n1.Internal > n2.Internal;
             }
-            else if (arguments[1] == "<")
+            else if (comp == "<")
             {
-                return FreneticScriptUtilities.StringToDouble(arguments[0]) < FreneticScriptUtilities.StringToDouble(arguments[2]);
+                return n1.Internal < n2.Internal;
             }
             else
             {
+                queue.HandleError(entry, "Invalid IF: Unknown comparison system!");
                 return false;
             }
         }

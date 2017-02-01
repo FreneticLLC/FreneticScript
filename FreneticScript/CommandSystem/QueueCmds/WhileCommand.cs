@@ -18,6 +18,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
     {
         // TODO: Meta!
 
+        // TODO: Compile!
+
         public WhileCommand()
         {
             Name = "while";
@@ -42,13 +44,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 CommandStackEntry cse = queue.CommandStack.Peek();
                 WhileCommandData dat = (WhileCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
                 dat.Index++;
-                List<string> comp = new List<string>();
-                for (int i = 0; i < dat.ComparisonArgs.Count; i++)
-                {
-                    // TODO: Preparse arguments less!
-                    comp.Add(dat.ComparisonArgs[i].Parse(TextStyle.Color_Simple /* TODO: READ COLOR OFF QUEUE OR ENTRY */, cse.Debug, (o) => queue.HandleError(entry, o), cse).ToString());
-                }
-                if (IfCommand.TryIf(comp))
+                if (IfCommand.TryIf(queue, entry, new List<Argument>(dat.ComparisonArgs)))
                 {
                     if (entry.ShouldShowGood(queue))
                     {
@@ -98,13 +94,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                List<string> parsedargs = new List<string>(entry.Arguments.Count + 1);
-                parsedargs.Add(count);
-                for (int i = 1; i < entry.Arguments.Count; i++)
-                {
-                    parsedargs.Add(entry.GetArgument(queue, i));
-                }
-                bool success = IfCommand.TryIf(parsedargs);
+                bool success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
                 if (!success)
                 {
                     if (entry.ShouldShowGood(queue))

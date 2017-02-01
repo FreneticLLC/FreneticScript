@@ -22,7 +22,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// The number this NumberTag represents.
         /// </summary>
         public double Internal;
-
+        
         /// <summary>
         /// Get a number tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
         /// Never null!

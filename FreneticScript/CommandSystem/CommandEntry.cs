@@ -344,7 +344,7 @@ namespace FreneticScript.CommandSystem
             if (NamedArguments.TryGetValue(name, out arg))
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
-                return arg.Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek());
+                return arg.Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), cse);
             }
             return null;
         }
@@ -360,7 +360,7 @@ namespace FreneticScript.CommandSystem
             if (queue.ParseTags != TagParseMode.OFF)
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek());
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), cse);
             }
             else
             {
@@ -379,7 +379,7 @@ namespace FreneticScript.CommandSystem
             if (queue.ParseTags != TagParseMode.OFF)
             {
                 CommandStackEntry cse = queue.CommandStack.Peek();
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), queue.CommandStack.Peek()).ToString();
+                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), cse).ToString();
             }
             else
             {

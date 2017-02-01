@@ -13,6 +13,15 @@ namespace FreneticScript.CommandSystem.Arguments
     public class TextArgumentBit : ArgumentBit
     {
         /// <summary>
+        /// Constructs the argument with an input boolean.
+        /// </summary>
+        /// <param name="_text">The input boolean.</param>
+        public TextArgumentBit(bool _text)
+        {
+            InputValue = new BooleanTag(_text);
+        }
+
+        /// <summary>
         /// Constructs the argument with input text.
         /// </summary>
         /// <param name="_text">The input text.</param>
@@ -47,6 +56,7 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             else if (_text.Contains('|'))
             {
+                // TODO: Maps stuff?!
                 ListTag list = ListTag.For(_text);
                 if (list.ToString() == _text)
                 {

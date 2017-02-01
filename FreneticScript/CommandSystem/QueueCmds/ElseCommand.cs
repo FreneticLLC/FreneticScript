@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -99,12 +100,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             bool success = true;
             if (entry.Arguments.Count >= 1)
             {
-                List<string> parsedargs = new List<string>(entry.Arguments.Count);
-                for (int i = 1; i < entry.Arguments.Count; i++)
-                {
-                    parsedargs.Add(entry.GetArgument(queue, i)); // TODO: Don't pre-parse. Parse in TryIf.
-                }
-                success = IfCommand.TryIf(parsedargs);
+                success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
             }
             if (success)
             {

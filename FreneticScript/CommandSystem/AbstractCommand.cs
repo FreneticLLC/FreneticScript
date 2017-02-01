@@ -250,9 +250,120 @@ namespace FreneticScript.CommandSystem
         public static Type CommandEntryType = typeof(CommandEntry);
 
         /// <summary>
+        /// Tracks generated IL.
+        /// </summary>
+        public class ILGeneratorTracker
+        {
+            /// <summary>
+            /// Internal generator.
+            /// </summary>
+            public ILGenerator Internal;
+
+            /// <summary>
+            /// All codes generated.
+            /// </summary>
+            public List<KeyValuePair<OpCode, object>> Codes = new List<KeyValuePair<OpCode, object>>();
+
+            /// <summary>
+            /// Defines a label.
+            /// </summary>
+            /// <returns>The label.</returns>
+            public Label DefineLabel()
+            {
+                return Internal.DefineLabel();
+            }
+
+            /// <summary>
+            /// Marks a label.
+            /// </summary>
+            /// <param name="label">The label.</param>
+            public void MarkLabel(Label label)
+            {
+                Internal.MarkLabel(label);
+                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Mark label>: " + label));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            public void Emit(OpCode code)
+            {
+                Internal.Emit(code);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, null));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="dat">The associated data.</param>
+            public void Emit(OpCode code, FieldInfo dat)
+            {
+                Internal.Emit(code, dat);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="dat">The associated data.</param>
+            public void Emit(OpCode code, Label[] dat)
+            {
+                Internal.Emit(code, dat);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="dat">The associated data.</param>
+            public void Emit(OpCode code, MethodInfo dat)
+            {
+                Internal.Emit(code, dat);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="dat">The associated data.</param>
+            public void Emit(OpCode code, Label dat)
+            {
+                Internal.Emit(code, dat);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="dat">The associated data.</param>
+            public void Emit(OpCode code, string dat)
+            {
+                Internal.Emit(code, dat);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="dat">The associated data.</param>
+            public void Emit(OpCode code, int dat)
+            {
+                Internal.Emit(code, dat);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+        }
+
+        /// <summary>
         /// The IL code generator.
         /// </summary>
-        public ILGenerator ILGen;
+        public ILGeneratorTracker ILGen;
         
         /// <summary>
         /// The method being constructed.

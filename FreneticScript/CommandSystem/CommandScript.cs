@@ -278,7 +278,7 @@ namespace FreneticScript.CommandSystem
                 return null;
             }
         }
-        
+
         /// <summary>
         /// The name of the script.
         /// </summary>
@@ -293,7 +293,7 @@ namespace FreneticScript.CommandSystem
         /// All commands in the script.
         /// </summary>
         public CommandStackEntry Created;
-        
+
         /// <summary>
         /// Constructs a new command script.
         /// </summary>
@@ -332,7 +332,7 @@ namespace FreneticScript.CommandSystem
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
                 MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(int) });
-                ILGenerator ilgen = methodbuild_c.GetILGenerator();
+                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator() };
                 CILAdaptationValues values = new CILAdaptationValues();
                 values.Entry = ccse;
                 values.Script = this;
@@ -402,6 +402,7 @@ namespace FreneticScript.CommandSystem
                     ccse.Entries[i].Command.AdaptToCIL(values, i);
                 }
                 ilgen.MarkLabel(ccse.AdaptedILPoints[ccse.AdaptedILPoints.Length - 1]);
+                values.MarkCommand(ccse.Entries.Length);
                 ilgen.Emit(OpCodes.Ret);
                 typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
                 Type t_c = typebuild_c.CreateType();
@@ -413,6 +414,14 @@ namespace FreneticScript.CommandSystem
                 }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
+#if SAVE
+                StringBuilder outp = new StringBuilder();
+                for (int i = 0; i < ilgen.Codes.Count; i++)
+                {
+                    outp.Append(ilgen.Codes[i].Key.Name + ": " + ilgen.Codes[i].Value + "\n");
+                }
+                System.IO.File.WriteAllText("script_" + tname + ".il", outp.ToString());
+#endif
             }
         }
 
