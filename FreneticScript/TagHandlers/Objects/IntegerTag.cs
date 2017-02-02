@@ -158,6 +158,34 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag((obj as IntegerTag).Internal % For(data, data.GetModifierObject(0)).Internal);
         }
 
+        [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the number.",
+            Examples = new string[] { "'-1' .absolute_value_int returns '1'." })]
+        public static TemplateObject Tag_Absolute_Value_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Abs((obj as IntegerTag).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is greater: the number or the specified number.",
+            Examples = new string[] { "'10' .maximum_int[12] returns '12'." })]
+        public static TemplateObject Tag_Maximum_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Max((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is lower: the number or the specified number.",
+            Examples = new string[] { "'10' .minimum_int[12] returns '10'." })]
+        public static TemplateObject Tag_Minimum_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Min((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Mathematics", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
+            Examples = new string[] { "'1' .to_binary returns '1000000000000000'." })]
+        public static TemplateObject Tag_To_Binary(TagData data, TemplateObject obj)
+        {
+            return new BinaryTag(BitConverter.GetBytes((obj as IntegerTag).Internal));
+        }
+
 #pragma warning restore 1591
 
         /// <summary>
@@ -182,40 +210,8 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in TextTag.
             RegisterTag("equals", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-           // <--[tag]
-            // @Name IntegerTag.absolute_value_int
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the absolute value of the number.
-            // @Example "-1" .absolute_value_int returns "1".
-            // -->
-            RegisterTag("absolute_value_int", (data, obj) => new IntegerTag(Math.Abs(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name NumberTag.maximum_int[<NumberTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns whichever is greater: the number or the specified number.
-            // @Example "10" .maximum_int[12] returns "12".
-            // -->
-            RegisterTag("maximum_int", (data, obj) => new IntegerTag(Math.Max(((IntegerTag)obj).Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.minimum_int[<NumberTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns whichever is lower: the number or the specified number.
-            // @Example "10" .minimum_int[12] returns "10".
-            // -->
-            RegisterTag("minimum_int", (data, obj) => new IntegerTag(Math.Min(((IntegerTag)obj).Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()), "integertag");
             // Documented in NumberTag.
             RegisterTag("sign", (data, obj) => new IntegerTag(Math.Sign(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.to_binary
-            // @Group Mathematics
-            // @ReturnType BinaryTag
-            // @Returns a binary representation of this integer.
-            // @Example "1" .to_binary returns "0100000000000000".
-            // -->
-            RegisterTag("to_binary", (data, obj) => new BinaryTag(BitConverter.GetBytes(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "binarytag");
             // Documented in TextTag.
             RegisterTag("to_integer", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
             // Documented in TextTag.
