@@ -123,18 +123,67 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag((obj as IntegerTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number plus the specified number.",
+        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer plus the specified integer.",
             Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
         public static TemplateObject Tag_Add_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal + For(data, data.GetModifierObject(0)).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number minus the specified number.",
+        [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer minus the specified integer.",
             Examples = new string[] { "'2' .subtract_int[1] returns '1'." }, Others = new string[] { "Commonly shortened to '-'." })]
         public static TemplateObject Tag_Subtract_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal - For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "multiply_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer multiplied by the specified integer.",
+            Examples = new string[] { "'2' .multiply_int[2] returns '4'." }, Others = new string[] { "Commonly shortened to '*'." })]
+        public static TemplateObject Tag_Multiply_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal * For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "divide_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer divided by the specified integer.",
+            Examples = new string[] { "'4' .divide_int[2] returns '2'." }, Others = new string[] { "Commonly shortened to '/'." })]
+        public static TemplateObject Tag_Divide_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal / For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "modulo_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer modulo the specified integer.",
+            Examples = new string[] { "'10' .modulo_int[3] returns '1'." }, Others = new string[] { "Commonly shortened to '%'." })]
+        public static TemplateObject Tag_Modulo_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal % For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the integer.",
+            Examples = new string[] { "'-1' .absolute_value_int returns '1'." })]
+        public static TemplateObject Tag_Absolute_Value_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Abs((obj as IntegerTag).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is greater: the integer or the specified integer.",
+            Examples = new string[] { "'10' .maximum_int[12] returns '12'." })]
+        public static TemplateObject Tag_Maximum_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Max((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is lower: the integer or the specified integer.",
+            Examples = new string[] { "'10' .minimum_int[12] returns '10'." })]
+        public static TemplateObject Tag_Minimum_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Min((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Mathematics", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
+            Examples = new string[] { "'1' .to_binary returns '1000000000000000'." })]
+        public static TemplateObject Tag_To_Binary(TagData data, TemplateObject obj)
+        {
+            return new BinaryTag(BitConverter.GetBytes((obj as IntegerTag).Internal));
         }
 
 #pragma warning restore 1591
@@ -161,67 +210,8 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in TextTag.
             RegisterTag("equals", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // <--[tag]
-            // @Name IntegerTag.multiply_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number multiplied by the specified number.
-            // @Other Commonly shortened to "*".
-            // @Example "2" .multiply_int[2] returns "4".
-            // -->
-            RegisterTag("multiply_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.divide_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number divided by the specified number.
-            // @Other Commonly shortened to "/".
-            // @Example "4" .divide_int[2] returns "2".
-            // -->
-            RegisterTag("divide_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.modulo_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number modulo the specified number.
-            // @Other Commonly shortened to "%".
-            // @Example "10" .modulo_int[3] returns "1".
-            // -->
-            RegisterTag("modulo_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.absolute_value_int
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the absolute value of the number.
-            // @Example "-1" .absolute_value_int returns "1".
-            // -->
-            RegisterTag("absolute_value_int", (data, obj) => new IntegerTag(Math.Abs(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name NumberTag.maximum_int[<NumberTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns whichever is greater: the number or the specified number.
-            // @Example "10" .maximum_int[12] returns "12".
-            // -->
-            RegisterTag("maximum_int", (data, obj) => new IntegerTag(Math.Max(((IntegerTag)obj).Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.minimum_int[<NumberTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns whichever is lower: the number or the specified number.
-            // @Example "10" .minimum_int[12] returns "10".
-            // -->
-            RegisterTag("minimum_int", (data, obj) => new IntegerTag(Math.Min(((IntegerTag)obj).Internal, For(data, data.GetModifierObject(0)).Internal)).Handle(data.Shrink()), "integertag");
             // Documented in NumberTag.
             RegisterTag("sign", (data, obj) => new IntegerTag(Math.Sign(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.to_binary
-            // @Group Mathematics
-            // @ReturnType BinaryTag
-            // @Returns a binary representation of this integer.
-            // @Example "1" .to_binary returns "0100000000000000".
-            // -->
-            RegisterTag("to_binary", (data, obj) => new BinaryTag(BitConverter.GetBytes(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "binarytag");
             // Documented in TextTag.
             RegisterTag("to_integer", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
             // Documented in TextTag.

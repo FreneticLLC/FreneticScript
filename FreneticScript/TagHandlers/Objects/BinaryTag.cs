@@ -93,6 +93,11 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The BinaryTag type.
+        /// </summary>
+        public const string TYPE = "binarytag";
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
