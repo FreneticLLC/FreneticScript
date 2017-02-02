@@ -287,8 +287,8 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Returns the a string representation of the binary data internally stored by this boolean tag.
-        /// This returns in hexadecimal format.
+        /// Returns the a string representation of the binary data internally stored by this binary tag.
+        /// This returns in little-endian hexadecimal format.
         /// </summary>
         /// <returns>A string representation of the binary data.</returns>
         public override string ToString()

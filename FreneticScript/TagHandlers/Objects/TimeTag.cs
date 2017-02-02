@@ -20,7 +20,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The DateTime this TimeTag represents.
         /// </summary>
-        DateTimeOffset Internal;
+        public DateTimeOffset Internal;
 
         /// <summary>
         /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
