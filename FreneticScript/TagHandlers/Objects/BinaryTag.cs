@@ -16,6 +16,7 @@ namespace FreneticScript.TagHandlers.Objects
         // @SubType TextTag
         // @Group Mathematics
         // @Description Represents binary data.
+        // @Other Text form is little-endian hexadecimal.
         // -->
 
         /// <summary>
@@ -56,14 +57,19 @@ namespace FreneticScript.TagHandlers.Objects
             byte[] arr = new byte[l];
             for (int i = 0; i < l; i++)
             {
-                arr[i] = (byte)((GetHexVal(hex[i << 1]) << 4) + (GetHexVal(hex[(i << 1) + 1])));
+                arr[i] = (byte)((GetHexVal(hex[i << 1])) + (GetHexVal(hex[(i << 1) + 1]) << 4));
             }
             return arr;
         }
 
-        static int GetHexVal(char val)
+        static int GetHexVal(char chr)
         {
-            return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
+            return chr - (chr < 58 ? 48 : (chr < 97 ? 55 : 87));
+        }
+
+        static char GetHexChar(int val)
+        {
+            return (char)((val < 10) ? ('0' + val) : ('A' + (val - 10)));
         }
 
         /// <summary>
@@ -103,7 +109,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Binary Data
                 // @ReturnType IntegerTag
                 // @Returns the integer version of the byte at a specific 1-based index.
-                // @Example "010203" .byte_at[1] returns "1".
+                // @Example "102030" .byte_at[1] returns "1".
                 // -->
                 case "byte_at":
                     {
@@ -123,7 +129,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Binary Data
                 // @ReturnType ListTag
                 // @Returns a list of integer versions of the bytes in this binary tag.
-                // @Example "010203" .byte_list returns "1|2|3".
+                // @Example "102030" .byte_list returns "1|2|3".
                 // -->
                 case "byte_list":
                     {
@@ -140,8 +146,8 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType BinaryTag
                 // @Returns the specified set of bytes in the binary data.
                 // @Other note that indices are one-based.
-                // @Example "01020304" .range[2,3] returns "0203".
-                // @Example "01020304" .range[2,2] returns "02".
+                // @Example "10203040" .range[2,3] returns "2030".
+                // @Example "10203040" .range[2,2] returns "20".
                 // -->
                 case "range":
                     {
@@ -199,7 +205,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType IntegerTag
                 // @Returns the internal data converted to an integer value.
                 // @Other Note that this currently must be of length: 1, 2, 4, or 8 bytes.
-                // @Example "0100000000000000" .to_integer returns "1".
+                // @Example "1000000000000000" .to_integer returns "1".
                 // -->
                 case "to_integer":
                     {
@@ -227,7 +233,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType NumberTag
                 // @Returns the internal data converted to an floating-point number value.
                 // @Other Note that this currently must be of length: 4, or 8 bytes.
-                // @Example "000000000000F03F" .to_number returns "1".
+                // @Example "0000000000000FF3" .to_number returns "1".
                 // -->
                 case "to_number":
                     {
@@ -251,7 +257,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @ReturnType TextTag
                 // @Returns the text that is represented by this UTF8 binary data.
                 // @Other can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>.
-                // @Example "6869" .from_utf8 returns "hi".
+                // @Example "8696" .from_utf8 returns "hi".
                 // -->
                 case "from_utf8":
                     return new TextTag(new UTF8Encoding(false).GetString(Internal)).Handle(data.Shrink());
@@ -260,7 +266,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Conversion
                 // @ReturnType TextTag
                 // @Returns a Base-64 text representation of this binary data.
-                // @Example "6869" .to_base64 returns "aGk=".
+                // @Example "8696" .to_base64 returns "aGk=".
                 // -->
                 case "to_base64":
                     return new TextTag(Convert.ToBase64String(Internal)).Handle(data.Shrink());
@@ -286,8 +292,13 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return "";
             }
-            // TODO: Efficiency?
-            return BitConverter.ToString(Internal).Replace("-", "");
+            char[] res = new char[Internal.Length * 2];
+            for (int i = 0; i < Internal.Length; i++)
+            {
+                res[i << 1] = GetHexChar(Internal[i] & 0x0F);
+                res[(i << 1) + 1] = GetHexChar((Internal[i] & 0xF0) >> 4);
+            }
+            return new string(res);
         }
     }
 }
