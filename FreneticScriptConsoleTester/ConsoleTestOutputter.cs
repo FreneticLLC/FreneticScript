@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FreneticScript;
 using FreneticScript.CommandSystem;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScriptConsoleTester
 {
@@ -12,12 +13,12 @@ namespace FreneticScriptConsoleTester
     {
         public override void BadOutput(string text)
         {
-            SysConsole.Output(OutputType.WARNING, text);
+            SysConsole.Output(OutputType.WARNING, TagParser.Unescape(text));
         }
 
         public override void GoodOutput(string text)
         {
-            SysConsole.Output(OutputType.GOOD, text);
+            SysConsole.Output(OutputType.GOOD, TagParser.Unescape(text));
         }
 
         public override byte[] ReadDataFile(string name)
@@ -56,7 +57,7 @@ namespace FreneticScriptConsoleTester
 
         public override void WriteLine(string text)
         {
-            SysConsole.Output(OutputType.INFO, text);
+            SysConsole.Output(OutputType.INFO, TagParser.Unescape(text));
         }
     }
 }
