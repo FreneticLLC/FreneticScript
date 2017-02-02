@@ -259,11 +259,11 @@ namespace FreneticScript.TagHandlers.Objects
             return new BinaryTag((obj as BinaryTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TextTag.TYPE, Returns = "The type of the tag.",
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
             Examples = new string[] { "'true' .duplicate returns 'binarytag'." })]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
-            return new TextTag(TYPE);
+            return new TagTypeTag(data.TagSystem.Type_Binary);
         }
 
 #pragma warning restore 1591

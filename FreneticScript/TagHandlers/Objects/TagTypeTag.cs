@@ -47,6 +47,12 @@ namespace FreneticScript.TagHandlers.Objects
             return null;
         }
 
+
+        /// <summary>
+        /// The TagTypeTag type.
+        /// </summary>
+        public const string TYPE = "tagtypetag";
+
         /// <summary>
         /// Returns the type of this tag.
         /// </summary>

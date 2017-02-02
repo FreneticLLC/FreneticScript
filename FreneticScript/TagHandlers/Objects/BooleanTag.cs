@@ -145,7 +145,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
-            Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true'" })]
+            Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'" })]
         public static TemplateObject Tag_Xor(TagData data, TemplateObject obj)
         {
             return new BooleanTag((obj as BooleanTag).Internal != For(data, data.GetModifierObject(0)).Internal);
@@ -158,11 +158,11 @@ namespace FreneticScript.TagHandlers.Objects
             return new BooleanTag((obj as BooleanTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TextTag.TYPE, Returns = "The type of the tag.",
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
             Examples = new string[] { "'true' .duplicate returns 'booleantag'." })]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
-            return new TextTag(TYPE);
+            return new TagTypeTag(data.TagSystem.Type_Boolean);
         }
 
 #pragma warning restore 1591
