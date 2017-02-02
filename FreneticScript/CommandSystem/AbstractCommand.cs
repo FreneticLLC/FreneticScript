@@ -323,7 +323,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, MethodInfo dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+                Codes.Add(new KeyValuePair<OpCode, object>(code, dat + ": " + dat.DeclaringType.Name));
             }
 
             /// <summary>
@@ -357,6 +357,16 @@ namespace FreneticScript.CommandSystem
             {
                 Internal.Emit(code, dat);
                 Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Declares a local.
+            /// </summary>
+            /// <param name="t">The type.</param>
+            public void DeclareLocal(Type t)
+            {
+                Internal.DeclareLocal(t);
+                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Declare local>: " + t.FullName));
             }
         }
 
