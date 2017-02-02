@@ -294,7 +294,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @ReturnType BinaryTag
             // @Returns UTF-8 encoded binary data of the included text.
             // @Other Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
-            // @Example "hi" .to_utf8_binary returns "6869".
+            // @Example "hi" .to_utf8_binary returns "8696".
             // -->
             Handlers.Add("to_utf8_binary", new TagSubHandler() { Handle = (data, obj) => new BinaryTag(new UTF8Encoding(false).GetBytes(obj.ToString())), ReturnTypeString = "binarytag" });
             // <--[tag]
