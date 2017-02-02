@@ -123,56 +123,56 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag((obj as IntegerTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number plus the specified number.",
+        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer plus the specified integer.",
             Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
         public static TemplateObject Tag_Add_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal + For(data, data.GetModifierObject(0)).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number minus the specified number.",
+        [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer minus the specified integer.",
             Examples = new string[] { "'2' .subtract_int[1] returns '1'." }, Others = new string[] { "Commonly shortened to '-'." })]
         public static TemplateObject Tag_Subtract_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal - For(data, data.GetModifierObject(0)).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "multiply_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number multiplied by the specified number.",
+        [TagMeta(TagType = TYPE, Name = "multiply_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer multiplied by the specified integer.",
             Examples = new string[] { "'2' .multiply_int[2] returns '4'." }, Others = new string[] { "Commonly shortened to '*'." })]
         public static TemplateObject Tag_Multiply_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal * For(data, data.GetModifierObject(0)).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "divide_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number divided by the specified number.",
+        [TagMeta(TagType = TYPE, Name = "divide_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer divided by the specified integer.",
             Examples = new string[] { "'4' .divide_int[2] returns '2'." }, Others = new string[] { "Commonly shortened to '/'." })]
         public static TemplateObject Tag_Divide_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal / For(data, data.GetModifierObject(0)).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "modulo_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number modulo the specified number.",
+        [TagMeta(TagType = TYPE, Name = "modulo_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer modulo the specified integer.",
             Examples = new string[] { "'10' .modulo_int[3] returns '1'." }, Others = new string[] { "Commonly shortened to '%'." })]
         public static TemplateObject Tag_Modulo_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal % For(data, data.GetModifierObject(0)).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the number.",
+        [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the integer.",
             Examples = new string[] { "'-1' .absolute_value_int returns '1'." })]
         public static TemplateObject Tag_Absolute_Value_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag(Math.Abs((obj as IntegerTag).Internal));
         }
 
-        [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is greater: the number or the specified number.",
+        [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is greater: the integer or the specified integer.",
             Examples = new string[] { "'10' .maximum_int[12] returns '12'." })]
         public static TemplateObject Tag_Maximum_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag(Math.Max((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
         }
 
-        [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is lower: the number or the specified number.",
+        [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is lower: the integer or the specified integer.",
             Examples = new string[] { "'10' .minimum_int[12] returns '10'." })]
         public static TemplateObject Tag_Minimum_Int(TagData data, TemplateObject obj)
         {
