@@ -159,21 +159,21 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the integer.",
-            Examples = new string[] { "'-1' .absolute_value_int returns '1'." })]
+            Examples = new string[] { "'-1' .absolute_value_int returns '1'." }, Others = new string[] { "Commonly shortened to 'abs'." })]
         public static TemplateObject Tag_Absolute_Value_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag(Math.Abs((obj as IntegerTag).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is greater: the integer or the specified integer.",
-            Examples = new string[] { "'10' .maximum_int[12] returns '12'." })]
+            Examples = new string[] { "'10' .maximum_int[12] returns '12'." }, Others = new string[] { "Commonly shortened to 'max'." })]
         public static TemplateObject Tag_Maximum_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag(Math.Max((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is lower: the integer or the specified integer.",
-            Examples = new string[] { "'10' .minimum_int[12] returns '10'." })]
+            Examples = new string[] { "'10' .minimum_int[12] returns '10'." }, Others = new string[] { "Commonly shortened to 'min'." })]
         public static TemplateObject Tag_Minimum_Int(TagData data, TemplateObject obj)
         {
             return new IntegerTag(Math.Min((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));

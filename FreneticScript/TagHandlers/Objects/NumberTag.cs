@@ -406,7 +406,7 @@ namespace FreneticScript.TagHandlers.Objects
                 // @Group Mathematics
                 // @ReturnType BinaryTag
                 // @Returns a binary representation of this floating-point number.
-                // @Example "1" .to_binary returns "000000000000F03F".
+                // @Example "1" .to_binary returns "0000000000000FF3".
                 // -->
                 case "to_binary":
                     return new BinaryTag(BitConverter.GetBytes(Internal)).Handle(data.Shrink());
