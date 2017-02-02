@@ -99,6 +99,11 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The NumberTag type.
+        /// </summary>
+        public const string TYPE = "numbertag";
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>

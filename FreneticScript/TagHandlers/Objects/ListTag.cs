@@ -99,6 +99,11 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The ListTag type.
+        /// </summary>
+        public const string TYPE = "listtag";
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
