@@ -137,6 +137,27 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag((obj as IntegerTag).Internal - For(data, data.GetModifierObject(0)).Internal);
         }
 
+        [TagMeta(TagType = TYPE, Name = "multiply_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number multiplied by the specified number.",
+            Examples = new string[] { "'2' .multiply_int[2] returns '4'." }, Others = new string[] { "Commonly shortened to '*'." })]
+        public static TemplateObject Tag_Multiply_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal * For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "divide_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number divided by the specified number.",
+            Examples = new string[] { "'4' .divide_int[2] returns '2'." }, Others = new string[] { "Commonly shortened to '/'." })]
+        public static TemplateObject Tag_Divide_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal / For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "modulo_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The number modulo the specified number.",
+            Examples = new string[] { "'10' .modulo_int[3] returns '1'." }, Others = new string[] { "Commonly shortened to '%'." })]
+        public static TemplateObject Tag_Modulo_Int(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal % For(data, data.GetModifierObject(0)).Internal);
+        }
+
 #pragma warning restore 1591
 
         /// <summary>
@@ -161,34 +182,7 @@ namespace FreneticScript.TagHandlers.Objects
             RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
             // Documented in TextTag.
             RegisterTag("equals", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // <--[tag]
-            // @Name IntegerTag.multiply_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number multiplied by the specified number.
-            // @Other Commonly shortened to "*".
-            // @Example "2" .multiply_int[2] returns "4".
-            // -->
-            RegisterTag("multiply_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal * For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.divide_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number divided by the specified number.
-            // @Other Commonly shortened to "/".
-            // @Example "4" .divide_int[2] returns "2".
-            // -->
-            RegisterTag("divide_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal / For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
-            // <--[tag]
-            // @Name IntegerTag.modulo_int[<IntegerTag>]
-            // @Group Mathematics
-            // @ReturnType IntegerTag
-            // @Returns the number modulo the specified number.
-            // @Other Commonly shortened to "%".
-            // @Example "10" .modulo_int[3] returns "1".
-            // -->
-            RegisterTag("modulo_int", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal % For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "integertag");
-            // <--[tag]
+           // <--[tag]
             // @Name IntegerTag.absolute_value_int
             // @Group Mathematics
             // @ReturnType IntegerTag
