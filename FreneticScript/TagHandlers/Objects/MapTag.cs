@@ -149,7 +149,7 @@ namespace FreneticScript.TagHandlers.Objects
                 case "values":
                     {
                         ListTag list = new ListTag();
-                        list.ListEntries.AddRange(Internal.Values);
+                        list.Internal.AddRange(Internal.Values);
                         return list.Handle(data.Shrink());
                     }
                 // <--[tag]

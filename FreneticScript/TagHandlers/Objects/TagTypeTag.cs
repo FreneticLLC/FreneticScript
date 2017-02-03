@@ -47,7 +47,6 @@ namespace FreneticScript.TagHandlers.Objects
             return null;
         }
 
-
         /// <summary>
         /// The TagTypeTag type.
         /// </summary>
