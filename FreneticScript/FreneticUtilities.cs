@@ -30,6 +30,16 @@ namespace FreneticScript
         }
 
         /// <summary>
+        /// Returns whether the string starts with a null character.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>A boolean.</returns>
+        public static bool StartsWithNull(this string input)
+        {
+            return input.Length > 0 && input[0] == '\0';
+        }
+
+        /// <summary>
         /// Quickly split a string.
         /// </summary>
         /// <param name="input">The original string.</param>

@@ -82,7 +82,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandStackEntry cse = script.Created.Duplicate();
             foreach (string var in entry.NamedArguments.Keys)
             {
-                if (!var.StartsWith("\0"))
+                if (!var.StartsWithNull())
                 {
                     /*
                     if (cse.Variables.ContainsKey(var))
