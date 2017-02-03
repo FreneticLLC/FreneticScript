@@ -56,7 +56,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The boolean tag.</returns>
         public static BooleanTag For(TagData dat, TemplateObject input)
         {
-            return input is BooleanTag ? (BooleanTag)input : For(dat, input.ToString());
+            return input as BooleanTag ?? For(dat, input.ToString());
         }
 
         /// <summary>

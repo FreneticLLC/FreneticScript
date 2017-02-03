@@ -80,7 +80,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The binary tag.</returns>
         public static BinaryTag For(TagData dat, TemplateObject input)
         {
-            return input is BinaryTag ? (BinaryTag)input : For(dat, input.ToString());
+            return input as BinaryTag ?? For(dat, input.ToString());
         }
 
         /// <summary>

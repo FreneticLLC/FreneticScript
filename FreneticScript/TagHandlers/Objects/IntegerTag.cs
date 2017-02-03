@@ -111,7 +111,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid integer tag.</returns>
         public static TemplateObject CreateFor(TagData dat, TemplateObject input)
         {
-            return input is IntegerTag ? (IntegerTag)input : For(dat, input.ToString());
+            return input as IntegerTag ?? For(dat, input.ToString());
         }
 
 #pragma warning disable 1591

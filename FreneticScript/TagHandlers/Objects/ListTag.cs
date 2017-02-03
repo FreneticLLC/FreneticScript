@@ -81,23 +81,33 @@ namespace FreneticScript.TagHandlers.Objects
         /// Constructs a list tag from text input.
         /// </summary>
         /// <param name="data">The relevant tag data, if any.</param>
-        /// <param name="list">The list input.</param>
+        /// <param name="input">The list input.</param>
         /// <returns>A valid list.</returns>
-        public static ListTag For(TagData data, TemplateObject list)
+        public static ListTag For(TagData data, TemplateObject input)
         {
-            return For(list);
+            return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
         }
         
         /// <summary>
         /// Constructs a list tag from text input.
         /// </summary>
-        /// <param name="list">The list input.</param>
+        /// <param name="input">The list input.</param>
         /// <returns>A valid list.</returns>
-        public static ListTag For(TemplateObject list)
+        public static ListTag For(TemplateObject input)
         {
-            return list is ListTag ? (ListTag)list : (list is TextTag ? For(list.ToString()): new ListTag(new List<TemplateObject>() { list }));
+            return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
         }
 
+        /// <summary>
+        /// Creates a ListTag for the given input data.
+        /// </summary>
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid list tag.</returns>
+        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        {
+            return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
+        }
         /// <summary>
         /// The ListTag type.
         /// </summary>

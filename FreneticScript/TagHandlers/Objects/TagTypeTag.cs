@@ -53,14 +53,14 @@ namespace FreneticScript.TagHandlers.Objects
         public const string TYPE = "tagtypetag";
 
         /// <summary>
-        /// Returns the type of this tag.
+        /// Returns the input object as a TagTypeTag.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="input">The input object.</param>
         /// <returns>A TagTypeTag, or null.</returns>
         public static TagTypeTag For(TagData data, TemplateObject input)
         {
-            return (input is TagTypeTag) ? (TagTypeTag)input : For(data, input.ToString());
+            return input as TagTypeTag ?? For(data, input.ToString());
         }
 
         /// <summary>

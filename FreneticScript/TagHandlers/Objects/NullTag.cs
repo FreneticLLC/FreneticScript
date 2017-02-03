@@ -29,6 +29,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new NullTag();
             }
+            // TODO: Error?
             return null;
         }
 
@@ -39,7 +40,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The null tag, or internal null.</returns>
         public static NullTag For(TemplateObject input)
         {
-            return input is NullTag ? (NullTag)input: For(input.ToString());
+            return input as NullTag ?? For(input.ToString());
         }
 
         /// <summary>

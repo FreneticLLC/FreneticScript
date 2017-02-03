@@ -191,7 +191,7 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("substring", new TagSubHandler() { Handle = (data, obj) =>
             {
                 string Text = obj.ToString();
-                ListTag inputs = ListTag.For(data.GetModifierObject(0));
+                ListTag inputs = ListTag.For(data, data.GetModifierObject(0));
                 if (inputs.Internal.Count < 2)
                 {
                     data.Error("Invalid substring tag! Not two entries in the list!");

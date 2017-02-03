@@ -30,7 +30,7 @@ namespace FreneticScript.TagHandlers.Objects
         
         public static CVarTag For(TagData data, TemplateObject input)
         {
-            return input is CVarTag ? (CVarTag)input : For(data, input.ToString());
+            return input as CVarTag ?? For(data, input.ToString());
         }
 
         /// <summary>

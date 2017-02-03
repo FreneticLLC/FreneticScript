@@ -53,7 +53,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The number tag.</returns>
         public static NumberTag For(TagData dat, TemplateObject input)
         {
-            return input is NumberTag ? (NumberTag)input : For(dat, input.ToString());
+            return input as NumberTag ?? For(dat, input.ToString());
         }
 
         /// <summary>

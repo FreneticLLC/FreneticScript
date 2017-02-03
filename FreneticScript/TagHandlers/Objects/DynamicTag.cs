@@ -32,32 +32,16 @@ namespace FreneticScript.TagHandlers.Objects
         {
             Internal = type;
         }
-
+        
         /// <summary>
-        /// Returns the type of this tag.
+        /// Returns the input as a dynamic tag.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="input">The input text.</param>
-        /// <returns>A TagTypeTag, or null.</returns>
-        public static TagTypeTag For(TagData data, string input)
+        /// <param name="input">The input.</param>
+        /// <returns>A dynamic tag.</returns>
+        public static DynamicTag For(TagData data, TemplateObject input)
         {
-            TagType type;
-            if (data.TagSystem.Types.TryGetValue(input.ToLowerFast(), out type))
-            {
-                return new TagTypeTag(type);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Returns the type of this tag.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="input">The input object.</param>
-        /// <returns>A TagTypeTag, or null.</returns>
-        public static TagTypeTag For(TagData data, TemplateObject input)
-        {
-            return (input is TagTypeTag) ? (TagTypeTag)input : For(data, input.ToString());
+            return input as DynamicTag ?? new DynamicTag(input);
         }
 
         /// <summary>

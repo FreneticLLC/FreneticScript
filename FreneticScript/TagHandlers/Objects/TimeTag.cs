@@ -38,7 +38,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
+        /// Get a time tag relevant to the specified input.
         /// </summary>
         /// <param name="data">The relevant tag data, if any.</param>
         /// <param name="input">The input to create a time from.</param>
@@ -49,13 +49,13 @@ namespace FreneticScript.TagHandlers.Objects
         }
         
         /// <summary>
-        /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
+        /// Get a time tag relevant to the specified input.
         /// </summary>
         /// <param name="input">The input to create a time from.</param>
         /// <returns>The time tag, or null.</returns>
         public static TimeTag For(TemplateObject input)
         {
-            return (input is TimeTag) ? (TimeTag)input : For(input.ToString());
+            return input as TimeTag ?? For(input.ToString());
         }
 
         /// <summary>
