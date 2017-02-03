@@ -98,6 +98,177 @@ namespace FreneticScript.TagHandlers.Objects
         public const string TYPE = "binarytag";
 
         /// <summary>
+        /// Creates a BinaryTag for the given input data.
+        /// </summary>
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid binary tag.</returns>
+        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        {
+            return input is BinaryTag ? (BinaryTag)input : For(dat, input.ToString());
+        }
+
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "byte_at", Group = "Binary Data", ReturnType = IntegerTag.TYPE, Returns = "The integer version of the byte at a specific 1-based index.",
+            Examples = new string[] { "'102030' .byte_at[1] returns '1'." })]
+        public static TemplateObject Tag_Byte_At(TagData data, TemplateObject obj)
+        {
+            byte[] Internal = (obj as BinaryTag).Internal;
+            int ind = (int)IntegerTag.For(data, data.GetModifier(0)).Internal;
+            if (ind < 1 || ind > Internal.Length)
+            {
+                if (!data.HasFallback)
+                {
+                    data.Error("Invalid byte_at tag: " + ind + " is not in the exclusive range of 1 to " + Internal.Length);
+                }
+                return new NullTag();
+            }
+            return new IntegerTag(Internal[ind - 1]);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "byte_list", Group = "Binary Data", ReturnType = ListTag.TYPE, Returns = "A list of integer versions of the bytes in this binary tag.",
+            Examples = new string[] { "'102030' .byte_list returns '1|2|3|'." })]
+        public static TemplateObject Tag_Byte_List(TagData data, TemplateObject obj)
+        {
+            byte[] Internal = (obj as BinaryTag).Internal;
+            List<TemplateObject> objs = new List<TemplateObject>(Internal.Length);
+            for (int i = 0; i < Internal.Length; i++)
+            {
+                objs.Add(new IntegerTag(Internal[i]));
+            }
+            return new ListTag(objs);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "range", Group = "Binary Data", ReturnType = TYPE, Returns = "The specified set of bytes in the binary data.",
+            Examples = new string[] { "'10203040' .range[2,3] returns '2030'.", "'10203040' .range[2,2] returns '20'." }, Others = new String[] { "Note that indices are one-based." })]
+        public static TemplateObject Tag_Range(TagData data, TemplateObject obj)
+        {
+            byte[] Internal = (obj as BinaryTag).Internal;
+            string modif = data.GetModifier(0);
+            string[] split = modif.SplitFast(',');
+            if (split.Length != 2)
+            {
+                data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
+                return new NullTag();
+            }
+            IntegerTag num1 = IntegerTag.For(data, split[0]);
+            IntegerTag num2 = IntegerTag.For(data, split[1]);
+            if (Internal.Length == 0)
+            {
+                data.Error("Read 'range' tag on empty BinaryTag!");
+                return new NullTag();
+            }
+            if (num1 == null || num2 == null)
+            {
+                data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
+                return new NullTag();
+            }
+            int number = (int)num1.Internal - 1;
+            int number2 = (int)num2.Internal - 1;
+            if (number < 0)
+            {
+                number = 0;
+            }
+            if (number2 < 0)
+            {
+                number2 = 0;
+            }
+            if (number >= Internal.Length)
+            {
+                data.Error("Invalid range tag!");
+                return new NullTag();
+            }
+            if (number2 >= Internal.Length)
+            {
+                data.Error("Invalid range tag!");
+                return new NullTag();
+            }
+            if (number2 < number)
+            {
+                data.Error("Invalid range tag!");
+                return new NullTag();
+            }
+            byte[] ndat = new byte[number2 - number + 1];
+            Array.Copy(Internal, number, ndat, 0, ndat.Length);
+            return new BinaryTag(ndat);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = IntegerTag.TYPE, Returns = "The internal data converted to an integer value.",
+            Examples = new string[] { "'1000000000000000' .to_integer returns '1'." }, Others = new String[] { "Note that this currently must be of length: 1, 2, 4, or 8 bytes." })]
+        public static TemplateObject Tag_To_Integer(TagData data, TemplateObject obj)
+        {
+            byte[] Internal = (obj as BinaryTag).Internal;
+            switch (Internal.Length)
+            {
+                case 1:
+                    return new IntegerTag(Internal[0]).Handle(data.Shrink());
+                case 2:
+                    return new IntegerTag(BitConverter.ToInt16(Internal, 0));
+                case 4:
+                    return new IntegerTag(BitConverter.ToInt32(Internal, 0));
+                case 8:
+                    return new IntegerTag(BitConverter.ToInt64(Internal, 0));
+                default:
+                    if (!data.HasFallback)
+                    {
+                        data.Error("Invalid to_integer binary data length: " + Internal.Length);
+                    }
+                    return new NullTag();
+            }
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The internal data converted to an floating-point number value.",
+            Examples = new string[] { "'0000000000000FF3' .to_number returns '1'." }, Others = new String[] { "Note that this currently must be of length: 4, or 8 bytes." })]
+        public static TemplateObject Tag_To_Number(TagData data, TemplateObject obj)
+        {
+            byte[] Internal = (obj as BinaryTag).Internal;
+            switch (Internal.Length)
+            {
+                case 4:
+                    return new NumberTag(BitConverter.ToSingle(Internal, 0));
+                case 8:
+                    return new NumberTag(BitConverter.ToDouble(Internal, 0));
+                default:
+                    if (!data.HasFallback)
+                    {
+                        data.Error("Invalid to_number binary data length: " + Internal.Length);
+                    }
+                    return new NullTag();
+            }
+        }
+
+        [TagMeta(TagType = TYPE, Name = "from_utf8", Group = "Conversion", ReturnType = TextTag.TYPE, Returns = "The text that is represented by this UTF8 binary data.",
+            Examples = new string[] { "'8696' .from_utf8 returns 'hi'." }, Others = new String[] { "Can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>." })]
+        public static TemplateObject Tag_From_UTF8(TagData data, TemplateObject obj)
+        {
+            return new TextTag(new UTF8Encoding(false).GetString((obj as BinaryTag).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_base64", Group = "Conversion", ReturnType = TextTag.TYPE, Returns = "A Base-64 text representation of this binary data.",
+            Examples = new string[] { "'8696' .to_base64 returns 'aGk='." })]
+        public static TemplateObject Tag_To_Base64(TagData data, TemplateObject obj)
+        {
+            return new TextTag(Convert.ToBase64String((obj as BinaryTag).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
+            Examples = new string[] { "'102030' .duplicate returns '102030'." })]
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new BinaryTag((obj as BinaryTag).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
+            Examples = new string[] { "'true' .type returns 'binarytag'." })]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Binary);
+        }
+
+#pragma warning restore 1591
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
@@ -109,178 +280,6 @@ namespace FreneticScript.TagHandlers.Objects
             }
             switch (data[0])
             {
-                // <--[tag]
-                // @Name BinaryTag.byte_at[<IntegerTag>]
-                // @Group Binary Data
-                // @ReturnType IntegerTag
-                // @Returns the integer version of the byte at a specific 1-based index.
-                // @Example "102030" .byte_at[1] returns "1".
-                // -->
-                case "byte_at":
-                    {
-                        int ind = (int)IntegerTag.For(data, data.GetModifier(0)).Internal;
-                        if (ind < 1 || ind > Internal.Length)
-                        {
-                            if (!data.HasFallback)
-                            {
-                                data.Error("Invalid byte_at tag: " + ind + " is not in the exclusive range of 1 to " + Internal.Length);
-                            }
-                            return new NullTag();
-                        }
-                        return new IntegerTag(Internal[ind - 1]).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name BinaryTag.byte_list
-                // @Group Binary Data
-                // @ReturnType ListTag
-                // @Returns a list of integer versions of the bytes in this binary tag.
-                // @Example "102030" .byte_list returns "1|2|3".
-                // -->
-                case "byte_list":
-                    {
-                        List<TemplateObject> objs = new List<TemplateObject>(Internal.Length);
-                        for (int i = 0; i < Internal.Length; i++)
-                        {
-                            objs.Add(new IntegerTag(Internal[i]));
-                        }
-                        return new ListTag(objs).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name BinaryTag.range[<IntegerTag>,<IntegerTag>]
-                // @Group Binary Data
-                // @ReturnType BinaryTag
-                // @Returns the specified set of bytes in the binary data.
-                // @Other note that indices are one-based.
-                // @Example "10203040" .range[2,3] returns "2030".
-                // @Example "10203040" .range[2,2] returns "20".
-                // -->
-                case "range":
-                    {
-                        string modif = data.GetModifier(0);
-                        string[] split = modif.SplitFast(',');
-                        if (split.Length != 2)
-                        {
-                            data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
-                            return new NullTag();
-                        }
-                        IntegerTag num1 = IntegerTag.For(data, split[0]);
-                        IntegerTag num2 = IntegerTag.For(data, split[1]);
-                        if (Internal.Length == 0)
-                        {
-                            data.Error("Read 'range' tag on empty BinaryTag!");
-                            return new NullTag();
-                        }
-                        if (num1 == null || num2 == null)
-                        {
-                            data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
-                            return new NullTag();
-                        }
-                        int number = (int)num1.Internal - 1;
-                        int number2 = (int)num2.Internal - 1;
-                        if (number < 0)
-                        {
-                            number = 0;
-                        }
-                        if (number2 < 0)
-                        {
-                            number2 = 0;
-                        }
-                        if (number >= Internal.Length)
-                        {
-                            data.Error("Invalid range tag!");
-                            return new NullTag();
-                        }
-                        if (number2 >= Internal.Length)
-                        {
-                            data.Error("Invalid range tag!");
-                            return new NullTag();
-                        }
-                        if (number2 < number)
-                        {
-                            data.Error("Invalid range tag!");
-                            return new NullTag();
-                        }
-                        byte[] ndat = new byte[number2 - number + 1];
-                        Array.Copy(Internal, number, ndat, 0, ndat.Length);
-                        return new BinaryTag(ndat).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name BinaryTag.to_integer
-                // @Group Conversion
-                // @ReturnType IntegerTag
-                // @Returns the internal data converted to an integer value.
-                // @Other Note that this currently must be of length: 1, 2, 4, or 8 bytes.
-                // @Example "1000000000000000" .to_integer returns "1".
-                // -->
-                case "to_integer":
-                    {
-                        switch (Internal.Length)
-                        {
-                            case 1:
-                                return new IntegerTag(Internal[0]).Handle(data.Shrink());
-                            case 2:
-                                return new IntegerTag(BitConverter.ToInt16(Internal, 0)).Handle(data.Shrink());
-                            case 4:
-                                return new IntegerTag(BitConverter.ToInt32(Internal, 0)).Handle(data.Shrink());
-                            case 8:
-                                return new IntegerTag(BitConverter.ToInt64(Internal, 0)).Handle(data.Shrink());
-                            default:
-                                if (data.HasFallback)
-                                {
-                                    data.Error("Invalid to_integer binary data length: " + Internal.Length);
-                                }
-                                return new NullTag();
-                        }
-                    }
-                // <--[tag]
-                // @Name BinaryTag.to_number
-                // @Group Conversion
-                // @ReturnType NumberTag
-                // @Returns the internal data converted to an floating-point number value.
-                // @Other Note that this currently must be of length: 4, or 8 bytes.
-                // @Example "0000000000000FF3" .to_number returns "1".
-                // -->
-                case "to_number":
-                    {
-                        switch (Internal.Length)
-                        {
-                            case 4:
-                                return new NumberTag(BitConverter.ToSingle(Internal, 0)).Handle(data.Shrink());
-                            case 8:
-                                return new NumberTag(BitConverter.ToDouble(Internal, 0)).Handle(data.Shrink());
-                            default:
-                                if (data.HasFallback)
-                                {
-                                    data.Error("Invalid to_number binary data length: " + Internal.Length);
-                                }
-                                return new NullTag();
-                        }
-                    }
-                // <--[tag]
-                // @Name BinaryTag.from_utf8
-                // @Group Conversion
-                // @ReturnType TextTag
-                // @Returns the text that is represented by this UTF8 binary data.
-                // @Other can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>.
-                // @Example "8696" .from_utf8 returns "hi".
-                // -->
-                case "from_utf8":
-                    return new TextTag(new UTF8Encoding(false).GetString(Internal)).Handle(data.Shrink());
-                // <--[tag]
-                // @Name BinaryTag.to_base64
-                // @Group Conversion
-                // @ReturnType TextTag
-                // @Returns a Base-64 text representation of this binary data.
-                // @Example "8696" .to_base64 returns "aGk=".
-                // -->
-                case "to_base64":
-                    return new TextTag(Convert.ToBase64String(Internal)).Handle(data.Shrink());
-                // Documented in TextTag.
-                case "duplicate":
-                    return new BinaryTag(Internal).Handle(data.Shrink());
-                // Documented in TextTag.
-                case "type":
-                    return new TagTypeTag(data.TagSystem.Type_Binary).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

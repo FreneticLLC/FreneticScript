@@ -253,7 +253,7 @@ namespace FreneticScript
             {
                 if (flag != CVarFlag.None && Flags.HasFlag(flag))
                 {
-                    list.ListEntries.Add(new TextTag(flag.ToString()));
+                    list.Internal.Add(new TextTag(flag.ToString()));
                 }
             }
             return list.Formatted();

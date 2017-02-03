@@ -106,6 +106,68 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The BooleanTag type.
+        /// </summary>
+        public const string TYPE = "booleantag";
+
+        /// <summary>
+        /// Creates a BooleanTag for the given input data.
+        /// </summary>
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid boolean tag.</returns>
+        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        {
+            return input is BooleanTag ? (BooleanTag)input : For(dat, input.ToString());
+        }
+
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "not", Group = "Boolean Logic", ReturnType = TYPE, Returns = "The opposite of the tag - true and false are flipped.",
+            Examples = new string[] { "'true' .not returns 'false'.", "'false' .not returns 'true'." })]
+        public static TemplateObject Tag_Not(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag(!(obj as BooleanTag).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "and", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean and the specified text are both true.",
+            Examples = new string[] { "'true' .and[true] returns 'true'.", "'true' .and[false] returns 'false'.", "'false' .and[true] returns 'false'." })]
+        public static TemplateObject Tag_And(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as BooleanTag).Internal && For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean or the specified text are true.",
+            Examples = new string[] { "'true' .or[true] returns 'true'.", "'true' .or[false] returns 'true'.", "'false' .or[false] returns 'false'." })]
+        public static TemplateObject Tag_Or(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as BooleanTag).Internal || For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
+            Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'" })]
+        public static TemplateObject Tag_Xor(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as BooleanTag).Internal != For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
+            Examples = new string[] { "'true' .duplicate returns 'true'." })]
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as BooleanTag).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
+            Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Boolean);
+        }
+
+#pragma warning restore 1591
+
+        /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
@@ -117,54 +179,6 @@ namespace FreneticScript.TagHandlers.Objects
             }
             switch (data[0])
             {
-                // <--[tag]
-                // @Name BooleanTag.not
-                // @Group Boolean Logic
-                // @ReturnType BooleanTag
-                // @Returns the opposite of the tag - true and false are flipped.
-                // @Example "true" .not returns "false".
-                // @Example "false" .not returns "true".
-                // -->
-                case "not":
-                    return new BooleanTag(!Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name BooleanTag.and[<BooleanTag>]
-                // @Group Boolean Logic
-                // @ReturnType BooleanTag
-                // @Returns whether the boolean and the specified text are both true.
-                // @Example "true" .and[true] returns "true".
-                // @Example "true" .and[false] returns "false".
-                // @Example "false" .and[true] returns "false".
-                // -->
-                case "and":
-                    return new BooleanTag(Internal && For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name BooleanTag.or[<BooleanTag>]
-                // @Group Boolean Logic
-                // @ReturnType BooleanTag
-                // @Returns whether the boolean or the specified text are true.
-                // @Example "true" .or[true] returns "true".
-                // @Example "true" .or[false] returns "true".
-                // @Example "false" .or[false] returns "false".
-                // -->
-                case "or":
-                    return new BooleanTag(Internal | For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // <--[tag]
-                // @Name BooleanTag.xor[<BooleanTag>]
-                // @Group Boolean Logic
-                // @ReturnType BooleanTag
-                // @Returns whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.
-                // @Example "true" .xor[true] returns "false".
-                // @Example "true" .xor[false] returns "true".
-                // -->
-                case "xor":
-                    return new BooleanTag(Internal != For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink());
-                // Documented in TextTag.
-                case "duplicate":
-                    return new BooleanTag(Internal).Handle(data.Shrink());
-                // Documented in TextTag.
-                case "type":
-                    return new TagTypeTag(data.TagSystem.Type_Boolean).Handle(data.Shrink());
                 default:
                     return new TextTag(ToString()).Handle(data);
             }

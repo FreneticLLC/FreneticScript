@@ -172,12 +172,12 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("replace", new TagSubHandler() { Handle = (data, obj) =>
                 {
                     ListTag modif = ListTag.For(data.GetModifierObject(0));
-                    if (modif.ListEntries.Count != 2)
+                    if (modif.Internal.Count != 2)
                     {
                         data.Error("Invalid replace tag! Not two entries in the list!");
                         return new NullTag();
                     }
-                    return new TextTag(obj.ToString().Replace(modif.ListEntries[0].ToString(), modif.ListEntries[1].ToString()));
+                    return new TextTag(obj.ToString().Replace(modif.Internal[0].ToString(), modif.Internal[1].ToString()));
                 },  ReturnTypeString = "texttag" });
             // <--[tag]
             // @Name TextTag.substring[<ListTag>]
@@ -192,13 +192,13 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 string Text = obj.ToString();
                 ListTag inputs = ListTag.For(data.GetModifierObject(0));
-                if (inputs.ListEntries.Count < 2)
+                if (inputs.Internal.Count < 2)
                 {
                     data.Error("Invalid substring tag! Not two entries in the list!");
                     return new NullTag();
                 }
-                int num1 = (int)IntegerTag.For(data, inputs.ListEntries[0]).Internal - 1;
-                int num2 = (int)IntegerTag.For(data, inputs.ListEntries[1]).Internal - 1;
+                int num1 = (int)IntegerTag.For(data, inputs.Internal[0]).Internal - 1;
+                int num2 = (int)IntegerTag.For(data, inputs.Internal[1]).Internal - 1;
                 if (num1 < 0)
                 {
                     num1 = 0;

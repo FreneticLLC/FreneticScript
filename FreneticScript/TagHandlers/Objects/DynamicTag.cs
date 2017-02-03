@@ -61,6 +61,11 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// The DynamicTag type.
+        /// </summary>
+        public const string TYPE = "dynamictag";
+
+        /// <summary>
         /// All tag handlers for this tag type.
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
