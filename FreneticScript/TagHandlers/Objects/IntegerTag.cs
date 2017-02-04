@@ -179,7 +179,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag(Math.Min((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
         }
 
-        [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Mathematics", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
+        [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
             Examples = new string[] { "'1' .to_binary returns '1000000000000000'." })]
         public static TemplateObject Tag_To_Binary(TagData data, TemplateObject obj)
         {
@@ -242,25 +242,26 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag((obj as IntegerTag).Internal);
         }
 
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
+            Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Integer);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "or_else", Group = "Tag System", ReturnType = TYPE, Returns = "The specified integer if the first one is invalid.",
+            Examples = new string[] { "'null' .or_else[1] returns '1'." })]
+        public static TemplateObject Tag_Or_Else(TagData data, TemplateObject obj)
+        {
+            return obj;
+        }
+
 #pragma warning restore 1591
 
         /// <summary>
         /// All tag handlers for this tag type.
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
-        static void RegisterTag(string name, Func<TagData, TemplateObject, TemplateObject> method, string rettype)
-        {
-            Handlers.Add(name.ToLowerFast(), new TagSubHandler() { Handle = method, ReturnTypeString = rettype });
-        }
-
-        static IntegerTag()
-        {
-            // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Integer), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "integertag" });
-        }
 
         /// <summary>
         /// Parse any direct tag input values.
