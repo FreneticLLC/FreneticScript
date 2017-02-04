@@ -179,11 +179,81 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag(Math.Min((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
         }
 
-        [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Mathematics", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
+        [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
             Examples = new string[] { "'1' .to_binary returns '1000000000000000'." })]
         public static TemplateObject Tag_To_Binary(TagData data, TemplateObject obj)
         {
             return new BinaryTag(BitConverter.GetBytes((obj as IntegerTag).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_greater_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is greater than the specified integer.",
+            Examples = new string[] { "'1' .is_greater_than[0] returns 'true'." }, Others = new string[] { "Commonly shortened to '>'." })]
+        public static TemplateObject Tag_Is_Greater_Than(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as IntegerTag).Internal > For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_greater_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is greater than or equal to the specified integer.",
+            Examples = new string[] { "'1' .is_greater_than_or_equal_to[0] returns 'true'." }, Others = new string[] { "Commonly shortened to '>='." })]
+        public static TemplateObject Tag_Is_Greater_Than_Or_Equal_To(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as IntegerTag).Internal >= For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_less_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is less than the specified integer.",
+            Examples = new string[] { "'1' .is_less_than[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '<'." })]
+        public static TemplateObject Tag_Is_Less_Than(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as IntegerTag).Internal < For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_less_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is less than or equal to the specified integer.",
+            Examples = new string[] { "'1' .is_less_than_or_equal_to[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '<='." })]
+        public static TemplateObject Tag_Is_Less_Than_Or_Equal_To(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as IntegerTag).Internal <= For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "equals", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer equals the specified integer.",
+            Examples = new string[] { "'1' .equals[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '='." })]
+        public static TemplateObject Tag_Equals(TagData data, TemplateObject obj)
+        {
+            return new BooleanTag((obj as IntegerTag).Internal == For(data, data.GetModifierObject(0)).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "sign", Group = "Mathematics", ReturnType = TYPE, Returns = "The sign of the integer, which can be -1, 0, or 1.",
+            Examples = new string[] { "'-5' .sign returns '-1'." })]
+        public static TemplateObject Tag_Sign(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag(Math.Sign((obj as IntegerTag).Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = TYPE, Returns = "The integer parsed as an integer.",
+            Examples = new string[] { "'1' .to_integer returns '1'." })]
+        public static TemplateObject Tag_To_Integer(TagData data, TemplateObject obj)
+        {
+            return new IntegerTag((obj as IntegerTag).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The integer parsed as a number.",
+            Examples = new string[] { "'1' .to_number returns '1'." })]
+        public static TemplateObject Tag_To_Number(TagData data, TemplateObject obj)
+        {
+            return new NumberTag((obj as IntegerTag).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
+            Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Integer);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "or_else", Group = "Tag System", ReturnType = TYPE, Returns = "The specified integer if the first one is invalid.",
+            Examples = new string[] { "'null' .or_else[1] returns '1'." })]
+        public static TemplateObject Tag_Or_Else(TagData data, TemplateObject obj)
+        {
+            return obj;
         }
 
 #pragma warning restore 1591
@@ -192,35 +262,6 @@ namespace FreneticScript.TagHandlers.Objects
         /// All tag handlers for this tag type.
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
-        static void RegisterTag(string name, Func<TagData, TemplateObject, TemplateObject> method, string rettype)
-        {
-            Handlers.Add(name.ToLowerFast(), new TagSubHandler() { Handle = method, ReturnTypeString = rettype });
-        }
-
-        static IntegerTag()
-        {
-            // Documented in NumberTag.
-            RegisterTag("is_greater_than", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal > For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // Documented in NumberTag.
-            RegisterTag("is_greater_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal >= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // Documented in NumberTag.
-            RegisterTag("is_less_than", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal < For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // Documented in NumberTag.
-            RegisterTag("is_less_than_or_equal_to", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal <= For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // Documented in TextTag.
-            RegisterTag("equals", (data, obj) => new BooleanTag(((IntegerTag)obj).Internal == For(data, data.GetModifierObject(0)).Internal).Handle(data.Shrink()), "booleantag");
-            // Documented in NumberTag.
-            RegisterTag("sign", (data, obj) => new IntegerTag(Math.Sign(((IntegerTag)obj).Internal)).Handle(data.Shrink()), "integertag");
-            // Documented in TextTag.
-            RegisterTag("to_integer", (data, obj) => new IntegerTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "integertag");
-            // Documented in TextTag.
-            RegisterTag("to_number", (data, obj) => new NumberTag(((IntegerTag)obj).Internal).Handle(data.Shrink()), "numbertag");
-            // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Integer), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "integertag" });
-        }
 
         /// <summary>
         /// Parse any direct tag input values.
