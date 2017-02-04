@@ -259,8 +259,8 @@ namespace FreneticScript.TagHandlers.Objects
             return new BinaryTag((obj as BinaryTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
-            Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BinaryTag).",
+            Examples = new string[] { "'102030' .type returns 'binarytag'." })]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
             return new TagTypeTag(data.TagSystem.Type_Binary);

@@ -105,8 +105,6 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TimeTag(((TimeTag)obj).Internal), ReturnTypeString = "timetag" });
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Time), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "timetag" });
         }
 
         /// <summary>

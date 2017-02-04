@@ -78,8 +78,6 @@ namespace FreneticScript.TagHandlers.Objects
         {
             // Needs docs!
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Text), ReturnTypeString = "tagtypetag" });
-            // Needs docs!
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "texttag" });
             // <--[tag]
             // @Name TextTag.to_number
             // @Group Text Modification

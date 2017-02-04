@@ -158,7 +158,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new BooleanTag((obj as BooleanTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BooleanTag).",
             Examples = new string[] { "'true' .type returns 'booleantag'." })]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {

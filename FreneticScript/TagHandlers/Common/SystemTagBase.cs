@@ -119,8 +119,6 @@ namespace FreneticScript.TagHandlers.Common
                 Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new SystemTag(), ReturnTypeString = "systemtag" });
                 // Documented in TextTag.
                 Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_System), ReturnTypeString = "tagtypetag" });
-                // Documented in TextTag.
-                Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "systemtag" });
                 // <--[tag]
                 // @Name SystemTag.os_version
                 // @Group Utilities

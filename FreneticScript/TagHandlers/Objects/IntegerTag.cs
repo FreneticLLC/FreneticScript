@@ -242,18 +242,11 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag((obj as IntegerTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
-            Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (IntegerTag).",
+            Examples = new string[] { "'1' .type returns 'integertag'." })]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
             return new TagTypeTag(data.TagSystem.Type_Integer);
-        }
-
-        [TagMeta(TagType = TYPE, Name = "or_else", Group = "Tag System", ReturnType = TYPE, Returns = "The specified integer if the first one is invalid.",
-            Examples = new string[] { "'null' .or_else[1] returns '1'." })]
-        public static TemplateObject Tag_Or_Else(TagData data, TemplateObject obj)
-        {
-            return obj;
         }
 
 #pragma warning restore 1591

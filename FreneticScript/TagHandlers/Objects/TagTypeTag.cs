@@ -82,8 +82,6 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(((TagTypeTag)obj).Internal), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_TagType), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => obj, ReturnTypeString = "tagtypetag" });
         }
 
         /// <summary>

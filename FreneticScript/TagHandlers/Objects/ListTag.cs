@@ -344,8 +344,8 @@ namespace FreneticScript.TagHandlers.Objects
             return new ListTag((obj as ListTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag.",
-            Examples = new string[] { "'true' .type returns 'listtag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (ListTag).",
+            Examples = new string[] { "'1|2|3|' .type returns 'listtag'." })]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
             return new TagTypeTag(data.TagSystem.Type_List);
