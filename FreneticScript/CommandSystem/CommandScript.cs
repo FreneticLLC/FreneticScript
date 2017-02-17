@@ -416,7 +416,7 @@ namespace FreneticScript.CommandSystem
                 }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
-#if !SAVE
+#if SAVE
                 StringBuilder outp = new StringBuilder();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
                 {

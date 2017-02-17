@@ -108,7 +108,7 @@ namespace FreneticScript.CommandSystem.Arguments
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("<{");
+            sb.Append("<");
             for (int i = 0; i < Bits.Length; i++)
             {
                 sb.Append(Bits[i].ToString());
@@ -117,7 +117,7 @@ namespace FreneticScript.CommandSystem.Arguments
                     sb.Append(".");
                 }
             }
-            sb.Append("}>");
+            sb.Append(">");
             return sb.ToString();
         }
     }

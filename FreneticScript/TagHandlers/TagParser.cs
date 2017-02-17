@@ -20,9 +20,9 @@ namespace FreneticScript.TagHandlers
         // @Word specified
         // @Group tag
         // @Description The word 'specified', when used in a tag description, refers to the value input after the tag.
-        // EG, you might have the tag <@link tag TextTag.equals[<TextTag>]><{text[<TextTag>].equals[<TextTag>]}><@/link>
+        // EG, you might have the tag <@link tag TextTag.equals[<TextTag>]><text[<TextTag>].equals[<TextTag>]><@/link>
         // In this tag, the first <TextTag> is referred to as 'the text', and the second <TextTag> as 'specified text'.
-        // Which would look like: <{text[the text].equals[specified text]}>.
+        // Which would look like: <text[the text].equals[specified text]>.
         // -->
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers
             {
                 return "null";
             }
-            return input.Replace("<{", "\0TAGSTART").Replace("}>", "\0TAGEND");
+            return input.Replace("<", "\0TAGSTART").Replace(">", "\0TAGEND");
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace FreneticScript.TagHandlers
             {
                 return "null";
             }
-            return input.Replace("\0TAGSTART", "<{").Replace("\0TAGEND", "}>");
+            return input.Replace("\0TAGSTART", "<").Replace("\0TAGEND", ">");
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace FreneticScript.TagHandlers
             {
                 return new Argument();
             }
-            if (input.IndexOf("<{") < 0)
+            if (input.IndexOf("<") < 0)
             {
                 Argument a = new Argument();
                 a.WasQuoted = wasquoted;
@@ -454,16 +454,15 @@ namespace FreneticScript.TagHandlers
             StringBuilder tbuilder = new StringBuilder();
             for (int i = 0; i < len; i++)
             {
-                if (i + 1 < len && input[i] == '<' && input[i + 1] == '{')
+                if (input[i] == '<')
                 {
                     blocks++;
                     if (blocks == 1)
                     {
-                        i++;
                         continue;
                     }
                 }
-                else if (i + 1 < len && input[i] == '}' && input[i + 1] == '>')
+                else if (input[i] == '>')
                 {
                     blocks--;
                     if (blocks == 0)
@@ -486,6 +485,7 @@ namespace FreneticScript.TagHandlers
                             {
                                 brack--;
                             }
+                            // TODO: Scrap old fallback engine, in favor of null tricks.
                             if (brack == 0 && value[fb] == '|' && fb > 0 && value[fb - 1] == '|')
                             {
                                 fallback = value.Substring(fb + 1);
@@ -540,7 +540,6 @@ namespace FreneticScript.TagHandlers
                         tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
                         arg.Bits.Add(tab);
                         blockbuilder = new StringBuilder();
-                        i++;
                         continue;
                     }
                 }
