@@ -6,6 +6,7 @@ using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Reflection.Emit;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers.Common;
@@ -560,6 +561,9 @@ namespace FreneticScript.CommandSystem
             }
             ilgen.Emit(OpCodes.Ldloc_0); // Load 'o'.
             ilgen.Emit(OpCodes.Ret); // Return.
+#if NET_4_5
+            methodbuild_c.SetCustomAttribute(new CustomAttributeBuilder(typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) }), new object[] { MethodImplOptions.AggressiveInlining }));
+#endif
             tab.GetResultMethod = methodbuild_c;
             toClean.Add(tab);
             return ilgen;
