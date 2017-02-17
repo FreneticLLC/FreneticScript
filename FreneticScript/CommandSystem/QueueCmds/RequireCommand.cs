@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
                 string arg = entry.GetArgument(queue, i).ToLowerFast();
-                CommandStackEntry cse = queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CurrentEntry;
                 // TODO: Restore this command. Use compilation!
                 /*
                 if (!cse.Variables.ContainsKey(arg))

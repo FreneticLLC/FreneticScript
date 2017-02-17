@@ -82,7 +82,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Set(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void AddImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Add(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void SubtractImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void MultiplyImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -128,9 +128,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="sdat">The split data variable.</param>
         /// <param name="queue">The relevant queue.</param>
         /// <param name="entry">The relevant entry.</param>
-        public static void DIvideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
+        public static void DivideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            (queue.CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? new string[0] : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>

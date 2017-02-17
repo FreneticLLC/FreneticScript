@@ -17,12 +17,12 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The current stack of all command execution data.
         /// </summary>
-        public Stack<CommandStackEntry> CommandStack = new Stack<CommandStackEntry>();
+        public Stack<CompiledCommandStackEntry> CommandStack = new Stack<CompiledCommandStackEntry>();
 
         /// <summary>
         /// The current stack entry being used.
         /// </summary>
-        public CommandStackEntry CurrentEntry;
+        public CompiledCommandStackEntry CurrentEntry;
         
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
@@ -149,7 +149,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The specified command.</returns>
         public CommandEntry GetCommand(int index)
         {
-            return CommandStack.Peek().Entries[index];
+            return CurrentEntry.Entries[index];
         }
         
         /// <summary>
@@ -157,7 +157,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Stop()
         {
-            CommandStack.Peek().Index = CommandStack.Peek().Entries.Length + 1;
+            CurrentEntry.Index = CurrentEntry.Entries.Length + 1;
             CommandStack.Clear();
         }
         
@@ -168,7 +168,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The new value.</param>
         public void SetLocalVar(int c, TemplateObject value)
         {
-            (CommandStack.Peek() as CompiledCommandStackEntry).LocalVariables[c].Internal = value;
+            CurrentEntry.LocalVariables[c].Internal = value;
         }
     }
 

@@ -79,7 +79,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.Good(queue, "Calling '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
             // TODO: Restore variable sending!
-            CommandStackEntry cse = script.Created.Duplicate();
+            CompiledCommandStackEntry cse = script.Created.Duplicate();
             foreach (string var in entry.NamedArguments.Keys)
             {
                 if (!var.StartsWithNull())

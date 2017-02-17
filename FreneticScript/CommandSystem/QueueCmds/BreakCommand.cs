@@ -78,7 +78,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             for (int i = 0; i < count; i++)
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CurrentEntry;
                 for (int ind = cse.Index; ind < cse.Entries.Length; ind++)
                 {
                     CommandEntry tentry = cse.Entries[ind];

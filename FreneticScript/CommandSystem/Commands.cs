@@ -123,7 +123,7 @@ namespace FreneticScript.CommandSystem
                 }*/
             }
             CommandStackEntry cse = queue.CommandStack.Peek();
-            cse.Debug = mode;
+            cse.Debug = mode; // TODO: Scrap this debug changer?
             queue.Execute();
             //Variables = queue.LowestVariables;
         }

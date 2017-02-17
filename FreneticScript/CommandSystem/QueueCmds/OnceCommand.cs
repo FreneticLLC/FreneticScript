@@ -97,12 +97,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Once block repeated, ignoring: " + TagParser.Escape(id));
                 }
-                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
+                queue.CurrentEntry.Index = entry.BlockEnd + 1;
             }
             else if (errorMode == "warning")
             {
                 entry.Bad(queue, "Once block repeated: " + TagParser.Escape(id));
-                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
+                queue.CurrentEntry.Index = entry.BlockEnd + 1;
             }
             else
             {

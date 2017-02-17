@@ -291,9 +291,9 @@ namespace FreneticScript.CommandSystem
         public DebugMode Debug = DebugMode.FULL;
 
         /// <summary>
-        /// All commands in the script.
+        /// All compiled command structure set created by this script.
         /// </summary>
-        public CommandStackEntry Created;
+        public CompiledCommandStackEntry Created;
 
         /// <summary>
         /// Constructs a new command script.

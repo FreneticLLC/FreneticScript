@@ -62,7 +62,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            queue.CommandStack.Peek().Index = entry.BlockEnd + 2;
+            queue.CurrentEntry.Index = entry.BlockEnd + 2;
             if (entry.ShouldShowGood(queue))
             {
                 entry.Good(queue, "Passing catch without executing.");

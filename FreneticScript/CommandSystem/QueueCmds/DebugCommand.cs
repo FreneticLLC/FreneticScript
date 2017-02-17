@@ -60,7 +60,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             string modechoice = entry.GetArgument(queue, 0);
-            CommandStackEntry cse = queue.CommandStack.Peek();
+            CommandStackEntry cse = queue.CurrentEntry;
             switch (modechoice.ToLowerFast())
             {
                 case "full":

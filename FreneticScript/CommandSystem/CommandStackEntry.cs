@@ -184,12 +184,6 @@ namespace FreneticScript.CommandSystem
         /// How much debug information this portion of the stack should show.
         /// </summary>
         public DebugMode Debug;
-
-        /// <summary>
-        /// Perfectly duplicates this stack entry.
-        /// </summary>
-        /// <returns>The newly duplicated stack entry.</returns>
-        public abstract CommandStackEntry Duplicate();
     }
 
     /// <summary>

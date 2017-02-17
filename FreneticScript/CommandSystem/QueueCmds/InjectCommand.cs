@@ -46,6 +46,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        // TODO: Does this (inject command) have any reason to exist in the modern structure?
+
         public override void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
@@ -60,9 +62,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Injecting '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
-            CommandStackEntry cse = queue.CommandStack.Peek();
-            CommandStackEntry tcse = script.Created.Duplicate();
-            tcse.Debug = cse.Debug;
+            CompiledCommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry tcse = script.Created.Duplicate();
+            tcse.Debug = cse.Debug; // TODO: Should debug editing be valid?
             queue.CommandStack.Push(tcse);
         }
     }

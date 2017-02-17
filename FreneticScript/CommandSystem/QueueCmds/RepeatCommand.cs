@@ -232,22 +232,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="rt">Repeat Total Location.</param>
         public bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
-            CommandStackEntry cse = queue.CommandStack.Peek();
-            RepeatCommandData dat = (RepeatCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
+            CommandStackEntry cse = queue.CurrentEntry;
+            RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
             dat.Index++;
             CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
             ccse.LocalVariables[ri].Internal = new IntegerTag(dat.Index);
             ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
             if (dat.Index <= dat.Total)
             {
-                if (entry.ShouldShowGood(queue))
+                if (entry.ShouldShowGood(queue)) // TODO: Compile away?
                 {
                     entry.GoodOutput(queue, "Repeating...: " + TextStyle.Color_Separate + dat.Index +  TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.Total);
                 }
                 cse.Index = entry.BlockStart;
                 return true;
             }
-            if (entry.ShouldShowGood(queue))
+            if (entry.ShouldShowGood(queue)) // TODO: Compile away?
             {
                 entry.GoodOutput(queue, "Repeat stopping.");
             }
@@ -273,7 +273,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
-            CompiledCommandStackEntry ccse = queue.CommandStack.Peek() as CompiledCommandStackEntry;
+            CompiledCommandStackEntry ccse = queue.CurrentEntry;
             ccse.LocalVariables[ri].Internal = new IntegerTag(1);
             ccse.LocalVariables[rt].Internal = new IntegerTag(target);
             if (entry.ShouldShowGood(queue))

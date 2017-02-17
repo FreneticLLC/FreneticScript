@@ -97,7 +97,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;
             nqueue.Outputsystem = queue.Outputsystem;
             nqueue.Execute();
-            CommandStackEntry cse = queue.CommandStack.Peek();
+            CommandStackEntry cse = queue.CurrentEntry;
             cse.Index = entry.BlockEnd + 2;
         }
     }

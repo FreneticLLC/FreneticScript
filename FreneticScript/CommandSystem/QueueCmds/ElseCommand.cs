@@ -70,7 +70,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
+                CommandStackEntry cse = queue.CurrentEntry;
                 CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
                 if (cse.Index < cse.Entries.Length)
                 {
@@ -94,7 +94,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Else continuing, previous IF passed.");
                 }
-                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
+                queue.CurrentEntry.Index = entry.BlockEnd + 1;
                 return;
             }
             bool success = true;
@@ -116,7 +116,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Else continuing, ELSE-IF is false!");
                 }
-                queue.CommandStack.Peek().Index = entry.BlockEnd + 1;
+                queue.CurrentEntry.Index = entry.BlockEnd + 1;
             }
         }
     }
