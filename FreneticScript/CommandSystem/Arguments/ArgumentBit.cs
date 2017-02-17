@@ -15,6 +15,12 @@ namespace FreneticScript.CommandSystem.Arguments
         public Commands CommandSystem;
 
         /// <summary>
+        /// Gets the resultant type of this argument bit.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public abstract TagType ReturnType();
+
+        /// <summary>
         /// Parse the argument part, reading any tags or other special data.
         /// </summary>
         /// <param name="base_color">The base color for color tags.</param>

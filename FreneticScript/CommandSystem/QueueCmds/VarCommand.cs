@@ -75,16 +75,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string type_name = cent.Arguments[4].ToString().ToLowerFast();
             TagType type = cent.System.TagSystem.Types[type_name];
             int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
+            bool isCorrect = cent.Arguments[2].ReturnType()?.TypeName == type.TypeName;
+            // This method:
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
+            // or:
+            // queue.SetLocalVar(lvarloc, entry.GetArgumentObject(queue, 2));
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
-            values.ILGen.Emit(OpCodes.Ldnull); // Prep a null (TagData)
+            if (!isCorrect)
+            {
+                values.ILGen.Emit(OpCodes.Ldnull); // Prep a null (TagData)
+            }
             values.LoadEntry(entry); // Load the entry
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, 2); // Prep a '2'
             // TODO: Debug output -> Only if compiled with debug on!
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod); // Get the specified argument
-            values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
+            if (!isCorrect)
+            {
+                values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
+            }
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod); // Push the result into the local var
         }
 

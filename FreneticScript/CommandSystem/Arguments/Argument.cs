@@ -21,6 +21,22 @@ namespace FreneticScript.CommandSystem.Arguments
         /// Whether the argument was input with "quotes" around it.
         /// </summary>
         public bool WasQuoted = true;
+        
+        /// <summary>
+        /// Gets the resultant type of this argument.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public TagType ReturnType()
+        {
+            if (Bits.Count == 1)
+            {
+                return Bits[0].ReturnType();
+            }
+            else
+            {
+                return Bits[0].CommandSystem.TagSystem.Type_Text;
+            }
+        }
 
         /// <summary>
         /// Parse the argument, reading any tags or other special data.
@@ -32,6 +48,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The parsed final text.</returns>
         public TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
+            // TODO: Compile this cleverly. This if and some other parts can probably be pre-computed!
             if (Bits.Count == 1)
             {
                 return Bits[0].Parse(base_color, mode, error, cse);

@@ -46,6 +46,15 @@ namespace FreneticScript.CommandSystem.Arguments
         }
 
         /// <summary>
+        /// Gets the resultant type of this argument bit.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType ReturnType()
+        {
+            return Bits[Bits.Length - 1].TagHandler?.Meta?.ReturnTypeResult;
+        }
+
+        /// <summary>
         /// The tag to fall back on if this tag fails.
         /// </summary>
         public Argument Fallback;

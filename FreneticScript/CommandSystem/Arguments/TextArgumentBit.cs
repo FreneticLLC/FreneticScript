@@ -19,6 +19,16 @@ namespace FreneticScript.CommandSystem.Arguments
         public TextArgumentBit(bool _text)
         {
             InputValue = new BooleanTag(_text);
+            ResType = BooleanTag.TYPE;
+        }
+
+        /// <summary>
+        /// Gets the resultant type of this argument bit.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType ReturnType()
+        {
+            return CommandSystem.TagSystem.Types[ResType];
         }
 
         /// <summary>
@@ -42,26 +52,32 @@ namespace FreneticScript.CommandSystem.Arguments
             if (wasquoted)
             {
                 InputValue = new TextTag(_text);
+                ResType = TextTag.TYPE;
             }
             else if (_text == "true")
             {
                 InputValue = new BooleanTag(true);
+                ResType = BooleanTag.TYPE;
             }
             else if (_text == "false")
             {
                 InputValue = new BooleanTag(false);
+                ResType = BooleanTag.TYPE;
             }
-            else if (_text == "&{NULL}" || _text == "&{null}")
+            else if (_text == "&{NULL}")
             {
                 InputValue = new NullTag();
+                ResType = NullTag.TYPE;
             }
             else if (long.TryParse(_text, out ti) && ti.ToString() == _text)
             {
                 InputValue = new IntegerTag(ti);
+                ResType = IntegerTag.TYPE;
             }
             else if (double.TryParse(_text, out tn) && tn.ToString() == _text)
             {
                 InputValue = new NumberTag(tn);
+                ResType = NumberTag.TYPE;
             }
             else if (_text.Contains('|'))
             {
@@ -70,17 +86,25 @@ namespace FreneticScript.CommandSystem.Arguments
                 if (list.ToString() == _text)
                 {
                     InputValue = list;
+                    ResType = ListTag.TYPE;
                 }
                 else
                 {
                     InputValue = new TextTag(_text);
+                    ResType = TextTag.TYPE;
                 }
             }
             else
             {
                 InputValue = new TextTag(_text);
+                ResType = TextTag.TYPE;
             }
         }
+
+        /// <summary>
+        /// The type resultant of this text argument bit.
+        /// </summary>
+        public string ResType;
 
         /// <summary>
         /// The input text.
