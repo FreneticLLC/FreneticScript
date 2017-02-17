@@ -85,6 +85,19 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning disable 1591
 
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new TimeTag(((TimeTag)obj).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TimeTag).")]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Time);
+        }
+
+        // TODO: More 'Time Parts' tags!
         [TagMeta(TagType = TYPE, Name = "total_milliseconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE, Returns = "The total number of milliseconds since Jan 1st, 0001 (UTC).",
             Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns 0." })]
         public static TemplateObject Tag_Current_Time_UTC(TagData data, TemplateObject obj)
@@ -93,20 +106,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-
-        /// <summary>
-        /// All tag handlers for this tag type.
-        /// </summary>
-        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
-        static TimeTag()
-        {
-            // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TimeTag(((TimeTag)obj).Internal), ReturnTypeString = "timetag" });
-            // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Time), ReturnTypeString = "tagtypetag" });
-        }
-
+        
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -117,11 +117,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this).Handle(data.Shrink());
-            }
+            // TODO: Scrap!
             return new TextTag(ToString()).Handle(data.Shrink());
         }
         

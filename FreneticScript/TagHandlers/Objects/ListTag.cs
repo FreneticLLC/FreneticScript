@@ -337,15 +337,13 @@ namespace FreneticScript.TagHandlers.Objects
             return newlist;
         }
 
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
-            Examples = new string[] { "'1|2|3|' .duplicate returns '1|2|3|'." })]
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
         {
             return new ListTag((obj as ListTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (ListTag).",
-            Examples = new string[] { "'1|2|3|' .type returns 'listtag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (ListTag).")]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
             return new TagTypeTag(data.TagSystem.Type_List);

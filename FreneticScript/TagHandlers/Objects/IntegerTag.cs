@@ -116,8 +116,7 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning disable 1591
 
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
-            Examples = new string[] { "'1' .duplicate returns '1'." })]
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
         {
             return new IntegerTag((obj as IntegerTag).Internal);
@@ -242,8 +241,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag((obj as IntegerTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (IntegerTag).",
-            Examples = new string[] { "'1' .type returns 'integertag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (IntegerTag).")]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
             return new TagTypeTag(data.TagSystem.Type_Integer);

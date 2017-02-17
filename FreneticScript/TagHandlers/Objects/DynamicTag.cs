@@ -65,6 +65,7 @@ namespace FreneticScript.TagHandlers.Objects
             // -->
             Handlers.Add("as", new TagSubHandler() { Handle = (data, obj) =>
             {
+                // NOTE: Requires special compilation code...
                 TagTypeTag ttt = TagTypeTag.For(data, data.GetModifierObject(0));
                 return ttt.Internal.TypeGetter(data, ((DynamicTag)obj).Internal);
             }, ReturnTypeString = null });

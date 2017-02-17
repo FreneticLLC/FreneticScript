@@ -252,15 +252,13 @@ namespace FreneticScript.TagHandlers.Objects
             return new TextTag(Convert.ToBase64String((obj as BinaryTag).Internal));
         }
 
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
-            Examples = new string[] { "'102030' .duplicate returns '102030'." })]
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
         {
             return new BinaryTag((obj as BinaryTag).Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BinaryTag).",
-            Examples = new string[] { "'102030' .type returns 'binarytag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (BinaryTag).")]
         public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
         {
             return new TagTypeTag(data.TagSystem.Type_Binary);
