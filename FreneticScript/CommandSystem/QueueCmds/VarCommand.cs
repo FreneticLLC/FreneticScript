@@ -22,7 +22,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public VarCommand()
         {
             Name = "var";
-            Arguments = "<variable> '=' <value> ['as' <type>]";
+            Arguments = "<variable> '=' <value> 'as' <type>";
             Description = "Modifies a variable in the current queue.";
             IsFlow = true;
             MinimumArguments = 3;
@@ -72,15 +72,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // TODO: Type verification!
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
+            string type_name = cent.Arguments[4].ToString().ToLowerFast();
+            TagType type = cent.System.TagSystem.Types[type_name];
             int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
-            values.LoadQueue();
-            values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
-            values.LoadEntry(entry);
-            values.LoadQueue();
-            values.ILGen.Emit(OpCodes.Ldc_I4, 2);
+            // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
+            values.LoadQueue(); // Load the queue
+            values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
+            values.ILGen.Emit(OpCodes.Ldnull); // Prep a null (TagData)
+            values.LoadEntry(entry); // Load the entry
+            values.LoadQueue(); // Load the queue
+            values.ILGen.Emit(OpCodes.Ldc_I4, 2); // Prep a '2'
             // TODO: Debug output -> Only if compiled with debug on!
-            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod);
-            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
+            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod); // Get the specified argument
+            values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
+            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod); // Push the result into the local var
         }
 
         TemplateObject verify1(TemplateObject input)

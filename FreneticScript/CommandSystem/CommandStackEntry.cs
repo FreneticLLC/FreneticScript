@@ -10,6 +10,7 @@ namespace FreneticScript.CommandSystem
 {
     /// <summary>
     /// Represents a single entry in a command stack.
+    /// TODO: Scrap this in favor of Compiled variant.
     /// </summary>
     public abstract class CommandStackEntry
     {
