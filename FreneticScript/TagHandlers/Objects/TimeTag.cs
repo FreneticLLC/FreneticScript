@@ -68,7 +68,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// The SystemTag type.
+        /// The TimeTag type.
         /// </summary>
         public const string TYPE = "timetag";
 
@@ -80,7 +80,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid time tag.</returns>
         public static TemplateObject CreateFor(TagData data, TemplateObject input)
         {
-            return (input is TimeTag) ? (TimeTag)input : For(input.ToString());
+            return (input as TimeTag) ?? For(input.ToString());
         }
 
 #pragma warning disable 1591

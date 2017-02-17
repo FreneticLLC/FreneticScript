@@ -185,8 +185,8 @@ namespace FreneticScript.TagHandlers
                 TypeName = "nulltag",
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = (data, obj) => new NullTag(),
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = NullTag.Handlers, // TODO: Convert!
+                GetNextTypeDown = (obj) => new TextTag(obj.ToString()), // TODO: Or an error?
+                SubHandlers = null,
                 RawType = typeof(NullTag)
             });
             Register(Type_Number = new TagType()
@@ -241,7 +241,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TimeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = TimeTag.Handlers, // TODO: Convert!
+                SubHandlers = null,
                 RawType = typeof(TimeTag)
             });
         }

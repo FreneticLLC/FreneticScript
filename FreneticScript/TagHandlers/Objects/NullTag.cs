@@ -18,32 +18,6 @@ namespace FreneticScript.TagHandlers.Objects
         // -->
 
         /// <summary>
-        /// Get a null tag if the input is null, or an internal null value if the input is not a null tag.
-        /// </summary>
-        /// <param name="input">The input to create or get a null tag from.</param>
-        /// <returns>The null tag, or internal null.</returns>
-        public static NullTag For(string input)
-        {
-            string low = input.ToLowerFast();
-            if (low == "null")
-            {
-                return new NullTag();
-            }
-            // TODO: Error?
-            return null;
-        }
-
-        /// <summary>
-        /// Get a null tag if the input is null, or an internal null value if the input is not a null tag.
-        /// </summary>
-        /// <param name="input">The input to create or get a null tag from.</param>
-        /// <returns>The null tag, or internal null.</returns>
-        public static NullTag For(TemplateObject input)
-        {
-            return input as NullTag ?? For(input.ToString());
-        }
-
-        /// <summary>
         /// Constructs a null tag.
         /// </summary>
         public NullTag()
@@ -51,20 +25,43 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// All tag handlers for this tag type.
+        /// The NullTag type.
         /// </summary>
-        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
+        public const string TYPE = "nulltag";
 
-        static NullTag()
+        /// <summary>
+        /// Creates a SystemTag for the given input data.
+        /// </summary>
+        /// <param name="data">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid time tag.</returns>
+        public static TemplateObject CreateFor(TagData data, TemplateObject input)
         {
-            // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new NullTag(), ReturnTypeString = "nulltag" });
-            // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Null), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
-            Handlers.Add("or_else", new TagSubHandler() { Handle = (data, obj) => data.GetModifierObject(0) });
+            return new NullTag();
         }
 
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new NullTag();
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (NullTag).")]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Null);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "or_else", Group = "Nulls", ReturnType = DynamicTag.TYPE, Returns = "The specified object.")]
+        public static TemplateObject Tag_Or_Else(TagData data, TemplateObject obj)
+        {
+            return new DynamicTag(data.GetModifierObject(0));
+        }
+
+#pragma warning restore 1591
+        
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -75,11 +72,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this).Handle(data.Shrink());
-            }
+            // TODO: ???
             if (!data.HasFallback)
             {
                 data.Error("Invalid tag bit: '" + TagParser.Escape(data[0]) + "'!");
