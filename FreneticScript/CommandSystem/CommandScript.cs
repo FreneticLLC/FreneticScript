@@ -344,8 +344,33 @@ namespace FreneticScript.CommandSystem
                 {
                     ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
                 }
+                int tagID = 0;
+                TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
+                List<TagArgumentBit> toClean = new List<TagArgumentBit>();
+                List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
+                    CILVariables[] ttvars = new CILVariables[values.LVarIDs.Count];
+                    int tcounter = 0;
+                    foreach (int tv in values.LVarIDs)
+                    {
+                        ttvars[tcounter] = values.CLVariables[tv];
+                        tcounter++;
+                    }
+                    ccse.Entries[i].CILVars = ttvars;
+                    for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
+                    {
+                        Argument arg = ccse.Entries[i].Arguments[a];
+                        for (int b = 0; b < arg.Bits.Count; b++)
+                        {
+                            TagArgumentBit tab = arg.Bits[b] as TagArgumentBit;
+                            if (tab != null)
+                            {
+                                tagID++;
+                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, a, toClean));
+                            }
+                        }
+                    }
                     bool isCallback = ccse.Entries[i].Arguments.Count > 0 && ccse.Entries[i].Arguments[0].ToString() == "\0CALLBACK";
                     if (!isCallback)
                     {
@@ -365,41 +390,18 @@ namespace FreneticScript.CommandSystem
                     }
                 }
                 ccse.LocalVariables = new ObjectHolder[values.CLVarID];
-                ccse.LocalVarNames = new string[values.CLVarID];
-                Dictionary<string, TagType> types = new Dictionary<string, TagType>();
-                for (int i = 0; i < values.CLVariables.Count; i++)
+                for (int n = 0; n < values.CLVariables.Count; n++)
                 {
-                    for (int x = 0; x <  values.CLVariables[i].LVariables.Count; x++)
+                    for (int x = 0; x < values.CLVariables[n].LVariables.Count; x++)
                     {
-                        int ind = values.CLVariables[i].LVariables[x].Item1;
-                        string name = i + "#" + values.CLVariables[i].LVariables[x].Item2;
-                        ccse.LocalVarNames[ind] = name;
+                        int ind = values.CLVariables[n].LVariables[x].Item1;
                         ccse.LocalVariables[ind] = new ObjectHolder();
-                        types[name] = values.CLVariables[i].LVariables[x].Item3;
-                        ind++;
                     }
                 }
                 ilgen.Emit(OpCodes.Ldarg_3);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
-                int tagID = 0;
-                List<TagArgumentBit> toClean = new List<TagArgumentBit>();
-                TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
-                List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
-                    for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
-                    {
-                        Argument arg = ccse.Entries[i].Arguments[a];
-                        for (int b = 0; b < arg.Bits.Count; b++)
-                        {
-                            TagArgumentBit tab = arg.Bits[b] as TagArgumentBit;
-                            if (tab != null)
-                            {
-                                tagID++;
-                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, types, tab, ref tagID, values, i, a, toClean));
-                            }
-                        }
-                    }
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
                     ccse.Entries[i].Command.AdaptToCIL(values, i);
                 }
@@ -440,14 +442,13 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="typeBuild_c">The type to contain this tag.</param>
         /// <param name="ccse">The CCSE available.</param>
-        /// <param name="types">The set of types available.</param>
         /// <param name="tab">The tag data.</param>
         /// <param name="tID">The ID of the tag.</param>
         /// <param name="values">The helper values.</param>
         /// <param name="i">The command entry index.</param>
         /// <param name="a">The argument index.</param>
         /// <param name="toClean">Cleanable tag bits.</param>
-        public static CILAdaptationValues.ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab,
+        public static CILAdaptationValues.ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
             ref int tID, CILAdaptationValues values, int i, int a, List<TagArgumentBit> toClean)
         {
             int id = tID;
@@ -470,7 +471,7 @@ namespace FreneticScript.CommandSystem
                     if (altArgs[sx].Bits[b] is TagArgumentBit)
                     {
                         tID++;
-                        GenerateTagData(typeBuild_c, ccse, types, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, i, a, toClean);
+                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, i, a, toClean);
                     }
                 }
             }
@@ -479,7 +480,7 @@ namespace FreneticScript.CommandSystem
             TagType returnable = tab.Start.ResultType;
             if (returnable == null)
             {
-                returnable = tab.Start.Adapt(ccse, types, tab, i, a);
+                returnable = tab.Start.Adapt(ccse, tab, i, a);
             }
             if (returnable == null)
             {

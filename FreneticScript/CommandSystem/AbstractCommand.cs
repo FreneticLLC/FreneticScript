@@ -433,7 +433,7 @@ namespace FreneticScript.CommandSystem
         public List<CILVariables> CLVariables = new List<CILVariables>();
 
         /// <summary>
-        /// The current stackl of LVarIDs.
+        /// The current stack of LVarIDs.
         /// </summary>
         public Stack<int> LVarIDs = new Stack<int>();
         

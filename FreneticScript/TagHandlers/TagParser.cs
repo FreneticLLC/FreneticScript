@@ -352,7 +352,7 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
-        /// References <see cref="AutoTag_Or_Else(TagData, TemplateObject)"/>.
+        /// References <see cref="AutoTag_Or_Else(TemplateObject, TagData)"/>.
         /// </summary>
         public static MethodInfo AUTO_OR_ELSE = typeof(TagParser).GetMethod("AutoTag_Or_Else");
         

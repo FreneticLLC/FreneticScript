@@ -22,7 +22,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public VarCommand()
         {
             Name = "var";
-            Arguments = "<variable> '=' <value> 'as' <type>";
+            Arguments = "<variable> '=' <value> ['as' <type>]";
             Description = "Modifies a variable in the current queue.";
             IsFlow = true;
             MinimumArguments = 3;
@@ -59,6 +59,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + larg + "!");
                 }
             }
+            else
+            {
+                t = cent.Arguments[2].ReturnType(values);
+            }
             values.AddVariable(larg, t);
         }
 
@@ -69,13 +73,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            // TODO: Type verification!
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
-            string type_name = cent.Arguments[4].ToString().ToLowerFast();
-            TagType type = cent.System.TagSystem.Types[type_name];
+            bool isCorrect = true;
+            TagType type = null;
+            if (cent.Arguments.Count > 4)
+            {
+                string type_name = cent.Arguments[4].ToString().ToLowerFast();
+                type = cent.System.TagSystem.Types[type_name];
+                isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
+            }
             int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
-            bool isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
             // This method:
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
             // or:

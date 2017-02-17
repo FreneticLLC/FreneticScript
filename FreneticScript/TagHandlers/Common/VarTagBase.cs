@@ -53,11 +53,10 @@ namespace FreneticScript.TagHandlers.Common
         /// Adapts the var tag base for compiling.
         /// </summary>
         /// <param name="ccse">The compiled CSE.</param>
-        /// <param name="types">The set of available types.</param>
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>
         /// <param name="a">The argument index.</param>
-        public override TagType Adapt(CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab, int i, int a)
+        public override TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, int a)
         {
             string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
             CommandEntry entry = ccse.Entries[i];

@@ -29,12 +29,7 @@ namespace FreneticScript.CommandSystem
         /// Variables local to the compiled function.
         /// </summary>
         public ObjectHolder[] LocalVariables;
-
-        /// <summary>
-        /// The names of local variables.
-        /// </summary>
-        public string[] LocalVarNames;
-
+        
         /// <summary>
         /// Perfectly duplicates this stack entry.
         /// </summary>
