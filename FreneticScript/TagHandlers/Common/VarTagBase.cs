@@ -18,6 +18,9 @@ namespace FreneticScript.TagHandlers.Common
     // TODO: Explain better!
     // -->
 
+    /// <summary>
+    /// Handles the 'var' tag base.
+    /// </summary>
     public class VarTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -27,17 +30,34 @@ namespace FreneticScript.TagHandlers.Common
         // @Returns the specified variable from the queue.
         // <@link explanation Queue Variables>What are queue variables?<@/link>
         // -->
+
+        /// <summary>
+        /// Constructs the tag base data.
+        /// </summary>
         public VarTagBase()
         {
             Name = "var";
         }
 
+        /// <summary>
+        /// Handles the base input for a tag.
+        /// </summary>
+        /// <param name="data">The tag data.</param>
+        /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
             data.Error("Var tag MUST be compiled!");
             return new NullTag();
         }
 
+        /// <summary>
+        /// Adapts the var tag base for compiling.
+        /// </summary>
+        /// <param name="ccse">The compiled CSE.</param>
+        /// <param name="types">The set of available types.</param>
+        /// <param name="tab">The TagArgumentBit.</param>
+        /// <param name="i">The command index.</param>
+        /// <param name="a">The argument index.</param>
         public override TagType Adapt(CompiledCommandStackEntry ccse, Dictionary<string, TagType> types, TagArgumentBit tab, int i, int a)
         {
             string vn = tab.Bits[0].Variable.ToString().ToLowerFast();

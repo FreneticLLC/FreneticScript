@@ -6,6 +6,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
+    /// <summary>
+    /// Handles the 'null' tag base.
+    /// </summary>
     public class NullTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -15,12 +18,20 @@ namespace FreneticScript.TagHandlers.Common
         // @Returns a NullTag.
         // -->
 
+        /// <summary>
+        /// Constructs the tag base data.
+        /// </summary>
         public NullTagBase()
         {
             Name = "null";
             ResultTypeString = "nulltag";
         }
 
+        /// <summary>
+        /// Handles the base input for a tag.
+        /// </summary>
+        /// <param name="data">The tag data.</param>
+        /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
             return new NullTag();

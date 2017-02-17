@@ -13,6 +13,10 @@ namespace FreneticScript.TagHandlers.Common
     // TODO: Explain better
     // TODO: Link tag system explanation
     // -->
+
+    /// <summary>
+    /// Handles the 'text' tag base.
+    /// </summary>
     public class TextTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -23,12 +27,20 @@ namespace FreneticScript.TagHandlers.Common
         // <@link explanation Text Tags>What are text tags?<@/link>
         // -->
 
+        /// <summary>
+        /// Constructs the tag base data.
+        /// </summary>
         public TextTagBase()
         {
             Name = "text";
             ResultTypeString = "texttag";
         }
 
+        /// <summary>
+        /// Handles the base input for a tag.
+        /// </summary>
+        /// <param name="data">The tag data.</param>
+        /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
             return new TextTag(data.GetModifier(0));
