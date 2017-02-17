@@ -237,7 +237,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             dat.Index++;
             CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
             ccse.LocalVariables[ri].Internal = new IntegerTag(dat.Index);
-            ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
+            // Probably not necessary: ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue)) // TODO: Compile away?
