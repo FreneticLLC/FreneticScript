@@ -29,11 +29,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 5;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                TextTag.For, // TODO: Lowercase
+                TextTag.For,
                 verify1,
                 TemplateObject.Basic_For,
                 verify2,
-                TemplateObject.Basic_For // TODO: Lowercase
+                TemplateObject.Basic_For // TODO: TagTypeTag?
             };
         }
 
@@ -69,7 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            // TODO: Type verification? Or remove the 'as TYPE' system?
+            // TODO: Type verification!
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
             int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
@@ -78,7 +78,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.LoadEntry(entry);
             values.LoadQueue();
             values.ILGen.Emit(OpCodes.Ldc_I4, 2);
-            // TODO: Debug this!?
+            // TODO: Debug output -> Only if compiled with debug on!
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod);
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
         }

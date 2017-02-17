@@ -22,6 +22,15 @@ namespace FreneticScript.CommandSystem.Arguments
         }
 
         /// <summary>
+        /// Constructs the argument with an input integer.
+        /// </summary>
+        /// <param name="_text">The input integer.</param>
+        public TextArgumentBit(long _text)
+        {
+            InputValue = new IntegerTag(_text);
+        }
+
+        /// <summary>
         /// Constructs the argument with input text.
         /// </summary>
         /// <param name="_text">The input text.</param>

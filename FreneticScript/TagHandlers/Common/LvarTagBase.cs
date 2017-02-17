@@ -29,9 +29,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The result.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            IntegerTag itag = IntegerTag.For(data, data.GetModifierObject(0));
-            CompiledCommandStackEntry ccse = data.CSE as CompiledCommandStackEntry;
-            return ccse.LocalVariables[itag.Internal].Internal;
+            return (data.CSE as CompiledCommandStackEntry).LocalVariables[IntegerTag.For(data, data.GetModifierObject(0)).Internal].Internal;
         }
     }
 }
