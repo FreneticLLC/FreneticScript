@@ -149,7 +149,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = DynamicTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = DynamicTag.Handlers, // TODO: Convert!
+                SubHandlers = null,
                 RawType = typeof(DynamicTag)
             });
             Register(Type_Integer = new TagType()
@@ -293,6 +293,11 @@ namespace FreneticScript.TagHandlers
                             }
                         }
                     }
+                    TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
+                    auto_thi.Meta = auto_thi.Meta.Duplicate();
+                    auto_thi.Meta.ReturnTypeResult = Types[auto_thi.Meta.ReturnType];
+                    auto_thi.Meta.ActualType = type;
+                    type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
                 }
                 // TODO: this line: else { error(); }
                 // TODO: Scrap below
@@ -320,6 +325,27 @@ namespace FreneticScript.TagHandlers
             }
         }
 
+        /// <summary>
+        /// An automatic tag for the 'or_else' system.
+        /// </summary>
+        /// <param name="data">The input tag data.</param>
+        /// <param name="obj">The input object.</param>
+        /// <returns>The result as described by meta documentation.</returns>
+        [TagMeta(TagType = null, Name = "or_else", Group = "Nulls", ReturnType = DynamicTag.TYPE, Returns = "The current object, or the specified object if the current is null.")]
+        public static TemplateObject AutoTag_Or_Else(TagData data, TemplateObject obj)
+        {
+            if (obj is NullTag)
+            {
+                return NullTag.Tag_Or_Else(data, obj);
+            }
+            return new DynamicTag(obj);
+        }
+
+        /// <summary>
+        /// References <see cref="AutoTag_Or_Else(TagData, TemplateObject)"/>.
+        /// </summary>
+        public static MethodInfo AUTO_OR_ELSE = typeof(TagParser).GetMethod("AutoTag_Or_Else");
+        
         /// <summary>
         /// The BinaryTag type.
         /// </summary>

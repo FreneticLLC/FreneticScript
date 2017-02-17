@@ -50,31 +50,39 @@ namespace FreneticScript.TagHandlers.Objects
         public const string TYPE = "dynamictag";
 
         /// <summary>
-        /// All tag handlers for this tag type.
+        /// Creates a SystemTag for the given input data.
         /// </summary>
-        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
-        static DynamicTag()
+        /// <param name="data">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid time tag.</returns>
+        public static TemplateObject CreateFor(TagData data, TemplateObject input)
         {
-            // <--[tag]
-            // @Name DynamicTag.as[<TagTypeTag>]
-            // @Group Tag System
-            // @ReturnType <Dynamic:SpecifiedType>
-            // @Returns this tag as the specified type.
-            // @Example "32" .as[IntegerTag] returns "32".
-            // -->
-            Handlers.Add("as", new TagSubHandler() { Handle = (data, obj) =>
-            {
-                // NOTE: Requires special compilation code...
-                TagTypeTag ttt = TagTypeTag.For(data, data.GetModifierObject(0));
-                return ttt.Internal.TypeGetter(data, ((DynamicTag)obj).Internal);
-            }, ReturnTypeString = null });
-            // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new DynamicTag(((DynamicTag)obj).Internal), ReturnTypeString = "dynamictag" });
-            // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Dynamic), ReturnTypeString = "tagtypetag" });
+            return new NullTag();
         }
 
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        {
+            return new DynamicTag((obj as DynamicTag).Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (DynamicTag).")]
+        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Null);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "as", Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
+        public static TemplateObject Tag_As(TagData data, TemplateObject obj)
+        {
+            // This will be specially compiled.
+            throw new NotImplementedException();
+        }
+
+#pragma warning restore 1591
+        
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -85,11 +93,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this).Handle(data.Shrink());
-            }
+            // TODO: Scrap!
             return new TextTag(ToString()).Handle(data);
         }
 

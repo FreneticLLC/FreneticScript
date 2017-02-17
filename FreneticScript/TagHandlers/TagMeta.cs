@@ -69,5 +69,14 @@ namespace FreneticScript.TagHandlers
         /// Other data for the tag.
         /// </summary>
         public string[] Others;
+
+        /// <summary>
+        /// Returns a perfect duplicate of this meta.
+        /// </summary>
+        /// <returns>The duplicate.</returns>
+        public TagMeta Duplicate()
+        {
+            return MemberwiseClone() as TagMeta;
+        }
     }
 }

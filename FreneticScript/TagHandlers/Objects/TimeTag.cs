@@ -88,7 +88,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
         {
-            return new TimeTag(((TimeTag)obj).Internal);
+            return new TimeTag((obj as TimeTag).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TimeTag).")]
@@ -102,7 +102,7 @@ namespace FreneticScript.TagHandlers.Objects
             Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns 0." })]
         public static TemplateObject Tag_Current_Time_UTC(TagData data, TemplateObject obj)
         {
-            return new IntegerTag(((TimeTag)obj).Internal.ToUniversalTime().Ticks / 10000L);
+            return new IntegerTag((obj as TimeTag).Internal.ToUniversalTime().Ticks / 10000L);
         }
 
 #pragma warning restore 1591
