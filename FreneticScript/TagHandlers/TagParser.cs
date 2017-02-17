@@ -595,9 +595,22 @@ namespace FreneticScript.TagHandlers
         /// <param name="error">What to invoke if there's an error.</param>
         /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, DebugMode mode, Action<string> error, CommandStackEntry cse)
+        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
         {
-            TagData data = new TagData(this, bits.Bits, base_color, mode, error, bits.Fallback, cse) { Start = bits.Start };
+            // TODO: Use compiler magic to reduce need for this tag data object.
+            TagData data = new TagData()
+            {
+                TagSystem = this,
+                InputKeys = bits.Bits,
+                BaseColor = base_color ?? TextStyle.Color_Simple,
+                Start = bits.Start,
+                Error = error,
+                Fallback = bits.Fallback,
+                CSE = cse,
+                mode = mode,
+                Remaining = bits.Bits.Length
+            };
+            //TagData data = new TagData(this, bits.Bits, base_color, mode, error, bits.Fallback, cse) { Start = bits.Start };
 #if EXTRA_CHECKS
             if (bits.GetResultHelper == null)
             {
@@ -606,7 +619,7 @@ namespace FreneticScript.TagHandlers
             }
 #endif
             TemplateObject res = bits.GetResultHelper(data);
-            if (mode <= DebugMode.FULL)
+            if (mode <= DebugMode.FULL) // TODO: Pre-determine this via compiler
             {
                 CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
                     bits.ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()

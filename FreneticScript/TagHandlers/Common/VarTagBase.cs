@@ -46,8 +46,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            data.Error("Var tag MUST be compiled!");
-            return new NullTag();
+            throw new NotImplementedException("Var tag MUST be compiled!");
         }
 
         /// <summary>

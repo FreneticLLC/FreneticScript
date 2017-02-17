@@ -47,7 +47,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The parsed final text.</returns>
-        public TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CommandStackEntry cse)
+        public TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
         {
             // TODO: Compile this cleverly. This if and some other parts can probably be pre-computed!
             if (Bits.Count == 1)

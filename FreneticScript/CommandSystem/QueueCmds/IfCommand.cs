@@ -167,7 +167,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             Action<string> error = (o) => queue.HandleError(entry, o);
-            CommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry cse = queue.CurrentEntry;
             if (arguments.Count == 1)
             {
                 TemplateObject theto = arguments[0].Parse(TextStyle.Color_Simple, cse.Debug, error, cse);

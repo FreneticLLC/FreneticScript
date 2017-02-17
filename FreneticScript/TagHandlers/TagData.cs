@@ -89,7 +89,15 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// The relevant command stack entry, if any.
         /// </summary>
-        public CommandStackEntry CSE;
+        public CompiledCommandStackEntry CSE;
+
+        /// <summary>
+        /// Construcgts an empty unfilled tag data (FILL THIS AFTER!)
+        /// </summary>
+        public TagData()
+        {
+            // Assume the Tag system will fill vars.
+        }
 
         /// <summary>
         /// Constructs the tag information container.
@@ -101,7 +109,7 @@ namespace FreneticScript.TagHandlers
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
         /// <param name="_cse">The relevant command stack entry, if any.</param>
-        public TagData(TagParser _system, TagBit[] _input, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CommandStackEntry _cse)
+        public TagData(TagParser _system, TagBit[] _input, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;

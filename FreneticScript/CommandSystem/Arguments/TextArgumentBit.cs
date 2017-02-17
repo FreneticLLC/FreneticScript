@@ -120,7 +120,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="cse">The relevant command stack entry, if any.</param>
         /// <returns>The parsed final text.</returns>
-        public override TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CommandStackEntry cse)
+        public override TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
         {
             return InputValue;
         }

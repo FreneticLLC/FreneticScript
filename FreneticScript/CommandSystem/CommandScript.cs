@@ -416,7 +416,7 @@ namespace FreneticScript.CommandSystem
                 }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
-#if SAVE
+#if !SAVE
                 StringBuilder outp = new StringBuilder();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
                 {
@@ -532,7 +532,13 @@ namespace FreneticScript.CommandSystem
                 ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
             }
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
+            if (tab.Start is LvarTagBase) // If the 'var' compiled tag...
+            {
+                int index = (int)((tab.Bits[0].Variable.Bits[0] as TextArgumentBit).InputValue as IntegerTag).Internal;
+                ilgen.Emit(OpCodes.Ldc_I4, index); // Load the correct variable location.
+                ilgen.Emit(OpCodes.Call, LvarTagBase.Method_HandleOneFast); // Handle it quickly and directly.
+            }
+            else if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
             {
                 ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOneObjective); // Run instance method: TemplateTagBase -> HandleOneObjective.
             }

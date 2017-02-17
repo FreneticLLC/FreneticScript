@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem;
+using System.Reflection;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -15,11 +16,27 @@ namespace FreneticScript.TagHandlers.Common
         // No meta: compiled only.
 
         /// <summary>
+        /// The 'HandleOneFast' method, for compilation use.
+        /// </summary>
+        public static MethodInfo Method_HandleOneFast = typeof(LvarTagBase).GetMethod("HandleOneFast", BindingFlags.Public | BindingFlags.Static);
+
+        /// <summary>
         /// Construct the Lvar tag base.
         /// </summary>
         public LvarTagBase()
         {
             Name = "\0lvar";
+        }
+        
+        /// <summary>
+        /// Handles a single entry.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="loc">The location of the variable.</param>
+        /// <returns>The result.</returns>
+        public static TemplateObject HandleOneFast(TagData data, int loc)
+        {
+            return data.CSE.LocalVariables[loc].Internal;
         }
 
         /// <summary>
@@ -29,7 +46,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The result.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return (data.CSE as CompiledCommandStackEntry).LocalVariables[IntegerTag.For(data, data.GetModifierObject(0)).Internal].Internal;
+            throw new NotImplementedException("LVar was called incorrectly!");
         }
     }
 }
