@@ -118,7 +118,16 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid boolean tag.</returns>
         public static TemplateObject CreateFor(TagData dat, TemplateObject input)
         {
-            return input is BooleanTag ? (BooleanTag)input : For(dat, input.ToString());
+            if (input is BooleanTag)
+            {
+                return input;
+            }
+            DynamicTag dynamic = input as DynamicTag;
+            if (dynamic != null)
+            {
+                return CreateFor(dat, dynamic.Internal);
+            }
+            return For(dat, input.ToString());
         }
 
 #pragma warning disable 1591

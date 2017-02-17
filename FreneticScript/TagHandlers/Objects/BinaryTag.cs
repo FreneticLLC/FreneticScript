@@ -105,7 +105,16 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid binary tag.</returns>
         public static TemplateObject CreateFor(TagData dat, TemplateObject input)
         {
-            return input is BinaryTag ? (BinaryTag)input : For(dat, input.ToString());
+            if (input is BinaryTag)
+            {
+                return input;
+            }
+            DynamicTag dynamic = input as DynamicTag;
+            if (dynamic != null)
+            {
+                return CreateFor(dat, dynamic.Internal);
+            }
+            return For(dat, input.ToString());
         }
 
 #pragma warning disable 1591

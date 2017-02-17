@@ -54,12 +54,21 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// Creates a SystemTag for the given input data.
         /// </summary>
-        /// <param name="data">The tag data.</param>
+        /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid time tag.</returns>
-        public static TemplateObject CreateFor(TagData data, TemplateObject input)
+        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
         {
-            return (input as TimeTag) ?? For(input.ToString());
+            if (input is TimeTag)
+            {
+                return input;
+            }
+            DynamicTag dynamic = input as DynamicTag;
+            if (dynamic != null)
+            {
+                return CreateFor(dat, dynamic.Internal);
+            }
+            return For(input.ToString());
         }
 
 #pragma warning disable 1591

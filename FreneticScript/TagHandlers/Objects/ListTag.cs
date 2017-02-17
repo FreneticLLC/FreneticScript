@@ -106,7 +106,16 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid list tag.</returns>
         public static TemplateObject CreateFor(TagData dat, TemplateObject input)
         {
-            return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
+            if (input is ListTag)
+            {
+                return input;
+            }
+            DynamicTag dynamic = input as DynamicTag;
+            if (dynamic != null)
+            {
+                return CreateFor(dat, dynamic.Internal);
+            }
+            return (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
         }
         /// <summary>
         /// The ListTag type.
