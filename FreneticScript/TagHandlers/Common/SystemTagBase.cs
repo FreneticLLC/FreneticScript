@@ -101,7 +101,7 @@ namespace FreneticScript.TagHandlers.Common
 
             [TagMeta(TagType = TYPE, Name = "current_time_utc", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current system time (UTC).",
                 Examples = new string[] { }, Others = new string[] { "Preferred for time-related calculations." })]
-            public static TemplateObject Tag_Current_Time_UTC(TagData data, TemplateObject obj)
+            public static TemplateObject Tag_Current_Time_UTC(TemplateObject obj, TagData data)
             {
                 return new TimeTag(DateTimeOffset.UtcNow);
             }

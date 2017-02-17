@@ -296,7 +296,7 @@ namespace FreneticScript.TagHandlers
                         else if (method.Name == "CreateFor")
                         {
                             ParameterInfo[] prms = method.GetParameters();
-                            if (prms.Length == 2 && prms[0].ParameterType == typeof(TagData) && prms[1].ParameterType == typeof(TemplateObject))
+                            if (prms.Length == 2 && prms[0].ParameterType == typeof(TemplateObject) && prms[1].ParameterType == typeof(TagData))
                             {
                                 type.CreatorMethod = method;
                             }
@@ -341,7 +341,7 @@ namespace FreneticScript.TagHandlers
         /// <param name="obj">The input object.</param>
         /// <returns>The result as described by meta documentation.</returns>
         [TagMeta(TagType = null, Name = "or_else", Group = "Nulls", ReturnType = DynamicTag.TYPE, Returns = "The current object, or the specified object if the current is null.")]
-        public static TemplateObject AutoTag_Or_Else(TagData data, TemplateObject obj)
+        public static TemplateObject AutoTag_Or_Else(TemplateObject obj, TagData data)
         {
             // TODO: Compile to not need a dynamic tag?
             if (obj is NullTag)

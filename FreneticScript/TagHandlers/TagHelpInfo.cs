@@ -34,7 +34,7 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="data">The tag data.</param>
         /// <param name="obj">The object to handle.</param>
-        public delegate TemplateObject MethodHandler(TagData data, TemplateObject obj);
+        public delegate TemplateObject MethodHandler(TemplateObject obj, TagData data);
 
         /// <summary>
         /// Constructs the TagHelpInfo.

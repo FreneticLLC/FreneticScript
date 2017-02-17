@@ -127,7 +127,7 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
-        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal);
         }
@@ -135,125 +135,125 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer plus the specified integer.",
             Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Automatic?!
-        public static TemplateObject Tag_Add_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Add_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal + For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer minus the specified integer.",
             Examples = new string[] { "'2' .subtract_int[1] returns '1'." }, Others = new string[] { "Commonly shortened to '-'." })]
-        public static TemplateObject Tag_Subtract_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Subtract_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal - For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "multiply_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer multiplied by the specified integer.",
             Examples = new string[] { "'2' .multiply_int[2] returns '4'." }, Others = new string[] { "Commonly shortened to '*'." })]
-        public static TemplateObject Tag_Multiply_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Multiply_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal * For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "divide_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer divided by the specified integer.",
             Examples = new string[] { "'4' .divide_int[2] returns '2'." }, Others = new string[] { "Commonly shortened to '/'." })]
-        public static TemplateObject Tag_Divide_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Divide_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal / For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "modulo_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer modulo the specified integer.",
             Examples = new string[] { "'10' .modulo_int[3] returns '1'." }, Others = new string[] { "Commonly shortened to '%'." })]
-        public static TemplateObject Tag_Modulo_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Modulo_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal % For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the integer.",
             Examples = new string[] { "'-1' .absolute_value_int returns '1'." }, Others = new string[] { "Commonly shortened to 'abs'." })]
-        public static TemplateObject Tag_Absolute_Value_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Absolute_Value_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag(Math.Abs((obj as IntegerTag).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is greater: the integer or the specified integer.",
             Examples = new string[] { "'10' .maximum_int[12] returns '12'." }, Others = new string[] { "Commonly shortened to 'max'." })]
-        public static TemplateObject Tag_Maximum_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Maximum_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag(Math.Max((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Returns = "Whichever is lower: the integer or the specified integer.",
             Examples = new string[] { "'10' .minimum_int[12] returns '10'." }, Others = new string[] { "Commonly shortened to 'min'." })]
-        public static TemplateObject Tag_Minimum_Int(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Minimum_Int(TemplateObject obj, TagData data)
         {
             return new IntegerTag(Math.Min((obj as IntegerTag).Internal, For(data, data.GetModifierObject(0)).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
             Examples = new string[] { "'1' .to_binary returns '1000000000000000'." })]
-        public static TemplateObject Tag_To_Binary(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_To_Binary(TemplateObject obj, TagData data)
         {
             return new BinaryTag(BitConverter.GetBytes((obj as IntegerTag).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "is_greater_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is greater than the specified integer.",
             Examples = new string[] { "'1' .is_greater_than[0] returns 'true'." }, Others = new string[] { "Commonly shortened to '>'." })]
-        public static TemplateObject Tag_Is_Greater_Than(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Is_Greater_Than(TemplateObject obj, TagData data)
         {
             return new BooleanTag((obj as IntegerTag).Internal > For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_greater_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is greater than or equal to the specified integer.",
             Examples = new string[] { "'1' .is_greater_than_or_equal_to[0] returns 'true'." }, Others = new string[] { "Commonly shortened to '>='." })]
-        public static TemplateObject Tag_Is_Greater_Than_Or_Equal_To(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Is_Greater_Than_Or_Equal_To(TemplateObject obj, TagData data)
         {
             return new BooleanTag((obj as IntegerTag).Internal >= For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_less_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is less than the specified integer.",
             Examples = new string[] { "'1' .is_less_than[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '<'." })]
-        public static TemplateObject Tag_Is_Less_Than(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Is_Less_Than(TemplateObject obj, TagData data)
         {
             return new BooleanTag((obj as IntegerTag).Internal < For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_less_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer is less than or equal to the specified integer.",
             Examples = new string[] { "'1' .is_less_than_or_equal_to[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '<='." })]
-        public static TemplateObject Tag_Is_Less_Than_Or_Equal_To(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Is_Less_Than_Or_Equal_To(TemplateObject obj, TagData data)
         {
             return new BooleanTag((obj as IntegerTag).Internal <= For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "equals", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Returns = "Whether the integer equals the specified integer.",
             Examples = new string[] { "'1' .equals[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '='." })]
-        public static TemplateObject Tag_Equals(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Equals(TemplateObject obj, TagData data)
         {
             return new BooleanTag((obj as IntegerTag).Internal == For(data, data.GetModifierObject(0)).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "sign", Group = "Mathematics", ReturnType = TYPE, Returns = "The sign of the integer, which can be -1, 0, or 1.",
             Examples = new string[] { "'-5' .sign returns '-1'." })]
-        public static TemplateObject Tag_Sign(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Sign(TemplateObject obj, TagData data)
         {
             return new IntegerTag(Math.Sign((obj as IntegerTag).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = TYPE, Returns = "The integer parsed as an integer.",
             Examples = new string[] { "'1' .to_integer returns '1'." })]
-        public static TemplateObject Tag_To_Integer(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_To_Integer(TemplateObject obj, TagData data)
         {
             return new IntegerTag((obj as IntegerTag).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The integer parsed as a number.",
             Examples = new string[] { "'1' .to_number returns '1'." })]
-        public static TemplateObject Tag_To_Number(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_To_Number(TemplateObject obj, TagData data)
         {
             return new NumberTag((obj as IntegerTag).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (IntegerTag).")]
-        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Type(TemplateObject obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Integer);
         }

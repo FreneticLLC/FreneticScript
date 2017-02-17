@@ -43,13 +43,13 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
-        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
         {
             return new NullTag();
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (NullTag).")]
-        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Type(TemplateObject obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Null);
         }

@@ -62,7 +62,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'Hello' .duplicate returns 'Hello'." })]
-        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
         {
             return new TextTag(obj.ToString());
         }

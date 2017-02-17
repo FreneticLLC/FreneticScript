@@ -524,12 +524,6 @@ namespace FreneticScript.CommandSystem
                         + "): Invalid sub-tag '" + key + "' for tag: " + tab.ToString());
                 }
             }
-            // TODO: Optimize more, keep 'o' on the stack more (less pushing to locals), etc.
-            bool oneonly = tab.Bits.Length == 1;
-            if (!oneonly)
-            {
-                ilgen.DeclareLocal(typeof(TemplateObject)); // TemplateObject 'o'.
-            }
             if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
@@ -550,28 +544,21 @@ namespace FreneticScript.CommandSystem
             {
                 ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOne); // Run static method: TemplateTagBase -> HandleOne.
             }
-            if (!oneonly)
+            for (int x = 1; x < tab.Bits.Length; x++)
             {
-                ilgen.Emit(OpCodes.Stloc_0); // Store into 'o'.
-                for (int x = 1; x < tab.Bits.Length; x++)
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink, which puts TagData back on the stack.
+                                             // If we're running the specially compiled 'DynamicTag.as' tag...
+                if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                 {
-                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                    ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink, which puts TagData back on the stack.
-                    ilgen.Emit(OpCodes.Ldloc_0); // Load 'o'.
-                                                 // If we're running the specially compiled 'DynamicTag.as' tag...
-                    if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
-                    {
-                        string type_name = tab.Bits[x].Variable.ToString();
-                        TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
-                        ilgen.Emit(OpCodes.Call, type_res.CreatorMethod); // Run the creator method for this tag.
-                    }
-                    else // For normal tags...
-                    {
-                        ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
-                    }
-                    ilgen.Emit(OpCodes.Stloc_0);  // Store into 'o'.
+                    string type_name = tab.Bits[x].Variable.ToString();
+                    TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
+                    ilgen.Emit(OpCodes.Call, type_res.CreatorMethod); // Run the creator method for this tag.
                 }
-                ilgen.Emit(OpCodes.Ldloc_0); // Load 'o'.
+                else // For normal tags...
+                {
+                    ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
+                }
             }
             ilgen.Emit(OpCodes.Ret); // Return.
 #if NET_4_5

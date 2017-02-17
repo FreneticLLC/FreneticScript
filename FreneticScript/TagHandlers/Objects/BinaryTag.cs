@@ -121,7 +121,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "byte_at", Group = "Binary Data", ReturnType = IntegerTag.TYPE, Returns = "The integer version of the byte at a specific 1-based index.",
             Examples = new string[] { "'102030' .byte_at[1] returns '1'." })]
-        public static TemplateObject Tag_Byte_At(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Byte_At(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
             int ind = (int)IntegerTag.For(data, data.GetModifier(0)).Internal;
@@ -138,7 +138,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "byte_list", Group = "Binary Data", ReturnType = ListTag.TYPE, Returns = "A list of integer versions of the bytes in this binary tag.",
             Examples = new string[] { "'102030' .byte_list returns '1|2|3|'." })]
-        public static TemplateObject Tag_Byte_List(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Byte_List(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
             List<TemplateObject> objs = new List<TemplateObject>(Internal.Length);
@@ -151,7 +151,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "range", Group = "Binary Data", ReturnType = TYPE, Returns = "The specified set of bytes in the binary data.",
             Examples = new string[] { "'10203040' .range[2,3] returns '2030'.", "'10203040' .range[2,2] returns '20'." }, Others = new String[] { "Note that indices are one-based." })]
-        public static TemplateObject Tag_Range(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Range(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
             string modif = data.GetModifier(0);
@@ -205,7 +205,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = IntegerTag.TYPE, Returns = "The internal data converted to an integer value.",
             Examples = new string[] { "'1000000000000000' .to_integer returns '1'." }, Others = new String[] { "Note that this currently must be of length: 1, 2, 4, or 8 bytes." })]
-        public static TemplateObject Tag_To_Integer(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_To_Integer(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
             switch (Internal.Length)
@@ -229,7 +229,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The internal data converted to an floating-point number value.",
             Examples = new string[] { "'0000000000000FF3' .to_number returns '1'." }, Others = new String[] { "Note that this currently must be of length: 4, or 8 bytes." })]
-        public static TemplateObject Tag_To_Number(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_To_Number(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
             switch (Internal.Length)
@@ -249,26 +249,26 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "from_utf8", Group = "Conversion", ReturnType = TextTag.TYPE, Returns = "The text that is represented by this UTF8 binary data.",
             Examples = new string[] { "'8696' .from_utf8 returns 'hi'." }, Others = new String[] { "Can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>." })]
-        public static TemplateObject Tag_From_UTF8(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_From_UTF8(TemplateObject obj, TagData data)
         {
             return new TextTag(new UTF8Encoding(false).GetString((obj as BinaryTag).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "to_base64", Group = "Conversion", ReturnType = TextTag.TYPE, Returns = "A Base-64 text representation of this binary data.",
             Examples = new string[] { "'8696' .to_base64 returns 'aGk='." })]
-        public static TemplateObject Tag_To_Base64(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_To_Base64(TemplateObject obj, TagData data)
         {
             return new TextTag(Convert.ToBase64String((obj as BinaryTag).Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
-        public static TemplateObject Tag_Duplicate(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
         {
             return new BinaryTag((obj as BinaryTag).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (BinaryTag).")]
-        public static TemplateObject Tag_Type(TagData data, TemplateObject obj)
+        public static TemplateObject Tag_Type(TemplateObject obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Binary);
         }
