@@ -177,11 +177,8 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            switch (data[0])
-            {
-                default:
-                    return new TextTag(ToString()).Handle(data);
-            }
+            // TODO: Scrap!
+            return new TextTag(ToString()).Handle(data);
         }
 
         /// <summary>

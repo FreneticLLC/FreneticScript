@@ -250,12 +250,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-
-        /// <summary>
-        /// All tag handlers for this tag type.
-        /// </summary>
-        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
+        
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -266,11 +261,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return this;
             }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this);
-            }
+            // TODO: Scrap!
             return new NumberTag(Internal).Handle(data); // TODO: is this best? Perhaps a BigDecimal type of tag?
         }
 

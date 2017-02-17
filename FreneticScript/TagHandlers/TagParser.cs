@@ -140,7 +140,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = CVarTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = CVarTag.Handlers,
+                SubHandlers = CVarTag.Handlers, // TODO: Convert!
                 RawType = typeof(CVarTag)
             });
             Register(Type_Dynamic = new TagType()
@@ -149,7 +149,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = DynamicTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = DynamicTag.Handlers,
+                SubHandlers = DynamicTag.Handlers, // TODO: Convert!
                 RawType = typeof(DynamicTag)
             });
             Register(Type_Integer = new TagType()
@@ -158,7 +158,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = "numbertag",
                 TypeGetter = IntegerTag.CreateFor,
                 GetNextTypeDown = (obj) => new NumberTag(((IntegerTag)obj).Internal),
-                SubHandlers = IntegerTag.Handlers,
+                SubHandlers = null,
                 RawType = typeof(IntegerTag)
             });
             Register(Type_List = new TagType()
@@ -185,7 +185,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = (data, obj) => new NullTag(),
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = NullTag.Handlers,
+                SubHandlers = NullTag.Handlers, // TODO: Convert!
                 RawType = typeof(NullTag)
             });
             Register(Type_Number = new TagType()
@@ -203,7 +203,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = SystemTagBase.SystemTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = SystemTagBase.SystemTag.Handlers,
+                SubHandlers = SystemTagBase.SystemTag.Handlers, // TODO: Convert!
                 RawType = typeof(SystemTagBase.SystemTag)
             });
             Register(Type_TagType = new TagType()
@@ -212,7 +212,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TagTypeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = TagTypeTag.Handlers,
+                SubHandlers = TagTypeTag.Handlers, // TODO: Convert!
                 RawType = typeof(TagTypeTag)
             });
             Register(Type_TernayPass = new TagType()
@@ -229,7 +229,8 @@ namespace FreneticScript.TagHandlers
                 TypeName = TextTag.TYPE,
                 SubTypeName = null,
                 TypeGetter =  TextTag.CreateFor,
-                SubHandlers = TextTag.Handlers,
+                GetNextTypeDown = null,
+                SubHandlers = TextTag.Handlers, // TODO: Convert!
                 RawType = typeof(TextTag)
             });
             Register(Type_Time = new TagType()
@@ -238,7 +239,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TimeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = TimeTag.Handlers,
+                SubHandlers = TimeTag.Handlers, // TODO: Convert!
                 RawType = typeof(TimeTag)
             });
         }
@@ -267,7 +268,7 @@ namespace FreneticScript.TagHandlers
                 type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
                 if (type.RawType != null)
                 {
-                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
+                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.Public))
                     {
                         TagMeta tm = method.GetCustomAttribute<TagMeta>();
                         if (tm != null)
@@ -292,21 +293,25 @@ namespace FreneticScript.TagHandlers
                     }
                 }
                 // TODO: this line: else { error(); }
-                Dictionary<string, TagSubHandler> orig = type.SubHandlers;
-                type.SubHandlers = new Dictionary<string, TagSubHandler>();
-                if (orig != null)
+                // TODO: Scrap below
+                if (type.SubHandlers != null)
                 {
-                    foreach (KeyValuePair<string, TagSubHandler> point in orig)
+                    Dictionary<string, TagSubHandler> orig = type.SubHandlers;
+                    type.SubHandlers = new Dictionary<string, TagSubHandler>();
+                    if (orig != null)
                     {
-                        TagSubHandler hand = point.Value.Duplicate();
-                        if (hand.ReturnTypeString != null && !Types.ContainsKey(hand.ReturnTypeString))
+                        foreach (KeyValuePair<string, TagSubHandler> point in orig)
                         {
-                            CommandSystem.Output.BadOutput("Unrecognized type string: " + hand.ReturnTypeString);
-                        }
-                        else
-                        {
-                            hand.ReturnType = hand.ReturnTypeString == null ? null : Types[hand.ReturnTypeString];
-                            type.SubHandlers.Add(point.Key, hand);
+                            TagSubHandler hand = point.Value.Duplicate();
+                            if (hand.ReturnTypeString != null && !Types.ContainsKey(hand.ReturnTypeString))
+                            {
+                                CommandSystem.Output.BadOutput("Unrecognized type string: " + hand.ReturnTypeString);
+                            }
+                            else
+                            {
+                                hand.ReturnType = hand.ReturnTypeString == null ? null : Types[hand.ReturnTypeString];
+                                type.SubHandlers.Add(point.Key, hand);
+                            }
                         }
                     }
                 }
