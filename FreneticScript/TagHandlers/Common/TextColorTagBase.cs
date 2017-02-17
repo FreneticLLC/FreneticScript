@@ -44,7 +44,7 @@ namespace FreneticScript.TagHandlers.Common
         /// Handles a 'color' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override TemplateObject HandleOne(TagData data)
+        public TemplateObject HandleOneObjective(TagData data)
         {
             Func<string> getter;
             if (Colors.TryGetValue(data.GetModifier(0).ToLowerFast(), out getter))

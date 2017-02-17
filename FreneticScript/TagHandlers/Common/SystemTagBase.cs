@@ -31,7 +31,7 @@ namespace FreneticScript.TagHandlers.Common
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return new SystemTag();
         }

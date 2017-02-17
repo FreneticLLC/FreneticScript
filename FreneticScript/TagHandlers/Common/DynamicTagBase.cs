@@ -6,7 +6,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class DynamicTagBase : TemplateTagBase
+    public class DynamicTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base dynamic[<DynamicTag>]
@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "dynamictag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return DynamicTag.CreateFor(data, data.GetModifierObject(0));
         }

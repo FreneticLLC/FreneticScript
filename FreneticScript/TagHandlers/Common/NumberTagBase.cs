@@ -6,7 +6,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class NumberTagBase : TemplateTagBase
+    public class NumberTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base number[<NumberTag>]
@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "numbertag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return NumberTag.For(data, data.GetModifierObject(0));
         }

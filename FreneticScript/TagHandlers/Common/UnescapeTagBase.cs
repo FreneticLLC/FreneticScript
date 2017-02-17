@@ -53,7 +53,7 @@ namespace FreneticScript.TagHandlers.Common
         /// Handles the 'unescape' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return new TextTag(Unescape(data.GetModifier(0)));
         }

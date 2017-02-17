@@ -6,7 +6,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class NullTagBase : TemplateTagBase
+    public class NullTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base null
@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "nulltag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return new NullTag();
         }

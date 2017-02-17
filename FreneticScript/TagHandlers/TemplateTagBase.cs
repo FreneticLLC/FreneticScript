@@ -14,9 +14,24 @@ namespace FreneticScript.TagHandlers
     public abstract class TemplateTagBase
     {
         /// <summary>
+        /// Constructs the tag base.
+        /// </summary>
+        public TemplateTagBase()
+        {
+            Type t = GetType();
+            Method_HandleOne = t.GetMethod("HandleOne", BindingFlags.Public | BindingFlags.Static);
+            Method_HandleOneObjective = t.GetMethod("HandleOneObjective", BindingFlags.Public | BindingFlags.Instance);
+        }
+
+        /// <summary>
         /// Represents the HandleOne(...) method.
         /// </summary>
-        public static MethodInfo Method_HandleOne = typeof(TemplateTagBase).GetMethod("HandleOne", BindingFlags.Public | BindingFlags.Instance);
+        public MethodInfo Method_HandleOne;
+
+        /// <summary>
+        /// Represents the HandleOne(...) method.
+        /// </summary>
+        public MethodInfo Method_HandleOneObjective;
 
         /// <summary>
         /// The name of the tag base.
@@ -32,13 +47,7 @@ namespace FreneticScript.TagHandlers
         /// The name of the type this tag handler will return. Null for dynamic.
         /// </summary>
         public string ResultTypeString = null;
-
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public abstract TemplateObject HandleOne(TagData data);
-
+        
         /// <summary>
         /// Adapts the template tab base for compiling.
         /// </summary>

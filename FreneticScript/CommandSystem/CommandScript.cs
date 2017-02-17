@@ -525,11 +525,20 @@ namespace FreneticScript.CommandSystem
             }
             // TODO: Optimize, keep 'o' on the stack, etc.
             ilgen.DeclareLocal(typeof(TemplateObject)); // TemplateObject 'o'.
+            if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
+            {
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
+            }
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
-            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            // TODO: maybe pre-read HandleOne to not need a virt instruction or the TagData->Start read?
-            ilgen.Emit(OpCodes.Callvirt, TemplateTagBase.Method_HandleOne); // Run method: TemplateTagBase -> HandleOne.
+            if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
+            {
+                ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOneObjective); // Run instance method: TemplateTagBase -> HandleOneObjective.
+            }
+            else // If faster static tag handling
+            {
+                ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOne); // Run static method: TemplateTagBase -> HandleOne.
+            }
             ilgen.Emit(OpCodes.Stloc_0); // Store into 'o'.
             for (int x = 1; x < tab.Bits.Length; x++)
             {

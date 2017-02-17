@@ -12,7 +12,8 @@ namespace FreneticScript.TagHandlers.Common
     // A map is a relationship between textual names and object values.
     // TODO: Explain better!
     // -->
-    class MapTagBase : TemplateTagBase
+
+    public class MapTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base map[<MapTag>]
@@ -27,7 +28,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "maptag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return MapTag.For(data, data.GetModifierObject(0));
         }

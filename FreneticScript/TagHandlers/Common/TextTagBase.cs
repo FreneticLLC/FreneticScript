@@ -13,7 +13,7 @@ namespace FreneticScript.TagHandlers.Common
     // TODO: Explain better
     // TODO: Link tag system explanation
     // -->
-    class TextTagBase : TemplateTagBase
+    public class TextTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base text[<TextTag>]
@@ -29,7 +29,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "texttag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return new TextTag(data.GetModifier(0));
         }

@@ -27,7 +27,7 @@ namespace FreneticScript.TagHandlers.Common
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns>The result.</returns>
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             IntegerTag itag = IntegerTag.For(data, data.GetModifierObject(0));
             CompiledCommandStackEntry ccse = data.CSE as CompiledCommandStackEntry;

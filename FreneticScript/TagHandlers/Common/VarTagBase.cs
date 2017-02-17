@@ -17,7 +17,8 @@ namespace FreneticScript.TagHandlers.Common
     // To use a queue variable in a tag, simply use the tag <@link tag var[<TextTag>]><{var[<TextTag>]}><@/link>.
     // TODO: Explain better!
     // -->
-    class VarTagBase : TemplateTagBase
+
+    public class VarTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base var[<TextTag>]
@@ -31,7 +32,7 @@ namespace FreneticScript.TagHandlers.Common
             Name = "var";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             data.Error("Var tag MUST be compiled!");
             return new NullTag();

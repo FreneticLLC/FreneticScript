@@ -12,7 +12,7 @@ namespace FreneticScript.TagHandlers.Common
     // A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
     // TODO: Explain better!
     // -->
-    class ListTagBase : TemplateTagBase
+    public class ListTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base list[<ListTag>]
@@ -27,7 +27,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "listtag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return ListTag.For(data.GetModifierObject(0));
         }

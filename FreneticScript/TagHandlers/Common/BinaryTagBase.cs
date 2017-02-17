@@ -6,7 +6,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class BinaryTagBase : TemplateTagBase
+    public class BinaryTagBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base binary[<BinaryTag>]
@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "binarytag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return BinaryTag.CreateFor(data, data.GetModifierObject(0));
         }

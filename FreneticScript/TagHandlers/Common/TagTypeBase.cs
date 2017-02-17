@@ -6,7 +6,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class TagTypeBase : TemplateTagBase
+    public class TagTypeBase : TemplateTagBase
     {
         // <--[tagbase]
         // @Base tagtype[<BinaryTag>]
@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "tagtypetag";
         }
 
-        public override TemplateObject HandleOne(TagData data)
+        public static TemplateObject HandleOne(TagData data)
         {
             return TagTypeTag.For(data, data.GetModifierObject(0));
         }
