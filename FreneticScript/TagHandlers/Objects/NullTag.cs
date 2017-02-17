@@ -53,13 +53,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return new TagTypeTag(data.TagSystem.Type_Null);
         }
-
-        [TagMeta(TagType = TYPE, Name = "or_else", Group = "Nulls", ReturnType = DynamicTag.TYPE, Returns = "The specified object.")]
-        public static TemplateObject Tag_Or_Else(TagData data, TemplateObject obj)
-        {
-            return new DynamicTag(data.GetModifierObject(0));
-        }
-
+        
 #pragma warning restore 1591
         
         /// <summary>

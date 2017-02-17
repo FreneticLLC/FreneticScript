@@ -32,17 +32,6 @@ namespace FreneticScript.TagHandlers.Objects
         {
             Internal = type;
         }
-        
-        /// <summary>
-        /// Returns the input as a dynamic tag.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="input">The input.</param>
-        /// <returns>A dynamic tag.</returns>
-        public static DynamicTag For(TagData data, TemplateObject input)
-        {
-            return input as DynamicTag ?? new DynamicTag(input);
-        }
 
         /// <summary>
         /// The DynamicTag type.
@@ -57,7 +46,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid time tag.</returns>
         public static TemplateObject CreateFor(TagData data, TemplateObject input)
         {
-            return new NullTag();
+            return input as DynamicTag ?? new DynamicTag(input);
         }
 
 #pragma warning disable 1591

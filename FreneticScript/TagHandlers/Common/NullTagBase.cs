@@ -6,24 +6,24 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class BinaryTagBase : TemplateTagBase
+    class NullTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base binary[<BinaryTag>]
+        // @Base null
         // @Group Common Base Types
-        // @ReturnType BinaryTag
-        // @Returns the input data as a BinaryTag.
+        // @ReturnType NullTag
+        // @Returns a NullTag.
         // -->
 
-        public BinaryTagBase()
+        public NullTagBase()
         {
-            Name = "binary";
-            ResultTypeString = "binarytag";
+            Name = "null";
+            ResultTypeString = "nulltag";
         }
 
         public override TemplateObject HandleOne(TagData data)
         {
-            return BinaryTag.CreateFor(data, data.GetModifierObject(0));
+            return new NullTag();
         }
     }
 }

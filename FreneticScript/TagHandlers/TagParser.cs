@@ -101,11 +101,13 @@ namespace FreneticScript.TagHandlers
             Register(new BinaryTagBase());
             Register(new BooleanTagBase());
             Register(new CVarTagBase());
+            Register(new DynamicTagBase());
             Register(new EscapeTagBase());
             Register(new IntegerTagBase());
             Register(new ListTagBase());
             Register(LVar = new LvarTagBase());
             Register(new MapTagBase());
+            Register(new NullTagBase());
             Register(new NumberTagBase());
             Register(new SystemTagBase());
             Register(new TagTypeBase());
@@ -147,7 +149,7 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = "dynamictag",
                 SubTypeName = TextTag.TYPE,
-                TypeGetter = DynamicTag.For,
+                TypeGetter = DynamicTag.CreateFor,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null,
                 RawType = typeof(DynamicTag)
@@ -239,7 +241,7 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = TimeTag.TYPE,
                 SubTypeName = TextTag.TYPE,
-                TypeGetter = TimeTag.For,
+                TypeGetter = TimeTag.CreateFor,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
                 SubHandlers = null,
                 RawType = typeof(TimeTag)
@@ -277,10 +279,17 @@ namespace FreneticScript.TagHandlers
                         {
                             tm.Ready(this);
                             TagHelpInfo thi = new TagHelpInfo(method);
-                            thi.Meta.ReturnTypeResult = Types[thi.Meta.ReturnType];
-                            if (thi.Meta.ReturnTypeResult == null)
+                            if (thi.Meta.TagType == DynamicTag.TYPE && thi.Meta.Name == "as")
                             {
-                                CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                // Special excemption! Specially compiled tag!
+                            }
+                            else
+                            {
+                                thi.Meta.ReturnTypeResult = Types[thi.Meta.ReturnType];
+                                if (thi.Meta.ReturnTypeResult == null)
+                                {
+                                    CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                }
                             }
                             type.TagHelpers.Add(tm.Name, thi);
                         }
@@ -334,9 +343,10 @@ namespace FreneticScript.TagHandlers
         [TagMeta(TagType = null, Name = "or_else", Group = "Nulls", ReturnType = DynamicTag.TYPE, Returns = "The current object, or the specified object if the current is null.")]
         public static TemplateObject AutoTag_Or_Else(TagData data, TemplateObject obj)
         {
+            // TODO: Compile to not need a dynamic tag?
             if (obj is NullTag)
             {
-                return NullTag.Tag_Or_Else(data, obj);
+                return new DynamicTag(data.GetModifierObject(0));
             }
             return new DynamicTag(obj);
         }

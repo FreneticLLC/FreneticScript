@@ -53,8 +53,8 @@ namespace FreneticScript.TagHandlers
         /// <param name="tags">The tag parser.</param>
         public void Ready(TagParser tags)
         {
-            ActualType = tags.Types[TagType];
-            if (!tags.Types.TryGetValue(ReturnType, out ReturnTypeResult))
+            ActualType = TagType == null ? null : tags.Types[TagType];
+            if (ReturnType == null || !tags.Types.TryGetValue(ReturnType, out ReturnTypeResult))
             {
                 ReturnTypeResult = null;
             }

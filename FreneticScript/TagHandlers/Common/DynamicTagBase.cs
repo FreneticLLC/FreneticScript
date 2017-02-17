@@ -6,24 +6,24 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    class BinaryTagBase : TemplateTagBase
+    class DynamicTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base binary[<BinaryTag>]
+        // @Base dynamic[<DynamicTag>]
         // @Group Common Base Types
-        // @ReturnType BinaryTag
-        // @Returns the input data as a BinaryTag.
+        // @ReturnType DynamicTag
+        // @Returns the input data as a DynamicTag.
         // -->
 
-        public BinaryTagBase()
+        public DynamicTagBase()
         {
-            Name = "binary";
-            ResultTypeString = "binarytag";
+            Name = "dynamic";
+            ResultTypeString = "dynamictag";
         }
 
         public override TemplateObject HandleOne(TagData data)
         {
-            return BinaryTag.CreateFor(data, data.GetModifierObject(0));
+            return DynamicTag.CreateFor(data, data.GetModifierObject(0));
         }
     }
 }

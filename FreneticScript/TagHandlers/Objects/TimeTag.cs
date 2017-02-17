@@ -36,28 +36,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return new TimeTag(dt.Value);
         }
-
-        /// <summary>
-        /// Get a time tag relevant to the specified input.
-        /// </summary>
-        /// <param name="data">The relevant tag data, if any.</param>
-        /// <param name="input">The input to create a time from.</param>
-        /// <returns>The time tag, or null.</returns>
-        public static TimeTag For(TagData data, TemplateObject input)
-        {
-            return For(input);
-        }
         
-        /// <summary>
-        /// Get a time tag relevant to the specified input.
-        /// </summary>
-        /// <param name="input">The input to create a time from.</param>
-        /// <returns>The time tag, or null.</returns>
-        public static TimeTag For(TemplateObject input)
-        {
-            return input as TimeTag ?? For(input.ToString());
-        }
-
         /// <summary>
         /// Constructs a time tag.
         /// </summary>
