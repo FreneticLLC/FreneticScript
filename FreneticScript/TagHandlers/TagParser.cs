@@ -264,7 +264,7 @@ namespace FreneticScript.TagHandlers
                 {
                     type.SubType = Types[type.SubTypeName];
                 }
-                type.TagHelpers = new Dictionary<string, TagHelpInfo>();
+                type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
                 if (type.RawType != null)
                 {
                     foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
@@ -555,7 +555,7 @@ namespace FreneticScript.TagHandlers
         public TemplateObject ParseTags(TagArgumentBit bits, string base_color, DebugMode mode, Action<string> error, CommandStackEntry cse)
         {
             TagData data = new TagData(this, bits.Bits, base_color, mode, error, bits.Fallback, cse) { Start = bits.Start };
-#if !EXTRA_CHECKS
+#if EXTRA_CHECKS
             if (bits.GetResultHelper == null)
             {
                 CommandSystem.Output.BadOutput("Failed to process tag: " + bits.ToString());
