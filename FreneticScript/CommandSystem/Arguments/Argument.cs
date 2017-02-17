@@ -25,12 +25,13 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <summary>
         /// Gets the resultant type of this argument.
         /// </summary>
+        /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
-        public TagType ReturnType()
+        public TagType ReturnType(CILAdaptationValues values)
         {
             if (Bits.Count == 1)
             {
-                return Bits[0].ReturnType();
+                return Bits[0].ReturnType(values);
             }
             else
             {

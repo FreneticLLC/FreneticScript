@@ -25,8 +25,9 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <summary>
         /// Gets the resultant type of this argument bit.
         /// </summary>
+        /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
-        public override TagType ReturnType()
+        public override TagType ReturnType(CILAdaptationValues values)
         {
             return CommandSystem.TagSystem.Types[ResType];
         }

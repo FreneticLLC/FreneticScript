@@ -75,7 +75,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string type_name = cent.Arguments[4].ToString().ToLowerFast();
             TagType type = cent.System.TagSystem.Types[type_name];
             int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
-            bool isCorrect = cent.Arguments[2].ReturnType()?.TypeName == type.TypeName;
+            bool isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
             // This method:
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
             // or:
@@ -84,7 +84,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
             if (!isCorrect)
             {
-                values.ILGen.Emit(OpCodes.Ldnull); // Prep a null (TagData)
+                values.ILGen.Emit(OpCodes.Ldnull); // Prep a null (TagData) // TODO: maybe get a proper tag data/error object from contextual data?
             }
             values.LoadEntry(entry); // Load the entry
             values.LoadQueue(); // Load the queue
