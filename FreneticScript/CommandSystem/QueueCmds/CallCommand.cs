@@ -96,7 +96,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     */
                 }
             }
-            cse.Debug = DebugMode.MINIMAL;
             if (entry.NamedArguments.ContainsKey("\0varname"))
             {
                 bool sgood = entry.ShouldShowGood(queue);

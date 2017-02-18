@@ -42,22 +42,20 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <summary>
         /// Parse the argument, reading any tags or other special data.
         /// </summary>
-        /// <param name="base_color">The base color for color tags.</param>
-        /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
-        /// <param name="cse">The relevant command stack entry, if any.</param>
+        /// <param name="cse">The command stack entry.</param>
         /// <returns>The parsed final text.</returns>
-        public TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
+        public TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
             // TODO: Compile this cleverly. This if and some other parts can probably be pre-computed!
             if (Bits.Count == 1)
             {
-                return Bits[0].Parse(base_color, mode, error, cse);
+                return Bits[0].Parse(error, cse);
             }
             StringBuilder built = new StringBuilder();
             for (int i = 0; i < Bits.Count; i++)
             {
-                built.Append(Bits[i].Parse(base_color, mode, error, cse).ToString());
+                built.Append(Bits[i].Parse(error, cse).ToString());
             }
             return new TextTag(built.ToString());
         }

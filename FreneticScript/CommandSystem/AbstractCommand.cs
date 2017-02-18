@@ -363,10 +363,11 @@ namespace FreneticScript.CommandSystem
             /// Declares a local.
             /// </summary>
             /// <param name="t">The type.</param>
-            public void DeclareLocal(Type t)
+            public int DeclareLocal(Type t)
             {
-                Internal.DeclareLocal(t);
-                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Declare local>: " + t.FullName));
+                int x = Internal.DeclareLocal(t).LocalIndex;
+                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Declare local>: " + t.FullName + " as " + x));
+                return x;
             }
         }
 

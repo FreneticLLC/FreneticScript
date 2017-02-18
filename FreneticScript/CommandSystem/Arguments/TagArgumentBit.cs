@@ -89,16 +89,23 @@ namespace FreneticScript.CommandSystem.Arguments
         public TemplateTagBase Start = null;
 
         /// <summary>
+        /// The approximate tag data object to be used.
+        /// </summary>
+        public TagData Data;
+
+        /// <summary>
         /// Parse the argument part, reading any tags.
         /// </summary>
-        /// <param name="base_color">The base color for color tags.</param>
-        /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
-        /// <param name="cse">The relevant command stack entry, if any.</param>
+        /// <param name="cse">The command stack entry.</param>
         /// <returns>The parsed final object.</returns>
-        public override TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
+        public override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
-            return CommandSystem.TagSystem.ParseTags(this, base_color, mode, error, cse);
+            Data.Error = error;
+            Data.cInd = 0;
+            Data.Remaining = Bits.Length;
+            Data.CSE = cse;
+            return GetResultHelper(Data);
         }
 
         /// <summary>

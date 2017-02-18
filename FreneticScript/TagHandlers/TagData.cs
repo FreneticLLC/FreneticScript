@@ -92,7 +92,7 @@ namespace FreneticScript.TagHandlers
         public CompiledCommandStackEntry CSE;
 
         /// <summary>
-        /// Construcgts an empty unfilled tag data (FILL THIS AFTER!)
+        /// Constructs an empty unfilled tag data (FILL THIS OBJECT AFTER USING THIS).
         /// </summary>
         public TagData()
         {
@@ -178,11 +178,7 @@ namespace FreneticScript.TagHandlers
         public TemplateObject GetModifierObject(int place)
         {
             place += cInd;
-            if (place < 0 || place >= InputKeys.Length)
-            {
-                throw new ArgumentOutOfRangeException("place");
-            }
-            return (InputKeys[place].Variable.Parse(BaseColor, mode, Error, CSE) ?? new TextTag(""));
+            return InputKeys[place].Variable.Parse(Error, CSE);
         }
     }
 }

@@ -73,6 +73,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
+            bool debug = values.Entry.Debug <= DebugMode.FULL;
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
             bool isCorrect = true;
@@ -88,6 +89,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
             // or:
             // queue.SetLocalVar(lvarloc, entry.GetArgumentObject(queue, 2));
+            int localInd = -1;
+            if (debug)
+            {
+                localInd = values.ILGen.DeclareLocal(typeof(TemplateObject)); // Create variable 'o' for later usage.
+            }
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
             if (!isCorrect)
@@ -97,13 +103,43 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.LoadEntry(entry); // Load the entry
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, 2); // Prep a '2'
-            // TODO: Debug output -> Only if compiled with debug on!
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod); // Get the specified argument
             if (!isCorrect)
             {
                 values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
             }
+            if (debug) // If in debug mode...
+            {
+                values.ILGen.Emit(OpCodes.Dup); // Duplicate the result on the stack
+                values.ILGen.Emit(OpCodes.Stloc, localInd); // Store it to the variable 'o'.
+            }
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod); // Push the result into the local var
+            if (debug) // If in debug mode...
+            {
+                values.ILGen.Emit(OpCodes.Ldloc, localInd); // Load variable 'o'.
+                values.LoadQueue(); // Load the queue
+                values.LoadEntry(entry); // Load the entry
+                values.ILGen.Emit(OpCodes.Call, Method_DebugHelper); // Call the debug method
+            }
+        }
+
+        /// <summary>
+        /// References <see cref="DebugHelper(TemplateObject, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod("DebugHelper");
+
+        /// <summary>
+        /// Helps debug output for the var command.
+        /// </summary>
+        /// <param name="res">The object saved as a var.</param>
+        /// <param name="queue">The queue.</param>
+        /// <param name="entry">The entry.</param>
+        public static void DebugHelper(TemplateObject res, CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.GoodOutput(queue, "Stored variable with value: " + TextStyle.Color_Separate + res);
+            }
         }
 
         TemplateObject verify1(TemplateObject input)

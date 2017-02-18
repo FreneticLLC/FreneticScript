@@ -115,12 +115,10 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <summary>
         /// Returns the input text.
         /// </summary>
-        /// <param name="base_color">The base color for color tags.</param>
-        /// <param name="mode">The debug mode to use when parsing tags.</param>
         /// <param name="error">What to invoke if there is an error.</param>
-        /// <param name="cse">The relevant command stack entry, if any.</param>
+        /// <param name="cse">The command stack entry.</param>
         /// <returns>The parsed final text.</returns>
-        public override TemplateObject Parse(string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
+        public override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
             return InputValue;
         }

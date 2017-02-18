@@ -584,34 +584,7 @@ namespace FreneticScript.TagHandlers
             }
             return arg;
         }
-
-        /// <summary>
-        /// Reads and parses all tags inside a list of tag bits.
-        /// </summary>
-        /// <param name="base_color">The base color for tags to use.</param>
-        /// <param name="bits">The tag data.</param>
-        /// <param name="mode">What debugmode to use.</param>
-        /// <param name="error">What to invoke if there's an error.</param>
-        /// <param name="cse">The relevant command stack entry, if any.</param>
-        /// <returns>The string with tags parsed.</returns>
-        public TemplateObject ParseTags(TagArgumentBit bits, string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
-        {
-            // TODO: Use compiler magic to reduce need for this tag data object. Maybe precompute it?
-            TagData data = new TagData()
-            {
-                TagSystem = this,
-                InputKeys = bits.Bits,
-                BaseColor = base_color,
-                Start = bits.Start,
-                Error = error,
-                Fallback = bits.Fallback,
-                CSE = cse,
-                mode = mode,
-                Remaining = bits.Bits.Length
-            };
-            return bits.GetResultHelper(data);
-        }
-
+        
         /// <summary>
         /// Reference to <see cref="DebugTagHelper(TemplateObject, TagData)"/>.
         /// </summary>

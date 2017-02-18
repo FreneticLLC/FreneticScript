@@ -527,6 +527,19 @@ namespace FreneticScript.CommandSystem
                         + "): Invalid sub-tag '" + key + "' for tag: " + tab.ToString());
                 }
             }
+            tab.Data = new TagData()
+            {
+                BaseColor = TextStyle.Color_Simple,
+                cInd = 0,
+                CSE = ccse,
+                Error = null,
+                Fallback = tab.Fallback,
+                InputKeys = tab.Bits,
+                mode = ccse.Debug,
+                Remaining = tab.Bits.Length,
+                Start = tab.Start,
+                TagSystem = tab.CommandSystem.TagSystem
+            };
             if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.

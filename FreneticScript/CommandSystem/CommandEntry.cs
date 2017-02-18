@@ -331,7 +331,7 @@ namespace FreneticScript.CommandSystem
             }
             return defaultval;
         }
-
+        
         /// <summary>
         /// Gets a named argument with a specified name, handling any tags.
         /// </summary>
@@ -343,8 +343,7 @@ namespace FreneticScript.CommandSystem
             Argument arg;
             if (NamedArguments.TryGetValue(name, out arg))
             {
-                CompiledCommandStackEntry cse = queue.CurrentEntry;
-                return arg.Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), cse);
+                return arg.Parse((o) => queue.HandleError(this, o), queue.CurrentEntry);
             }
             return null;
         }
@@ -359,8 +358,7 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.ParseTags != TagParseMode.OFF) // TODO: Compile parse tags option
             {
-                CompiledCommandStackEntry cse = queue.CurrentEntry;
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), cse);
+                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry);
             }
             else
             {
@@ -378,8 +376,7 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.ParseTags != TagParseMode.OFF)
             {
-                CompiledCommandStackEntry cse = queue.CurrentEntry;
-                return Arguments[place].Parse(TextStyle.Color_Simple, cse.Debug, (o) => queue.HandleError(this, o), cse).ToString();
+                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry).ToString();
             }
             else
             {
