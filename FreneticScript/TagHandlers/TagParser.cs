@@ -596,12 +596,12 @@ namespace FreneticScript.TagHandlers
         /// <returns>The string with tags parsed.</returns>
         public TemplateObject ParseTags(TagArgumentBit bits, string base_color, DebugMode mode, Action<string> error, CompiledCommandStackEntry cse)
         {
-            // TODO: Use compiler magic to reduce need for this tag data object.
+            // TODO: Use compiler magic to reduce need for this tag data object. Maybe precompute it?
             TagData data = new TagData()
             {
                 TagSystem = this,
                 InputKeys = bits.Bits,
-                BaseColor = base_color ?? TextStyle.Color_Simple,
+                BaseColor = base_color,
                 Start = bits.Start,
                 Error = error,
                 Fallback = bits.Fallback,
@@ -609,19 +609,26 @@ namespace FreneticScript.TagHandlers
                 mode = mode,
                 Remaining = bits.Bits.Length
             };
-            //TagData data = new TagData(this, bits.Bits, base_color, mode, error, bits.Fallback, cse) { Start = bits.Start };
-#if EXTRA_CHECKS
-            if (bits.GetResultHelper == null)
+            return bits.GetResultHelper(data);
+        }
+
+        /// <summary>
+        /// Reference to <see cref="DebugTagHelper(TemplateObject, TagData)"/>.
+        /// </summary>
+        public static MethodInfo Method_DebugTagHelper = typeof(TagParser).GetMethod("DebugTagHelper");
+
+        /// <summary>
+        /// Helper for debugging compiled tags.
+        /// </summary>
+        /// <param name="res">The returned object.</param>
+        /// <param name="data">The tag data.</param>
+        /// <returns>Res, unmodified.</returns>
+        public static TemplateObject DebugTagHelper(TemplateObject res, TagData data)
+        {
+            if (data.mode <= DebugMode.FULL)
             {
-                CommandSystem.Output.BadOutput("Failed to process tag: " + bits.ToString());
-                return new NullTag();
-            }
-#endif
-            TemplateObject res = bits.GetResultHelper(data);
-            if (mode <= DebugMode.FULL) // TODO: Pre-determine this via compiler
-            {
-                CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
-                    bits.ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
+                data.TagSystem.CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
+                    new TagArgumentBit(data.TagSystem.CommandSystem, data.InputKeys).ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
                     + TextStyle.Color_Outgood + "\".");
             }
             return res;

@@ -212,7 +212,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart));
+                    queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart, DebugMode.MINIMAL));
                     if (entry.ShouldShowGood(queue))
                     {
                         entry.Good(queue, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' defined.");

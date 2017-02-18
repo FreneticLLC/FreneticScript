@@ -43,8 +43,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="bits">The tag bits.</param>
         public TagArgumentBit(Commands system, TagBit[] bits)
         {
-            Bits = bits;
             CommandSystem = system;
+            Bits = bits;
         }
 
         /// <summary>

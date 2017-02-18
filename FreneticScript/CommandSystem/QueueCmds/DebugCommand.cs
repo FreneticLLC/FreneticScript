@@ -47,6 +47,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        // TODO: Compile this command neatly!
+
         TemplateObject verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();

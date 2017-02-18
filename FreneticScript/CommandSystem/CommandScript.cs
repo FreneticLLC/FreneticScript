@@ -301,8 +301,10 @@ namespace FreneticScript.CommandSystem
         /// <param name="_name">The name of the script.</param>
         /// <param name="_commands">All commands in the script.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
-        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0)
+        /// <param name="mode">What debug mode to use for this script.</param>
+        public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, DebugMode mode = DebugMode.FULL)
         {
+            Debug = mode;
             Name = _name.ToLowerFast();
             List<CommandEntry> Commands = _commands;
             Commands = new List<CommandEntry>(_commands);
@@ -560,6 +562,11 @@ namespace FreneticScript.CommandSystem
                 {
                     ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
                 }
+            }
+            if (ccse.Debug <= DebugMode.FULL) // If debug mode is on...
+            {
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                ilgen.Emit(OpCodes.Call, TagParser.Method_DebugTagHelper); // Debug the tag as a final step. Will give back the object to the stack.
             }
             ilgen.Emit(OpCodes.Ret); // Return.
 #if NET_4_5
