@@ -66,7 +66,7 @@ namespace FreneticScript.TagHandlers.Common
             /// </summary>
             /// <param name="data">The data.</param>
             /// <param name="input">The input.</param>
-            public static TernaryPassTag For(TagData data, TemplateObject input)
+            public static TernaryPassTag For(TemplateObject input, TagData data)
             {
                 return input is TernaryPassTag ? (TernaryPassTag)input : For(data, input.ToString());
             }

@@ -48,7 +48,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="data">The tag data.</param>
         /// <param name="text">The text input.</param>
         /// <returns>A valid text tag.</returns>
-        public static TemplateObject CreateFor(TagData data, TemplateObject text)
+        public static TextTag CreateFor(TemplateObject text, TagData data)
         {
             return new TextTag(text.ToString());
         }
@@ -85,7 +85,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns the text parsed as a number.
             // @Example "1" .to_number returns "1".
             // -->
-            Handlers.Add("to_number", new TagSubHandler() { Handle = (data, obj) => NumberTag.For(data, obj), ReturnTypeString = "numbertag" });
+            Handlers.Add("to_number", new TagSubHandler() { Handle = (data, obj) => NumberTag.For(obj, data), ReturnTypeString = "numbertag" });
             // <--[tag]
             // @Name TextTag.to_integer
             // @Group Text Modification
@@ -93,7 +93,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns the text parsed as an integer.
             // @Example "1" .to_integer returns "1".
             // -->
-            Handlers.Add("to_integer", new TagSubHandler() { Handle = (data, obj) => IntegerTag.For(data, obj), ReturnTypeString = "integertag" });
+            Handlers.Add("to_integer", new TagSubHandler() { Handle = (data, obj) => IntegerTag.For(obj, data), ReturnTypeString = "integertag" });
             // <--[tag]
             // @Name TextTag.to_boolean
             // @Group Text Modification
@@ -101,7 +101,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns the text parsed as a boolean.
             // @Example "true" .to_boolean returns "true".
             // -->
-            Handlers.Add("to_boolean", new TagSubHandler() { Handle = (data, obj) => BooleanTag.For(data, obj), ReturnTypeString = "booleantag" });
+            Handlers.Add("to_boolean", new TagSubHandler() { Handle = (data, obj) => BooleanTag.For(obj, data), ReturnTypeString = "booleantag" });
             // <--[tag]
             // @Name TextTag.is_number
             // @Group Text Modification
@@ -189,14 +189,14 @@ namespace FreneticScript.TagHandlers.Objects
             Handlers.Add("substring", new TagSubHandler() { Handle = (data, obj) =>
             {
                 string Text = obj.ToString();
-                ListTag inputs = ListTag.For(data, data.GetModifierObject(0));
+                ListTag inputs = ListTag.For(data.GetModifierObject(0), data);
                 if (inputs.Internal.Count < 2)
                 {
                     data.Error("Invalid substring tag! Not two entries in the list!");
                     return new NullTag();
                 }
-                int num1 = (int)IntegerTag.For(data, inputs.Internal[0]).Internal - 1;
-                int num2 = (int)IntegerTag.For(data, inputs.Internal[1]).Internal - 1;
+                int num1 = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
+                int num2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
                 if (num1 < 0)
                 {
                     num1 = 0;

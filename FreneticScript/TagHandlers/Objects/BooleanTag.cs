@@ -54,7 +54,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The TagData used to construct this BooleanTag.</param>
         /// <param name="input">The input to create or get a boolean from.</param>
         /// <returns>The boolean tag.</returns>
-        public static BooleanTag For(TagData dat, TemplateObject input)
+        public static BooleanTag For(TemplateObject input, TagData dat)
         {
             return input as BooleanTag ?? For(dat, input.ToString());
         }
@@ -116,16 +116,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid boolean tag.</returns>
-        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        public static BooleanTag CreateFor(TemplateObject input, TagData dat)
         {
-            if (input is BooleanTag)
+            BooleanTag conv = input as BooleanTag;
+            if (conv != null)
             {
-                return input;
+                return conv;
             }
             DynamicTag dynamic = input as DynamicTag;
             if (dynamic != null)
             {
-                return CreateFor(dat, dynamic.Internal);
+                return CreateFor(dynamic.Internal, dat);
             }
             return For(dat, input.ToString());
         }
@@ -143,21 +144,21 @@ namespace FreneticScript.TagHandlers.Objects
             Examples = new string[] { "'true' .and[true] returns 'true'.", "'true' .and[false] returns 'false'.", "'false' .and[true] returns 'false'." })]
         public static TemplateObject Tag_And(TemplateObject obj, TagData data)
         {
-            return new BooleanTag((obj as BooleanTag).Internal && For(data, data.GetModifierObject(0)).Internal);
+            return new BooleanTag((obj as BooleanTag).Internal && For(data.GetModifierObject(0), data).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean or the specified text are true.",
             Examples = new string[] { "'true' .or[true] returns 'true'.", "'true' .or[false] returns 'true'.", "'false' .or[false] returns 'false'." })]
         public static TemplateObject Tag_Or(TemplateObject obj, TagData data)
         {
-            return new BooleanTag((obj as BooleanTag).Internal || For(data, data.GetModifierObject(0)).Internal);
+            return new BooleanTag((obj as BooleanTag).Internal || For(data.GetModifierObject(0), data).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
             Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'" })]
         public static TemplateObject Tag_Xor(TemplateObject obj, TagData data)
         {
-            return new BooleanTag((obj as BooleanTag).Internal != For(data, data.GetModifierObject(0)).Internal);
+            return new BooleanTag((obj as BooleanTag).Internal != For(data.GetModifierObject(0), data).Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",

@@ -57,16 +57,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid time tag.</returns>
-        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        public static TemplateObject CreateFor(TemplateObject input, TagData dat)
         {
-            if (input is TimeTag)
+            TimeTag conv = input as TimeTag;
+            if (conv != null)
             {
-                return input;
+                return conv;
             }
             DynamicTag dynamic = input as DynamicTag;
             if (dynamic != null)
             {
-                return CreateFor(dat, dynamic.Internal);
+                return CreateFor(dynamic.Internal, dat);
             }
             return For(input.ToString());
         }

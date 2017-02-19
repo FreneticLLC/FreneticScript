@@ -22,20 +22,7 @@ namespace FreneticScript.TagHandlers
         /// The relevant method.
         /// </summary>
         public MethodInfo Method;
-
-        /// <summary>
-        /// TODO: Remove this!
-        /// Calls the method directly.
-        /// </summary>
-        public MethodHandler TEMP_MethodCaller;
-
-        /// <summary>
-        /// Represents a method caller function.
-        /// </summary>
-        /// <param name="data">The tag data.</param>
-        /// <param name="obj">The object to handle.</param>
-        public delegate TemplateObject MethodHandler(TemplateObject obj, TagData data);
-
+        
         /// <summary>
         /// Constructs the TagHelpInfo.
         /// </summary>
@@ -44,7 +31,6 @@ namespace FreneticScript.TagHandlers
         {
             Method = _method;
             Meta = _method.GetCustomAttribute<TagMeta>();
-            TEMP_MethodCaller = (MethodHandler) Method.CreateDelegate(typeof(MethodHandler));
         }
     }
 }

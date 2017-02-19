@@ -28,7 +28,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         public CVar Internal;
         
-        public static CVarTag For(TagData data, TemplateObject input)
+        public static CVarTag For(TemplateObject input, TagData data)
         {
             return input as CVarTag ?? For(data, input.ToString());
         }

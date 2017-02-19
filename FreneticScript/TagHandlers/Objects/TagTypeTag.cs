@@ -58,7 +58,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="data">The data.</param>
         /// <param name="input">The input object.</param>
         /// <returns>A TagTypeTag, or null.</returns>
-        public static TagTypeTag For(TagData data, TemplateObject input)
+        public static TagTypeTag For(TemplateObject input, TagData data)
         {
             return input as TagTypeTag ?? For(data, input.ToString());
         }
@@ -77,7 +77,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns a constructed instance of this tag type.
             // @Example "numbertag" .for[3] returns "3".
             // -->
-            Handlers.Add("for", new TagSubHandler() { Handle = (data, obj) => new DynamicTag(((TagTypeTag)obj).Internal.TypeGetter(data, data.GetModifierObject(0))), ReturnTypeString = "dynamictag" });
+            Handlers.Add("for", new TagSubHandler() { Handle = (data, obj) => new DynamicTag(((TagTypeTag)obj).Internal.TypeGetter(data.GetModifierObject(0), data)), ReturnTypeString = "dynamictag" });
             // Documented in TextTag.
             Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(((TagTypeTag)obj).Internal), ReturnTypeString = "tagtypetag" });
             // Documented in TextTag.

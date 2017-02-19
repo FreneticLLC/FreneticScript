@@ -177,8 +177,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObject(int place)
         {
-            place += cInd;
-            return InputKeys[place].Variable.Parse(Error, CSE);
+            return InputKeys[place + cInd].Variable.Parse(Error, CSE);
         }
     }
 }

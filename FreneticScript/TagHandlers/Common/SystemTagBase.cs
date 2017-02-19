@@ -69,7 +69,7 @@ namespace FreneticScript.TagHandlers.Common
             /// </summary>
             /// <param name="data">The data.</param>
             /// <param name="input">The input.</param>
-            public static SystemTag For(TagData data, TemplateObject input)
+            public static SystemTag For(TemplateObject input, TagData data)
             {
                 return input is SystemTag ? (SystemTag)input : For(data, input.ToString());
             }

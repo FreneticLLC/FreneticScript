@@ -34,7 +34,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            return CVarTag.For(data, data.GetModifierObject(0));
+            return CVarTag.For(data.GetModifierObject(0), data);
         }
     }
 }

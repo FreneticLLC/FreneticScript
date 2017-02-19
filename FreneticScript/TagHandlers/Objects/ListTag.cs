@@ -83,7 +83,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="data">The relevant tag data, if any.</param>
         /// <param name="input">The list input.</param>
         /// <returns>A valid list.</returns>
-        public static ListTag For(TagData data, TemplateObject input)
+        public static ListTag For(TemplateObject input, TagData data)
         {
             return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
         }
@@ -104,16 +104,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid list tag.</returns>
-        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        public static ListTag CreateFor(TemplateObject input, TagData dat)
         {
-            if (input is ListTag)
+            ListTag conv = input as ListTag;
+            if (conv != null)
             {
-                return input;
+                return conv;
             }
             DynamicTag dynamic = input as DynamicTag;
             if (dynamic != null)
             {
-                return CreateFor(dat, dynamic.Internal);
+                return CreateFor(dynamic.Internal, dat);
             }
             return (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
         }
@@ -247,7 +248,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             List<TemplateObject> Internal = (obj as ListTag).Internal;
             TemplateObject modif = data.GetModifierObject(0);
-            IntegerTag num = IntegerTag.For(data, modif);
+            IntegerTag num = IntegerTag.For(modif, data);
             if (Internal.Count == 0)
             {
                 data.Error("Read 'get' tag on empty list!");
@@ -277,8 +278,8 @@ namespace FreneticScript.TagHandlers.Objects
                 data.Error("Invalid substring tag! Not two entries in the list!");
                 return new NullTag();
             }
-            int number = (int)IntegerTag.For(data, inputs.Internal[0]).Internal - 1;
-            int number2 = (int)IntegerTag.For(data, inputs.Internal[1]).Internal - 1;
+            int number = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
+            int number2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'range' tag on empty list!");
@@ -335,7 +336,7 @@ namespace FreneticScript.TagHandlers.Objects
                 data.Error("Empty list to insert!");
                 return new NullTag();
             }
-            IntegerTag index = IntegerTag.For(data, modif.Internal[0]);
+            IntegerTag index = IntegerTag.For(modif.Internal[0], data);
             modif.Internal.RemoveAt(0);
             ListTag newlist = new ListTag((obj as ListTag).Internal);
             if (index.Internal > newlist.Internal.Count)

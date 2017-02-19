@@ -99,7 +99,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The relevant tag data, if any.</param>
         /// <param name="input">The input object.</param>
         /// <returns>The map represented by the input object.</returns>
-        public static MapTag For(TagData dat, TemplateObject input)
+        public static MapTag For(TemplateObject input, TagData dat)
         {
             return input as MapTag ?? For(input.ToString());
         }

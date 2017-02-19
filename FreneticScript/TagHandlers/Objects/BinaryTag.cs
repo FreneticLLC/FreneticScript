@@ -78,7 +78,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The TagData used to construct this BinaryTag.</param>
         /// <param name="input">The input to create or get binary data from.</param>
         /// <returns>The binary tag.</returns>
-        public static BinaryTag For(TagData dat, TemplateObject input)
+        public static BinaryTag For(TemplateObject input, TagData dat)
         {
             return input as BinaryTag ?? For(dat, input.ToString());
         }
@@ -103,16 +103,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid binary tag.</returns>
-        public static TemplateObject CreateFor(TagData dat, TemplateObject input)
+        public static BinaryTag CreateFor(TemplateObject input, TagData dat)
         {
-            if (input is BinaryTag)
+            BinaryTag conv = input as BinaryTag;
+            if (conv != null)
             {
-                return input;
+                return conv;
             }
             DynamicTag dynamic = input as DynamicTag;
             if (dynamic != null)
             {
-                return CreateFor(dat, dynamic.Internal);
+                return CreateFor(dynamic.Internal, dat);
             }
             return For(dat, input.ToString());
         }

@@ -33,7 +33,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            return TimeTag.CreateFor(data, data.GetModifierObject(0));
+            return TimeTag.CreateFor(data.GetModifierObject(0), data);
         }
     }
 }

@@ -281,7 +281,7 @@ namespace FreneticScript.TagHandlers
                             TagHelpInfo thi = new TagHelpInfo(method);
                             if (thi.Meta.TagType == DynamicTag.TYPE && thi.Meta.Name == "as")
                             {
-                                // Special excemption! Specially compiled tag!
+                                // Special exception! Specially compiled tag!
                             }
                             else
                             {

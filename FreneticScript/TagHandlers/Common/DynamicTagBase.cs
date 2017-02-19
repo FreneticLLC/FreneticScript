@@ -34,7 +34,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return DynamicTag.CreateFor(data, data.GetModifierObject(0));
+            return DynamicTag.CreateFor(data.GetModifierObject(0), data);
         }
     }
 }
