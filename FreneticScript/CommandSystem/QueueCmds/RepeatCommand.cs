@@ -140,7 +140,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadQueue();
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
                 values.ILGen.Emit(OpCodes.Call, values.Entry.Debug <= DebugMode.FULL ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
@@ -234,14 +233,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
-        /// <param name="rt">Repeat Total Location.</param>
-        public static bool TryRepeatCILNoDebug(CommandQueue queue, CommandEntry entry, int ri, int rt)
+        public static bool TryRepeatCILNoDebug(CommandQueue queue, CommandEntry entry, int ri)
         {
             CompiledCommandStackEntry cse = queue.CurrentEntry;
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
-            dat.Index++;
-            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
-            return dat.Index <= dat.Total;
+            return ((cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index) <= dat.Total;
         }
         /// <summary>
         /// Executes the callback part of the repeat command.
@@ -249,13 +245,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
-        /// <param name="rt">Repeat Total Location.</param>
-        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
+        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
             CompiledCommandStackEntry cse = queue.CurrentEntry;
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
-            dat.Index++;
-            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
+            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue))
