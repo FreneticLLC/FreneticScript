@@ -241,8 +241,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
             dat.Index++;
             CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
-            ccse.LocalVariables[ri].Internal = new IntegerTag(dat.Index);
-            // Probably not necessary: ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
+            (ccse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
             if (dat.Index <= dat.Total)
             {
                 cse.Index = entry.BlockStart;
@@ -263,18 +262,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
             dat.Index++;
             CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
-            ccse.LocalVariables[ri].Internal = new IntegerTag(dat.Index);
-            // Probably not necessary: ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
+            (ccse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
             if (dat.Index <= dat.Total)
             {
-                if (entry.ShouldShowGood(queue)) // TODO: Compile away?
+                if (entry.ShouldShowGood(queue))
                 {
                     entry.GoodOutput(queue, "Repeating...: " + TextStyle.Color_Separate + dat.Index +  TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.Total);
                 }
                 cse.Index = entry.BlockStart;
                 return true;
             }
-            if (entry.ShouldShowGood(queue)) // TODO: Compile away?
+            if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Repeat stopping.");
             }
