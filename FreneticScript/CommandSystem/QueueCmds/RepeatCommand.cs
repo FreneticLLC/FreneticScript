@@ -242,12 +242,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             dat.Index++;
             CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
             (ccse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
-            if (dat.Index <= dat.Total)
-            {
-                cse.Index = entry.BlockStart;
-                return true;
-            }
-            return false;
+            return dat.Index <= dat.Total;
         }
         /// <summary>
         /// Executes the callback part of the repeat command.
@@ -269,7 +264,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.GoodOutput(queue, "Repeating...: " + TextStyle.Color_Separate + dat.Index +  TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.Total);
                 }
-                cse.Index = entry.BlockStart;
                 return true;
             }
             if (entry.ShouldShowGood(queue))
