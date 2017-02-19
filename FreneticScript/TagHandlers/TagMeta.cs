@@ -48,6 +48,16 @@ namespace FreneticScript.TagHandlers
         public TagType ReturnTypeResult;
 
         /// <summary>
+        /// The modifier type of this tag.
+        /// </summary>
+        public string Modifier;
+
+        /// <summary>
+        /// The internal modifier tag type of this tag.
+        /// </summary>
+        public TagType ModifierType;
+
+        /// <summary>
         /// Prepares the tag meta.
         /// </summary>
         /// <param name="tags">The tag parser.</param>
@@ -58,6 +68,7 @@ namespace FreneticScript.TagHandlers
             {
                 ReturnTypeResult = null;
             }
+            ModifierType = Modifier == null ? null : tags.Types[Modifier];
         }
 
         /// <summary>

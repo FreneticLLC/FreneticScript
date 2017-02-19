@@ -103,7 +103,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// The IntegerTag type.
         /// </summary>
         public const string TYPE = "integertag";
-
+        
         /// <summary>
         /// Creates an IntegerTag for the given input data.
         /// </summary>
@@ -133,12 +133,12 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag(obj.Internal);
         }
         
-        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer plus the specified integer.",
+        [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE, Returns = "The integer plus the specified integer.",
             Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Automatic?!
-        public static IntegerTag Tag_Add_Int(IntegerTag obj, TagData data)
+        public static IntegerTag Tag_Add_Int(IntegerTag obj, IntegerTag modifier)
         {
-            return new IntegerTag(obj.Internal + CreateFor(data.GetModifierObject(0), data).Internal);
+            return new IntegerTag(obj.Internal + modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The integer minus the specified integer.",

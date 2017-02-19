@@ -277,8 +277,8 @@ namespace FreneticScript.TagHandlers
                         TagMeta tm = method.GetCustomAttribute<TagMeta>();
                         if (tm != null)
                         {
-                            tm.Ready(this);
                             TagHelpInfo thi = new TagHelpInfo(method);
+                            thi.Meta.Ready(this);
                             if (thi.Meta.TagType == DynamicTag.TYPE && thi.Meta.Name == "as")
                             {
                                 // Special exception! Specially compiled tag!
@@ -307,29 +307,6 @@ namespace FreneticScript.TagHandlers
                     auto_thi.Meta.ReturnTypeResult = Types[auto_thi.Meta.ReturnType];
                     auto_thi.Meta.ActualType = type;
                     type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
-                }
-                // TODO: this line: else { error(); }
-                // TODO: Scrap below
-                if (type.SubHandlers != null)
-                {
-                    Dictionary<string, TagSubHandler> orig = type.SubHandlers;
-                    type.SubHandlers = new Dictionary<string, TagSubHandler>();
-                    if (orig != null)
-                    {
-                        foreach (KeyValuePair<string, TagSubHandler> point in orig)
-                        {
-                            TagSubHandler hand = point.Value.Duplicate();
-                            if (hand.ReturnTypeString != null && !Types.ContainsKey(hand.ReturnTypeString))
-                            {
-                                CommandSystem.Output.BadOutput("Unrecognized type string: " + hand.ReturnTypeString);
-                            }
-                            else
-                            {
-                                hand.ReturnType = hand.ReturnTypeString == null ? null : Types[hand.ReturnTypeString];
-                                type.SubHandlers.Add(point.Key, hand);
-                            }
-                        }
-                    }
                 }
             }
         }

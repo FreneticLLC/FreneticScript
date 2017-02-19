@@ -560,11 +560,26 @@ namespace FreneticScript.CommandSystem
             {
                 ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOne); // Run static method: TemplateTagBase -> HandleOne.
             }
+            int need_shrink = 0;
             for (int x = 1; x < tab.Bits.Length; x++)
             {
-                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink, which puts TagData back on the stack.
-                                             // If we're running the specially compiled 'DynamicTag.as' tag...
+                TagType modt = tab.Bits[x].TagHandler.Meta.ModifierType;
+                need_shrink++;
+                if (modt == null) // If no direct modifier input is required, just a generic TagData input...
+                {
+                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                    if (need_shrink > 1) // If we need to shrink several at once...
+                    {
+                        ilgen.Emit(OpCodes.Ldc_I4, need_shrink); // Load the number of times a shrink is needed.
+                        ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkMulti); // Run method: TagData -> ShrinkMulti, which puts TagData back on the stack.
+                    }
+                    else
+                    {
+                        ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink, which puts TagData back on the stack.
+                    }
+                    need_shrink = 0;
+                }
+                // If we're running the specially compiled 'DynamicTag.as' tag...
                 if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                 {
                     string type_name = tab.Bits[x].Variable.ToString();
@@ -573,6 +588,17 @@ namespace FreneticScript.CommandSystem
                 }
                 else // For normal tags...
                 {
+                    if (modt != null) // If we have a modifier input type pre-requirement...
+                    {
+                        ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                        ilgen.Emit(OpCodes.Ldc_I4, x); // Load the correct tag modifier location in exact.
+                        ilgen.Emit(OpCodes.Call, TagData.Method_GetModiferObjectKnown); // Call the method to get the tag modifier object at the x location.
+                        TagType atype = tab.Bits[x].Variable.ReturnType(values);
+                        if (modt != atype) // If the modifier input is of the wrong type...
+                        {
+                            ilgen.Emit(OpCodes.Call, modt.CreatorMethod); // Run the creator method to convert the tag to the correct type.
+                        }
+                    }
                     ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
                 }
             }

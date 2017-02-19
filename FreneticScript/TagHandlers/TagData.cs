@@ -26,9 +26,9 @@ namespace FreneticScript.TagHandlers
         public static FieldInfo Field_InputKeys = typeof(TagData).GetField("InputKeys");
 
         /// <summary>
-        /// The "ShrinkQuick" method.
+        /// The "ShrinkMulti" method.
         /// </summary>
-        public static MethodInfo Method_ShrinkQuick = typeof(TagData).GetMethod("ShrinkQuick");
+        public static MethodInfo Method_ShrinkMulti = typeof(TagData).GetMethod("ShrinkMulti");
 
         /// <summary>
         /// The "Shrink" method.
@@ -135,13 +135,14 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
-        /// Shrinks the data amount by one at the start, and returns itself.
+        /// Shrinks the data amount by X at the start, and returns itself.
         /// </summary>
         /// <returns>This object.</returns>
-        public void ShrinkQuick()
+        public TagData ShrinkMulti(int x)
         {
-            cInd++;
-            Remaining--;
+            cInd += x;
+            Remaining -= x;
+            return this;
         }
 
         /// <summary>
@@ -168,6 +169,21 @@ namespace FreneticScript.TagHandlers
         public string GetModifier(int place)
         {
             return GetModifierObject(place).ToString();
+        }
+
+        /// <summary>
+        /// Reference to <see cref="GetModifierObjectKnown(int)"/>.
+        /// </summary>
+        public static MethodInfo Method_GetModiferObjectKnown = typeof(TagData).GetMethod("GetModifierObjectKnown");
+
+        /// <summary>
+        /// Gets the modifier at a specified place, handling any tags within.
+        /// </summary>
+        /// <param name="place">What precise place to get a modifier from.</param>
+        /// <returns>The tag-parsed modifier.</returns>
+        public TemplateObject GetModifierObjectKnown(int place)
+        {
+            return InputKeys[place].Variable.Parse(Error, CSE);
         }
 
         /// <summary>
