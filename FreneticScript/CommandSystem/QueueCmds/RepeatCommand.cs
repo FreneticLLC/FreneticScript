@@ -138,9 +138,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 int lvar_ind_loc = cent.VarLoc(sn);
                 int lvar_tot_loc = cent.VarLoc(sn_tot);
                 values.LoadQueue();
-                values.LoadEntry(entry);
+                bool db = values.Entry.Debug <= DebugMode.FULL;
+                if (db)
+                {
+                    values.LoadEntry(entry);
+                }
+                else
+                {
+                    values.ILGen.Emit(OpCodes.Ldc_I4, cent.BlockStart - 1);
+                }
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
-                values.ILGen.Emit(OpCodes.Call, values.Entry.Debug <= DebugMode.FULL ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
+                values.ILGen.Emit(OpCodes.Call, db ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
             else if (arg == "stop")
@@ -231,12 +239,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Executes the callback part of the repeat command, without debug output.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
+        /// <param name="entry_ind">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
-        public static bool TryRepeatCILNoDebug(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
             CompiledCommandStackEntry cse = queue.CurrentEntry;
-            RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
+            RepeatCommandData dat = cse.EntryData[entry_ind] as RepeatCommandData;
             return ((cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index) <= dat.Total;
         }
         /// <summary>
