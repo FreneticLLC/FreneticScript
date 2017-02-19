@@ -132,13 +132,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 string sn_tot = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_total", "save_total");
                 int lvar_ind_loc = cent.VarLoc(sn);
                 int lvar_tot_loc = cent.VarLoc(sn_tot);
-                values.PrepareExecutionCall(entry);
+                values.LoadQueue();
+                values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
-                values.ILGen.Emit(OpCodes.Callvirt, TryRepeatCILMethod);
-                // TODO: Simplify to a single brtrue?
-                values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
-                values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[cent.BlockStart]);
+                values.ILGen.Emit(OpCodes.Call, TryRepeatCILMethod);
+                values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
             else if (arg == "stop")
             {
@@ -180,10 +179,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_index"));
                 int lvar_tot_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_total", "save_total"));
-                values.PrepareExecutionCall(entry);
+                values.LoadQueue();
+                values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
-                values.ILGen.Emit(OpCodes.Callvirt, TryRepeatNumberedCILMethod);
+                values.ILGen.Emit(OpCodes.Call, TryRepeatNumberedCILMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
         }
@@ -230,7 +230,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
         /// <param name="rt">Repeat Total Location.</param>
-        public bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
+        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
             CommandStackEntry cse = queue.CurrentEntry;
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
@@ -261,7 +261,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
         /// <param name="rt">Repeat Total Location.</param>
-        public bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
+        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
             int target = (int)IntegerTag.TryFor(entry.GetArgumentObject(queue, 0)).Internal;
             if (target <= 0)
