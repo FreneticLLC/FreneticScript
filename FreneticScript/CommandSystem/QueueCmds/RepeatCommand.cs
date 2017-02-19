@@ -237,11 +237,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="rt">Repeat Total Location.</param>
         public static bool TryRepeatCILNoDebug(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
-            CommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry cse = queue.CurrentEntry;
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
             dat.Index++;
-            CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
-            (ccse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
+            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
             return dat.Index <= dat.Total;
         }
         /// <summary>
@@ -253,11 +252,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="rt">Repeat Total Location.</param>
         public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
         {
-            CommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry cse = queue.CurrentEntry;
             RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
             dat.Index++;
-            CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
-            (ccse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
+            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = dat.Index;
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue))
