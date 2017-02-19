@@ -134,9 +134,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (arg == "\0CALLBACK")
             {
                 string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_index");
-                string sn_tot = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_total", "save_total");
                 int lvar_ind_loc = cent.VarLoc(sn);
-                int lvar_tot_loc = cent.VarLoc(sn_tot);
                 values.LoadQueue();
                 bool db = values.Entry.Debug <= DebugMode.FULL;
                 if (db)
@@ -194,7 +192,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadQueue();
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
                 values.ILGen.Emit(OpCodes.Call, TryRepeatNumberedCILMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
@@ -220,19 +217,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.PushVarSet();
             string sn = cent.GetSaveNameNoParse("repeat_index");
-            string sn_tot = cent.GetSaveNameNoParse("repeat_total", "save_total");
             // TODO: scope properly!
             if (values.LocalVariableLocation(sn) >= 0)
             {
                 throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_index var (labeled '" + sn + "')?!");
             }
-            if (values.LocalVariableLocation(sn_tot) >= 0)
-            {
-                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_total var (labeled '" + sn_tot + "')?!");
-            }
             TagType type = cent.System.TagSystem.Type_Integer;
             values.AddVariable(sn, type);
-            values.AddVariable(sn_tot, type);
         }
 
         /// <summary>
@@ -279,8 +270,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
-        /// <param name="rt">Repeat Total Location.</param>
-        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri, int rt)
+        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
             int target = (int)IntegerTag.TryFor(entry.GetArgumentObject(queue, 0)).Internal;
             if (target <= 0)
@@ -294,7 +284,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
             CompiledCommandStackEntry ccse = queue.CurrentEntry;
             ccse.LocalVariables[ri].Internal = new IntegerTag(1);
-            ccse.LocalVariables[rt].Internal = new IntegerTag(target);
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Repeating " + TextStyle.Color_Separate + target + TextStyle.Color_Base + " times...");
