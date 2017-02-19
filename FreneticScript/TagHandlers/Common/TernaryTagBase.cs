@@ -70,26 +70,6 @@ namespace FreneticScript.TagHandlers.Common
             {
                 return input is TernaryPassTag ? (TernaryPassTag)input : For(data, input.ToString());
             }
-
-            /// <summary>
-            /// Handles the 'ternary[].pass[]' tag.
-            /// </summary>
-            /// <param name="data">The data to be handled.</param>
-            public override TemplateObject Handle(TagData data)
-            {
-                // <--[tag]
-                // @Name TernaryPassTag.pass[<TextTag>]
-                // @Group Text Comparison
-                // @ReturnType TernaryFailTag
-                // @Returns a step in the ternary pass/fail tag.
-                // Used as a part of the <@link tag Ternary[<TextTag>]>Ternary<@/link> tag.
-                // -->
-                if (Passed)
-                {
-                    return data.GetModifierObject(0).Handle(data.Shrink());
-                }
-                return new NullTag().Handle(data.Shrink());
-            }
             
             /// <summary>
             /// Returns a boolean true or false as text.

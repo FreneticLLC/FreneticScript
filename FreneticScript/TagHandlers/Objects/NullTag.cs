@@ -57,24 +57,6 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning restore 1591
         
         /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            // TODO: ???
-            if (!data.HasFallback)
-            {
-                data.Error("Invalid tag bit: '" + TagParser.Escape(data[0]) + "'!");
-            }
-            return new NullTag();
-        }
-
-        /// <summary>
         /// Returns "&amp;{NULL}".
         /// </summary>
         /// <returns>"&amp;{NULL}".</returns>

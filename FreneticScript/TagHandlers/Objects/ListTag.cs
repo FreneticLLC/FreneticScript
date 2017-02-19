@@ -305,7 +305,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             if (number2 < number)
             {
-                return new ListTag().Handle(data.Shrink());
+                return new ListTag();
             }
             List<TemplateObject> Entries = new List<TemplateObject>();
             for (int i = number; i <= number2; i++)
@@ -359,27 +359,10 @@ namespace FreneticScript.TagHandlers.Objects
             return new TagTypeTag(data.TagSystem.Type_List);
         }
 
+        // TODO: Sort, styled like filter/parse tags
+
 #pragma warning restore 1591
-
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            switch (data[0])
-            {
-                // TODO: Sort, styled like filter/parse tags
-                
-                default:
-                    return new TextTag(ToString()).Handle(data);
-            }
-        }
-
+            
         /// <summary>
         /// Converts the ListTag to a list of strings.
         /// </summary>

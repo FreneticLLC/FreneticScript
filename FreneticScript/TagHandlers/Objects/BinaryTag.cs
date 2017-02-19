@@ -151,7 +151,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "range", Group = "Binary Data", ReturnType = TYPE, Returns = "The specified set of bytes in the binary data.",
-            Examples = new string[] { "'10203040' .range[2,3] returns '2030'.", "'10203040' .range[2,2] returns '20'." }, Others = new String[] { "Note that indices are one-based." })]
+            Examples = new string[] { "'10203040' .range[2,3] returns '2030'.", "'10203040' .range[2,2] returns '20'." }, Others = new string[] { "Note that indices are one-based." })]
         public static TemplateObject Tag_Range(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
@@ -205,14 +205,14 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = IntegerTag.TYPE, Returns = "The internal data converted to an integer value.",
-            Examples = new string[] { "'1000000000000000' .to_integer returns '1'." }, Others = new String[] { "Note that this currently must be of length: 1, 2, 4, or 8 bytes." })]
+            Examples = new string[] { "'1000000000000000' .to_integer returns '1'." }, Others = new string[] { "Note that this currently must be of length: 1, 2, 4, or 8 bytes." })]
         public static TemplateObject Tag_To_Integer(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
             switch (Internal.Length)
             {
                 case 1:
-                    return new IntegerTag(Internal[0]).Handle(data.Shrink());
+                    return new IntegerTag(Internal[0]);
                 case 2:
                     return new IntegerTag(BitConverter.ToInt16(Internal, 0));
                 case 4:
@@ -229,7 +229,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The internal data converted to an floating-point number value.",
-            Examples = new string[] { "'0000000000000FF3' .to_number returns '1'." }, Others = new String[] { "Note that this currently must be of length: 4, or 8 bytes." })]
+            Examples = new string[] { "'0000000000000FF3' .to_number returns '1'." }, Others = new string[] { "Note that this currently must be of length: 4, or 8 bytes." })]
         public static TemplateObject Tag_To_Number(TemplateObject obj, TagData data)
         {
             byte[] Internal = (obj as BinaryTag).Internal;
@@ -249,7 +249,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "from_utf8", Group = "Conversion", ReturnType = TextTag.TYPE, Returns = "The text that is represented by this UTF8 binary data.",
-            Examples = new string[] { "'8696' .from_utf8 returns 'hi'." }, Others = new String[] { "Can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>." })]
+            Examples = new string[] { "'8696' .from_utf8 returns 'hi'." }, Others = new string[] { "Can be reverted via <@link tag TextTag.to_utf8_binary>TextTag.to_utf8_binary<@/link>." })]
         public static TemplateObject Tag_From_UTF8(TemplateObject obj, TagData data)
         {
             return new TextTag(new UTF8Encoding(false).GetString((obj as BinaryTag).Internal));
@@ -275,21 +275,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            // TODO: Scrap!
-            return new TextTag(ToString()).Handle(data);
-        }
-
+        
         /// <summary>
         /// Returns the a string representation of the binary data internally stored by this binary tag.
         /// This returns in little-endian hexadecimal format.

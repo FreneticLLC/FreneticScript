@@ -97,20 +97,6 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning restore 1591
         
         /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            // TODO: Scrap!
-            return new TextTag(ToString()).Handle(data.Shrink());
-        }
-        
-        /// <summary>
         /// Returns the a string representation of the date-time internally stored by this time tag.
         /// </summary>
         /// <returns>A string representation of the date-time.</returns>

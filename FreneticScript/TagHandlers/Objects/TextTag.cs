@@ -158,7 +158,7 @@ namespace FreneticScript.TagHandlers.Objects
                 {
                     list.Add(new TextTag(Text[i].ToString()));
                 }
-                return new ListTag(list).Handle(data.Shrink());
+                return new ListTag(list);
             }, ReturnTypeString = "texttag" });
             // <--[tag]
             // @Name TextTag.replace[<ListTag>]
@@ -215,7 +215,7 @@ namespace FreneticScript.TagHandlers.Objects
                 }
                 if (num2 < num1)
                 {
-                    return new TextTag("").Handle(data.Shrink());
+                    return new TextTag("");
                 }
                 return new TextTag(Text.Substring(num1, (num2 - num1) + 1));
             },  ReturnTypeString = "texttag" });
@@ -322,28 +322,6 @@ namespace FreneticScript.TagHandlers.Objects
                     return new NullTag();
                 }
             },  ReturnTypeString = "texttag" });
-        }
-
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this).Handle(data.Shrink());
-            }
-            if (!data.HasFallback)
-            {
-                data.Error("Invalid tag bit: '" + TagParser.Escape(data[0]) + "'!");
-            }
-            return new NullTag();
         }
         
         /// <summary>

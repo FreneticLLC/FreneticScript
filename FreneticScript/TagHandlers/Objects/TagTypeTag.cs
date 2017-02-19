@@ -83,25 +83,7 @@ namespace FreneticScript.TagHandlers.Objects
             // Documented in TextTag.
             Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_TagType), ReturnTypeString = "tagtypetag" });
         }
-
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this).Handle(data.Shrink());
-            }
-            return new TextTag(ToString()).Handle(data);
-        }
-
+        
         /// <summary>
         /// Returns the name of the tag type.
         /// </summary>

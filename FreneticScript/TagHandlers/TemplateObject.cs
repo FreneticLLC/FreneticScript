@@ -12,12 +12,6 @@ namespace FreneticScript.TagHandlers
     public abstract class TemplateObject
     {
         /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public abstract TemplateObject Handle(TagData data);
-        
-        /// <summary>
         /// Returns the input as-is, for use with ObjecTypes.
         /// </summary>
         /// <param name="obj">The object input.</param>

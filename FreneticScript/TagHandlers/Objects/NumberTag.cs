@@ -103,6 +103,8 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public const string TYPE = "numbertag";
 
+        // TODO: !!!
+        /*
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -430,7 +432,7 @@ namespace FreneticScript.TagHandlers.Objects
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
-        }
+        }*/
 
         /// <summary>
         /// Returns the a string representation of the number internally stored by this number tag. EG, could return "0", or "1", or "-1.005", or...

@@ -104,6 +104,8 @@ namespace FreneticScript.TagHandlers.Objects
             return input as MapTag ?? For(input.ToString());
         }
 
+        // TODO: !!!
+        /*
         /// <summary>
         /// Parse any direct tag input values.
         /// </summary>
@@ -193,7 +195,7 @@ namespace FreneticScript.TagHandlers.Objects
                 default:
                     return new TextTag(ToString()).Handle(data);
             }
-        }
+        }*/
 
         /// <summary>
         /// Gets a string representation of this map.

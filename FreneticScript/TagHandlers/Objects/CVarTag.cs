@@ -46,6 +46,8 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
 
+        // TODO: !!!
+        /*
         static CVarTag()
         {
             // Documented in TextTag.
@@ -151,29 +153,7 @@ namespace FreneticScript.TagHandlers.Objects
             // @Returns whether the CVar was made by a command instead of being internal-use.
             // -->
             Handlers.Add("user_made", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(((CVarTag)obj).Internal.Flags.HasFlag(CVarFlag.UserMade)).Handle(data.Shrink()), ReturnTypeString = "booleantag" });
-        }
-
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            TagSubHandler handler;
-            if (Handlers.TryGetValue(data[0], out handler))
-            {
-                return handler.Handle(data, this).Handle(data.Shrink());
-            }
-            if (!data.HasFallback)
-            {
-                data.Error("Invalid tag bit: '" + TagParser.Escape(data[0]) + "'!");
-            }
-            return new NullTag();
-        }
+        }*/
         
         public override string ToString()
         {

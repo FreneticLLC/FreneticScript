@@ -262,20 +262,6 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning restore 1591
         
         /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
-        {
-            if (data.Remaining == 0)
-            {
-                return this;
-            }
-            // TODO: Scrap!
-            return new NumberTag(Internal).Handle(data); // TODO: is this best? Perhaps a BigDecimal type of tag?
-        }
-
-        /// <summary>
         /// Returns the a string representation of the integer internally stored by this integer tag. EG, could return "0", or "1", or...
         /// </summary>
         /// <returns>A string representation of the integer.</returns>

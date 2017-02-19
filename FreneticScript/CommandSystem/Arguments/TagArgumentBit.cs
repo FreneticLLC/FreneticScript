@@ -101,6 +101,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The parsed final object.</returns>
         public override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
+            // TODO: This isn't very thread safe.
             Data.Error = error;
             Data.cInd = 0;
             Data.Remaining = Bits.Length;
