@@ -113,6 +113,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatCIL");
 
         /// <summary>
+        /// Represents the "TryRepeatCILNoDebug(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo TryRepeatCILMethodNoDebug = typeof(RepeatCommand).GetMethod("TryRepeatCILNoDebug");
+
+        /// <summary>
         /// Represents the "TryRepeatNumberedCIL(queue, entry)" method.
         /// </summary>
         public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatNumberedCIL");
@@ -136,7 +141,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_tot_loc);
-                values.ILGen.Emit(OpCodes.Call, TryRepeatCILMethod);
+                values.ILGen.Emit(OpCodes.Call, values.Entry.Debug <= DebugMode.FULL ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
             else if (arg == "stop")
@@ -223,6 +228,28 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.AddVariable(sn_tot, type);
         }
 
+        /// <summary>
+        /// Executes the callback part of the repeat command, without debug output.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        /// <param name="ri">Repeat Index location.</param>
+        /// <param name="rt">Repeat Total Location.</param>
+        public static bool TryRepeatCILNoDebug(CommandQueue queue, CommandEntry entry, int ri, int rt)
+        {
+            CommandStackEntry cse = queue.CurrentEntry;
+            RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
+            dat.Index++;
+            CompiledCommandStackEntry ccse = cse as CompiledCommandStackEntry;
+            ccse.LocalVariables[ri].Internal = new IntegerTag(dat.Index);
+            // Probably not necessary: ccse.LocalVariables[rt].Internal = new IntegerTag(dat.Total);
+            if (dat.Index <= dat.Total)
+            {
+                cse.Index = entry.BlockStart;
+                return true;
+            }
+            return false;
+        }
         /// <summary>
         /// Executes the callback part of the repeat command.
         /// </summary>
