@@ -9,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("FreneticScriptConsoleTester")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("FreneticXYZ")]
+[assembly: AssemblyCompany("Frenetic LLC")]
 [assembly: AssemblyProduct("FreneticScriptConsoleTester")]
-[assembly: AssemblyCopyright("Copyright © FreneticXYZ 2016")]
+[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2016-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

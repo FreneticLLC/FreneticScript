@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("FreneticScript")]
 [assembly: AssemblyDescription("A C# powered scripting engine.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("mcmonkey studios")]
+[assembly: AssemblyCompany("Frenetic LLC")]
 [assembly: AssemblyProduct("FreneticScript")]
-[assembly: AssemblyCopyright("Copyright © FreneticXYZ 2015-2016")]
+[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2015-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
