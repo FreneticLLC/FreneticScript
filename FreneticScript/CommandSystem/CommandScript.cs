@@ -596,6 +596,7 @@ namespace FreneticScript.CommandSystem
                         TagType atype = tab.Bits[x].Variable.ReturnType(values);
                         if (modt != atype) // If the modifier input is of the wrong type...
                         {
+                            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                             ilgen.Emit(OpCodes.Call, modt.CreatorMethod); // Run the creator method to convert the tag to the correct type.
                         }
                     }
