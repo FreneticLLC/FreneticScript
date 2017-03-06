@@ -111,6 +111,11 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return conv;
             }
+            IntegerTag iconv = input as IntegerTag;
+            if (iconv != null)
+            {
+                return new NumberTag(iconv.Internal);
+            }
             DynamicTag dynamic = input as DynamicTag;
             if (dynamic != null)
             {
