@@ -127,44 +127,44 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "size", Group = "List Attributes", ReturnType = IntegerTag.TYPE, Returns = "The number of entries in the list.",
             Examples = new string[] { "'one|two|three|' .size returns '3'." })]
-        public static TemplateObject Tag_Size(TemplateObject obj, TagData data)
+        public static IntegerTag Tag_Size(ListTag obj, TagData data)
         {
-            return new NumberTag((obj as ListTag).Internal.Count);
+            return new IntegerTag(obj.Internal.Count);
         }
 
         [TagMeta(TagType = TYPE, Name = "comma_separated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a user-friendly comma-separated format.",
             Examples = new string[] { "'one|two|three|' .comma_separated returns 'one, two, three'." })]
-        public static TemplateObject Tag_Comma_Separated(TemplateObject obj, TagData data)
+        public static TextTag Tag_Comma_Separated(ListTag obj, TagData data)
         {
-            return new TextTag((obj as ListTag).ToCSString());
+            return new TextTag(obj.ToCSString());
         }
 
         [TagMeta(TagType = TYPE, Name = "space_separated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a space-separated format.",
             Examples = new string[] { "'one|two|three|' .space_separated returns 'one two three'." })]
-        public static TemplateObject Tag_Space_Separated(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Space_Separated(ListTag obj, TagData data)
         {
-            return new TextTag((obj as ListTag).ToSpaceString());
+            return new TextTag(obj.ToSpaceString());
         }
 
         [TagMeta(TagType = TYPE, Name = "unseparated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list as an unseparated string.",
             Examples = new string[] { "'one|two|three|' .unseparated returns 'onetwothree'." })]
-        public static TemplateObject Tag_Unseparated(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Unseparated(ListTag obj, TagData data)
         {
-            return new TextTag((obj as ListTag).ToFlatString());
+            return new TextTag(obj.ToFlatString());
         }
 
         [TagMeta(TagType = TYPE, Name = "formatted", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a user-friendly format.",
             Examples = new string[] { "'one|two|three|' .formatted returns 'one, two, and three'." })]
-        public static TemplateObject Tag_Formatted(TemplateObject obj, TagData data)
+        public static TextTag Tag_Formatted(ListTag obj, TagData data)
         {
-            return new TextTag((obj as ListTag).Formatted());
+            return new TextTag(obj.Formatted());
         }
 
         [TagMeta(TagType = TYPE, Name = "reversed", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "The list entirely backwards.",
             Examples = new string[] { "'one|two|three|' .reversed returns 'three|two|one|'." })]
-        public static TemplateObject Tag_Reversed(TemplateObject obj, TagData data)
+        public static ListTag Tag_Reversed(ListTag obj, TagData data)
         {
-            ListTag newlist = new ListTag((obj as ListTag).Internal);
+            ListTag newlist = new ListTag(obj.Internal);
             newlist.Internal.Reverse();
             return newlist;
         }
@@ -172,9 +172,9 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "filter", Group = "List Attributes", ReturnType = ListTag.TYPE, 
             Returns = "The list modified such that each entry is only included if the input modifier would return true for it.",
             Examples = new string[] { "'one|two|three|' .filter[true] returns 'one|two|three|'.", "'1|2|3|' .filter[<{[filter_value].equals[2]}>] returns '2|'." })]
-        public static TemplateObject Tag_Filter(TemplateObject obj, TagData data)
+        public static ListTag Tag_Filter(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             ListTag newlist = new ListTag();
             for (int i = 0; i < Internal.Count; i++)
             {
@@ -191,9 +191,9 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "parse", Group = "List Attributes", ReturnType = ListTag.TYPE, 
             Returns = "list modified such that each entry is modified to be what the input modifier would return for it.",
             Examples = new string[] { "'one|two|three|' .parse[<{[parse_value].to_upper}>] returns 'ONE|TWO|THREE|'." })]
-        public static TemplateObject Tag_Parse(TemplateObject obj, TagData data)
+        public static ListTag Tag_Parse(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             ListTag newlist = new ListTag();
             for (int i = 0; i < Internal.Count; i++)
             {
@@ -205,9 +205,9 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "first", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "The first entry in the list.",
             Examples = new string[] { "'one|two|three|' .first.as[TextTag] returns 'one'." })]
-        public static TemplateObject Tag_First(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_First(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'first' tag on empty list!");
@@ -218,9 +218,9 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "random", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A random entry from the list.",
             Examples = new string[] { "'one|two|three|' .random returns 'one', 'two', or 'three'." })]
-        public static TemplateObject Tag_Random(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Random(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'random' tag on empty list!");
@@ -231,9 +231,9 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "last", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A last entry in the list.",
             Examples = new string[] { "'one|two|three|' .last returns 'three'." })]
-        public static TemplateObject Tag_Last(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Last(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'last' tag on empty list!");
@@ -244,9 +244,9 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "get", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A specified entry in the list.",
             Examples = new string[] { "'one|two|three|' .get[2] returns 'two'." })]
-        public static TemplateObject Tag_Get(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Get(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             TemplateObject modif = data.GetModifierObject(0);
             IntegerTag num = IntegerTag.For(modif, data);
             if (Internal.Count == 0)
@@ -269,9 +269,9 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "range", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "The specified set of entries in the list.",
             Examples = new string[] { "'one|two|three|four|' .range[2|3] returns 'two|three|'.", "'one|two|three|' .range[2|2] returns 'two|'." }, 
             Others = new String[] { "Note that indices are one-based." })]
-        public static TemplateObject Tag_Range(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Range(ListTag obj, TagData data)
         {
-            List<TemplateObject> Internal = (obj as ListTag).Internal;
+            List<TemplateObject> Internal = obj.Internal;
             ListTag inputs = ListTag.For(data.GetModifierObject(0));
             if (inputs.Internal.Count < 2)
             {
@@ -317,10 +317,10 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "include", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "A list with the input list added to the end.",
             Examples = new string[] { "'one|two|three|' .include[four|five|] returns 'one|two|three|four|five|'." })]
-        public static TemplateObject Tag_Include(TemplateObject obj, TagData data)
+        public static ListTag Tag_Include(ListTag obj, ListTag modifier)
         {
-            ListTag newlist = new ListTag((obj as ListTag).Internal);
-            newlist.Internal.AddRange(For(data.GetModifierObject(0)).Internal);
+            ListTag newlist = new ListTag(obj.Internal);
+            newlist.Internal.AddRange(modifier.Internal);
             return newlist;
         }
 
@@ -328,7 +328,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "A list with the input list added after an index specified as the first item in the list (index is not included in the final list).",
             Examples = new string[] { "'one|two|three|' .insert[1|a|b|] returns 'one|a|b|two|three|'." },
             Others = new String[] { "Note that indices are one-based.", "Specify 0 as the index to insert at the beginning." })]
-        public static TemplateObject Tag_Insert(TemplateObject obj, TagData data)
+        public static TemplateObject Tag_Insert(ListTag obj, TagData data)
         {
             ListTag modif = For(data.GetModifierObject(0));
             if (modif.Internal.Count == 0)
@@ -338,7 +338,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             IntegerTag index = IntegerTag.For(modif.Internal[0], data);
             modif.Internal.RemoveAt(0);
-            ListTag newlist = new ListTag((obj as ListTag).Internal);
+            ListTag newlist = new ListTag(obj.Internal);
             if (index.Internal > newlist.Internal.Count)
             {
                 index.Internal = newlist.Internal.Count;
@@ -348,13 +348,13 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
-        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
+        public static ListTag Tag_Duplicate(ListTag obj, TagData data)
         {
-            return new ListTag((obj as ListTag).Internal);
+            return new ListTag(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (ListTag).")]
-        public static TemplateObject Tag_Type(TemplateObject obj, TagData data)
+        public static TagTypeTag Tag_Type(ListTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_List);
         }
