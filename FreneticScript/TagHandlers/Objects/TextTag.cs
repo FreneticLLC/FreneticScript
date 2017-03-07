@@ -62,267 +62,241 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'Hello' .duplicate returns 'Hello'." })]
-        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
+        public static TextTag Tag_Duplicate(TextTag obj, TagData data)
         {
             return new TextTag(obj.ToString());
         }
 
-#pragma warning restore 1591
-
-        /// <summary>
-        /// All tag handlers for this tag type.
-        /// </summary>
-        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
-        static TextTag()
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TextTag).",
+            Examples = new string[] { "'Hello' .type returns 'texttag'." })]
+        public static TagTypeTag Tag_Type(TextTag obj, TagData data)
         {
-            // Needs docs!
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_Text), ReturnTypeString = "tagtypetag" });
-            // <--[tag]
-            // @Name TextTag.to_number
-            // @Group Text Modification
-            // @ReturnType NumberTag
-            // @Returns the text parsed as a number.
-            // @Example "1" .to_number returns "1".
-            // -->
-            Handlers.Add("to_number", new TagSubHandler() { Handle = (data, obj) => NumberTag.For(obj, data), ReturnTypeString = "numbertag" });
-            // <--[tag]
-            // @Name TextTag.to_integer
-            // @Group Text Modification
-            // @ReturnType IntegerTag
-            // @Returns the text parsed as an integer.
-            // @Example "1" .to_integer returns "1".
-            // -->
-            Handlers.Add("to_integer", new TagSubHandler() { Handle = (data, obj) => IntegerTag.For(obj, data), ReturnTypeString = "integertag" });
-            // <--[tag]
-            // @Name TextTag.to_boolean
-            // @Group Text Modification
-            // @ReturnType BooleanTag
-            // @Returns the text parsed as a boolean.
-            // @Example "true" .to_boolean returns "true".
-            // -->
-            Handlers.Add("to_boolean", new TagSubHandler() { Handle = (data, obj) => BooleanTag.For(obj, data), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.is_number
-            // @Group Text Modification
-            // @ReturnType BooleanTag
-            // @Returns whether the text represents a valid number.
-            // @Example "1" .is_number returns "true".
-            // -->
-            Handlers.Add("is_number", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(NumberTag.TryFor(obj) != null), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.is_integer
-            // @Group Text Modification
-            // @ReturnType BooleanTag
-            // @Returns whether the text represents a valid integer.
-            // @Example "1" .is_integer returns "true".
-            // -->
-            Handlers.Add("is_integer", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(IntegerTag.TryFor(obj) != null), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.is_boolean
-            // @Group Text Modification
-            // @ReturnType BooleanTag
-            // @Returns whether the text represents a valid boolean.
-            // @Example "true" .is_boolean returns "true".
-            // -->
-            Handlers.Add("is_boolean", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(BooleanTag.TryFor(obj) != null), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.to_upper
-            // @Group Text Modification
-            // @ReturnType TextTag
-            // @Returns the text in full upper-case.
-            // @Example "alpha" .to_upper returns "ALPHA".
-            // -->
-            Handlers.Add("to_upper", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString().ToUpperInvariant()), ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.to_lower
-            // @Group Text Modification
-            // @ReturnType TextTag
-            // @Returns the text in full lower-case.
-            // @Example "ALPHA" .to_lower returns "alpha".
-            // -->
-            Handlers.Add("to_lower", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString().ToLowerFast()), ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.to_list_of_characters
-            // @Group Text Modification
-            // @ReturnType ListTag
-            // @Returns the text as a list of characters.
-            // @Other Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>.
-            // @Example "alpha" .to_list_of_characters returns "a|l|p|h|a".
-            // -->
-            Handlers.Add("to_list_of_characters", new TagSubHandler() { Handle = (data, obj) =>
-            {
-                string Text = obj.ToString();
-                List<TemplateObject> list = new List<TemplateObject>(Text.Length);
-                for (int i = 0; i < Text.Length; i++)
-                {
-                    list.Add(new TextTag(Text[i].ToString()));
-                }
-                return new ListTag(list);
-            }, ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.replace[<ListTag>]
-            // @Group Text Modification
-            // @ReturnType TextTag
-            // @Returns the text with all instances of the first text replaced with the second.
-            // @Example "alpha" .replace[a|b] returns "blphb".
-            // -->
-            Handlers.Add("replace", new TagSubHandler() { Handle = (data, obj) =>
-                {
-                    ListTag modif = ListTag.For(data.GetModifierObject(0));
-                    if (modif.Internal.Count != 2)
-                    {
-                        data.Error("Invalid replace tag! Not two entries in the list!");
-                        return new NullTag();
-                    }
-                    return new TextTag(obj.ToString().Replace(modif.Internal[0].ToString(), modif.Internal[1].ToString()));
-                },  ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.substring[<ListTag>]
-            // @Group Text Modification
-            // @ReturnType TextTag
-            // @Returns the portion of text in the specified range.
-            // @Other Note that indices are one-based.
-            // @Example "alpha" .substring[2|4] returns "lph".
-            // @Example "alpha" .substring[2|99999] will return "lpha".
-            // -->
-            Handlers.Add("substring", new TagSubHandler() { Handle = (data, obj) =>
-            {
-                string Text = obj.ToString();
-                ListTag inputs = ListTag.For(data.GetModifierObject(0), data);
-                if (inputs.Internal.Count < 2)
-                {
-                    data.Error("Invalid substring tag! Not two entries in the list!");
-                    return new NullTag();
-                }
-                int num1 = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
-                int num2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
-                if (num1 < 0)
-                {
-                    num1 = 0;
-                }
-                if (num1 > Text.Length - 1)
-                {
-                    num1 = Text.Length - 1;
-                }
-                if (num2 < 0)
-                {
-                    num2 = 0;
-                }
-                if (num2 > Text.Length - 1)
-                {
-                    num2 = Text.Length - 1;
-                }
-                if (num2 < num1)
-                {
-                    return new TextTag("");
-                }
-                return new TextTag(Text.Substring(num1, (num2 - num1) + 1));
-            },  ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.append[<TextTag>]
-            // @Group Text Modification
-            // @ReturnType TextTag
-            // @Returns the text with the input text appended.
-            // @Example "alpha" .append[bet] returns "alphabet".
-            // -->
-            Handlers.Add("append", new TagSubHandler() { Handle = (data, obj) => new TextTag(obj.ToString() + data.GetModifier(0)), ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.prepend[<TextTag>]
-            // @Group Text Modification
-            // @ReturnType TextTag
-            // @Returns the text with the input text prepended.
-            // @Example "alpha" .prepend[bet] returns "betalpha".
-            // -->
-            Handlers.Add("prepend", new TagSubHandler() { Handle = (data, obj) => new TextTag(data.GetModifier(0) + obj.ToString()), ReturnTypeString = "texttag" });
-            // <--[tag]
-            // @Name TextTag.length
-            // @Group Text Attributes
-            // @ReturnType NumberTag
-            // @Returns the number of characters in the text.
-            // @Example "alpha" .length returns "5".
-            // -->
-            Handlers.Add("length", new TagSubHandler() { Handle = (data, obj) => new IntegerTag(obj.ToString().Length), ReturnTypeString = "integertag" });
-            // <--[tag]
-            // @Name TextTag.equals[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType BooleanTag
-            // @Returns whether the text matches the specified text.
-            // @Other Note that this is case-sensitive.
-            // @Example "alpha" .equals[alpha] returns "true".
-            // -->
-            Handlers.Add("equals", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString() == data.GetModifier(0)), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.does_not_equal[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType BooleanTag
-            // @Returns whether the text does not match the specified text.
-            // @Other Note that this is case-sensitive.
-            // @Example "alpha" .does_not_equal[alpha] returns "false".
-            // -->
-            Handlers.Add("does_not_equal", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString() != data.GetModifier(0)), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.equals_ignore_case[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType BooleanTag
-            // @Returns whether the text matches the specified text, ignoring letter casing.
-            // @Example "alpha" .equals_ignore_case[ALPHA] returns "true".
-            // -->
-            Handlers.Add("equals_ignore_case", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString().ToLowerFast() == data.GetModifier(0).ToLowerFast()), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.does_not_equal_ignore_case[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType BooleanTag
-            // @Returns whether the text matches the specified text, ignoring letter casing.
-            // @Example "alpha" .does_not_equal_ignore_case[ALPHA] returns "false".
-            // -->
-            Handlers.Add("dos_not_equal_ignore_case", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString().ToLowerFast() != data.GetModifier(0).ToLowerFast()), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.contains[<TextTag>]
-            // @Group Text Comparison
-            // @ReturnType BooleanTag
-            // @Returns whether the text contains the specified text.
-            // @Other Note that this is case-sensitive.
-            // @Example "alpha" .contains[alp] returns "true".
-            // -->
-            Handlers.Add("contains", new TagSubHandler() { Handle = (data, obj) => new BooleanTag(obj.ToString().Contains(data.GetModifier(0))), ReturnTypeString = "booleantag" });
-            // <--[tag]
-            // @Name TextTag.to_utf8_binary
-            // @Group Conversion
-            // @ReturnType BinaryTag
-            // @Returns UTF-8 encoded binary data of the included text.
-            // @Other Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>.
-            // @Example "hi" .to_utf8_binary returns "8696".
-            // -->
-            Handlers.Add("to_utf8_binary", new TagSubHandler() { Handle = (data, obj) => new BinaryTag(new UTF8Encoding(false).GetBytes(obj.ToString())), ReturnTypeString = "binarytag" });
-            // <--[tag]
-            // @Name TextTag.from_base64
-            // @Group Conversion
-            // @ReturnType BinaryTag
-            // @Returns the binary data represented by this Base-64 text.
-            // @Other Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>.
-            // @Example "aGk=" .from_base64 returns "6869".
-            // -->
-            Handlers.Add("from_base64", new TagSubHandler() { Handle = (data, obj) =>
-            {
-                string Text = obj.ToString();
-                try
-                {
-                    byte[] bits = Convert.FromBase64String(Text);
-                    if (bits == null)
-                    {
-                        data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "'!");
-                        return new NullTag();
-                    }
-                    return new BinaryTag(bits);
-                }
-                catch (FormatException ex)
-                {
-                    data.Error("Invalid base64 input: '" + TagParser.Escape(Text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
-                    return new NullTag();
-                }
-            },  ReturnTypeString = "texttag" });
+            return new TagTypeTag(data.TagSystem.Type_Text);
         }
+
+        [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The text parsed as a number.",
+            Examples = new string[] { "'1' .to_number returns '1'." })]
+        public static NumberTag Tag_To_Number(TextTag obj, TagData data)
+        {
+            return NumberTag.For(obj, data);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = IntegerTag.TYPE, Returns = "The text parsed as an integer.",
+            Examples = new string[] { "'1' .to_integer returns '1'." })]
+        public static IntegerTag Tag_To_Integer(TextTag obj, TagData data)
+        {
+            return IntegerTag.For(obj, data);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_boolean", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "The text parsed as a boolean.",
+            Examples = new string[] { "'true' .to_boolean returns 'true'." })]
+        public static BooleanTag Tag_To_Boolean(TextTag obj, TagData data)
+        {
+            return BooleanTag.For(obj, data);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_number", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents a number.",
+            Examples = new string[] { "'1' .is_number returns 'true'." })]
+        public static BooleanTag Tag_Is_Number(TextTag obj, TagData data)
+        {
+            return new BooleanTag(NumberTag.TryFor(obj) != null);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_integer", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents an integer.",
+            Examples = new string[] { "'1' .is_integer returns 'true'." })]
+        public static BooleanTag Tag_Is_Integer(TextTag obj, TagData data)
+        {
+            return new BooleanTag(IntegerTag.TryFor(obj) != null);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "is_boolean", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents a boolean.",
+            Examples = new string[] { "'true' .is_boolean returns 'true'." })]
+        public static BooleanTag Tag_Is_Boolean(TextTag obj, TagData data)
+        {
+            return new BooleanTag(BooleanTag.TryFor(obj) != null);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_upper", Group = "Text Modification", ReturnType = TYPE, Returns = "The text in full upper-case.",
+            Examples = new string[] { "'alpha' .to_upper returns 'ALPHA'." })]
+        public static TextTag Tag_To_Upper(TextTag obj, TagData data)
+        {
+            return new TextTag(obj.Internal.ToUpperInvariant());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_lower", Group = "Text Modification", ReturnType = TYPE, Returns = "The text in full lower-case.",
+            Examples = new string[] { "'ALPHA' .to_lower returns 'alpha'." })]
+        public static TextTag Tag_To_Lower(TextTag obj, TagData data)
+        {
+            return new TextTag(obj.Internal.ToLowerFast());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_list_of_characters", Group = "Text Modification", ReturnType = ListTag.TYPE, 
+            Returns = "The text as a list of characters.", Examples = new string[] { "'alpha' .to_list_of_characters returns 'a|l|p|h|a'." },
+            Others = new string[] { "Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>." })]
+        public static ListTag Tag_To_List_Of_Characters(TextTag obj, TagData data)
+        {
+            string text = obj.Internal;
+            List<TemplateObject> list = new List<TemplateObject>(text.Length);
+            for (int i = 0; i < text.Length; i++)
+            {
+                list.Add(new TextTag(text[i].ToString()));
+            }
+            return new ListTag(list);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "replace", Group = "Text Modification", ReturnType = TextTag.TYPE,
+            Returns = "The text with all instances of the first text replaced with the second.", 
+            Examples = new string[] { "'alpha' .replace[a|b] returns 'blphb'." })]
+        public static TemplateObject Tag_Replace(TextTag obj, TagData data)
+        {
+            ListTag modif = ListTag.For(data.GetModifierObject(0));
+            if (modif.Internal.Count != 2)
+            {
+                data.Error("Invalid replace tag! Not two entries in the list!");
+                return new NullTag();
+            }
+            return new TextTag(obj.Internal.Replace(modif.Internal[0].ToString(), modif.Internal[1].ToString()));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "substring", Group = "Text Modification", ReturnType = TextTag.TYPE,
+            Returns = "The portion of text in the specified range.",
+            Examples = new string[] { "'alpha' .substring[2|4] returns 'lph'." , "'alpha' .substring[2|99999] will return 'lpha'." },
+            Others = new string[] { "Note that indices are one-based (This means the first entry is at index 1)." })]
+        public static TemplateObject Tag_Substring(TextTag obj, TagData data)
+        {
+            string text = obj.Internal;
+            ListTag inputs = ListTag.For(data.GetModifierObject(0), data);
+            if (inputs.Internal.Count < 2)
+            {
+                data.Error("Invalid substring tag! Not two entries in the list!");
+                return new NullTag();
+            }
+            int num1 = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
+            int num2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
+            if (num1 < 0)
+            {
+                num1 = 0;
+            }
+            if (num1 > text.Length - 1)
+            {
+                num1 = text.Length - 1;
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (num2 > text.Length - 1)
+            {
+                num2 = text.Length - 1;
+            }
+            if (num2 < num1)
+            {
+                return new TextTag("");
+            }
+            return new TextTag(text.Substring(num1, (num2 - num1) + 1));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "append", Group = "Text Modification", ReturnType = TYPE, Modifier = TYPE,
+            Returns = "The text with the input text appended.", Examples = new string[] { "'alpha' .append[bet] returns 'alphabet'." })]
+        public static TextTag Tag_Append(TextTag obj, TextTag modifier)
+        {
+            return new TextTag(obj.Internal + modifier.Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "prepend", Group = "Text Modification", ReturnType = TYPE, Modifier = TYPE,
+            Returns = "The text with the input text prepended.", Examples = new string[] { "'alpha' .prepend[bet] returns 'betalpha'." })]
+        public static TextTag Tag_Prepend(TextTag obj, TextTag modifier)
+        {
+            return new TextTag(modifier.Internal + obj.Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "length", Group = "Text Attributes", ReturnType = IntegerTag.TYPE, Returns = "The number of characters in the text.",
+            Examples = new string[] { "'alpha' .length returns '5'." })]
+        public static IntegerTag Tag_Length(TextTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Length);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "equals", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
+            Returns = "Whether the text matches the specified text.", Examples = new string[] { "'alpha' .equals[alpha] returns 'true'." },
+            Others = new string[] { "Note that this is case-sensitive." })]
+        public static BooleanTag Tag_Equals(TextTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal == modifier.Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "does_not_equal", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
+            Returns = "Whether the text does not match the specified text.", Examples = new string[] { "'alpha' .does_not_equal[alpha] returns 'false'." },
+            Others = new string[] { "Note that this is case-sensitive." })]
+        public static BooleanTag Tag_Does_Not_Equal(TextTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal != modifier.Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "equals_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
+            Returns = "Whether the text matches the specified text, ignoring letter casing.",
+            Examples = new string[] { "'alpha' .equals_ignore_case[ALPHA] returns 'true'." })]
+        public static BooleanTag Tag_Equals_Ignore_Case(TextTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal.ToLowerFast() == modifier.Internal.ToLowerFast());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "does_not_equal_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
+            Returns = "Whether the text does not match the specified text, ignoring letter casing.",
+            Examples = new string[] { "'alpha' .does_not_equal_ignore_case[ALPHA] returns 'false'." })]
+        public static BooleanTag Tag_Does_Not_Equal_Ignore_Case(TextTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal.ToLowerFast() != modifier.Internal.ToLowerFast());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "contains", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
+            Returns = "Whether the text contains the specified text.", Examples = new string[] { "'alpha' .contains[alp] returns 'true'." },
+            Others = new string[] { "Note that this is case-sensitive." })]
+        public static BooleanTag Tag_Contains(TextTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal.Contains(modifier.Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "contains_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
+            Returns = "Whether the text contains the specified text, ignoring letter casing.",
+            Examples = new string[] { "'alpha' .contains_ignore_case[ALP] returns 'true'." })]
+        public static BooleanTag Tag_Contains_Ignore_Case(TextTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal.ToLowerFast().Contains(modifier.Internal.ToLowerFast()));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "to_utf8_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE,
+            Returns = "UTF-8 encoded binary data of the included text.", Examples = new string[] { "'hi' .to_utf8_binary returns '8696'." },
+            Others = new string[] { "Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>." })]
+        public static BinaryTag Tag_To_UTF8_Binary(TextTag obj, TagData data)
+        {
+            return new BinaryTag(new UTF8Encoding(false).GetBytes(obj.Internal));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "from_base64", Group = "Conversion", ReturnType = BinaryTag.TYPE,
+            Returns = "The binary data represented by this Base-64 text.", Examples = new string[] { "'aGk=' .from_base64 returns '6869'." },
+            Others = new string[] { "Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>." })]
+        public static TemplateObject Tag_From_Base64(TextTag obj, TagData data)
+        {
+            string text = obj.Internal;
+            try
+            {
+                byte[] bits = Convert.FromBase64String(text);
+                if (bits == null)
+                {
+                    data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "'!");
+                    return new NullTag();
+                }
+                return new BinaryTag(bits);
+            }
+            catch (FormatException ex)
+            {
+                data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
+                return new NullTag();
+            }
+        }
+
+#pragma warning restore 1591
         
         /// <summary>
         /// Converts the text tag to a string by returning the internal text.

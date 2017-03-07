@@ -232,9 +232,9 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = TextTag.TYPE,
                 SubTypeName = null,
-                TypeGetter =  TextTag.CreateFor,
+                TypeGetter = TextTag.CreateFor,
                 GetNextTypeDown = null,
-                SubHandlers = TextTag.Handlers, // TODO: Convert!
+                SubHandlers = null,
                 RawType = typeof(TextTag)
             });
             Register(Type_Time = new TagType()

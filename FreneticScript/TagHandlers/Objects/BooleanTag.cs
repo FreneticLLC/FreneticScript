@@ -135,42 +135,45 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "not", Group = "Boolean Logic", ReturnType = TYPE, Returns = "The opposite of the tag - true and false are flipped.",
             Examples = new string[] { "'true' .not returns 'false'.", "'false' .not returns 'true'." })]
-        public static TemplateObject Tag_Not(TemplateObject obj, TagData data)
+        public static BooleanTag Tag_Not(BooleanTag obj, TagData data)
         {
-            return new BooleanTag(!(obj as BooleanTag).Internal);
+            return new BooleanTag(!obj.Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "and", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean and the specified text are both true.",
+        [TagMeta(TagType = TYPE, Name = "and", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
+            Returns = "Whether the boolean and the specified text are both true.",
             Examples = new string[] { "'true' .and[true] returns 'true'.", "'true' .and[false] returns 'false'.", "'false' .and[true] returns 'false'." })]
-        public static TemplateObject Tag_And(TemplateObject obj, TagData data)
+        public static BooleanTag Tag_And(BooleanTag obj, BooleanTag modifier)
         {
-            return new BooleanTag((obj as BooleanTag).Internal && For(data.GetModifierObject(0), data).Internal);
+            return new BooleanTag(obj.Internal && modifier.Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean or the specified text are true.",
+        [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
+            Returns = "Whether the boolean or the specified text are true.",
             Examples = new string[] { "'true' .or[true] returns 'true'.", "'true' .or[false] returns 'true'.", "'false' .or[false] returns 'false'." })]
-        public static TemplateObject Tag_Or(TemplateObject obj, TagData data)
+        public static BooleanTag Tag_Or(BooleanTag obj, BooleanTag modifier)
         {
-            return new BooleanTag((obj as BooleanTag).Internal || For(data.GetModifierObject(0), data).Internal);
+            return new BooleanTag(obj.Internal || modifier.Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
+        [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
+            Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
             Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'" })]
-        public static TemplateObject Tag_Xor(TemplateObject obj, TagData data)
+        public static BooleanTag Tag_Xor(BooleanTag obj, BooleanTag modifier)
         {
-            return new BooleanTag((obj as BooleanTag).Internal != For(data.GetModifierObject(0), data).Internal);
+            return new BooleanTag(obj.Internal != modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'true' .duplicate returns 'true'." })]
-        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
+        public static BooleanTag Tag_Duplicate(BooleanTag obj, TagData data)
         {
-            return new BooleanTag((obj as BooleanTag).Internal);
+            return new BooleanTag(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BooleanTag).",
             Examples = new string[] { "'true' .type returns 'booleantag'." })]
-        public static TemplateObject Tag_Type(TemplateObject obj, TagData data)
+        public static TagTypeTag Tag_Type(BooleanTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Boolean);
         }
