@@ -59,17 +59,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid time tag.</returns>
         public static TemplateObject CreateFor(TemplateObject input, TagData dat)
         {
-            TimeTag conv = input as TimeTag;
-            if (conv != null)
+            switch (input)
             {
-                return conv;
+                case TimeTag ttag:
+                    return ttag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
+                default:
+                    return For(input.ToString());
             }
-            DynamicTag dynamic = input as DynamicTag;
-            if (dynamic != null)
-            {
-                return CreateFor(dynamic.Internal, dat);
-            }
-            return For(input.ToString());
         }
 
 #pragma warning disable 1591

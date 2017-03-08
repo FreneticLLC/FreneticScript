@@ -92,8 +92,7 @@ namespace FreneticScript
         /// <returns>a long-integer value.</returns>
         public static long StringToLong(string input)
         {
-            long output = 0;
-            long.TryParse(input, out output);
+            long.TryParse(input, out long output);
             return output;
         }
 
@@ -105,8 +104,7 @@ namespace FreneticScript
         /// <returns>an integer value.</returns>
         public static int StringToInt(string input)
         {
-            int output = 0;
-            int.TryParse(input, out output);
+            int.TryParse(input, out int output);
             return output;
         }
 
@@ -118,8 +116,7 @@ namespace FreneticScript
         /// <returns>a double value.</returns>
         public static double StringToDouble(string input)
         {
-            double output = 0;
-            double.TryParse(input, out output);
+            double.TryParse(input, out double output);
             return output;
         }
 
@@ -131,8 +128,7 @@ namespace FreneticScript
         /// <returns>a float value.</returns>
         public static float StringToFloat(string input)
         {
-            float output = 0;
-            float.TryParse(input, out output);
+            float.TryParse(input, out float output);
             return output;
         }
 

@@ -227,8 +227,7 @@ namespace FreneticScript.TagHandlers.Objects
                 Internal[names[0].ToLowerFast()] = val;
                 return;
             }
-            TemplateObject obj;
-            if (names != null && names.Length > 1 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            if (names != null && names.Length > 1 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -244,8 +243,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to add.</param>
         public override void Add(string[] names, TemplateObject val)
         {
-            TemplateObject obj;
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -262,8 +260,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to subtract.</param>
         public override void Subtract(string[] names, TemplateObject val)
         {
-            TemplateObject obj;
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -280,8 +277,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to multiply.</param>
         public override void Multiply(string[] names, TemplateObject val)
         {
-            TemplateObject obj;
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -298,8 +294,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to divide.</param>
         public override void Divide(string[] names, TemplateObject val)
         {
-            TemplateObject obj;
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);

@@ -114,8 +114,7 @@ namespace FreneticScript.CommandSystem
                     Lines.Add(line);
                     CommandList.Add(commands.Substring(start).Trim());
                 }
-                bool herr;
-                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out herr), 0);
+                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), 0);
             }
             catch (Exception ex)
             {
@@ -172,8 +171,7 @@ namespace FreneticScript.CommandSystem
                     {
                         if (toret.Count == 0)
                         {
-                            bool err;
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, out bool err);
                             if (err)
                             {
                                 had_error = true;
@@ -184,9 +182,8 @@ namespace FreneticScript.CommandSystem
                         }
                         else
                         {
-                            bool err;
                             CommandEntry cent = toret[toret.Count - 1];
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, out err);
+                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, out bool err);
                             if (err)
                             {
                                 had_error = true;
@@ -315,14 +312,15 @@ namespace FreneticScript.CommandSystem
                 Commands[i].BlockStart -= adj;
                 Commands[i].BlockEnd -= adj;
             }
-            Created = new CompiledCommandStackEntry();
-            Created.Debug = Debug;
-            Created.Entries = Commands.ToArray();
+            Created = new CompiledCommandStackEntry()
+            {
+                Debug = Debug,
+                Entries = Commands.ToArray()
+            };
             Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
             {
                 string tname = "__script__" + IDINCR++;
-                AssemblyName asmname = new AssemblyName(tname);
-                asmname.Name = tname;
+                AssemblyName asmname = new AssemblyName(tname) { Name = tname };
                 AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
 #if NET_4_5
                     AssemblyBuilderAccess.RunAndCollect
@@ -336,11 +334,13 @@ namespace FreneticScript.CommandSystem
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
                 MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(int) });
                 CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator() };
-                CILAdaptationValues values = new CILAdaptationValues();
-                values.Entry = ccse;
-                values.Script = this;
-                values.ILGen = ilgen;
-                values.Method = methodbuild_c;
+                CILAdaptationValues values = new CILAdaptationValues()
+                {
+                    Entry = ccse,
+                    Script = this,
+                    ILGen = ilgen,
+                    Method = methodbuild_c
+                };
                 values.PushVarSet();
                 for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
                 {
@@ -365,8 +365,8 @@ namespace FreneticScript.CommandSystem
                         Argument arg = ccse.Entries[i].Arguments[a];
                         for (int b = 0; b < arg.Bits.Count; b++)
                         {
-                            TagArgumentBit tab = arg.Bits[b] as TagArgumentBit;
-                            if (tab != null)
+                            TagArgumentBit tab;
+                            if ((tab = arg.Bits[b] as TagArgumentBit) != null)
                             {
                                 tagID++;
                                 ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, a, toClean));

@@ -417,13 +417,11 @@ namespace FreneticScript.TagHandlers
             }
             if (input.IndexOf("<") < 0)
             {
-                Argument a = new Argument();
-                a.WasQuoted = wasquoted;
+                Argument a = new Argument() { WasQuoted = wasquoted };
                 a.Bits.Add(new TextArgumentBit(input, wasquoted) { CommandSystem = CommandSystem });
                 return a;
             }
-            Argument arg = new Argument();
-            arg.WasQuoted = wasquoted;
+            Argument arg = new Argument() { WasQuoted = wasquoted };
             int len = input.Length;
             int blocks = 0;
             int brackets = 0;
@@ -507,8 +505,7 @@ namespace FreneticScript.TagHandlers
                         TagArgumentBit tab = new TagArgumentBit(CommandSystem, bits.ToArray());
                         if (tab.Bits.Length > 0)
                         {
-                            TemplateTagBase start;
-                            if (!CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out start))
+                            if (!CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
                             {
                                 throw new ErrorInducedException("Invalid tag base '" + tab.Bits[0].Key.ToLowerFast() + "'!");
                             }

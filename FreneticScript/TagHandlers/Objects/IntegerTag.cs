@@ -33,8 +33,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The integer tag.</returns>
         public static IntegerTag For(TagData dat, string input)
         {
-            long tval;
-            if (long.TryParse(input, out tval))
+            if (long.TryParse(input, out long tval))
             {
                 return new IntegerTag(tval);
             }
@@ -64,8 +63,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>An integer, or null.</returns>
         public static IntegerTag TryFor(string input)
         {
-            long tval;
-            if (long.TryParse(input, out tval))
+            if (long.TryParse(input, out long tval))
             {
                 return new IntegerTag(tval);
             }
@@ -112,17 +110,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid integer tag.</returns>
         public static IntegerTag CreateFor(TemplateObject input, TagData dat)
         {
-            IntegerTag it = input as IntegerTag;
-            if (it != null)
+            switch (input)
             {
-                return it;
+                case IntegerTag itag:
+                    return itag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
+                default:
+                    return For(dat, input.ToString());
             }
-            DynamicTag dynamic = input as DynamicTag;
-            if (dynamic != null)
-            {
-                return CreateFor(dynamic.Internal, dat);
-            }
-            return For(dat, input.ToString());
         }
 
 #pragma warning disable 1591

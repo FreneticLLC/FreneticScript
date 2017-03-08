@@ -32,8 +32,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The number tag.</returns>
         public static NumberTag For(TagData dat, string input)
         {
-            double tval;
-            if (double.TryParse(input, out tval))
+            if (double.TryParse(input, out double tval))
             {
                 return new NumberTag(tval);
             }
@@ -63,8 +62,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A number, or null.</returns>
         public static NumberTag TryFor(string input)
         {
-            double tval;
-            if (double.TryParse(input, out tval))
+            if (double.TryParse(input, out double tval))
             {
                 return new NumberTag(tval);
             }
@@ -106,22 +104,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid number tag.</returns>
         public static NumberTag CreateFor(TemplateObject input, TagData dat)
         {
-            NumberTag conv = input as NumberTag;
-            if (conv != null)
+            switch (input)
             {
-                return conv;
+                case NumberTag ntag:
+                    return ntag;
+                case IntegerTag itag:
+                    return new NumberTag(itag.Internal);
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
+                default:
+                    return TryFor(input.ToString());
             }
-            IntegerTag iconv = input as IntegerTag;
-            if (iconv != null)
-            {
-                return new NumberTag(iconv.Internal);
-            }
-            DynamicTag dynamic = input as DynamicTag;
-            if (dynamic != null)
-            {
-                return CreateFor(dynamic.Internal, dat);
-            }
-            return TryFor(input.ToString());
         }
 
         /// <summary>

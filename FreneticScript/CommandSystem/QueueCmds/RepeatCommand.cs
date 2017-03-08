@@ -84,18 +84,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsBreakable = true;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                verify
+                Verify
             };
         }
 
-        TemplateObject verify(TemplateObject input)
+        TemplateObject Verify(TemplateObject input)
         {
             if (input.ToString() == "\0CALLBACK")
             {
                 return input;
             }
-            int rep;
-            if (int.TryParse(input.ToString(), out rep))
+            if (int.TryParse(input.ToString(), out int rep))
             {
                 return new IntegerTag(rep);
             }
