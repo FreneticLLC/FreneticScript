@@ -73,13 +73,13 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
-        public static TemplateObject Tag_Duplicate(TemplateObject obj, TagData data)
+        public static TimeTag Tag_Duplicate(TimeTag obj, TagData data)
         {
-            return new TimeTag((obj as TimeTag).Internal);
+            return new TimeTag(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TimeTag).")]
-        public static TemplateObject Tag_Type(TemplateObject obj, TagData data)
+        public static TagTypeTag Tag_Type(TimeTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Time);
         }
@@ -87,9 +87,9 @@ namespace FreneticScript.TagHandlers.Objects
         // TODO: More 'Time Parts' tags!
         [TagMeta(TagType = TYPE, Name = "total_milliseconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE, Returns = "The total number of milliseconds since Jan 1st, 0001 (UTC).",
             Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns 0." })]
-        public static TemplateObject Tag_Current_Time_UTC(TemplateObject obj, TagData data)
+        public static IntegerTag Tag_Current_Time_UTC(TimeTag obj, TagData data)
         {
-            return new IntegerTag((obj as TimeTag).Internal.ToUniversalTime().Ticks / 10000L);
+            return new IntegerTag(obj.Internal.ToUniversalTime().Ticks / 10000L);
         }
 
 #pragma warning restore 1591

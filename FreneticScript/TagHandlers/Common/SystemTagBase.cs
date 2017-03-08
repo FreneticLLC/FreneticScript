@@ -99,9 +99,15 @@ namespace FreneticScript.TagHandlers.Common
 
 #pragma warning disable 1591
 
+            [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+            public static TagTypeTag Tag_Duplicate(TagTypeTag obj, TagData data)
+            {
+                return new TagTypeTag(obj.Internal);
+            }
+
             [TagMeta(TagType = TYPE, Name = "current_time_utc", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current system time (UTC).",
                 Examples = new string[] { }, Others = new string[] { "Preferred for time-related calculations." })]
-            public static TemplateObject Tag_Current_Time_UTC(TemplateObject obj, TagData data)
+            public static TimeTag Tag_Current_Time_UTC(SystemTag obj, TagData data)
             {
                 return new TimeTag(DateTimeOffset.UtcNow);
             }
