@@ -365,8 +365,7 @@ namespace FreneticScript.CommandSystem
                         Argument arg = ccse.Entries[i].Arguments[a];
                         for (int b = 0; b < arg.Bits.Count; b++)
                         {
-                            TagArgumentBit tab;
-                            if ((tab = arg.Bits[b] as TagArgumentBit) != null)
+                            if (arg.Bits[b] is TagArgumentBit tab)
                             {
                                 tagID++;
                                 ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, a, toClean));
