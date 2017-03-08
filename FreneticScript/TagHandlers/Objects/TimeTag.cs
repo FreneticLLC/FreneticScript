@@ -86,14 +86,95 @@ namespace FreneticScript.TagHandlers.Objects
 
         // TODO: More 'Time Parts' tags!
         [TagMeta(TagType = TYPE, Name = "total_milliseconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE, Returns = "The total number of milliseconds since Jan 1st, 0001 (UTC).",
-            Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns 0." })]
-        public static IntegerTag Tag_Current_Time_UTC(TimeTag obj, TagData data)
+            Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns '0'." })]
+        public static IntegerTag Tag_Total_Milliseconds(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.ToUniversalTime().Ticks / 10000L);
         }
 
+        [TagMeta(TagType = TYPE, Name = "short_date", Group = "Time Parts", ReturnType = TextTag.TYPE,
+            Returns = "The date part of the time in a short-date format.",
+            Examples = new string[] { "'2017/03/08 12:00:00:0000 UTC+00:00' .short_date returns '8/03/2017'." })]
+        public static TextTag Tag_Date(TimeTag obj, TagData data)
+        {
+            return new TextTag(obj.Internal.Date.ToShortDateString());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "long_date", Group = "Time Parts", ReturnType = TextTag.TYPE,
+            Returns = "The date part of the time in a long-date format.",
+            Examples = new string[] { "'2017/03/08 12:00:00:0000 UTC+00:00' .long_date returns 'Wednesday, 8 March 2017'." })]
+        public static TextTag Tag_Long_Date(TimeTag obj, TagData data)
+        {
+            return new TextTag(obj.Internal.Date.ToLongDateString());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "short_time", Group = "Time Parts", ReturnType = TextTag.TYPE, Returns = "The time in a HH:MM AM/PM format.",
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .short_time returns '12:30 PM'." })]
+        public static TextTag Tag_Time(TimeTag obj, TagData data)
+        {
+            return new TextTag(obj.Internal.DateTime.ToShortTimeString());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "long_time", Group = "Time Parts", ReturnType = TextTag.TYPE,
+            Returns = "The time in a HH:MM:SS AM/PM format.",
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .long_time returns '12:30:00 PM'." })]
+        public static TextTag Tag_Long_Time(TimeTag obj, TagData data)
+        {
+            return new TextTag(obj.Internal.DateTime.ToLongTimeString());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "year", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
+            Returns = "The year represented in the time.",
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .year returns '2017'." })]
+        public static IntegerTag Tag_Year(TimeTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Year);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "month", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
+            Returns = "The month of the year represented in the time.",
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .month returns '3'." })]
+        public static IntegerTag Tag_Month(TimeTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Month);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "day", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
+            Returns = "The day of the month represented in the time.",
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .day returns '8'." })]
+        public static IntegerTag Tag_Day(TimeTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Day);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "hours", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
+            Returns = "The number of hours represented in the time.",
+            Others = new string[] { "Note this is 24 hour." },
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .hours returns '12'." ,
+                "'2017/03/08 14:30:00:0000 UTC+00:00' .hours returns '14'." })]
+        public static IntegerTag Tag_Hours(TimeTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Hour);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "minutes", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
+            Returns = "The number of minutes represented in the time.",
+            Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .minutes returns '30'."})]
+        public static IntegerTag Tag_Minutes(TimeTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Minute);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "seconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
+            Returns = "The number of seconds represented in the time.",
+            Examples = new string[] { "'2017/03/08 12:30:45:0000 UTC+00:00' .seconds returns '45'." })]
+        public static IntegerTag Tag_Seconds(TimeTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Second);
+        }
+
 #pragma warning restore 1591
-        
+
         /// <summary>
         /// Returns the a string representation of the date-time internally stored by this time tag.
         /// </summary>

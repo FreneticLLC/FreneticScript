@@ -112,8 +112,15 @@ namespace FreneticScript.TagHandlers.Common
                 return new TimeTag(DateTimeOffset.UtcNow);
             }
 
+            [TagMeta(TagType = TYPE, Name = "current_time_local", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current local system time.",
+                Examples = new string[] { })]
+            public static TimeTag Tag_Current_Time_Local(SystemTag obj, TagData data)
+            {
+                return new TimeTag(DateTimeOffset.Now);
+            }
+
 #pragma warning restore 1591
-            
+
             /// <summary>
             /// All tag handlers for this tag type.
             /// </summary>
