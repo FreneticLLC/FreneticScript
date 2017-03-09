@@ -375,6 +375,15 @@ namespace FreneticScript.CommandSystem
                 Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Declare local>: " + t.FullName + " as " + x));
                 return x;
             }
+
+            /// <summary>
+            /// Adds a comment to the developer debug of the IL output.
+            /// </summary>
+            /// <param name="str">The comment text.</param>
+            public void Comment(string str)
+            {
+                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "// Comment -- " + str + " --"));
+            }
         }
 
         /// <summary>
@@ -473,6 +482,14 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The entry location.</param>
         public void MarkCommand(int entry)
         {
+            if (entry < Entry.Entries.Length)
+            {
+                ILGen.Comment("Begin command: " + entry + ") " + Entry.Entries[entry].CommandLine);
+            }
+            else
+            {
+                ILGen.Comment("End command series at: " + entry);
+            }
             ILGen.Emit(OpCodes.Ldarg_2);
             ILGen.Emit(OpCodes.Ldc_I4, entry);
             ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
