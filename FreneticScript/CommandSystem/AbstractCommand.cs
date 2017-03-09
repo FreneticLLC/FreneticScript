@@ -15,6 +15,19 @@ namespace FreneticScript.CommandSystem
     public abstract class AbstractCommand
     {
         /// <summary>
+        /// Represents the "Execute(CommandQueue, CommandEntry)" method for this command.
+        /// </summary>
+        public MethodInfo ExecuteMethod = null;
+
+        /// <summary>
+        /// Initializes the abstract command.
+        /// </summary>
+        public AbstractCommand()
+        {
+            ExecuteMethod = this.GetType().GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
+        }
+
+        /// <summary>
         /// The name of the command.
         /// </summary>
         public string Name = "NAME:UNSET";
@@ -128,7 +141,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The present entry ID.</param>
         public virtual void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            values.CallExecute(entry);
+            values.CallExecute(entry, this);
         }
 
         /// <summary>
@@ -151,27 +164,25 @@ namespace FreneticScript.CommandSystem
         {
             input.Add(GetFollower(entry));
         }
-
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public abstract void Execute(CommandQueue queue, CommandEntry entry);
-
+        
         /// <summary>
         /// Displays the usage information on a command to the console.
         /// </summary>
         /// <param name="queue">The associated queue.</param>
         /// <param name="entry">The CommandEntry data to show usage help to.</param>
         /// <param name="doError">Whether to end with an error.</param>
-        public void ShowUsage(CommandQueue queue, CommandEntry entry, bool doError = true)
+        /// <param name="cmd">The command to show help for - if unspecified, will get from the entry.</param>
+        public static void ShowUsage(CommandQueue queue, CommandEntry entry, bool doError = true, AbstractCommand cmd = null)
         {
+            if (cmd == null)
+            {
+                cmd = entry.Command;
+            }
             if (entry.ShouldShowGood(queue))
             {
-                entry.InfoOutput(queue, TextStyle.Color_Separate + Name + TextStyle.Color_Base + ": " + Description);
-                entry.InfoOutput(queue, TextStyle.Color_Commandhelp + "Usage: /" + Name + " " + Arguments);
-                if (IsDebug)
+                entry.InfoOutput(queue, TextStyle.Color_Separate + cmd.Name + TextStyle.Color_Base + ": " + cmd.Description);
+                entry.InfoOutput(queue, TextStyle.Color_Commandhelp + "Usage: /" + cmd.Name + " " + cmd.Arguments);
+                if (cmd.IsDebug)
                 {
                     entry.InfoOutput(queue, "Note: This command is intended for debugging purposes.");
                 }
@@ -233,12 +244,7 @@ namespace FreneticScript.CommandSystem
         /// Represents the field "Internal" in the class IntHolder.
         /// </summary>
         public static FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField("Internal");
-
-        /// <summary>
-        /// Represents the "Execute(queue, entry)" method.
-        /// </summary>
-        public static MethodInfo ExecuteMethod = typeof(AbstractCommand).GetMethod("Execute", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
-
+        
         /// <summary>
         /// Represents the "SetLocalVar(c, value)" method in the class CommandQueue.
         /// </summary>
@@ -481,19 +487,17 @@ namespace FreneticScript.CommandSystem
         public void PrepareExecutionCall(int entry)
         {
             MarkCommand(entry);
-            LoadEntry(entry);
-            ILGen.Emit(OpCodes.Ldfld, Entry_CommandField);
             LoadQueue();
-            LoadEntry(entry); // Awkward -> avoid duplicate call?
+            LoadEntry(entry);
         }
 
         /// <summary>
         /// Call the "Execute(queue, entry)" method with appropriate parameters.
         /// </summary>
-        public void CallExecute(int entry)
+        public void CallExecute(int entry, AbstractCommand cmd)
         {
             PrepareExecutionCall(entry);
-            ILGen.Emit(OpCodes.Callvirt, ExecuteMethod);
+            ILGen.Emit(OpCodes.Call, cmd.ExecuteMethod);
         }
     }
 }

@@ -121,7 +121,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             throw new NotImplementedException("Unknown execution of IF command, invalid!");
         }

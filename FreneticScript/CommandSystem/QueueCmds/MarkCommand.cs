@@ -8,7 +8,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class MarkCommand : AbstractCommand
+    public class MarkCommand : AbstractCommand
     {
         // <--[command]
         // @Name mark
@@ -52,7 +52,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.ShouldShowGood(queue))
             {

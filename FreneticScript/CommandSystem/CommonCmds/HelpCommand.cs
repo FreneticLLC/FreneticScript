@@ -7,7 +7,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    class HelpCommand : AbstractCommand
+    public class HelpCommand : AbstractCommand
     {
         // TODO: Meta!
 
@@ -24,16 +24,15 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string cmd = entry.GetArgument(queue, 0);
-            AbstractCommand acmd;
-            if (!entry.Command.CommandSystem.RegisteredCommands.TryGetValue(cmd, out acmd))
+            if (!entry.Command.CommandSystem.RegisteredCommands.TryGetValue(cmd, out AbstractCommand acmd))
             {
                 queue.HandleError(entry, "Unrecognized command name!");
                 return;
             }
-            acmd.ShowUsage(queue, entry, false);
+            ShowUsage(queue, entry, false, acmd);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
     // TODO: Remove? Make compatible with CIL update somehow?
 
-    class InjectCommand : AbstractCommand
+    public class InjectCommand : AbstractCommand
     {
         public InjectCommand()
         {
@@ -48,7 +48,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         // TODO: Does this (inject command) have any reason to exist in the modern structure?
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
             fname = fname.ToLowerFast();

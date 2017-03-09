@@ -8,7 +8,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class ErrorCommand : AbstractCommand
+    public class ErrorCommand : AbstractCommand
     {
         // <--[command]
         // @Name error
@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 1 && BooleanTag.TryFor(entry.GetArgumentObject(queue, 1)).Internal)
             {

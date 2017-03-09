@@ -7,7 +7,7 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    class NoopCommand: AbstractCommand
+    public class NoopCommand : AbstractCommand
     {
         // TODO: Meta!
 
@@ -28,7 +28,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
         }
     }

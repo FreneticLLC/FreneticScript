@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class WaitCommand: AbstractCommand
+    public class WaitCommand : AbstractCommand
     {
         // TODO: Meta!
         public WaitCommand()
@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return output;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string delay = entry.GetArgument(queue, 0);
             float seconds = StringToFloat(delay);

@@ -9,7 +9,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // TODO: Meta!
 
-    class StopCommand: AbstractCommand
+    public class StopCommand : AbstractCommand
     {
         public StopCommand()
         {
@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0).ToLowerFast() == "all")
             {

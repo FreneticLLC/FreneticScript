@@ -7,7 +7,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class EventCommand : AbstractCommand
+    public class EventCommand : AbstractCommand
     {
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
@@ -80,7 +80,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {

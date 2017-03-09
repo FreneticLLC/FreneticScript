@@ -8,7 +8,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    class CvarinfoCommand: AbstractCommand
+    public class CvarinfoCommand : AbstractCommand
     {
         // TODO: Meta!
 
@@ -30,7 +30,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count < 1)
             {

@@ -8,7 +8,7 @@ using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class DelayCommand : AbstractCommand
+    public class DelayCommand : AbstractCommand
     {
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
@@ -67,7 +67,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return NumberTag.TryFor(input);
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {

@@ -8,7 +8,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    class ToggleCommand: AbstractCommand
+    public class ToggleCommand : AbstractCommand
     {
         // TODO: Meta!
 
@@ -31,7 +31,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string target = entry.GetArgument(queue, 0);
             CVar cvar = queue.CommandSystem.Output.CVarSys.Get(target);

@@ -7,7 +7,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class ParsingCommand : AbstractCommand
+    public class ParsingCommand : AbstractCommand
     {
         // <--[command]
         // @Name parsing
@@ -53,7 +53,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             TagParseMode modechoice = (TagParseMode)Enum.Parse(typeof(TagParseMode), entry.GetArgument(queue, 0).ToUpper());
             queue.ParseTags = modechoice;

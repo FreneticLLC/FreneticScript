@@ -5,7 +5,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class RequireCommand : AbstractCommand
+    public class RequireCommand : AbstractCommand
     {
         // TODO: Meta!
         public RequireCommand()
@@ -34,7 +34,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string loud = entry.GetArgument(queue, 0).ToLowerFast();
             for (int i = 1; i < entry.Arguments.Count; i++)

@@ -7,7 +7,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class OnceCommand : AbstractCommand
+    public class OnceCommand : AbstractCommand
     {
         // <--[command]
         // @Name once
@@ -75,7 +75,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments[0].ToString() == "\0CALLBACK")
             {

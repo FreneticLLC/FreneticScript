@@ -8,7 +8,7 @@ using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class ElseCommand: AbstractCommand
+    public class ElseCommand: AbstractCommand
     {
         // <--[command]
         // @Name else
@@ -66,7 +66,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
             {

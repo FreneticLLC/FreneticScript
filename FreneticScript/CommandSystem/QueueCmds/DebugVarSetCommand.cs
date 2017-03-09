@@ -180,7 +180,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">The entry to execute with.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             queue.HandleError(entry, "This command MUST be compiled!");
         }

@@ -35,7 +35,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string name = entry.Arguments[0].ToString();
             List<string> args = new List<string>(entry.Arguments.Count);

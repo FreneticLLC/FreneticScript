@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="queue">The queue to run under.</param>
         /// <returns>Whether to continue looping.</returns>
-        public override CommandStackRetVal Run(CommandQueue queue)
+        public CommandStackRetVal Run(CommandQueue queue)
         {
             IntHolder c = new IntHolder() { Internal = 0 };
             try

@@ -35,6 +35,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        // TODO: Store these events elsewhere!
+
         /// <summary>
         /// The first event fired in a sequence of three.
         /// <para/>Fires when a a script is going to be ran, cancellable.
@@ -66,14 +68,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">The command details to be ran.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0).ToLowerFast();
-            ScriptRanPreEventArgs args = new ScriptRanPreEventArgs();
-            args.ScriptName = fname;
-            if (OnScriptRanPreEvent != null)
+            ScriptRanPreEventArgs args = new ScriptRanPreEventArgs() { ScriptName = fname };
+            RunCommand rcmd = entry.Command as RunCommand;
+            if (rcmd.OnScriptRanPreEvent != null)
             {
-                OnScriptRanPreEvent.Fire(args);
+                rcmd.OnScriptRanPreEvent.Fire(args);
             }
             if (args.Cancelled)
             {
@@ -87,11 +89,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandScript script = queue.CommandSystem.GetScript(args.ScriptName);
             if (script != null)
             {
-                ScriptRanEventArgs args2 = new ScriptRanEventArgs();
-                args2.Script = script;
-                if (OnScriptRanEvent != null)
+                ScriptRanEventArgs args2 = new ScriptRanEventArgs() { Script = script };
+                if (rcmd.OnScriptRanEvent != null)
                 {
-                    OnScriptRanEvent.Fire(args2);
+                    rcmd.OnScriptRanEvent.Fire(args2);
                 }
                 if (args2.Cancelled)
                 {
@@ -116,9 +117,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Running '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
                 }
-                CommandQueue nqueue;
                 Dictionary<string, ObjectHolder> vars = new Dictionary<string, ObjectHolder>();
-                queue.CommandSystem.ExecuteScript(script, ref vars, out nqueue);
+                queue.CommandSystem.ExecuteScript(script, ref vars, out CommandQueue nqueue);
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 {
                     if (!nqueue.Running)
@@ -131,11 +131,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         nqueue.Complete += fin.Complete;
                     }
                 }
-                ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs();
-                args4.Script = script;
-                if (OnScriptRanPostEvent != null)
+                ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs() { Script = script };
+                if (rcmd.OnScriptRanPostEvent != null)
                 {
-                    OnScriptRanPostEvent.Fire(args4);
+                    rcmd.OnScriptRanPostEvent.Fire(args4);
                 }
                 // TODO: queue.SetVariable("run_variables", new MapTag(nqueue.LowestVariables)); // TODO: use the ^= syntax here.
             }

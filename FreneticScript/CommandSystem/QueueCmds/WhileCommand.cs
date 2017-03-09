@@ -14,7 +14,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public int Index;
     }
 
-    class WhileCommand : AbstractCommand
+    public class WhileCommand : AbstractCommand
     {
         // TODO: Meta!
 
@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string count = entry.GetArgument(queue, 0);
             if (count == "\0CALLBACK")

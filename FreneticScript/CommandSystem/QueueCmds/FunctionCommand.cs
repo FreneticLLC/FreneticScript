@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
-    class FunctionCommand : AbstractCommand
+    public class FunctionCommand : AbstractCommand
     {
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
@@ -122,7 +122,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string type = entry.GetArgument(queue, 0);
             if (type == "\0CALLBACK")

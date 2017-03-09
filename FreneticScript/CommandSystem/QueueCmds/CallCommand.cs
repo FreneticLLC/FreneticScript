@@ -41,7 +41,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: More examples!
     // -->
 
-    class CallCommand : AbstractCommand
+    public class CallCommand : AbstractCommand
     {
         public CallCommand()
         {
@@ -64,7 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Ret);
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
             fname = fname.ToLowerFast();

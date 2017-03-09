@@ -8,7 +8,7 @@ using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class TryCommand : AbstractCommand
+    public class TryCommand : AbstractCommand
     {
         // TODO: Meta!
         // @Block always
@@ -26,7 +26,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
 
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0) == "\0CALLBACK")
             {

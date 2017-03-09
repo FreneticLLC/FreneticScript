@@ -10,54 +10,6 @@ using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    // <--[command]
-    // @Name repeat
-    // @Arguments <times to repeat>/'stop'/'next'
-    // @Short Executes the following block of commands a specified number of times.
-    // @Updated 2014/06/23
-    // @Authors mcmonkey
-    // @Group Queue
-    // @Minimum 1
-    // @Maximum 1
-    // @Braces allowed
-    // @Description
-    // The repeat command will loop the given number of times and execute the included command block
-    // each time it loops.
-    // It can also be used to stop the looping via the 'stop' argument, or to jump to the next
-    // entry in the list and restart the command block via the 'next' argument.
-    // TODO: Explain more!
-    // @Example
-    // // This example runs through the list and echos "1/3", then "2/3", then "3/3" back to the console.
-    // repeat 3
-    // {
-    //     echo "<{var[repeat_index]}>/<{var[repeat_total]}>";
-    // }
-    // @Example
-    // // This example runs through the list and echos "1", then "1r", then "2", then "3", then "3r" back to the console.
-    // repeat 3
-    // {
-    //     echo "<{var[repeat_index]}>";
-    //     if <{var[repeat_index].equals[2]}>
-    //     {
-    //         repeat next;
-    //     }
-    //     echo "<{var[repeat_index]}>r";
-    // }
-    // @Example
-    // // This example runs through the list and echos "1", then "2", then stops early.
-    // repeat 3
-    // {
-    //     if <{var[repeat_index].equals[3]}>
-    //     {
-    //         repeat stop;
-    //     }
-    //     echo "<{var[repeat_index]}>";
-    // }
-    // @Example
-    // // TODO: More examples!
-    // @Save repeat_index IntegerTag returns what iteration (numeric) the repeat is on.
-    // @Var repeat_total IntegerTag returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
-    // -->
     class RepeatCommandData : AbstractCommandEntryData
     {
         public int Index;
@@ -69,6 +21,55 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// </summary>
     public class RepeatCommand : AbstractCommand
     {
+        // <--[command]
+        // @Name repeat
+        // @Arguments <times to repeat>/'stop'/'next'
+        // @Short Executes the following block of commands a specified number of times.
+        // @Updated 2014/06/23
+        // @Authors mcmonkey
+        // @Group Queue
+        // @Minimum 1
+        // @Maximum 1
+        // @Braces allowed
+        // @Description
+        // The repeat command will loop the given number of times and execute the included command block
+        // each time it loops.
+        // It can also be used to stop the looping via the 'stop' argument, or to jump to the next
+        // entry in the list and restart the command block via the 'next' argument.
+        // TODO: Explain more!
+        // @Example
+        // // This example runs through the list and echos "1/3", then "2/3", then "3/3" back to the console.
+        // repeat 3
+        // {
+        //     echo "<{var[repeat_index]}>/<{var[repeat_total]}>";
+        // }
+        // @Example
+        // // This example runs through the list and echos "1", then "1r", then "2", then "3", then "3r" back to the console.
+        // repeat 3
+        // {
+        //     echo "<{var[repeat_index]}>";
+        //     if <{var[repeat_index].equals[2]}>
+        //     {
+        //         repeat next;
+        //     }
+        //     echo "<{var[repeat_index]}>r";
+        // }
+        // @Example
+        // // This example runs through the list and echos "1", then "2", then stops early.
+        // repeat 3
+        // {
+        //     if <{var[repeat_index].equals[3]}>
+        //     {
+        //         repeat stop;
+        //     }
+        //     echo "<{var[repeat_index]}>";
+        // }
+        // @Example
+        // // TODO: More examples!
+        // @Save repeat_index IntegerTag returns what iteration (numeric) the repeat is on.
+        // @Var repeat_total IntegerTag returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
+        // -->
+
         /// <summary>
         /// Constructs the repeat command.
         /// </summary>
@@ -295,7 +296,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             queue.HandleError(entry, "Cannot Execute() a repeat, must compile!");
         }

@@ -43,7 +43,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
-    class BreakCommand: AbstractCommand
+    public class BreakCommand : AbstractCommand
     {
         public BreakCommand()
         {
@@ -60,7 +60,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
         
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             int count = 1;
             if (entry.Arguments.Count > 0)

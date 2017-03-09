@@ -7,7 +7,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class DebugCommand : AbstractCommand
+    public class DebugCommand : AbstractCommand
     {
         // <--[command]
         // @Name debug
@@ -59,7 +59,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string modechoice = entry.GetArgument(queue, 0);
             CommandStackEntry cse = queue.CurrentEntry;

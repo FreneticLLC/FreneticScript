@@ -6,7 +6,7 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class CatchCommand: AbstractCommand
+    public class CatchCommand: AbstractCommand
     {
         // <--[command]
         // @Name catch
@@ -52,7 +52,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
             {

@@ -5,7 +5,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    class AssertCommand : AbstractCommand
+    public class AssertCommand : AbstractCommand
     {
         // <--[command]
         // @Name assert
@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        public override void Execute(CommandQueue queue, CommandEntry entry)
+        public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             TemplateObject arg1 = entry.GetArgumentObject(queue, 0);
             BooleanTag bt = BooleanTag.TryFor(arg1);
