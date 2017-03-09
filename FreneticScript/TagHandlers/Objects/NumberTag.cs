@@ -98,6 +98,17 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Constructs a number tag for a given integer tag.
+        /// </summary>
+        /// <param name="obj">The integer tag object.</param>
+        /// <returns>The number tag result.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static NumberTag ForIntegerTag(TemplateObject obj)
+        {
+            return new NumberTag((obj as IntegerTag).Internal);
+        }
+
+        /// <summary>
         /// Creates a NumberTag for the given input data.
         /// </summary>
         /// <param name="dat">The tag data.</param>

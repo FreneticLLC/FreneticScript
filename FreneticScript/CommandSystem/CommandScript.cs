@@ -419,7 +419,7 @@ namespace FreneticScript.CommandSystem
                 }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
-#if SAVE
+#if !SAVE
                 StringBuilder outp = new StringBuilder();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
                 {
@@ -488,42 +488,43 @@ namespace FreneticScript.CommandSystem
                 throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
                     + "): Invalid tag top-handler '" + tab.Start.Name + "' for tag: " + tab.ToString());
             }
+            TagType prevType = returnable;
             for (int x = 1; x < tab.Bits.Length; x++)
             {
                 string key = tab.Bits[x].Key;
-                if (returnable.TagHelpers.ContainsKey(key))
+                if (!returnable.TagHelpers.ContainsKey(key))
                 {
-                    TagType temptype = returnable;
-                    TagHelpInfo tsh = null;
-                    while (tsh == null && temptype != null)
+                    while (returnable.SubType != null)
                     {
-                        tsh = temptype.TagHelpers[key];
-                        temptype = temptype.SubType;
+                        returnable = returnable.SubType;
+                        if (returnable.TagHelpers.ContainsKey(key))
+                        {
+                            goto ready;
+                        }
                     }
-                    tab.Bits[x].TagHandler = tsh;
-                    if (tsh == null || tsh.Meta.ReturnTypeResult == null)
+                    throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                        + "): Invalid sub-tag '" + key + "' for tag: " + tab.ToString());
+                }
+                ready:
+                TagHelpInfo tsh = returnable.TagHelpers[key];
+                tab.Bits[x].TagHandler = tsh;
+                if (tsh.Meta.ReturnTypeResult == null)
+                {
+                    if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                     {
-                        if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
-                        {
-                            string type_name = tab.Bits[x].Variable.ToString();
-                            TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
-                            returnable = type_res;
-                        }
-                        else
-                        {
-                            throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                            + "): Invalid tag ReturnType '" + tsh.Meta.ReturnType + "' for tag: " + tab.ToString());
-                        }
+                        string type_name = tab.Bits[x].Variable.ToString();
+                        TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
+                        returnable = type_res;
                     }
                     else
                     {
-                        returnable = tsh.Meta.ReturnTypeResult;
+                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
+                        + "): Invalid tag ReturnType '" + tsh.Meta.ReturnType + "' for tag: " + tab.ToString());
                     }
                 }
                 else
                 {
-                    throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                        + "): Invalid sub-tag '" + key + "' for tag: " + tab.ToString());
+                    returnable = tsh.Meta.ReturnTypeResult;
                 }
             }
             tab.Data = new TagData()
@@ -570,11 +571,11 @@ namespace FreneticScript.CommandSystem
                     if (need_shrink > 1) // If we need to shrink several at once...
                     {
                         ilgen.Emit(OpCodes.Ldc_I4, need_shrink); // Load the number of times a shrink is needed.
-                        ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkMulti); // Run method: TagData -> ShrinkMulti, which puts TagData back on the stack.
+                        ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkMulti); // Run method: TagData -> ShrinkMulti.
                     }
                     else
                     {
-                        ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink, which puts TagData back on the stack.
+                        ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink.
                     }
                     need_shrink = 0;
                 }
@@ -582,11 +583,21 @@ namespace FreneticScript.CommandSystem
                 if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                 {
                     string type_name = tab.Bits[x].Variable.ToString();
-                    TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
-                    ilgen.Emit(OpCodes.Call, type_res.CreatorMethod); // Run the creator method for this tag.
+                    prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
+                    ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for this tag.
                 }
                 else // For normal tags...
                 {
+                    while (tab.Bits[x].TagHandler.Meta.TagType != prevType.TypeName)
+                    {
+                        ilgen.Emit(OpCodes.Call, prevType.GetNextTypeDown.Method);
+                        prevType = prevType.SubType;
+                        if (prevType == null)
+                        {
+                            throw new Exception("Failed to parse down a tag: type reached the base type without finding the expected tag type!");
+                        }
+                    }
+                    prevType = tab.Bits[x].TagHandler.Meta.ReturnTypeResult;
                     if (modt != null) // If we have a modifier input type pre-requirement...
                     {
                         ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
@@ -598,6 +609,10 @@ namespace FreneticScript.CommandSystem
                             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                             ilgen.Emit(OpCodes.Call, modt.CreatorMethod); // Run the creator method to convert the tag to the correct type.
                         }
+                    }
+                    else
+                    {
+                        ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                     }
                     ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
                 }

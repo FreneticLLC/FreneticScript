@@ -120,19 +120,19 @@ namespace FreneticScript.TagHandlers
             // Object types
             Register(Type_Binary = new TagType()
             {
-                TypeName = "binarytag",
+                TypeName = BinaryTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = BinaryTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(BinaryTag)
             });
             Register(Type_Boolean = new TagType()
             {
-                TypeName = "booleantag",
+                TypeName = BooleanTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = BooleanTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(BooleanTag)
             });
@@ -141,34 +141,34 @@ namespace FreneticScript.TagHandlers
                 TypeName = "cvartag",
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = CVarTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = CVarTag.Handlers, // TODO: Convert!
                 RawType = typeof(CVarTag)
             });
             Register(Type_Dynamic = new TagType()
             {
-                TypeName = "dynamictag",
+                TypeName = DynamicTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = DynamicTag.CreateFor,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(DynamicTag)
             });
             Register(Type_Integer = new TagType()
             {
                 TypeName = IntegerTag.TYPE,
-                SubTypeName = "numbertag",
+                SubTypeName = NumberTag.TYPE,
                 TypeGetter = IntegerTag.CreateFor,
-                GetNextTypeDown = (obj) => new NumberTag(((IntegerTag)obj).Internal),
+                GetNextTypeDown = NumberTag.ForIntegerTag,
                 SubHandlers = null,
                 RawType = typeof(IntegerTag)
             });
             Register(Type_List = new TagType()
             {
-                TypeName = "listtag",
+                TypeName = ListTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = ListTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(ListTag)
             });
@@ -178,26 +178,25 @@ namespace FreneticScript.TagHandlers
                 TypeName = "maptag",
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = MapTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(MapTag)
             });
             Register(Type_Null = new TagType()
             {
-                TypeName = "nulltag",
+                TypeName = NullTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = (data, obj) => new NullTag(),
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()), // TODO: Or an error?
+                GetNextTypeDown = TextTag.For, // TODO: Or an error?
                 SubHandlers = null,
                 RawType = typeof(NullTag)
             });
             Register(Type_Number = new TagType()
             {
-                // TODO: Convert!
-                TypeName = "numbertag",
+                TypeName = NumberTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = NumberTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(NumberTag)
             });
@@ -206,25 +205,26 @@ namespace FreneticScript.TagHandlers
                 TypeName = SystemTagBase.SystemTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = SystemTagBase.SystemTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = SystemTagBase.SystemTag.Handlers, // TODO: Convert!
                 RawType = typeof(SystemTagBase.SystemTag)
             });
             Register(Type_TagType = new TagType()
             {
-                TypeName = "tagtypetag",
+                TypeName = TagTypeTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TagTypeTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(TagTypeTag)
             });
             Register(Type_TernayPass = new TagType()
             {
+                // TODO: Convert!
                 TypeName = "ternarypasstag",
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TernaryTagBase.TernaryPassTag.For,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(TernaryTagBase.TernaryPassTag)
             });
@@ -242,7 +242,7 @@ namespace FreneticScript.TagHandlers
                 TypeName = TimeTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TimeTag.CreateFor,
-                GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
+                GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(TimeTag)
             });

@@ -53,7 +53,8 @@ namespace FreneticScript.TagHandlers
         public Dictionary<string, TagHelpInfo> TagHelpers;
 
         /// <summary>
-        /// Gets the boject of the next type down the tree of types.
+        /// Gets the object of the next type down the tree of types.
+        /// REQUIRES a PUBLIC STATIC METHOD be referenced!
         /// </summary>
         public Func<TemplateObject, TemplateObject> GetNextTypeDown;
     }

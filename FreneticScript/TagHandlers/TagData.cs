@@ -138,22 +138,20 @@ namespace FreneticScript.TagHandlers
         /// Shrinks the data amount by X at the start, and returns itself.
         /// </summary>
         /// <returns>This object.</returns>
-        public TagData ShrinkMulti(int x)
+        public void ShrinkMulti(int x)
         {
             cInd += x;
             Remaining -= x;
-            return this;
         }
 
         /// <summary>
         /// Shrinks the data amount by one at the start, and returns itself.
         /// </summary>
         /// <returns>This object.</returns>
-        public TagData Shrink()
+        public void Shrink()
         {
             cInd++;
             Remaining--;
-            return this;
         }
 
         /// <summary>
