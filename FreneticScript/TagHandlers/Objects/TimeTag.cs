@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -73,12 +74,14 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeTag Tag_Duplicate(TimeTag obj, TagData data)
         {
             return new TimeTag(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TimeTag).")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TimeTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Time);
@@ -87,6 +90,7 @@ namespace FreneticScript.TagHandlers.Objects
         // TODO: More 'Time Parts' tags!
         [TagMeta(TagType = TYPE, Name = "total_milliseconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE, Returns = "The total number of milliseconds since Jan 1st, 0001 (UTC).",
             Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns '0'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Total_Milliseconds(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.ToUniversalTime().Ticks / 10000L);
@@ -95,6 +99,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "short_date", Group = "Time Parts", ReturnType = TextTag.TYPE,
             Returns = "The date part of the time in a short-date format.",
             Examples = new string[] { "'2017/03/08 12:00:00:0000 UTC+00:00' .short_date returns '8/03/2017'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Date(TimeTag obj, TagData data)
         {
             return new TextTag(obj.Internal.Date.ToShortDateString());
@@ -103,6 +108,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "long_date", Group = "Time Parts", ReturnType = TextTag.TYPE,
             Returns = "The date part of the time in a long-date format.",
             Examples = new string[] { "'2017/03/08 12:00:00:0000 UTC+00:00' .long_date returns 'Wednesday, 8 March 2017'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Long_Date(TimeTag obj, TagData data)
         {
             return new TextTag(obj.Internal.Date.ToLongDateString());
@@ -110,6 +116,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "short_time", Group = "Time Parts", ReturnType = TextTag.TYPE, Returns = "The time in a HH:MM AM/PM format.",
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .short_time returns '12:30 PM'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Time(TimeTag obj, TagData data)
         {
             return new TextTag(obj.Internal.DateTime.ToShortTimeString());
@@ -118,6 +125,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "long_time", Group = "Time Parts", ReturnType = TextTag.TYPE,
             Returns = "The time in a HH:MM:SS AM/PM format.",
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .long_time returns '12:30:00 PM'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Long_Time(TimeTag obj, TagData data)
         {
             return new TextTag(obj.Internal.DateTime.ToLongTimeString());
@@ -126,6 +134,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "year", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
             Returns = "The year represented in the time.",
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .year returns '2017'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Year(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Year);
@@ -134,6 +143,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "month", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
             Returns = "The month of the year represented in the time.",
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .month returns '3'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Month(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Month);
@@ -142,6 +152,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "day", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
             Returns = "The day of the month represented in the time.",
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .day returns '8'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Day(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Day);
@@ -152,6 +163,7 @@ namespace FreneticScript.TagHandlers.Objects
             Others = new string[] { "Note this is 24 hour." },
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .hours returns '12'." ,
                 "'2017/03/08 14:30:00:0000 UTC+00:00' .hours returns '14'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Hours(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Hour);
@@ -160,6 +172,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "minutes", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
             Returns = "The number of minutes represented in the time.",
             Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .minutes returns '30'."})]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Minutes(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Minute);
@@ -168,6 +181,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "seconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
             Returns = "The number of seconds represented in the time.",
             Examples = new string[] { "'2017/03/08 12:30:45:0000 UTC+00:00' .seconds returns '45'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Seconds(TimeTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Second);

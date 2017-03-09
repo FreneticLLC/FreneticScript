@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -66,18 +67,21 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "for", Group = "Tag System", ReturnType = DynamicTag.TYPE, Returns = "A constructed instance of this tag type.",
             Examples = new string[] { "'numbertag' .for[3] returns '3'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DynamicTag Tag_For(TagTypeTag obj, TagData data)
         {
             return new DynamicTag((obj.Internal.TypeGetter(data.GetModifierObject(0), data)));
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Duplicate(TagTypeTag obj, TagData data)
         {
             return new TagTypeTag(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TagTypeTag).")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TagTypeTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_TagType);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -43,12 +44,14 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullTag Tag_Duplicate(NullTag obj, TagData data)
         {
             return new NullTag();
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (NullTag).")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(NullTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Null);

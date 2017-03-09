@@ -31,6 +31,8 @@ namespace FreneticScript.TagHandlers
             throw new Exception("Invalid object setter!");
         }
 
+        // TODO: replace virtuals below with automatic tag magic!
+
         /// <summary>
         /// Adds a value to a value on the object.
         /// </summary>

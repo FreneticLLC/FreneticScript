@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -62,6 +63,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'Hello' .duplicate returns 'Hello'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Duplicate(TextTag obj, TagData data)
         {
             return new TextTag(obj.ToString());
@@ -69,6 +71,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TextTag).",
             Examples = new string[] { "'Hello' .type returns 'texttag'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TextTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Text);
@@ -76,6 +79,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The text parsed as a number.",
             Examples = new string[] { "'1' .to_number returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_To_Number(TextTag obj, TagData data)
         {
             return NumberTag.For(obj, data);
@@ -83,6 +87,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = IntegerTag.TYPE, Returns = "The text parsed as an integer.",
             Examples = new string[] { "'1' .to_integer returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_To_Integer(TextTag obj, TagData data)
         {
             return IntegerTag.For(obj, data);
@@ -90,6 +95,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_boolean", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "The text parsed as a boolean.",
             Examples = new string[] { "'true' .to_boolean returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_To_Boolean(TextTag obj, TagData data)
         {
             return BooleanTag.For(obj, data);
@@ -97,6 +103,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "is_number", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents a number.",
             Examples = new string[] { "'1' .is_number returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Number(TextTag obj, TagData data)
         {
             return new BooleanTag(NumberTag.TryFor(obj) != null);
@@ -104,6 +111,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "is_integer", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents an integer.",
             Examples = new string[] { "'1' .is_integer returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Integer(TextTag obj, TagData data)
         {
             return new BooleanTag(IntegerTag.TryFor(obj) != null);
@@ -111,6 +119,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "is_boolean", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents a boolean.",
             Examples = new string[] { "'true' .is_boolean returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Boolean(TextTag obj, TagData data)
         {
             return new BooleanTag(BooleanTag.TryFor(obj) != null);
@@ -118,6 +127,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_upper", Group = "Text Modification", ReturnType = TYPE, Returns = "The text in full upper-case.",
             Examples = new string[] { "'alpha' .to_upper returns 'ALPHA'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_To_Upper(TextTag obj, TagData data)
         {
             return new TextTag(obj.Internal.ToUpperInvariant());
@@ -125,6 +135,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "to_lower", Group = "Text Modification", ReturnType = TYPE, Returns = "The text in full lower-case.",
             Examples = new string[] { "'ALPHA' .to_lower returns 'alpha'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_To_Lower(TextTag obj, TagData data)
         {
             return new TextTag(obj.Internal.ToLowerFast());
@@ -133,6 +144,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "to_list_of_characters", Group = "Text Modification", ReturnType = ListTag.TYPE, 
             Returns = "The text as a list of characters.", Examples = new string[] { "'alpha' .to_list_of_characters returns 'a|l|p|h|a'." },
             Others = new string[] { "Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag Tag_To_List_Of_Characters(TextTag obj, TagData data)
         {
             string text = obj.Internal;
@@ -147,6 +159,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "replace", Group = "Text Modification", ReturnType = TextTag.TYPE,
             Returns = "The text with all instances of the first text replaced with the second.", 
             Examples = new string[] { "'alpha' .replace[a|b] returns 'blphb'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Replace(TextTag obj, TagData data)
         {
             ListTag modif = ListTag.For(data.GetModifierObject(0));
@@ -162,6 +175,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "The portion of text in the specified range.",
             Examples = new string[] { "'alpha' .substring[2|4] returns 'lph'." , "'alpha' .substring[2|99999] will return 'lpha'." },
             Others = new string[] { "Note that indices are one-based (This means the first entry is at index 1)." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Substring(TextTag obj, TagData data)
         {
             string text = obj.Internal;
@@ -198,6 +212,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "append", Group = "Text Modification", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The text with the input text appended.", Examples = new string[] { "'alpha' .append[bet] returns 'alphabet'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Append(TextTag obj, TextTag modifier)
         {
             return new TextTag(obj.Internal + modifier.Internal);
@@ -205,6 +220,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "prepend", Group = "Text Modification", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The text with the input text prepended.", Examples = new string[] { "'alpha' .prepend[bet] returns 'betalpha'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Prepend(TextTag obj, TextTag modifier)
         {
             return new TextTag(modifier.Internal + obj.Internal);
@@ -212,6 +228,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "length", Group = "Text Attributes", ReturnType = IntegerTag.TYPE, Returns = "The number of characters in the text.",
             Examples = new string[] { "'alpha' .length returns '5'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Length(TextTag obj, TagData data)
         {
             return new IntegerTag(obj.Internal.Length);
@@ -220,6 +237,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "equals", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
             Returns = "Whether the text matches the specified text.", Examples = new string[] { "'alpha' .equals[alpha] returns 'true'." },
             Others = new string[] { "Note that this is case-sensitive." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals(TextTag obj, TextTag modifier)
         {
             return new BooleanTag(obj.Internal == modifier.Internal);
@@ -228,6 +246,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "does_not_equal", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
             Returns = "Whether the text does not match the specified text.", Examples = new string[] { "'alpha' .does_not_equal[alpha] returns 'false'." },
             Others = new string[] { "Note that this is case-sensitive." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Does_Not_Equal(TextTag obj, TextTag modifier)
         {
             return new BooleanTag(obj.Internal != modifier.Internal);
@@ -236,6 +255,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "equals_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
             Returns = "Whether the text matches the specified text, ignoring letter casing.",
             Examples = new string[] { "'alpha' .equals_ignore_case[ALPHA] returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals_Ignore_Case(TextTag obj, TextTag modifier)
         {
             return new BooleanTag(obj.Internal.ToLowerFast() == modifier.Internal.ToLowerFast());
@@ -244,6 +264,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "does_not_equal_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
             Returns = "Whether the text does not match the specified text, ignoring letter casing.",
             Examples = new string[] { "'alpha' .does_not_equal_ignore_case[ALPHA] returns 'false'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Does_Not_Equal_Ignore_Case(TextTag obj, TextTag modifier)
         {
             return new BooleanTag(obj.Internal.ToLowerFast() != modifier.Internal.ToLowerFast());
@@ -252,6 +273,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "contains", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
             Returns = "Whether the text contains the specified text.", Examples = new string[] { "'alpha' .contains[alp] returns 'true'." },
             Others = new string[] { "Note that this is case-sensitive." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains(TextTag obj, TextTag modifier)
         {
             return new BooleanTag(obj.Internal.Contains(modifier.Internal));
@@ -260,6 +282,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "contains_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
             Returns = "Whether the text contains the specified text, ignoring letter casing.",
             Examples = new string[] { "'alpha' .contains_ignore_case[ALP] returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains_Ignore_Case(TextTag obj, TextTag modifier)
         {
             return new BooleanTag(obj.Internal.ToLowerFast().Contains(modifier.Internal.ToLowerFast()));
@@ -268,6 +291,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "to_utf8_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE,
             Returns = "UTF-8 encoded binary data of the included text.", Examples = new string[] { "'hi' .to_utf8_binary returns '8696'." },
             Others = new string[] { "Can be reverted via <@link tag BinaryTag.from_utf8>BinaryTag.from_utf8<@/link>." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BinaryTag Tag_To_UTF8_Binary(TextTag obj, TagData data)
         {
             return new BinaryTag(new UTF8Encoding(false).GetBytes(obj.Internal));
@@ -276,6 +300,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "from_base64", Group = "Conversion", ReturnType = BinaryTag.TYPE,
             Returns = "The binary data represented by this Base-64 text.", Examples = new string[] { "'aGk=' .from_base64 returns '6869'." },
             Others = new string[] { "Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_From_Base64(TextTag obj, TagData data)
         {
             string text = obj.Internal;

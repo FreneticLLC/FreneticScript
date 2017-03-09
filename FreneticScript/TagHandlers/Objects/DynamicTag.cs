@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -52,18 +53,21 @@ namespace FreneticScript.TagHandlers.Objects
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DynamicTag Tag_Duplicate(DynamicTag obj, TagData data)
         {
             return new DynamicTag(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (DynamicTag).")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(DynamicTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Null);
         }
 
         [TagMeta(TagType = TYPE, Name = "as", Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_As(TemplateObject obj, TagData data)
         {
             // This will be specially compiled.

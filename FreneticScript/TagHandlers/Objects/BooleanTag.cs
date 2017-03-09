@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -118,23 +119,22 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid boolean tag.</returns>
         public static BooleanTag CreateFor(TemplateObject input, TagData dat)
         {
-            BooleanTag conv = input as BooleanTag;
-            if (conv != null)
+            switch (input)
             {
-                return conv;
+                case BooleanTag itag:
+                    return itag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
+                default:
+                    return For(dat, input.ToString());
             }
-            DynamicTag dynamic = input as DynamicTag;
-            if (dynamic != null)
-            {
-                return CreateFor(dynamic.Internal, dat);
-            }
-            return For(dat, input.ToString());
         }
 
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "not", Group = "Boolean Logic", ReturnType = TYPE, Returns = "The opposite of the tag - true and false are flipped.",
             Examples = new string[] { "'true' .not returns 'false'.", "'false' .not returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Not(BooleanTag obj, TagData data)
         {
             return new BooleanTag(!obj.Internal);
@@ -143,6 +143,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "and", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
             Returns = "Whether the boolean and the specified text are both true.",
             Examples = new string[] { "'true' .and[true] returns 'true'.", "'true' .and[false] returns 'false'.", "'false' .and[true] returns 'false'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_And(BooleanTag obj, BooleanTag modifier)
         {
             return new BooleanTag(obj.Internal && modifier.Internal);
@@ -151,6 +152,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
             Returns = "Whether the boolean or the specified text are true.",
             Examples = new string[] { "'true' .or[true] returns 'true'.", "'true' .or[false] returns 'true'.", "'false' .or[false] returns 'false'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Or(BooleanTag obj, BooleanTag modifier)
         {
             return new BooleanTag(obj.Internal || modifier.Internal);
@@ -159,6 +161,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
             Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
             Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'" })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Xor(BooleanTag obj, BooleanTag modifier)
         {
             return new BooleanTag(obj.Internal != modifier.Internal);
@@ -166,6 +169,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'true' .duplicate returns 'true'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Duplicate(BooleanTag obj, TagData data)
         {
             return new BooleanTag(obj.Internal);
@@ -173,6 +177,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BooleanTag).",
             Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(BooleanTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Boolean);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -128,6 +129,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number is greater than the specified number.",
             Examples = new string[] { "'1' .is_greater_than[0] returns 'true'." },
             Others = new String[] { "Commonly shortened to '>'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Greater_Than(NumberTag obj, NumberTag modifier)
         {
             return new BooleanTag(obj.Internal > modifier.Internal);
@@ -137,6 +139,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number is greater than or equal to the specified number.",
             Examples = new string[] { "'1' .is_greater_than_or_equal_to[0] returns 'true'." },
             Others = new String[] { "Commonly shortened to '>='." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Greater_Than_Or_Equal_To(NumberTag obj, NumberTag modifier)
         {
             return new BooleanTag(obj.Internal >= modifier.Internal);
@@ -146,6 +149,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number is less than the specified number.",
             Examples = new string[] { "'1' .is_less_than[0] returns 'false'." },
             Others = new String[] { "Commonly shortened to '<'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Less_Than(NumberTag obj, NumberTag modifier)
         {
             return new BooleanTag(obj.Internal < modifier.Internal);
@@ -155,6 +159,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number is less than or equal to the specified number.",
             Examples = new string[] { "'1' .is_less_than_or_equal_to[0] returns 'false'." },
             Others = new String[] { "Commonly shortened to '<='." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Less_Than_Or_Equal_To(NumberTag obj, NumberTag modifier)
         {
             return new BooleanTag(obj.Internal <= modifier.Internal);
@@ -164,6 +169,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number is equal to the specified number.",
             Examples = new string[] { "'1' .equals[0] returns 'false'." },
             Others = new String[] { "Commonly shortened to '=='." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals(NumberTag obj, NumberTag modifier)
         {
             return new BooleanTag(obj.Internal == modifier.Internal);
@@ -173,6 +179,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number plus the specified number.",
             Examples = new string[] { "'1' .add[1] returns '2'." },
             Others = new String[] { "Commonly shortened to '+'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Add(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(obj.Internal + modifier.Internal);
@@ -182,6 +189,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number minus the specified number.",
             Examples = new string[] { "'1' .subtract[1] returns '0'." },
             Others = new String[] { "Commonly shortened to '-'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Subtract(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(obj.Internal - modifier.Internal);
@@ -191,6 +199,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number multiplied by the specified number.",
             Examples = new string[] { "'2' .multiply[2] returns '4'." },
             Others = new String[] { "Commonly shortened to '*'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Multiply(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(obj.Internal * modifier.Internal);
@@ -200,6 +209,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number divided by the specified number.",
             Examples = new string[] { "'4' .multiply[2] returns '2'." },
             Others = new String[] { "Commonly shortened to '/'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Divide(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(obj.Internal / modifier.Internal);
@@ -209,6 +219,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "Whether the number modulo the specified number.",
             Examples = new string[] { "'10' .modulo[3] returns '1'." },
             Others = new String[] { "Commonly shortened to '%'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Modulo(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(obj.Internal % modifier.Internal);
@@ -217,6 +228,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "round", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The number rounded to the nearest whole number.",
             Examples = new string[] { "'1.4' .round returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Round(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Round(obj.Internal));
@@ -225,6 +237,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "absolute_value", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The absolute value of the number.",
             Examples = new string[] { "'-1' .absolute_value returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Absolute_Value(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Abs(obj.Internal));
@@ -233,6 +246,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "sine", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The sine of the number.",
             Examples = new string[] { "'3.14159' .sine returns '0'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Sine(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Sin(obj.Internal));
@@ -241,6 +255,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "cosine", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The cosine of the number.",
             Examples = new string[] { "'3.14159' .cosine returns '-1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Cosine(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Cos(obj.Internal));
@@ -249,6 +264,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "tangent", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The tangent of the number.",
             Examples = new string[] { "'3.14159' .sine returns '0'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Tangent(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Tan(obj.Internal));
@@ -257,6 +273,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "arcsine", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The inverse sine of the number.",
             Examples = new string[] { "'0' .arcsine returns '0'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Arcsine(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Asin(obj.Internal));
@@ -265,6 +282,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "arccosine", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The inverse cosine of the number.",
             Examples = new string[] { "'1' .arccosine returns '0'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Arccosine(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Acos(obj.Internal));
@@ -273,6 +291,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "arctangent", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The inverse tangent of the number.",
             Examples = new string[] { "'0' .arctangent returns '0'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Arctangent(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Atan(obj.Internal));
@@ -281,6 +300,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "atan2", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The inverse tangent that is the number divided by the specified number.",
             Examples = new string[] { "'0' .atan2[1] returns '0'" })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Atan2(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(Math.Atan2(obj.Internal, modifier.Internal));
@@ -289,6 +309,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "hyperbolic_sine", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The hyperbolic sine of the number.",
             Examples = new string[] { "'0' .hyperbolic_sine returns '0'" })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Hyperbolic_Sine(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Sinh(obj.Internal));
@@ -297,6 +318,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "hyperbolic_cosine", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The hyperbolic cosine of the number.",
             Examples = new string[] { "'0' .hyperbolic_cosine returns '1'" })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Hyperbolic_Cosine(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Cosh(obj.Internal));
@@ -305,6 +327,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "hyperbolic_tangent", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The hyperbolic tangent of the number.",
             Examples = new string[] { "'0' .hyperbolic_sine returns '0'" })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Hyperbolic_Tangent(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Tanh(obj.Internal));
@@ -313,6 +336,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "round_up", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The number rounded to the next whole number.",
             Examples = new string[] { "'1.4' .round_up returns '2'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Round_Up(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Ceiling(obj.Internal));
@@ -321,6 +345,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "round_down", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The number rounded to the previous whole number.",
             Examples = new string[] { "'1.6' .round_down returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Round_Down(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Floor(obj.Internal));
@@ -329,6 +354,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "log10", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The base-10 logarithm of the number.",
             Examples = new string[] { "'10' .log10 returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Log10(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Log10(obj.Internal));
@@ -337,6 +363,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "log", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The logarithm (to the base of the specified number) of the number.",
             Examples = new string[] { "'2' .log[2] returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Log(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(Math.Log(obj.Internal, modifier.Internal));
@@ -345,6 +372,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "maximum", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The higher (between the number and the specific number).",
             Examples = new string[] { "'10' .maximum[12] returns '12'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Maximum(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(Math.Max(obj.Internal, obj.Internal));
@@ -353,6 +381,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "minimum", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The lower number (between the number and the specific number).",
             Examples = new string[] { "'10' .minimum[12] returns '10'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Minimum(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(Math.Min(obj.Internal, obj.Internal));
@@ -362,6 +391,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "The number to the power of the specified number.",
             Examples = new string[] { "'2' .power[2] returns '4'." },
             Others = new string[] { "Commonly shortened to '^'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Power(NumberTag obj, NumberTag modifier)
         {
             return new NumberTag(Math.Pow(obj.Internal, modifier.Internal));
@@ -370,6 +400,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "sign", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The sign of the number, which can be -1, 0, or 1.",
             Examples = new string[] { "'-5' .sign returns '-1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Sign(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Sign(obj.Internal));
@@ -378,6 +409,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "square_root", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The square root of the number.",
             Examples = new string[] { "'4' .square_root returns '2'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Square_Root(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Sqrt(obj.Internal));
@@ -386,6 +418,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "truncate", Group = "Mathematics", ReturnType = TYPE,
             Returns = "The integral part of the number",
             Examples = new string[] { "'-1.7' .truncate returns '-1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Truncate(NumberTag obj, TagData data)
         {
             return new NumberTag(Math.Truncate(obj.Internal));
@@ -394,6 +427,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Number Conversion", ReturnType = BinaryTag.TYPE,
             Returns = "The binary representation of the number.",
             Examples = new string[] { "'1' .to_binary returns '0000000000000FF3'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BinaryTag Tag_To_Binary(NumberTag obj, TagData data)
         {
             return new BinaryTag(BitConverter.GetBytes(obj.Internal));
@@ -402,6 +436,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Number Conversion", ReturnType = IntegerTag.TYPE,
             Returns = "The integer representation of the number.",
             Examples = new string[] { "'1.0' .to_integer returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_To_Integer(NumberTag obj, TagData data)
         {
             return new IntegerTag((long)obj.Internal);
@@ -410,6 +445,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Number Conversion", ReturnType = TYPE,
             Returns = "The number.",
             Examples = new string[] { "'1' .to_number returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_To_Number(NumberTag obj, TagData data)
         {
             return obj;
@@ -418,6 +454,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE,
             Returns = "A perfect duplicate of this object.",
             Examples = new string[] { "'1' .duplicate returns '1'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Duplicate(NumberTag obj, TagData data)
         {
             return new NumberTag(obj.Internal);
@@ -426,6 +463,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE,
             Returns = "The type of this object (NumberTag).",
             Examples = new string[] { "'1' .type returns 'numbertag'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(NumberTag obj, TagData data)
         {
             return new TagTypeTag(data.TagSystem.Type_Number);
