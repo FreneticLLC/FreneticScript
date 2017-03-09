@@ -62,26 +62,28 @@ namespace FreneticScript.TagHandlers.Objects
             return input as TagTypeTag ?? For(data, input.ToString());
         }
 
-        /// <summary>
-        /// All tag handlers for this tag type.
-        /// </summary>
-        public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
+        #pragma warning disable 1591
 
-        static TagTypeTag()
+        [TagMeta(TagType = TYPE, Name = "for", Group = "Tag System", ReturnType = DynamicTag.TYPE, Returns = "A constructed instance of this tag type.",
+            Examples = new string[] { "'numbertag' .for[3] returns '3'." })]
+        public static DynamicTag Tag_For(TagTypeTag obj, TagData data)
         {
-            // <--[tag]
-            // @Name TagTypeTag.for[<Tag>]
-            // @Group Tag System
-            // @ReturnType DynamicTag
-            // @Returns a constructed instance of this tag type.
-            // @Example "numbertag" .for[3] returns "3".
-            // -->
-            Handlers.Add("for", new TagSubHandler() { Handle = (data, obj) => new DynamicTag(((TagTypeTag)obj).Internal.TypeGetter(data.GetModifierObject(0), data)), ReturnTypeString = "dynamictag" });
-            // Documented in TextTag.
-            Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(((TagTypeTag)obj).Internal), ReturnTypeString = "tagtypetag" });
-            // Documented in TextTag.
-            Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_TagType), ReturnTypeString = "tagtypetag" });
+            return new DynamicTag((obj.Internal.TypeGetter(data.GetModifierObject(0), data)));
         }
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        public static TagTypeTag Tag_Duplicate(TagTypeTag obj, TagData data)
+        {
+            return new TagTypeTag(obj.Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TagTypeTag).")]
+        public static TagTypeTag Tag_Type(TagTypeTag obj, TagData data)
+        {
+            return new TagTypeTag(data.TagSystem.Type_TagType);
+        }
+
+#pragma warning restore 1591
         
         /// <summary>
         /// Returns the name of the tag type.

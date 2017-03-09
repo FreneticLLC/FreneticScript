@@ -141,14 +141,14 @@ namespace FreneticScript.TagHandlers.Objects
 
         [TagMeta(TagType = TYPE, Name = "space_separated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a space-separated format.",
             Examples = new string[] { "'one|two|three|' .space_separated returns 'one two three'." })]
-        public static TemplateObject Tag_Space_Separated(ListTag obj, TagData data)
+        public static TextTag Tag_Space_Separated(ListTag obj, TagData data)
         {
             return new TextTag(obj.ToSpaceString());
         }
 
         [TagMeta(TagType = TYPE, Name = "unseparated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list as an unseparated string.",
             Examples = new string[] { "'one|two|three|' .unseparated returns 'onetwothree'." })]
-        public static TemplateObject Tag_Unseparated(ListTag obj, TagData data)
+        public static TextTag Tag_Unseparated(ListTag obj, TagData data)
         {
             return new TextTag(obj.ToFlatString());
         }

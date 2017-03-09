@@ -216,7 +216,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = TagTypeTag.For,
                 GetNextTypeDown = (obj) => new TextTag(obj.ToString()),
-                SubHandlers = TagTypeTag.Handlers, // TODO: Convert!
+                SubHandlers = null,
                 RawType = typeof(TagTypeTag)
             });
             Register(Type_TernayPass = new TagType()
