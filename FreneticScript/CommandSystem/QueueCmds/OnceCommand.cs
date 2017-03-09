@@ -49,12 +49,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 2;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                lower,
-                testValidity
+                Lower,
+                TestValidity
             };
         }
 
-        TemplateObject lower(TemplateObject input)
+        TemplateObject Lower(TemplateObject input)
         {
             string val = input.ToString();
             if (input.ToString() == "\0CALLBACK")
@@ -64,7 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return new TextTag(val.ToLowerFast());
         }
 
-        TemplateObject testValidity(TemplateObject input)
+        TemplateObject TestValidity(TemplateObject input)
         {
             string val = input.ToString();
             string low = val.ToLowerFast();

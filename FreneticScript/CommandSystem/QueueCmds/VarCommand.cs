@@ -30,9 +30,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
                 TextTag.For,
-                verify1,
+                Verify1,
                 TemplateObject.Basic_For,
-                verify2,
+                Verify2,
                 TemplateObject.Basic_For // TODO: TagTypeTag?
             };
         }
@@ -142,7 +142,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        TemplateObject verify1(TemplateObject input)
+        TemplateObject Verify1(TemplateObject input)
         {
             if (input.ToString() == "=")
             {
@@ -151,7 +151,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        TemplateObject verify2(TemplateObject input)
+        TemplateObject Verify2(TemplateObject input)
         {
             if (input.ToString().ToLowerFast() == "as")
             {

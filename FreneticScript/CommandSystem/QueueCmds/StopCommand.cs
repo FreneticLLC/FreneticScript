@@ -22,11 +22,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                verify
+                Verify
             };
         }
 
-        TemplateObject verify(TemplateObject input)
+        TemplateObject Verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
             if (inp == "all")

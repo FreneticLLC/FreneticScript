@@ -24,11 +24,11 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 TextTag.For,
                 TextTag.For,
-                verify
+                Verify
             };
         }
 
-        TemplateObject verify(TemplateObject input)
+        TemplateObject Verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
             if (inp == "force" || inp == "remove" || inp == "do_not_save")

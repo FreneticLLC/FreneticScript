@@ -79,12 +79,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsBreakable = true;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                verify,
+                Verify,
                 ListTag.For
             };
         }
 
-        TemplateObject verify(TemplateObject input)
+        TemplateObject Verify(TemplateObject input)
         {
             if (input.ToString() == "\0CALLBACK")
             {

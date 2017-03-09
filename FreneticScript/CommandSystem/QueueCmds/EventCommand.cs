@@ -48,15 +48,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 5;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                verify1,
+                Verify1,
                 TextTag.For,
                 TextTag.For,
                 IntegerTag.TryFor,
-                verify2
+                Verify2
             };
         }
 
-        TemplateObject verify1(TemplateObject input)
+        TemplateObject Verify1(TemplateObject input)
         {
             if (input.ToString() == "\0CALLBACK")
             {
@@ -70,7 +70,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        TemplateObject verify2(TemplateObject input)
+        TemplateObject Verify2(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
             if (inp == "quiet_fail")
@@ -100,8 +100,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            ScriptEvent theEvent;
-            if (!queue.CommandSystem.Events.TryGetValue(eventname, out theEvent))
+            if (!queue.CommandSystem.Events.TryGetValue(eventname, out ScriptEvent theEvent))
             {
                 queue.HandleError(entry, "Unknown event '<{text_color[emphasis]}>" + TagParser.Escape(eventname) + "<{text_color[base]}>'.");
                 return;

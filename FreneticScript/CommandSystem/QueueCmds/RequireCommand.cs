@@ -19,12 +19,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = -1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                verify,
+                Verify,
                 TextTag.For
             };
         }
 
-        TemplateObject verify(TemplateObject input)
+        TemplateObject Verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
             if (inp == "loud" || inp == "quiet" || inp == "error")

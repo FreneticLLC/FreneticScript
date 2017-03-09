@@ -35,8 +35,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         public static float StringToFloat(string input)
         {
-            float output = 0;
-            float.TryParse(input, out output);
+            float.TryParse(input, out float output);
             return output;
         }
 

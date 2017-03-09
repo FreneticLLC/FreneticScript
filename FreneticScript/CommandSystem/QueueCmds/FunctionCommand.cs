@@ -66,9 +66,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 3;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
-                verify1,
+                Verify1,
                 TextTag.For,
-                verify2
+                Verify2
             };
         }
 
@@ -98,7 +98,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        TemplateObject verify1(TemplateObject input)
+        TemplateObject Verify1(TemplateObject input)
         {
             if (input.ToString() == "\0CALLBACK")
             {
@@ -112,7 +112,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
         
-        TemplateObject verify2(TemplateObject input)
+        TemplateObject Verify2(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFast();
             if (inp == "quiet_fail")
