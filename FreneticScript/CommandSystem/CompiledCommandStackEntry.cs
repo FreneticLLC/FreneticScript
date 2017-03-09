@@ -55,7 +55,7 @@ namespace FreneticScript.CommandSystem
             IntHolder c = new IntHolder() { Internal = 0 };
             try
             {
-                MainCompiledRunnable.Run(queue, c, Index);
+                MainCompiledRunnable.Run(queue, c, Entries, Index);
                 Index = c.Internal + 1;
                 if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
                 {

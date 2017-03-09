@@ -454,9 +454,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void LoadEntry(int entry)
         {
-            ILGen.Emit(OpCodes.Ldarg_0);
-            ILGen.Emit(OpCodes.Ldfld, EntryField);
-            ILGen.Emit(OpCodes.Ldfld, EntriesField);
+            ILGen.Emit(OpCodes.Ldarg_3);
             ILGen.Emit(OpCodes.Ldc_I4, entry);
             ILGen.Emit(OpCodes.Ldelem_Ref);
         }

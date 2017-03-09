@@ -329,10 +329,10 @@ namespace FreneticScript.CommandSystem
 #endif
                     );
                 ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
-                CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)Created;
+                CompiledCommandStackEntry ccse = Created;
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
-                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(int) });
+                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
                 CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator() };
                 CILAdaptationValues values = new CILAdaptationValues()
                 {
@@ -399,7 +399,7 @@ namespace FreneticScript.CommandSystem
                         ccse.LocalVariables[ind] = new ObjectHolder();
                     }
                 }
-                ilgen.Emit(OpCodes.Ldarg_3);
+                ilgen.Emit(OpCodes.Ldarg, 4);
                 ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
@@ -419,7 +419,7 @@ namespace FreneticScript.CommandSystem
                 }
                 ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
                 ccse.MainCompiledRunnable.CSEntry = ccse;
-#if !SAVE
+#if SAVE
                 StringBuilder outp = new StringBuilder();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
                 {
@@ -698,7 +698,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// This class's "Run(queue)" method.
         /// </summary>
-        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(int) });
+        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
 
         /// <summary>
         /// Runs the runnable.
@@ -706,7 +706,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="queue">The queue to run on.</param>
         /// <param name="counter">The current command index.</param>
         /// <param name="fent">The first entry (the entry to start calculating at).</param>
-        public abstract void Run(CommandQueue queue, IntHolder counter, int fent);
+        /// <param name="entries">The entry set ran with.</param>
+        public abstract void Run(CommandQueue queue, IntHolder counter, CommandEntry[] entries, int fent);
     }
 
     /// <summary>
