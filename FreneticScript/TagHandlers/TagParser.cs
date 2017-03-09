@@ -320,7 +320,7 @@ namespace FreneticScript.TagHandlers
         [TagMeta(TagType = null, Name = "or_else", Group = "Nulls", ReturnType = DynamicTag.TYPE, Returns = "The current object, or the specified object if the current is null.")]
         public static TemplateObject AutoTag_Or_Else(TemplateObject obj, TagData data)
         {
-            // TODO: Compile to not need a dynamic tag?
+            // TODO: Special compiler code, to not need a dynamic tag?
             if (obj is NullTag)
             {
                 return new DynamicTag(data.GetModifierObject(0));

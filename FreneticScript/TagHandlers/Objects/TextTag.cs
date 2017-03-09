@@ -162,7 +162,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Replace(TextTag obj, TagData data)
         {
-            ListTag modif = ListTag.For(data.GetModifierObject(0));
+            ListTag modif = ListTag.CreateFor(data.GetModifierObject(0));
             if (modif.Internal.Count != 2)
             {
                 data.Error("Invalid replace tag! Not two entries in the list!");

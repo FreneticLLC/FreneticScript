@@ -115,7 +115,7 @@ namespace FreneticScript.CommandSystem
                         if (obj == null)
                         {
                             return "Invalid argument '" + TagParser.Escape(entry.Arguments[i].ToString())
-                                + "', translates to NULL for this command's input expectation (Command is " + TagParser.Escape(entry.Command.Name) + ").";
+                                + "', translates to NULL for this command's input expectation (Command is " + TagParser.Escape(entry.Command.Name) + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
                         }
                         ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = obj;
                     }

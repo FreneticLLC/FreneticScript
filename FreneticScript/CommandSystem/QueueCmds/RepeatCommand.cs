@@ -7,6 +7,7 @@ using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -188,7 +189,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             else
             {
                 int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_index"));
-                int lvar_tot_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_total", "save_total"));
                 values.LoadQueue();
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
@@ -232,6 +232,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
             CompiledCommandStackEntry cse = queue.CurrentEntry;

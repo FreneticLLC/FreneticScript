@@ -90,13 +90,24 @@ namespace FreneticScript.TagHandlers.Objects
         }
         
         /// <summary>
-        /// Constructs a list tag from text input.
+        /// Creates a ListTag for the given input data.
         /// </summary>
-        /// <param name="input">The list input.</param>
-        /// <returns>A valid list.</returns>
-        public static ListTag For(TemplateObject input)
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid list tag.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ListTag CreateFor(TemplateObject input)
         {
-            return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
+            switch (input)
+            {
+                case ListTag ltag:
+                    return ltag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal);
+                case TextTag ttag:
+                    return For(input.ToString());
+                default:
+                    return new ListTag(new List<TemplateObject>() { input });
+            }
         }
 
         /// <summary>
@@ -105,20 +116,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid list tag.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
-            {
-                case ListTag ltag:
-                    return ltag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                case TextTag ttag:
-                    return For(input.ToString());
-                default:
-                    return new ListTag(new List<TemplateObject>() { input });
-            }
+            return CreateFor(input);
         }
+
         /// <summary>
         /// The ListTag type.
         /// </summary>
@@ -286,7 +289,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Range(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
-            ListTag inputs = ListTag.For(data.GetModifierObject(0));
+            ListTag inputs = ListTag.CreateFor(data.GetModifierObject(0));
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
@@ -346,7 +349,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Insert(ListTag obj, TagData data)
         {
-            ListTag modif = For(data.GetModifierObject(0));
+            ListTag modif = CreateFor(data.GetModifierObject(0));
             if (modif.Internal.Count == 0)
             {
                 data.Error("Empty list to insert!");

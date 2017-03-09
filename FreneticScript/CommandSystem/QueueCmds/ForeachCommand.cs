@@ -5,15 +5,21 @@ using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.Arguments;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
     class ForeachCommandData : AbstractCommandEntryData
     {
-        //public List<TemplateObject> List;
-        //public int Index;
+        public List<TemplateObject> List;
+        public int Index;
     }
 
+    /// <summary>
+    /// Command to loop through a list.
+    /// </summary>
     public class ForeachCommand : AbstractCommand
     {
         // <--[command]
@@ -67,6 +73,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Var foreach_list ListTag returns the full list being looped through.
         // -->
 
+        /// <summary>
+        /// Construct the foreach command.
+        /// </summary>
         public ForeachCommand()
         {
             Name = "foreach";
@@ -80,7 +89,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
                 Verify,
-                ListTag.For
+                ListTag.CreateFor
             };
         }
 
@@ -98,95 +107,208 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public static void Execute(CommandQueue queue, CommandEntry entry)
+        /// <summary>
+        /// Represents the "TryRepeatCIL(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo TryRepeatCILMethod = typeof(ForeachCommand).GetMethod("TryRepeatCIL");
+
+        /// <summary>
+        /// Represents the "TryRepeatCILNoDebug(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo TryRepeatCILMethodNoDebug = typeof(ForeachCommand).GetMethod("TryRepeatCILNoDebug");
+
+        /// <summary>
+        /// Represents the "TryRepeatNumberedCIL(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo TryRepeatNumberedCILMethod = typeof(ForeachCommand).GetMethod("TryRepeatNumberedCIL");
+
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            // TODO: Restore, compile!
-            queue.HandleError(entry, "Foreach is non-functional at this time!");
-            /*
-            string type = entry.GetArgument(queue, 0);
-            if (type == "\0CALLBACK")
+            CommandEntry cent = values.Entry.Entries[entry];
+            string arg = cent.Arguments[0].ToString();
+            if (arg == "\0CALLBACK")
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                ForeachCommandData dat = (ForeachCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
-                dat.Index++;
-                queue.SetVariable("foreach_total", new IntegerTag(dat.List.Count));
-                queue.SetVariable("foreach_index", new IntegerTag(dat.Index));
-                queue.SetVariable("foreach_list", new ListTag(dat.List));
-                if (dat.Index <= dat.List.Count)
+                string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("foreach_value");
+                int lvar_ind_loc = cent.VarLoc(sn);
+                values.LoadQueue();
+                bool db = values.Entry.Debug <= DebugMode.FULL;
+                if (db)
                 {
-                    queue.SetVariable("foreach_value", new DynamicTag(dat.List[dat.Index - 1]));
-                    if (entry.ShouldShowGood(queue))
-                    {
-                        entry.Good(queue, "Foreach looping...: " + dat.Index + "/" + dat.List.Count);
-                    }
-                    cse.Index = entry.BlockStart;
-                    return;
+                    values.LoadEntry(entry);
                 }
-                if (entry.ShouldShowGood(queue))
+                else
                 {
-                    entry.Good(queue, "Foreach stopping.");
+                    values.ILGen.Emit(OpCodes.Ldc_I4, cent.BlockStart - 1);
                 }
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.ILGen.Emit(OpCodes.Call, db ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
+                values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
-            else if (type.ToLowerFast() == "stop")
+            else if (arg == "stop")
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                for (int i = 0; i < cse.Entries.Length; i++)
+                for (int i = entry - 1; i >= 0; i--)
                 {
-                    if (queue.GetCommand(i).Command is ForeachCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (!(values.Entry.Entries[i].Command is ForeachCommand))
                     {
-                        if (entry.ShouldShowGood(queue))
-                        {
-                            entry.Good(queue, "Stopping a foreach loop.");
-                        }
-                        cse.Index = i + 2;
+                        continue;
+                    }
+                    string a0 = values.Entry.Entries[i].Arguments[0].ToString();
+                    if (a0 == "start" && values.Entry.Entries[i].InnerCommandBlock != null)
+                    {
+                        // TODO: Debug output?
+                        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.Entries[i].BlockEnd + 2]);
                         return;
                     }
                 }
-                queue.HandleError(entry, "Cannot stop foreach: not in one!");
+                throw new Exception("Invalid 'foreach stop' command: not inside a foreach block!");
             }
-            else if (type.ToLowerFast() == "next")
+            else if (arg == "next")
             {
-                CommandStackEntry cse = queue.CommandStack.Peek();
-                for (int i = cse.Index - 1; i > 0; i--)
+                for (int i = entry - 1; i >= 0; i--)
                 {
-                    if (queue.GetCommand(i).Command is ForeachCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
+                    if (!(values.Entry.Entries[i].Command is ForeachCommand))
                     {
-                        if (entry.ShouldShowGood(queue))
-                        {
-                            entry.Good(queue, "Jumping forward in a foreach loop.");
-                        }
-                        cse.Index = i + 1;
+                        continue;
+                    }
+                    string a0 = values.Entry.Entries[i].Arguments[0].ToString();
+                    if (a0 == "start" && values.Entry.Entries[i].InnerCommandBlock != null)
+                    {
+                        // TODO: Debug output?
+                        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.Entries[i].BlockEnd + 1]);
                         return;
                     }
                 }
-                queue.HandleError(entry, "Cannot advance foreach: not in one!");
+                throw new Exception("Invalid 'foreach next' command: not inside a foreach block!");
             }
-            else if (type.ToLowerFast() == "start" && entry.Arguments.Count > 1)
+            else if (arg == "start")
             {
-                ListTag list = ListTag.For(entry.GetArgument(queue, 1));
-                int target = list.ListEntries.Count;
-                if (target <= 0)
-                {
-                    entry.Good(queue, "Not looping.");
-                    CommandStackEntry cse = queue.CommandStack.Peek();
-                    cse.Index = entry.BlockEnd + 2;
-                    return;
-                }
-                entry.SetData(queue, new ForeachCommandData() { Index = 1, List = list.ListEntries });
-                queue.SetVariable("foreach_index", new IntegerTag(1));
-                queue.SetVariable("foreach_total", new IntegerTag(target));
-                queue.SetVariable("foreach_value", new DynamicTag(list.ListEntries[0]));
-                queue.SetVariable("foreach_list", list);
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.Good(queue, "Foreach looping <{text_color[emphasis]}>" + target + "<{text_color[base]}> times...");
-                }
+                int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("foreach_value"));
+                values.LoadQueue();
+                values.LoadEntry(entry);
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.ILGen.Emit(OpCodes.Call, TryRepeatNumberedCILMethod);
+                values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
             else
             {
-                ShowUsage(queue, entry);
+                throw new Exception("Invalid 'foreach' command: unknown argument: " + arg);
             }
-            */
+        }
+
+        /// <summary>
+        /// Prepares to adapt a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            string arg = cent.Arguments[0].ToString();
+            if (arg == "\0CALLBACK")
+            {
+                values.PopVarSet();
+                return;
+            }
+            if (arg == "next" || arg == "stop")
+            {
+                return;
+            }
+            values.PushVarSet();
+            string sn = cent.GetSaveNameNoParse("foreach_value");
+            // TODO: scope properly!
+            if (values.LocalVariableLocation(sn) >= 0)
+            {
+                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a foreach_value var (labeled '" + sn + "')?!");
+            }
+            TagType type = cent.System.TagSystem.Type_Dynamic;
+            values.AddVariable(sn, type);
+        }
+
+        /// <summary>
+        /// Executes the callback part of the repeat command, without debug output.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry_ind">Entry to be executed.</param>
+        /// <param name="ri">Repeat Index location.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
+        {
+            CompiledCommandStackEntry cse = queue.CurrentEntry;
+            ForeachCommandData dat = cse.EntryData[entry_ind] as ForeachCommandData;
+            if (++dat.Index < dat.List.Count)
+            {
+                (cse.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Executes the callback part of the repeat command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        /// <param name="ri">Repeat Index location.</param>
+        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri)
+        {
+            CompiledCommandStackEntry cse = queue.CurrentEntry;
+            ForeachCommandData dat = cse.EntryData[entry.BlockStart - 1] as ForeachCommandData;
+            if (++dat.Index < dat.List.Count)
+            {
+                (cse.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
+                if (entry.ShouldShowGood(queue))
+                {
+                    entry.GoodOutput(queue, "Looping...: " + TextStyle.Color_Separate + dat.Index + TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.List.Count);
+                }
+                return true;
+            }
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.GoodOutput(queue, "Foreach stopping.");
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Executes the numbered input part of the repeat command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        /// <param name="ri">Repeat Index location.</param>
+        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
+        {
+            ListTag list = ListTag.CreateFor(entry.GetArgumentObject(queue, 1));
+            if (list.Internal.Count == 0)
+            {
+                if (entry.ShouldShowGood(queue))
+                {
+                    entry.GoodOutput(queue, "Not looping.");
+                }
+                return false;
+            }
+            entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
+            CompiledCommandStackEntry ccse = queue.CurrentEntry;
+            ccse.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.GoodOutput(queue, "Looping " + TextStyle.Color_Separate + list.Internal.Count + TextStyle.Color_Base + " times...");
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        public static void Execute(CommandQueue queue, CommandEntry entry)
+        {
+            queue.HandleError(entry, "Cannot Execute() a foreach, must compile!");
         }
     }
 }
