@@ -18,8 +18,7 @@ namespace FreneticScriptConsoleTester
         static void Main(string[] args)
         {
             SysConsole.Init();
-            CommandSystem = new Commands();
-            CommandSystem.Output = new ConsoleTestOutputter();
+            CommandSystem = new Commands() { Output = new ConsoleTestOutputter() };
             CommandSystem.Init();
             // Register things here!
             CommandSystem.PostInit();

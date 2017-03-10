@@ -75,7 +75,21 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (cent.Arguments[0].ToString() == "\0CALLBACK")
             {
                 values.MarkCommand(entry);
-                values.ILGen.Emit(OpCodes.Nop);
+                // TODO: Debug?
+                int dodgepoint = cent.BlockEnd + 2;
+                while (dodgepoint < values.Entry.Entries.Length)
+                {
+                    CommandEntry tent = values.Entry.Entries[dodgepoint];
+                    if (tent.Command is ElseCommand)
+                    {
+                        dodgepoint = tent.BlockEnd + 2;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[dodgepoint]);
                 return;
             }
             if (cent.BlockEnd <= 0)

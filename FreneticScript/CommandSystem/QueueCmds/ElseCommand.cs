@@ -5,6 +5,8 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -66,58 +68,100 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
-        public static void Execute(CommandQueue queue, CommandEntry entry)
+        /// <summary>
+        /// Represents the "TryIfCIL(queue, entry)" method.
+        /// </summary>
+        public static MethodInfo TryIfCILMethod = typeof(ElseCommand).GetMethod("TryIfCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
+
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            if (entry.Arguments.Count > 0 && entry.Arguments[0].ToString() == "\0CALLBACK")
+            CommandEntry cent = values.Entry.Entries[entry];
+            if (cent.Arguments.Count == 1 && cent.Arguments[0].ToString() == "\0CALLBACK")
             {
-                CommandStackEntry cse = queue.CurrentEntry;
-                CommandEntry ifentry = cse.Entries[entry.BlockStart - 1];
-                if (cse.Index < cse.Entries.Length)
+                values.MarkCommand(entry);
+                // TODO: Debug?
+                int dodgepoint = cent.BlockEnd + 2;
+                while (dodgepoint < values.Entry.Entries.Length)
                 {
-                    CommandEntry elseentry = cse.Entries[cse.Index];
-                    if (elseentry.Command is ElseCommand)
+                    CommandEntry tent = values.Entry.Entries[dodgepoint];
+                    if (tent.Command is ElseCommand)
                     {
-                        elseentry.SetData(queue, ifentry.GetData(queue));
+                        dodgepoint = tent.BlockEnd + 2;
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
+                values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[dodgepoint]);
                 return;
             }
-            if (!(entry.GetData(queue) is IfCommandData))
+            if (cent.BlockEnd <= 0)
             {
-                queue.HandleError(entry, "ELSE invalid, IF did not precede!");
-                return;
+                throw new Exception("Incorrectly defined Else command: no block follows!");
             }
-            IfCommandData data = (IfCommandData)entry.GetData(queue);
-            if (data.Result == 1)
+            if (cent.Arguments.Count > 0 && cent.Arguments[0].ToString() != "if")
+            {
+                throw new Exception("Incorrectly defined Else command: argument input that isn't 'if'!");
+            }
+            values.MarkCommand(entry);
+            values.LoadQueue();
+            values.LoadEntry(entry);
+            values.ILGen.Emit(OpCodes.Call, TryIfCILMethod);
+            values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
+        }
+
+        /// <summary>
+        /// Executes the command via CIL.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        public static bool TryIfCIL(CommandQueue queue, CommandEntry entry)
+        {
+            entry.SetData(queue, new IfCommandData() { Result = 0 });
+            if (entry.Arguments.Count == 0)
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Else continuing, previous IF passed.");
+                    entry.Good(queue, "Else is reached, executing block...");
                 }
-                queue.CurrentEntry.Index = entry.BlockEnd + 1;
-                return;
+                ((IfCommandData)entry.GetData(queue)).Result = 1;
+                return true;
             }
-            bool success = true;
-            if (entry.Arguments.Count >= 1)
-            {
-                success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
-            }
+            List<Argument> args = new List<Argument>(entry.Arguments);
+            args.RemoveAt(0);
+            bool success = IfCommand.TryIf(queue, entry, args);
             if (success)
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Else [if] is true, executing...");
+                    entry.Good(queue, "Else-If is true, executing...");
                 }
-                data.Result = 1;
+                ((IfCommandData)entry.GetData(queue)).Result = 1;
             }
             else
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Else continuing, ELSE-IF is false!");
+                    entry.Good(queue, "Else-If is false, doing nothing!");
                 }
-                queue.CurrentEntry.Index = entry.BlockEnd + 1;
             }
+            return success;
+        }
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        public static void Execute(CommandQueue queue, CommandEntry entry)
+        {
+            throw new NotImplementedException("Unknown execution of ELSE command, invalid!");
         }
     }
 }
