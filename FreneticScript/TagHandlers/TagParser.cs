@@ -142,7 +142,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = CVarTag.For,
                 GetNextTypeDown = TextTag.For,
-                SubHandlers = CVarTag.Handlers, // TODO: Convert!
+                SubHandlers = null,
                 RawType = typeof(CVarTag)
             });
             Register(Type_Dynamic = new TagType()

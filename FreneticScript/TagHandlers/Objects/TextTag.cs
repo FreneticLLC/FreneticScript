@@ -22,7 +22,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The text this TextTag represents.
         /// </summary>
-        string Internal = null;
+        public string Internal = null;
 
         /// <summary>
         /// Constructs a text tag.
@@ -61,16 +61,14 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning disable 1591
 
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
-            Examples = new string[] { "'Hello' .duplicate returns 'Hello'." })]
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Duplicate(TextTag obj, TagData data)
         {
             return new TextTag(obj.ToString());
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TextTag).",
-            Examples = new string[] { "'Hello' .type returns 'texttag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (TextTag).")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TextTag obj, TagData data)
         {

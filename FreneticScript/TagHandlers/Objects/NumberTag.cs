@@ -462,18 +462,14 @@ namespace FreneticScript.TagHandlers.Objects
             return obj;
         }
 
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE,
-            Returns = "A perfect duplicate of this object.",
-            Examples = new string[] { "'1' .duplicate returns '1'." })]
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Duplicate(NumberTag obj, TagData data)
         {
             return new NumberTag(obj.Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE,
-            Returns = "The type of this object (NumberTag).",
-            Examples = new string[] { "'1' .type returns 'numbertag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (NumberTag).")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(NumberTag obj, TagData data)
         {
