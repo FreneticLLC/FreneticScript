@@ -138,7 +138,7 @@ namespace FreneticScript.TagHandlers
             });
             Register(Type_Cvar = new TagType()
             {
-                TypeName = "cvartag",
+                TypeName = CVarTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = CVarTag.For,
                 GetNextTypeDown = TextTag.For,
