@@ -5,6 +5,7 @@ using System.Text;
 using FreneticScript.TagHandlers.Common;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.CommandSystem;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -104,98 +105,99 @@ namespace FreneticScript.TagHandlers.Objects
             return input as MapTag ?? For(input.ToString());
         }
 
-        // TODO: !!!
-        /*
         /// <summary>
-        /// Parse any direct tag input values.
+        /// Creates a MapTag for the given input data.
         /// </summary>
-        /// <param name="data">The input tag data.</param>
-        public override TemplateObject Handle(TagData data)
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid map tag.</returns>
+        public static MapTag CreateFor(TemplateObject input, TagData dat)
         {
-            if (data.Remaining == 0)
+            switch (input)
             {
-                return this;
-            }
-            switch (data[0])
-            {
-                // <--[tag]
-                // @Name MapTag.size
-                // @Group Map Entries
-                // @ReturnType IntegerTag
-                // @Returns the number of entries in the map.
-                // @Example "one:a|two:b" .size returns "2".
-                // -->
-                case "size":
-                    {
-                        return new IntegerTag(Internal.Count).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name MapTag.keys
-                // @Group Map Entries
-                // @ReturnType ListTag
-                // @Returns a list of all keys in the map.
-                // @Example "one:a|two:b" .get[one] returns "one|two|".
-                // -->
-                case "keys":
-                    {
-                        ListTag list = new ListTag(Internal.Keys.ToList());
-                        return list.Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name MapTag.values
-                // @Group Map Entries
-                // @ReturnType ListTag
-                // @Returns a list of all values in the map.
-                // @Example "one:a|two:b" .get[one] returns "a|b|".
-                // -->
-                case "values":
-                    {
-                        ListTag list = new ListTag();
-                        list.Internal.AddRange(Internal.Values);
-                        return list.Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name MapTag.contains[<TextTag>]
-                // @Group Map Entries
-                // @ReturnType BooleanTag
-                // @Returns whether the specified entry exists in the map.
-                // @Example "one:a|two:b" .contains[one] returns "true".
-                // @Example "one:a|two:b" .contains[three] returns "false".
-                // -->
-                case "contains":
-                    {
-                        string modif = data.GetModifier(0).ToLower();
-                        return new BooleanTag(Internal.ContainsKey(modif)).Handle(data.Shrink());
-                    }
-                // <--[tag]
-                // @Name MapTag.get[<TextTag>]
-                // @Group Map Entries
-                // @ReturnType DynamicTag
-                // @Returns the specified entry value in the map.
-                // @Example "one:a|two:b" .get[one] returns "a".
-                // @Example "one:a|two:b" .get[two] returns "b".
-                // -->
-                case "get":
-                    {
-                        string modif = data.GetModifier(0).ToLower();
-                        TemplateObject outp;
-                        if (Internal.TryGetValue(modif, out outp))
-                        {
-                            return new DynamicTag(outp).Handle(data.Shrink());
-                        }
-                        data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
-                        return new NullTag();
-                    }
-                // Documented in TextTag.
-                case "duplicate":
-                    return new MapTag(Internal).Handle(data.Shrink());
-                // Documented in TextTag.
-                case "type":
-                    return new TagTypeTag(data.TagSystem.Type_Map).Handle(data.Shrink());
+                case MapTag itag:
+                    return itag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
                 default:
-                    return new TextTag(ToString()).Handle(data);
+                    return For(input.ToString());
             }
-        }*/
+        }
+
+        /// <summary>
+        /// The NumberTag type.
+        /// </summary>
+        public const string TYPE = "numbertag";
+
+#pragma warning disable 1591
+
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MapTag Tag_Duplicate(MapTag obj, TagData data)
+        {
+            return new MapTag(obj.Internal);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (MapTag).")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TagTypeTag Tag_Type(MapTag obj, TagData data)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Map);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "size", Group = "Map Entries", ReturnType = IntegerTag.TYPE, Modifier = TYPE,
+            Returns = "The number of entries in the map.",
+            Examples = new string[] { "'one:a|two:b' .size returns '2'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IntegerTag Tag_Size(MapTag obj, TagData data)
+        {
+            return new IntegerTag(obj.Internal.Count);
+        }
+
+        [TagMeta(TagType = TYPE, Name = "keys", Group = "Map Entries", ReturnType = ListTag.TYPE, Returns = "A list of all keys in the map.",
+            Examples = new string[] { "'one:a|two:b' .keys returns 'one|two|'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ListTag Tag_Keys(MapTag obj, TagData data)
+        {
+            return new ListTag(obj.Internal.Keys.ToList());
+        }
+
+        [TagMeta(TagType = TYPE, Name = "values", Group = "Map Entries", ReturnType = ListTag.TYPE, Returns = "A list of all values in the map.",
+            Examples = new string[] { "'one:a|two:b' .values returns 'a|b|'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ListTag Tag_Values(MapTag obj, TagData data)
+        {
+            ListTag list = new ListTag();
+            list.Internal.AddRange(obj.Internal.Values);
+            return list;
+        }
+
+        [TagMeta(TagType = TYPE, Name = "contains", Group = "Map Entries", ReturnType = BooleanTag.TYPE, Modifier = TextTag.TYPE,
+            Returns = "Whether the map contains an entry with the specified key.", 
+            Examples = new string[] { "'one:a|two:b' .contains[one] returns 'true'.", "'one:a|two:b' .contains[three] returns 'false'."})]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BooleanTag Tag_Contains(MapTag obj, TextTag modifier)
+        {
+            return new BooleanTag(obj.Internal.ContainsKey(modifier.Internal.ToLowerFast()));
+        }
+
+        [TagMeta(TagType = TYPE, Name = "get", Group = "Map Entries", ReturnType = DynamicTag.TYPE,
+            Returns = "The specified entry value in the map.",
+            Examples = new string[] { "'one:a|two:b' .get[one] returns 'a'.", "'one:a|two:b' .get[two] returns 'b'." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TemplateObject Tag_Get(MapTag obj, TagData data)
+        {
+            string modif = data.GetModifier(0).ToLowerFast();
+            TemplateObject outp;
+            if (obj.Internal.TryGetValue(modif, out outp))
+            {
+                return new DynamicTag(outp);
+            }
+            data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
+            return new NullTag();
+        }
+
+#pragma warning restore 1591
 
         /// <summary>
         /// Gets a string representation of this map.

@@ -22,7 +22,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The text this TextTag represents.
         /// </summary>
-        string Internal = null;
+        public string Internal = null;
 
         /// <summary>
         /// Constructs a text tag.
