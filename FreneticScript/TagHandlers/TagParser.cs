@@ -175,7 +175,7 @@ namespace FreneticScript.TagHandlers
             Register(Type_Map = new TagType()
             {
                 // TODO: Convert!
-                TypeName = "maptag",
+                TypeName = MapTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = MapTag.For,
                 GetNextTypeDown = TextTag.For,

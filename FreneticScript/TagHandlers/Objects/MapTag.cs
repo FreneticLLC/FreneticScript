@@ -125,9 +125,9 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// The NumberTag type.
+        /// The MapTag type.
         /// </summary>
-        public const string TYPE = "numbertag";
+        public const string TYPE = "maptag";
 
 #pragma warning disable 1591
 
@@ -145,8 +145,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new TagTypeTag(data.TagSystem.Type_Map);
         }
 
-        [TagMeta(TagType = TYPE, Name = "size", Group = "Map Entries", ReturnType = IntegerTag.TYPE, Modifier = TYPE,
-            Returns = "The number of entries in the map.",
+        [TagMeta(TagType = TYPE, Name = "size", Group = "Map Entries", ReturnType = IntegerTag.TYPE, Returns = "The number of entries in the map.",
             Examples = new string[] { "'one:a|two:b' .size returns '2'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IntegerTag Tag_Size(MapTag obj, TagData data)
@@ -188,8 +187,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Get(MapTag obj, TagData data)
         {
             string modif = data.GetModifier(0).ToLowerFast();
-            TemplateObject outp;
-            if (obj.Internal.TryGetValue(modif, out outp))
+            if (obj.Internal.TryGetValue(modif, out TemplateObject outp))
             {
                 return new DynamicTag(outp);
             }
