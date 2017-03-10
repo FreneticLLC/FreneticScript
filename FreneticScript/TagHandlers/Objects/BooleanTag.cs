@@ -167,16 +167,14 @@ namespace FreneticScript.TagHandlers.Objects
             return new BooleanTag(obj.Internal != modifier.Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.",
-            Examples = new string[] { "'true' .duplicate returns 'true'." })]
+        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Duplicate(BooleanTag obj, TagData data)
         {
             return new BooleanTag(obj.Internal);
         }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BooleanTag).",
-            Examples = new string[] { "'true' .type returns 'booleantag'." })]
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BooleanTag).")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(BooleanTag obj, TagData data)
         {
