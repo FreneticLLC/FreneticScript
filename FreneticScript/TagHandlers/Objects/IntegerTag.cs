@@ -129,7 +129,14 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return new IntegerTag(obj.Internal);
         }
-        
+
+        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (IntegerTag).")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TagTypeTag Tag_Type(IntegerTag obj, TagData data)
+        {
+            return new TagTypeTag(data.TagSystem.Type_Integer);
+        }
+
         [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
             Returns = "The integer plus the specified integer.",
             Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
@@ -276,13 +283,6 @@ namespace FreneticScript.TagHandlers.Objects
         public static NumberTag Tag_To_Number(IntegerTag obj, TagData data)
         {
             return new NumberTag(obj.Internal);
-        }
-
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (IntegerTag).")]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TagTypeTag Tag_Type(IntegerTag obj, TagData data)
-        {
-            return new TagTypeTag(data.TagSystem.Type_Integer);
         }
 
 #pragma warning restore 1591

@@ -206,7 +206,7 @@ namespace FreneticScript.TagHandlers
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = SystemTagBase.SystemTag.For,
                 GetNextTypeDown = TextTag.For,
-                SubHandlers = SystemTagBase.SystemTag.Handlers, // TODO: Convert!
+                SubHandlers = null,
                 RawType = typeof(SystemTagBase.SystemTag)
             });
             Register(Type_TagType = new TagType()
