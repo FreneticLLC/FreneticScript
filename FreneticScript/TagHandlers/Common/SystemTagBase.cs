@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -100,97 +101,92 @@ namespace FreneticScript.TagHandlers.Common
 #pragma warning disable 1591
 
             [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static TagTypeTag Tag_Duplicate(TagTypeTag obj, TagData data)
             {
                 return new TagTypeTag(obj.Internal);
             }
 
+            [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (SystemTag).")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static TagTypeTag Tag_Type(IntegerTag obj, TagData data)
+            {
+                return new TagTypeTag(data.TagSystem.Type_System);
+            }
+
             [TagMeta(TagType = TYPE, Name = "current_time_utc", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current system time (UTC).",
-                Examples = new string[] { }, Others = new string[] { "Preferred for time-related calculations." })]
+                Others = new string[] { "Preferred for time-related calculations." })]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static TimeTag Tag_Current_Time_UTC(SystemTag obj, TagData data)
             {
                 return new TimeTag(DateTimeOffset.UtcNow);
             }
 
-            [TagMeta(TagType = TYPE, Name = "current_time_local", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current local system time.",
-                Examples = new string[] { })]
+            [TagMeta(TagType = TYPE, Name = "current_time_local", Group = "Utilities", ReturnType = TimeTag.TYPE,
+                Returns = "The current local system time.", Others = new string[] { "Preferred for displaying the current time." })]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static TimeTag Tag_Current_Time_Local(SystemTag obj, TagData data)
             {
                 return new TimeTag(DateTimeOffset.Now);
             }
 
-#pragma warning restore 1591
-
-            /// <summary>
-            /// All tag handlers for this tag type.
-            /// </summary>
-            public static Dictionary<string, TagSubHandler> Handlers = new Dictionary<string, TagSubHandler>();
-
-            static SystemTag()
+            [TagMeta(TagType = TYPE, Name = "os_version", Group = "Utilities", ReturnType = TextTag.TYPE,
+                Returns = "The name and version text of the operating system running this engine.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static TextTag Tag_OS_Version(SystemTag obj, TagData data)
             {
-                // Documented in TextTag.
-                Handlers.Add("duplicate", new TagSubHandler() { Handle = (data, obj) => new SystemTag(), ReturnTypeString = "systemtag" });
-                // Documented in TextTag.
-                Handlers.Add("type", new TagSubHandler() { Handle = (data, obj) => new TagTypeTag(data.TagSystem.Type_System), ReturnTypeString = "tagtypetag" });
-                // <--[tag]
-                // @Name SystemTag.os_version
-                // @Group Utilities
-                // @ReturnType TextTag
-                // @Returns the name and version text of the operating system running this engine.
-                // -->
-                Handlers.Add("os_version", new TagSubHandler() { Handle = (data, obj) => new TextTag(Environment.OSVersion.VersionString), ReturnTypeString = "texttag" });
-                // <--[tag]
-                // @Name SystemTag.user
-                // @Group Utilities
-                // @ReturnType TextTag
-                // @Returns the name of the system user running this engine.
-                // -->
-                Handlers.Add("user", new TagSubHandler() { Handle = (data, obj) => new TextTag(Environment.UserName), ReturnTypeString = "texttag" });
-                // <--[tag]
-                // @Name SystemTag.processor_count
-                // @Group Utilities
-                // @ReturnType IntegerTag
-                // @Returns the number of (virtual) processors on this computer.
-                // -->
-                Handlers.Add("processor_count", new TagSubHandler() { Handle = (data, obj) => new IntegerTag(Environment.ProcessorCount), ReturnTypeString = "integertag" });
-                // <--[tag]
-                // @Name SystemTag.machine_name
-                // @Group Utilities
-                // @ReturnType TextTag
-                // @Returns the name given to this computer.
-                // -->
-                Handlers.Add("machine_name", new TagSubHandler() { Handle = (data, obj) => new TextTag(Environment.MachineName), ReturnTypeString = "texttag" });
-                // <--[tag]
-                // @Name SystemTag.dotnet_version
-                // @Group Utilities
-                // @ReturnType TextTag
-                // @Returns the system's .NET (CLR) version string.
-                // -->
-                Handlers.Add("dotnet_version", new TagSubHandler() { Handle = (data, obj) => new TextTag(Environment.Version.ToString()), ReturnTypeString = "texttag" });
-                // TODO: Meta: Link the two current_time's at each other!
-                // <--[tag]
-                // @Name SystemTag.current_time_local
-                // @Group Utilities
-                // @ReturnType TimeTag
-                // @Returns the current system time (local).
-                // @Other Preferred for displaying the current time.
-                // -->
-                Handlers.Add("current_time_local", new TagSubHandler() { Handle = (data, obj) => new TimeTag(DateTimeOffset.Now), ReturnTypeString = "timetag" });
-                // <--[tag]
-                // @Name SystemTag.total_ram_usage
-                // @Group Utilities
-                // @ReturnType TimeTag
-                // @Returns the total RAM usage of the program running. This is measured in bytes.
-                // -->
-                Handlers.Add("total_ram_usage", new TagSubHandler() { Handle = (data, obj) => new IntegerTag(GC.GetTotalMemory(false)), ReturnTypeString = "integertag" });
-                // <--[tag]
-                // @Name SystemTag.random_decimal
-                // @Group Utilities
-                // @ReturnType NumberTag
-                // @Returns a random decimal number between zero and one.
-                // -->
-                Handlers.Add("random_decimal", new TagSubHandler() { Handle = (data, obj) => new NumberTag(data.TagSystem.CommandSystem.random.NextDouble()), ReturnTypeString = "numbertag" });
+                return new TextTag(Environment.OSVersion.VersionString);
             }
+
+            [TagMeta(TagType = TYPE, Name = "user", Group = "Utilities", ReturnType = TextTag.TYPE,
+                Returns = "The name of the system user running this engine.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static TextTag Tag_User(SystemTag obj, TagData data)
+            {
+                return new TextTag(Environment.UserName);
+            }
+
+            [TagMeta(TagType = TYPE, Name = "processor_count", Group = "Utilities", ReturnType = IntegerTag.TYPE,
+                Returns = "The number of (virtual) processors on this computer.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static IntegerTag Tag_Processor_Count(SystemTag obj, TagData data)
+            {
+                return new IntegerTag(Environment.ProcessorCount);
+            }
+
+            [TagMeta(TagType = TYPE, Name = "machine_name", Group = "Utilities", ReturnType = TextTag.TYPE,
+                Returns = "The name given to this computer.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static TextTag Tag_Machine_Name(SystemTag obj, TagData data)
+            {
+                return new TextTag(Environment.MachineName);
+            }
+
+            [TagMeta(TagType = TYPE, Name = "dotnet_version", Group = "Utilities", ReturnType = TextTag.TYPE,
+                Returns = "The system's .NET (CLR) version string.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static TextTag Tag_DotNET_Version(SystemTag obj, TagData data)
+            {
+                return new TextTag(Environment.Version.ToString());
+            }
+
+            [TagMeta(TagType = TYPE, Name = "total_ram_usage", Group = "Utilities", ReturnType = IntegerTag.TYPE,
+                Returns = "The total RAM usage of the program running. This is measured in bytes.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static IntegerTag Tag_Total_RAM_Usage(SystemTag obj, TagData data)
+            {
+                return new IntegerTag(GC.GetTotalMemory(false));
+            }
+
+            [TagMeta(TagType = TYPE, Name = "random_decimal", Group = "Utilities", ReturnType = NumberTag.TYPE,
+                Returns = "A random decimal number between zero and one.")]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static NumberTag Tag_Random_Decimal(SystemTag obj, TagData data)
+            {
+                return new NumberTag(data.TagSystem.CommandSystem.random.NextDouble());
+            }
+
+#pragma warning restore 1591
             
             /// <summary>
             /// Returns "System".
