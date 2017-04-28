@@ -52,6 +52,20 @@ namespace FreneticScript.TagHandlers.Common
             public bool Passed = false;
 
             /// <summary>
+            /// Return the type name of this tag.
+            /// </summary>
+            /// <returns>The tag type name.</returns>
+            public override string GetTagTypeName()
+            {
+                return TYPE;
+            }
+
+            /// <summary>
+            /// The TernaryPassTag type.
+            /// </summary>
+            public static string TYPE = "ternarypasstag";
+
+            /// <summary>
             /// Gets a ternary pass tag. Shouldn't be used.
             /// </summary>
             /// <param name="data">The data.</param>

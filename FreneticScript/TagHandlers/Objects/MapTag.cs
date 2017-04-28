@@ -22,6 +22,15 @@ namespace FreneticScript.TagHandlers.Objects
         // -->
 
         /// <summary>
+        /// Return the type name of this tag.
+        /// </summary>
+        /// <returns>The tag type name.</returns>
+        public override string GetTagTypeName()
+        {
+            return TYPE;
+        }
+
+        /// <summary>
         /// The internal dictionary that this MapTag represents.
         /// </summary>
         public Dictionary<string, TemplateObject> Internal;
@@ -77,7 +86,31 @@ namespace FreneticScript.TagHandlers.Objects
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFast()] = new TextArgumentBit(kvp[1], false).InputValue;
+                map.Internal[kvp[0].ToLowerFast()] = new TextArgumentBit(TagParser.Unescape(kvp[1]), false).InputValue;
+            }
+            return map;
+        }
+
+        /// <summary>
+        /// Converts saved text to a map tag.
+        /// Never null. Will ignore invalid entries.
+        /// </summary>
+        /// <param name="input">The input saved text.</param>
+        /// <param name="data">The tag data.</param>
+        /// <returns>The map represented by the input text.</returns>
+        public static MapTag CreateFromSaved(string input, TagData data)
+        {
+            string[] dat = input.SplitFast('|');
+            MapTag map = new MapTag();
+            for (int i = 0; i < dat.Length; i++)
+            {
+                string[] kvp = dat[i].SplitFast(':');
+                if (kvp.Length != 2)
+                {
+                    // TODO: Error?
+                    continue;
+                }
+                map.Internal[kvp[0].ToLowerFast()] = data.TagSystem.ParseFromSaved(TagParser.Unescape(kvp[1]), data);
             }
             return map;
         }
@@ -196,6 +229,22 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Gets a savable string representation of this map.
+        /// </summary>
+        /// <returns>The typed string representation.</returns>
+        public override string GetSavableString()
+        {
+            StringBuilder toret = new StringBuilder(Internal.Count * 50 + 10);
+            toret.Append(TYPE);
+            toret.Append(SAVE_MARK);
+            foreach (KeyValuePair<string, TemplateObject> entry in Internal)
+            {
+                toret.Append(EscapeTagBase.Escape(entry.Key)).Append(":").Append(EscapeTagBase.Escape(entry.Value.GetSavableString())).Append("|");
+            }
+            return toret.ToString().Substring(0, toret.Length - 1);
+        }
 
         /// <summary>
         /// Gets a string representation of this map.

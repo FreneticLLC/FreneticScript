@@ -24,7 +24,7 @@ namespace FreneticScript.TagHandlers.Common
         public NullTagBase()
         {
             Name = "null";
-            ResultTypeString = "nulltag";
+            ResultTypeString = NullTag.TYPE;
         }
 
         /// <summary>

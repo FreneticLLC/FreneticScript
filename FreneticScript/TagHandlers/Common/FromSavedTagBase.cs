@@ -6,33 +6,25 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.Common
 {
-    // <--[explanation]
-    // @Name Maps
-    // @Description
-    // A map is a relationship between textual names and object values.
-    // TODO: Explain better!
-    // -->
-
     /// <summary>
-    /// Handles the 'map' tag base.
+    /// Handles the 'from_saved' tag base.
     /// </summary>
-    public class MapTagBase : TemplateTagBase
+    public class FromSavedTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base map[<MapTag>]
-        // @Group Mathematics
-        // @ReturnType MapTag
-        // @Returns the specified input as a map.
-        // <@link explanation maps>What are maps?<@/link>
+        // @Base from_saved[<TextTag>]
+        // @Group Common Base Types
+        // @ReturnType DynamicTag
+        // @Returns the saved copy of a tag input converted to the correct tag type.
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public MapTagBase()
+        public FromSavedTagBase()
         {
-            Name = "map";
-            ResultTypeString = MapTag.TYPE;
+            Name = "from_saved";
+            ResultTypeString = DynamicTag.TYPE;
         }
 
         /// <summary>
@@ -42,7 +34,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return MapTag.For(data.GetModifierObject(0), data);
+            return new DynamicTag(data.TagSystem.ParseFromSaved(data.GetModifier(0), data));
         }
     }
 }

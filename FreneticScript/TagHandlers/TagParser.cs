@@ -81,9 +81,11 @@ namespace FreneticScript.TagHandlers
         /// Registers a type object for later usage by tags.
         /// </summary>
         /// <param name="type">The type object to register.</param>
-        public void Register(TagType type)
+        /// <param name="creator">The tag creator method (for SAVABLE data).</param>
+        public void Register(TagType type, Func<string, TagData, TemplateObject> creator)
         {
             Types.Add(type.TypeName, type);
+            SaveCreators[type.TypeName.ToLowerFast()] = creator;
         }
 
         /// <summary>
@@ -103,12 +105,14 @@ namespace FreneticScript.TagHandlers
             Register(new CVarTagBase());
             Register(new DynamicTagBase());
             Register(new EscapeTagBase());
+            Register(new FromSavedTagBase());
             Register(new IntegerTagBase());
             Register(new ListTagBase());
             Register(LVar = new LvarTagBase());
             Register(new MapTagBase());
             Register(new NullTagBase());
             Register(new NumberTagBase());
+            Register(new SaveTagBase());
             Register(new SystemTagBase());
             Register(new TagTypeBase());
             Register(new TernaryTagBase());
@@ -126,7 +130,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(BinaryTag)
-            });
+            }, (inp, dat) => BinaryTag.For(dat, inp));
             Register(Type_Boolean = new TagType()
             {
                 TypeName = BooleanTag.TYPE,
@@ -135,7 +139,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(BooleanTag)
-            });
+            }, (inp, dat) => BooleanTag.For(dat, inp));
             Register(Type_Cvar = new TagType()
             {
                 TypeName = CVarTag.TYPE,
@@ -144,7 +148,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(CVarTag)
-            });
+            }, (inp, dat) => CVarTag.For(dat, inp));
             Register(Type_Dynamic = new TagType()
             {
                 TypeName = DynamicTag.TYPE,
@@ -153,7 +157,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(DynamicTag)
-            });
+            }, DynamicTag.CreateFromSaved);
             Register(Type_Integer = new TagType()
             {
                 TypeName = IntegerTag.TYPE,
@@ -162,7 +166,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = NumberTag.ForIntegerTag,
                 SubHandlers = null,
                 RawType = typeof(IntegerTag)
-            });
+            }, (inp, dat) => IntegerTag.For(dat, inp));
             Register(Type_List = new TagType()
             {
                 TypeName = ListTag.TYPE,
@@ -171,7 +175,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(ListTag)
-            });
+            }, ListTag.CreateFromSaved);
             Register(Type_Map = new TagType()
             {
                 // TODO: Convert!
@@ -181,7 +185,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(MapTag)
-            });
+            }, MapTag.CreateFromSaved);
             Register(Type_Null = new TagType()
             {
                 TypeName = NullTag.TYPE,
@@ -190,7 +194,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For, // TODO: Or an error?
                 SubHandlers = null,
                 RawType = typeof(NullTag)
-            });
+            }, (inp, dat) => new NullTag());
             Register(Type_Number = new TagType()
             {
                 TypeName = NumberTag.TYPE,
@@ -199,7 +203,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(NumberTag)
-            });
+            }, (inp, dat) => NumberTag.For(dat, inp));
             Register(Type_System = new TagType()
             {
                 TypeName = SystemTagBase.SystemTag.TYPE,
@@ -208,7 +212,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(SystemTagBase.SystemTag)
-            });
+            }, (inp, dat) => SystemTagBase.SystemTag.For(dat, inp));
             Register(Type_TagType = new TagType()
             {
                 TypeName = TagTypeTag.TYPE,
@@ -217,7 +221,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(TagTypeTag)
-            });
+            }, (inp, dat) => TagTypeTag.For(dat, inp));
             Register(Type_TernayPass = new TagType()
             {
                 // TODO: Convert!
@@ -227,7 +231,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(TernaryTagBase.TernaryPassTag)
-            });
+            }, (inp, dat) => TernaryTagBase.TernaryPassTag.For(dat, inp));
             Register(Type_Text = new TagType()
             {
                 TypeName = TextTag.TYPE,
@@ -236,7 +240,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = null,
                 SubHandlers = null,
                 RawType = typeof(TextTag)
-            });
+            }, (inp, dat) => new TextTag(inp));
             Register(Type_Time = new TagType()
             {
                 TypeName = TimeTag.TYPE,
@@ -245,7 +249,7 @@ namespace FreneticScript.TagHandlers
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(TimeTag)
-            });
+            }, (inp, dat) => TimeTag.For(inp));
         }
         /// <summary>
         /// Set up the tag engine after all input has be registered.
@@ -402,6 +406,29 @@ namespace FreneticScript.TagHandlers
         /// The TimeTag type.
         /// </summary>
         public TagType Type_Time;
+
+        /// <summary>
+        /// Helpers to load tags for any given type, input by name.
+        /// </summary>
+        public Dictionary<string, Func<string, TagData, TemplateObject>> SaveCreators = new Dictionary<string, Func<string, TagData, TemplateObject>>();
+
+        /// <summary>
+        /// Creates an object from saved data.
+        /// </summary>
+        /// <param name="input">The input save data.</param>
+        /// <param name="data">The tag data.</param>
+        /// <returns>The resultant object.</returns>
+        public TemplateObject ParseFromSaved(string input, TagData data)
+        {
+            Console.WriteLine(input);
+            string[] dat = input.SplitFast(TemplateObject.SAVE_MARK[0], 1);
+            if (SaveCreators.TryGetValue(dat[0], out Func<string, TagData, TemplateObject> creator))
+            {
+                return creator(dat[1], data);
+            }
+            data.Error("Invalid save loader type (Was a tag type spelled wrong?)!");
+            return new NullTag();
+        }
 
         /// <summary>
         /// Splits text into an Argument, for preparsing.

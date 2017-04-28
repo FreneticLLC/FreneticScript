@@ -21,6 +21,15 @@ namespace FreneticScript.TagHandlers.Objects
         // -->
 
         /// <summary>
+        /// Return the type name of this tag.
+        /// </summary>
+        /// <returns>The tag type name.</returns>
+        public override string GetTagTypeName()
+        {
+            return TYPE;
+        }
+
+        /// <summary>
         /// The binary data this tag represents.
         /// </summary>
         public byte[] Internal;

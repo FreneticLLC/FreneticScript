@@ -15,7 +15,16 @@ namespace FreneticScript.TagHandlers.Objects
         // @Group Variables
         // @Description Represents a global control variable.
         // -->
-        
+
+        /// <summary>
+        /// Return the type name of this tag.
+        /// </summary>
+        /// <returns>The tag type name.</returns>
+        public override string GetTagTypeName()
+        {
+            return TYPE;
+        }
+
         public static CVarTag For(TagData data, string input)
         {
             CVar tcv = data.TagSystem.CommandSystem.Output.CVarSys.Get(input);

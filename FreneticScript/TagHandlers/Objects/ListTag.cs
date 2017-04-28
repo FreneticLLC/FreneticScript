@@ -22,6 +22,15 @@ namespace FreneticScript.TagHandlers.Objects
         // -->
 
         /// <summary>
+        /// Return the type name of this tag.
+        /// </summary>
+        /// <returns>The tag type name.</returns>
+        public override string GetTagTypeName()
+        {
+            return TYPE;
+        }
+
+        /// <summary>
         /// The list this ListTag represents.
         /// </summary>
         public List<TemplateObject> Internal;
@@ -77,6 +86,29 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return tlist;
         }
+
+        /// <summary>
+        /// Constructs a list tag from saved text input.
+        /// </summary>
+        /// <param name="list">The saved text input.</param>
+        /// <param name="data">The tag data.</param>
+        /// <returns>A valid list.</returns>
+        public static ListTag CreateFromSaved(string list, TagData data)
+        {
+            string[] baselist = list.SplitFast('|');
+            ListTag tlist = new ListTag();
+            for (int i = 0; i < baselist.Length; i++)
+            {
+                if (i == baselist.Length - 1 && baselist[i].Length == 0)
+                {
+                    break;
+                }
+                string dat = UnescapeTagBase.Unescape(baselist[i]);
+                tlist.Internal.Add(data.TagSystem.ParseFromSaved(dat, data));
+            }
+            return tlist;
+        }
+
 
         /// <summary>
         /// Constructs a list tag from text input.
@@ -396,6 +428,22 @@ namespace FreneticScript.TagHandlers.Objects
                 list.Add(Internal[i].ToString());
             }
             return list;
+        }
+
+        /// <summary>
+        /// Converts the list tag to a savable string.
+        /// </summary>
+        /// <returns>A typed string representation of the list.</returns>
+        public override string GetSavableString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(TYPE);
+            sb.Append(SAVE_MARK);
+            for (int i = 0; i < Internal.Count; i++)
+            {
+                sb.Append(EscapeTagBase.Escape(Internal[i].GetSavableString())).Append("|");
+            }
+            return sb.ToString();
         }
 
         /// <summary>

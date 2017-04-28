@@ -50,6 +50,15 @@ namespace FreneticScript.TagHandlers.Common
             // -->
 
             /// <summary>
+            /// Return the type name of this tag.
+            /// </summary>
+            /// <returns>The tag type name.</returns>
+            public override string GetTagTypeName()
+            {
+                return TYPE;
+            }
+            
+            /// <summary>
             /// Gets a system tag. Shouldn't be used.
             /// </summary>
             /// <param name="data">The data.</param>

@@ -18,6 +18,15 @@ namespace FreneticScript.TagHandlers.Objects
         // @Description Represents any object, dynamically.
         // -->
 
+        /// <summary>
+        /// Return the type name of this tag.
+        /// </summary>
+        /// <returns>The tag type name.</returns>
+        public override string GetTagTypeName()
+        {
+            return TYPE;
+        }
+
         // TODO: Explanation of dynamics!
 
         /// <summary>
@@ -50,6 +59,17 @@ namespace FreneticScript.TagHandlers.Objects
             return input as DynamicTag ?? new DynamicTag(input);
         }
 
+        /// <summary>
+        /// Creates a DynamicTag from the saved object.
+        /// </summary>
+        /// <param name="input">The input data.</param>
+        /// <param name="data">The tag data.</param>
+        /// <returns>The object.</returns>
+        public static DynamicTag CreateFromSaved(string input, TagData data)
+        {
+            return new DynamicTag(data.TagSystem.ParseFromSaved(input, data));
+        }
+
 #pragma warning disable 1591
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
@@ -75,11 +95,20 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-        
+
         /// <summary>
-        /// Returns the name of the tag type.
+        /// Returns savable dynamic tag data.
         /// </summary>
-        /// <returns>The name.</returns>
+        /// <returns>The data.</returns>
+        public override string GetSavableString()
+        {
+            return TYPE + SAVE_MARK + Internal.GetSavableString();
+        }
+
+        /// <summary>
+        /// Returns the dynamic tag data.
+        /// </summary>
+        /// <returns>The data.</returns>
         public override string ToString()
         {
             return Internal.ToString();
