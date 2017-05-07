@@ -32,6 +32,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
+
+        /// <summary>
+        /// Constructs the mark command.
+        /// </summary>
         public MarkCommand()
         {
             Name = "mark";

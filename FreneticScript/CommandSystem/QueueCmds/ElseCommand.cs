@@ -39,6 +39,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
+
+        /// <summary>
+        /// Constructs the else command.
+        /// </summary>
         public ElseCommand()
         {
             Name = "else";

@@ -32,6 +32,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // This example sets the debug mode to minimal.
         // debug minimal;
         // -->
+
+        /// <summary>
+        /// Constructs the debug command.
+        /// </summary>
         public DebugCommand()
         {
             Name = "debug";

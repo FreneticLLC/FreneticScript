@@ -7,10 +7,16 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// The Help command: shows help information on commands.
+    /// </summary>
     public class HelpCommand : AbstractCommand
     {
         // TODO: Meta!
 
+        /// <summary>
+        /// Constructs the help command.
+        /// </summary>
         public HelpCommand()
         {
             Name = "help";

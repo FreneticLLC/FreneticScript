@@ -12,6 +12,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     public class WaitCommand : AbstractCommand
     {
         // TODO: Meta!
+
+        /// <summary>
+        /// Constructs the wait command.
+        /// </summary>
         public WaitCommand()
         {
             Name = "wait";
@@ -38,6 +42,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Ret);
         }
 
+        /// <summary>
+        /// Converts a string to a float.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>The float.</returns>
         public static float StringToFloat(string input)
         {
             float.TryParse(input, out float output);

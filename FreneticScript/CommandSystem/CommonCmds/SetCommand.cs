@@ -12,6 +12,9 @@ namespace FreneticScript.CommandSystem.CommonCmds
     {
         // TODO: Meta!
 
+        /// <summary>
+        /// Constructs the set command.
+        /// </summary>
         public SetCommand()
         {
             Name = "set";

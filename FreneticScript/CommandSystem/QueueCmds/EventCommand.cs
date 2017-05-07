@@ -43,6 +43,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
+
+        /// <summary>
+        /// Constructs the event command.
+        /// </summary>
         public EventCommand()
         {
             Name = "event";

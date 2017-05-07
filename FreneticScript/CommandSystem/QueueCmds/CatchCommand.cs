@@ -35,6 +35,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // TODO: More examples!
         // @Var stack_trace TextTag The error message that was caught, with full script tracing information.
         // -->
+
+        /// <summary>
+        /// Constructs the catch command.
+        /// </summary>
         public CatchCommand()
         {
             Name = "catch";

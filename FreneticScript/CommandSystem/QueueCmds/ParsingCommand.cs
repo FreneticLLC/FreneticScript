@@ -28,6 +28,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
+
+        /// <summary>
+        /// Constructs the parsing command.
+        /// </summary>
         public ParsingCommand()
         {
             Name = "parsing";

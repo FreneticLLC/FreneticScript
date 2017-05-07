@@ -43,8 +43,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
+    
     public class BreakCommand : AbstractCommand
     {
+        /// <summary>
+        /// Constructs the breaks command.
+        /// </summary>
         public BreakCommand()
         {
             Name = "break";
@@ -58,6 +62,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 NumberTag.TryFor
             };
+            // TODO: Compile the break command!
         }
 
         /// <summary>

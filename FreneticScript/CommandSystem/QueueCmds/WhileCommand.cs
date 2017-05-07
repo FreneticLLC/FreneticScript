@@ -20,6 +20,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         // TODO: Compile!
 
+        /// <summary>
+        /// Constructs the while command.
+        /// </summary>
         public WhileCommand()
         {
             Name = "while";

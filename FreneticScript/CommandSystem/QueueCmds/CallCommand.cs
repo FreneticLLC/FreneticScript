@@ -40,9 +40,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
-
+    
     public class CallCommand : AbstractCommand
     {
+        /// <summary>
+        /// Constructs the call command.
+        /// </summary>
         public CallCommand()
         {
             Name = "call";

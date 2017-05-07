@@ -8,10 +8,16 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// The Echo command: outputs text to the console.
+    /// </summary>
     public class EchoCommand : AbstractCommand
     {
         // TODO: Meta!
 
+        /// <summary>
+        /// Constructs the echo command.
+        /// </summary>
         public EchoCommand()
         {
             Name = "echo";

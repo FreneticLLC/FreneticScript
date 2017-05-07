@@ -12,6 +12,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     {
         // TODO: Meta!
         // @Block always
+
+        /// <summary>
+        /// Constructs the try command.
+        /// </summary>
         public TryCommand()
         {
             Name = "try";

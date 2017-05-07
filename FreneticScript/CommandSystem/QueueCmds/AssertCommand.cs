@@ -30,6 +30,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // This example sometimes throws an error.
         // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!";
         // -->
+
+        /// <summary>
+        /// Constructs the assert command.
+        /// </summary>
         public AssertCommand()
         {
             Name = "assert";

@@ -12,6 +12,9 @@ namespace FreneticScript.CommandSystem.CommonCmds
     {
         // TODO: Meta!
 
+        /// <summary>
+        /// Constructs the toggle command.
+        /// </summary>
         public ToggleCommand()
         {
             Name = "toggle";

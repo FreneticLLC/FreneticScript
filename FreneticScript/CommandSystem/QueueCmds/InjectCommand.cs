@@ -31,6 +31,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
     public class InjectCommand : AbstractCommand
     {
+        /// <summary>
+        /// Constructs the inject command.
+        /// </summary>
         public InjectCommand()
         {
             Name = "inject";

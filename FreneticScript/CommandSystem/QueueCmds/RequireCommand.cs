@@ -8,6 +8,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     public class RequireCommand : AbstractCommand
     {
         // TODO: Meta!
+
+        /// <summary>
+        /// Constructs the require command.
+        /// </summary>
         public RequireCommand()
         {
             Name = "require";

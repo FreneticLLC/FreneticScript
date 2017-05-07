@@ -39,6 +39,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // once MyScript { echo "hi!"; }
         // once MyScript quiet { echo "This won't show!"; }
         // -->
+
+        /// <summary>
+        /// Constructs the once command.
+        /// </summary>
         public OnceCommand()
         {
             Name = "once";

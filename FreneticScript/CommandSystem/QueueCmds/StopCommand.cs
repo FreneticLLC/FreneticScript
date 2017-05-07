@@ -11,6 +11,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
     public class StopCommand : AbstractCommand
     {
+        /// <summary>
+        /// Constructs the stop command.
+        /// </summary>
         public StopCommand()
         {
             Name = "stop";

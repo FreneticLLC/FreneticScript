@@ -61,6 +61,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             fblock.Add(GetFollower(entry));
         }
 
+        /// <summary>
+        /// Constructs the function command.
+        /// </summary>
         public FunctionCommand()
         {
             Name = "function";

@@ -33,6 +33,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
+
+        /// <summary>
+        /// Constructs the goto command.
+        /// </summary>
         public GotoCommand()
         {
             Name = "goto";

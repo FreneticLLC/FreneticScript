@@ -7,10 +7,16 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// The NoOp command: does nothing!
+    /// </summary>
     public class NoopCommand : AbstractCommand
     {
         // TODO: Meta!
 
+        /// <summary>
+        /// Construct the noop command.
+        /// </summary>
         public NoopCommand()
         {
             Name = "noop";

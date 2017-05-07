@@ -8,10 +8,16 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// The Reload command: reloads the system.
+    /// </summary>
     public class ReloadCommand : AbstractCommand
     {
         // TODO: Meta!
 
+        /// <summary>
+        /// Constructs the reload command.
+        /// </summary>
         public ReloadCommand()
         {
             Name = "reload";
