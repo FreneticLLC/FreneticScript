@@ -45,6 +45,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
+
+    /// <summary>
+    /// The Function command.
+    /// </summary>
     public class FunctionCommand : AbstractCommand
     {
         /// <summary>

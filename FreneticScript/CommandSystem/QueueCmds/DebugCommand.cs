@@ -7,6 +7,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Debug command.
+    /// </summary>
     public class DebugCommand : AbstractCommand
     {
         // <--[command]

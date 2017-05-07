@@ -5,6 +5,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Assert command.
+    /// </summary>
     public class AssertCommand : AbstractCommand
     {
         // <--[command]

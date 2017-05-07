@@ -8,6 +8,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Error command.
+    /// </summary>
     public class ErrorCommand : AbstractCommand
     {
         // <--[command]

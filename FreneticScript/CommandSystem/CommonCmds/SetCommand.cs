@@ -8,6 +8,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// The Set command.
+    /// </summary>
     public class SetCommand : AbstractCommand
     {
         // TODO: Meta!

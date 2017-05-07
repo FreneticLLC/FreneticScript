@@ -10,6 +10,9 @@ using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Else command.
+    /// </summary>
     public class ElseCommand: AbstractCommand
     {
         // <--[command]

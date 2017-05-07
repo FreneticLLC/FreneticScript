@@ -9,6 +9,9 @@ using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Wait command.
+    /// </summary>
     public class WaitCommand : AbstractCommand
     {
         // TODO: Meta!

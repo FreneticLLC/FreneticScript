@@ -43,7 +43,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
-    
+
+    /// <summary>
+    /// The Break command.
+    /// </summary>
     public class BreakCommand : AbstractCommand
     {
         /// <summary>

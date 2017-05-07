@@ -8,6 +8,9 @@ using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Delay command.
+    /// </summary>
     public class DelayCommand : AbstractCommand
     {
         /// <summary>

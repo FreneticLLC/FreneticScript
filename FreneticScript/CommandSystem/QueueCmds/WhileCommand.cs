@@ -14,6 +14,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public int Index;
     }
 
+    /// <summary>
+    /// The While command.
+    /// </summary>
     public class WhileCommand : AbstractCommand
     {
         // TODO: Meta!

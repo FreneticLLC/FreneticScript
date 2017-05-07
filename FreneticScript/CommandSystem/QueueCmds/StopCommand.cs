@@ -9,6 +9,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // TODO: Meta!
 
+    /// <summary>
+    /// The Stop command.
+    /// </summary>
     public class StopCommand : AbstractCommand
     {
         /// <summary>

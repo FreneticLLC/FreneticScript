@@ -7,6 +7,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Event command.
+    /// </summary>
     public class EventCommand : AbstractCommand
     {
         /// <summary>

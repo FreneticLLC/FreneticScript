@@ -8,6 +8,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Mark command.
+    /// </summary>
     public class MarkCommand : AbstractCommand
     {
         // <--[command]

@@ -8,6 +8,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
+    /// <summary>
+    /// The Toggle command.
+    /// </summary>
     public class ToggleCommand : AbstractCommand
     {
         // TODO: Meta!

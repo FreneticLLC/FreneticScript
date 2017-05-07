@@ -5,6 +5,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Require command.
+    /// </summary>
     public class RequireCommand : AbstractCommand
     {
         // TODO: Meta!

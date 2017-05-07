@@ -7,6 +7,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Parsing command.
+    /// </summary>
     public class ParsingCommand : AbstractCommand
     {
         // <--[command]
@@ -45,6 +48,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 Verify
             };
+            // TODO: Should this command exist?
         }
 
         TemplateObject Verify(TemplateObject input)

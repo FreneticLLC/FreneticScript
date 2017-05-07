@@ -9,6 +9,9 @@ using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Goto command.
+    /// </summary>
     public class GotoCommand : AbstractCommand
     {
         // <--[command]

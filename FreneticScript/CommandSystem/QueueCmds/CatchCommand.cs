@@ -6,6 +6,9 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Catch command.
+    /// </summary>
     public class CatchCommand: AbstractCommand
     {
         // <--[command]

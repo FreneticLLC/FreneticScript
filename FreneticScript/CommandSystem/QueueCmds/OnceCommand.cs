@@ -7,6 +7,9 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Once command.
+    /// </summary>
     public class OnceCommand : AbstractCommand
     {
         // <--[command]

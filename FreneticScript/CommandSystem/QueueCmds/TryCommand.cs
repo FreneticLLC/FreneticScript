@@ -8,6 +8,9 @@ using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
+    /// <summary>
+    /// The Try command.
+    /// </summary>
     public class TryCommand : AbstractCommand
     {
         // TODO: Meta!
