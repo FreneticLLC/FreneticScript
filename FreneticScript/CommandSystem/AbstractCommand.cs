@@ -155,7 +155,7 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// Adjust list of commands that formed by an inner block.
+        /// Adjust list of commands that are formed by an inner block.
         /// </summary>
         /// <param name="entry">The producing entry.</param>
         /// <param name="input">The block of commands.</param>

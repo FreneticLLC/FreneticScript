@@ -53,6 +53,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             TagParseMode modechoice = (TagParseMode)Enum.Parse(typeof(TagParseMode), entry.GetArgument(queue, 0).ToUpper());

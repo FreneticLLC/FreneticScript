@@ -9,6 +9,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     public class EventCommand : AbstractCommand
     {
+        /// <summary>
+        /// Adjust list of commands that are formed by an inner block.
+        /// </summary>
+        /// <param name="entry">The producing entry.</param>
+        /// <param name="input">The block of commands.</param>
+        /// <param name="fblock">The final block to add to the entry.</param>
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
             input.Clear();
@@ -80,6 +86,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments[0].ToString() == "\0CALLBACK")

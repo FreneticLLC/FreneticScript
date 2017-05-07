@@ -47,6 +47,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // -->
     public class FunctionCommand : AbstractCommand
     {
+        /// <summary>
+        /// Adjust list of commands that are formed by an inner block.
+        /// </summary>
+        /// <param name="entry">The producing entry.</param>
+        /// <param name="input">The block of commands.</param>
+        /// <param name="fblock">The final block to add to the entry.</param>
         public override void AdaptBlockFollowers(CommandEntry entry, List<CommandEntry> input, List<CommandEntry> fblock)
         {
             entry.BlockEnd -= input.Count;
@@ -71,8 +77,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 Verify2
             };
         }
-
-
+        
+        /// <summary>
+        /// Prepares to adapt a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
@@ -122,6 +132,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string type = entry.GetArgument(queue, 0);

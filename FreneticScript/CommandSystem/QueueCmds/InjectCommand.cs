@@ -48,6 +48,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         // TODO: Does this (inject command) have any reason to exist in the modern structure?
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);

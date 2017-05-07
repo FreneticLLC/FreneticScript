@@ -48,6 +48,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];

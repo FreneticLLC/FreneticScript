@@ -75,6 +75,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return null;
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments[0].ToString() == "\0CALLBACK")

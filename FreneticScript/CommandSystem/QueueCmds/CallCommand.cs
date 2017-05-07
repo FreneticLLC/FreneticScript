@@ -58,12 +58,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             base.AdaptToCIL(values, entry);
             values.ILGen.Emit(OpCodes.Ret);
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);

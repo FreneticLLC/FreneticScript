@@ -36,6 +36,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string count = entry.GetArgument(queue, 0);

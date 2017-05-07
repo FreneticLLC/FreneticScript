@@ -59,7 +59,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 NumberTag.TryFor
             };
         }
-        
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             int count = 1;

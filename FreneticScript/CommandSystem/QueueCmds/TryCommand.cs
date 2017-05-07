@@ -23,9 +23,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
-
-
-
+        
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0) == "\0CALLBACK")
