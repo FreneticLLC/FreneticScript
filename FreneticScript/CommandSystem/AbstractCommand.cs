@@ -24,7 +24,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public AbstractCommand()
         {
-            ExecuteMethod = this.GetType().GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
+            ExecuteMethod = GetType().GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
         }
 
         /// <summary>
@@ -223,37 +223,37 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Represents the field "CSEntry" in the class CompiledCommandRunnable.
         /// </summary>
-        public static FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("CSEntry");
+        public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("CSEntry");
 
         /// <summary>
         /// Represents the field "Entries" in the class CommandStackEntry.
         /// </summary>
-        public static FieldInfo EntriesField = typeof(CommandStackEntry).GetField("Entries");
+        public static readonly FieldInfo EntriesField = typeof(CommandStackEntry).GetField("Entries");
 
         /// <summary>
         /// Represents the field "Command" in the class CommandEntry.
         /// </summary>
-        public static FieldInfo Entry_CommandField = typeof(CommandEntry).GetField("Command");
+        public static readonly FieldInfo Entry_CommandField = typeof(CommandEntry).GetField("Command");
 
         /// <summary>
         /// Represents the field "GetArgumentObject" in the class CommandEntry.
         /// </summary>
-        public static MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod("GetArgumentObject", new Type[] { typeof(CommandQueue), typeof(int) });
+        public static readonly MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod("GetArgumentObject", new Type[] { typeof(CommandQueue), typeof(int) });
 
         /// <summary>
         /// Represents the field "Internal" in the class IntHolder.
         /// </summary>
-        public static FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField("Internal");
+        public static readonly FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField("Internal");
         
         /// <summary>
         /// Represents the "SetLocalVar(c, value)" method in the class CommandQueue.
         /// </summary>
-        public static MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod("SetLocalVar", new Type[] { typeof(int), typeof(TemplateObject) });
+        public static readonly MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod("SetLocalVar", new Type[] { typeof(int), typeof(TemplateObject) });
         
         /// <summary>
         /// The type of the class CommandEntry.
         /// </summary>
-        public static Type CommandEntryType = typeof(CommandEntry);
+        public static readonly Type CommandEntryType = typeof(CommandEntry);
 
         /// <summary>
         /// Tracks generated IL.

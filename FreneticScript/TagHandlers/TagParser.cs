@@ -178,7 +178,6 @@ namespace FreneticScript.TagHandlers
             }, ListTag.CreateFromSaved);
             Register(Type_Map = new TagType()
             {
-                // TODO: Convert!
                 TypeName = MapTag.TYPE,
                 SubTypeName = TextTag.TYPE,
                 TypeGetter = MapTag.For,

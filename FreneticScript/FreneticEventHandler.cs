@@ -16,6 +16,7 @@ namespace FreneticScript
     {
         /// <summary>
         /// All handlers in the event.
+        /// TODO: Type choice - is this the most efficient option (mainly for reading the set, as a key crunch point)?
         /// </summary>
         public SortedDictionary<FreneticScriptEventEntry<T>, FreneticScriptEventEntry<T>> InternalActions = new SortedDictionary<FreneticScriptEventEntry<T>, FreneticScriptEventEntry<T>>();
         

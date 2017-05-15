@@ -126,9 +126,8 @@ namespace FreneticScript.CommandSystem
                         i -= 2;
                     }
                 }
-                AbstractCommand cmd;
                 CommandEntry entry;
-                if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out cmd))
+                if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out AbstractCommand cmd))
                 {
                     entry = new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs, nameds, system) { WaitFor = waitfor };
                 }
@@ -324,8 +323,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The save name.</returns>
         public string GetSaveNameNoParse(string defaultval, string id = "save")
         {
-            Argument arg;
-            if (NamedArguments.TryGetValue(id, out arg))
+            if (NamedArguments.TryGetValue(id, out Argument arg))
             {
                 return arg.ToString().ToLowerFast();
             }
@@ -340,8 +338,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument.</returns>
         public TemplateObject GetNamedArgumentObject(CommandQueue queue, string name)
         {
-            Argument arg;
-            if (NamedArguments.TryGetValue(name, out arg))
+            if (NamedArguments.TryGetValue(name, out Argument arg))
             {
                 return arg.Parse((o) => queue.HandleError(this, o), queue.CurrentEntry);
             }

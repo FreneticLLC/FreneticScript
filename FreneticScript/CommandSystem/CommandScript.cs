@@ -417,7 +417,7 @@ namespace FreneticScript.CommandSystem
                     toClean[i].GetResultMethod = tP_c2.GetMethod(toClean[i].GetResultMethod.Name);
                     toClean[i].GetResultHelper = (TagArgumentBit.MethodHandler)toClean[i].GetResultMethod.CreateDelegate(typeof(TagArgumentBit.MethodHandler));
                 }
-                ccse.MainCompiledRunnable = (CompiledCommandRunnable)Activator.CreateInstance(t_c);
+                ccse.MainCompiledRunnable = Activator.CreateInstance(t_c) as CompiledCommandRunnable;
                 ccse.MainCompiledRunnable.CSEntry = ccse;
 #if SAVE
                 StringBuilder outp = new StringBuilder();
@@ -698,7 +698,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// This class's "Run(queue)" method.
         /// </summary>
-        public static MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
+        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
 
         /// <summary>
         /// Runs the runnable.
