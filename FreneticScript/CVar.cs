@@ -190,10 +190,7 @@ namespace FreneticScript
             {
                 system.Modified = true;
             }
-            if (OnChanged != null)
-            {
-                OnChanged(this, null);
-            }
+            OnChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -232,10 +229,7 @@ namespace FreneticScript
                 ValueD = 0;
             }
             system.Modified = true;
-            if (OnChanged != null)
-            {
-                OnChanged(this, null);
-            }
+            OnChanged?.Invoke(this, null);
         }
 
         /// <summary>
