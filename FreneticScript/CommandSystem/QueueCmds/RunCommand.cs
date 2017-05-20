@@ -180,7 +180,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// Fires when a a script is going to be ran, cancellable.
     /// </summary>
-    public class ScriptRanPreEventArgs: EventArgs
+    public class ScriptRanPreEventArgs: FreneticEventArgs
     {
         /// <summary>
         /// The name of the script requested to be run.
@@ -196,7 +196,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// Fires when a a script is about to be ran, cancellable.
     /// </summary>
-    public class ScriptRanEventArgs : EventArgs
+    public class ScriptRanEventArgs : FreneticEventArgs
     {
         /// <summary>
         /// The script that will be ran.
@@ -213,7 +213,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// Fires when a a script has been ran, monitor-only.
     /// </summary>
-    public class ScriptRanPostEventArgs : EventArgs
+    public class ScriptRanPostEventArgs : FreneticEventArgs
     {
         /// <summary>
         /// The script that was ran.

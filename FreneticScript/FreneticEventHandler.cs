@@ -12,7 +12,7 @@ namespace FreneticScript
     /// Fires in priority order.
     /// </summary>
     /// <typeparam name="T">The event arguments type to use.</typeparam>
-    public class FreneticScriptEventHandler<T> where T: EventArgs
+    public class FreneticScriptEventHandler<T> where T: FreneticEventArgs
     {
         /// <summary>
         /// All handlers in the event.
@@ -28,7 +28,8 @@ namespace FreneticScript
         {
             foreach (FreneticScriptEventEntry<T> a in InternalActions.Keys)
             {
-                a.Act(a.Priority, args);
+                args.Priority = a.Priority;
+                a.Act(args);
             }
         }
 
@@ -37,7 +38,7 @@ namespace FreneticScript
         /// </summary>
         /// <param name="act">The action to run.</param>
         /// <param name="priority">The priority of the action.</param>
-        public void Add(Action<int, T> act, int priority)
+        public void Add(Action<T> act, int priority)
         {
             FreneticScriptEventEntry<T> fee = new FreneticScriptEventEntry<T>(act) { Priority = priority };
             InternalActions.Add(fee, fee);
@@ -49,7 +50,7 @@ namespace FreneticScript
         /// <param name="act">The action to test for.</param>
         /// <param name="priority">The priority of the action.</param>
         /// <returns></returns>
-        public bool Contains(Action<int, T> act, int priority)
+        public bool Contains(Action<T> act, int priority)
         {
             FreneticScriptEventEntry<T> fee = new FreneticScriptEventEntry<T>(act) { Priority = priority };
             return InternalActions.ContainsKey(fee);
@@ -60,7 +61,7 @@ namespace FreneticScript
         /// </summary>
         /// <param name="act">The action to no longer run.</param>
         /// <param name="priority">The priority of the action.</param>
-        public void Remove(Action<int, T> act, int priority)
+        public void Remove(Action<T> act, int priority)
         {
             InternalActions.Remove(new FreneticScriptEventEntry<T>(act) { Priority = priority });
         }
@@ -71,7 +72,7 @@ namespace FreneticScript
         /// <param name="evt">The original event.</param>
         /// <param name="act">The action to add.</param>
         /// <returns>The input event.</returns>
-        public static FreneticScriptEventHandler<T> operator +(FreneticScriptEventHandler<T> evt, Action<int, T> act)
+        public static FreneticScriptEventHandler<T> operator +(FreneticScriptEventHandler<T> evt, Action<T> act)
         {
             if (evt == null)
             {
@@ -87,7 +88,7 @@ namespace FreneticScript
         /// <param name="evt">The original event.</param>
         /// <param name="act">The action to remove.</param>
         /// <returns>The input event.</returns>
-        public static FreneticScriptEventHandler<T> operator -(FreneticScriptEventHandler<T> evt, Action<int, T> act)
+        public static FreneticScriptEventHandler<T> operator -(FreneticScriptEventHandler<T> evt, Action<T> act)
         {
             evt.InternalActions.Remove(new FreneticScriptEventEntry<T>(act) { Priority = 0 });
             return evt;
@@ -104,7 +105,7 @@ namespace FreneticScript
         /// Constructs a prioritized event entry.
         /// </summary>
         /// <param name="a">The action to use.</param>
-        public FreneticScriptEventEntry(Action<int, T> a)
+        public FreneticScriptEventEntry(Action<T> a)
         {
             Act = a;
         }
@@ -117,7 +118,7 @@ namespace FreneticScript
         /// <summary>
         /// The action used.
         /// </summary>
-        public Action<int, T> Act;
+        public Action<T> Act;
 
         /// <summary>
         /// Compares this event entry to another.
@@ -195,5 +196,16 @@ namespace FreneticScript
             }
             return !x.Equals(y);
         }
+    }
+
+    /// <summary>
+    /// Represents the arguments to a Frenetic event.
+    /// </summary>
+    public class FreneticEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The priority this event fired with.
+        /// </summary>
+        public int Priority;
     }
 }

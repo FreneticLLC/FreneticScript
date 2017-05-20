@@ -61,14 +61,13 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// <summary>
         /// Runs the script event with the given input.
         /// </summary>
-        /// <param name="prio">The priority to run with.</param>
         /// <param name="oevt">The details to the script that was ran.</param>
         /// <returns>The event details after firing.</returns>
-        public void Run(int prio, ScriptRanPostEventArgs oevt)
+        public void Run(ScriptRanPostEventArgs oevt)
         {
             ScriptRanPostScriptEvent evt = (ScriptRanPostScriptEvent)Duplicate();
             evt.ScriptName = new TextTag(oevt.Script.Name);
-            evt.Call(prio);
+            evt.Call(oevt.Priority);
         }
 
         /// <summary>
