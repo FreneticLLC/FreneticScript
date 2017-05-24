@@ -12,21 +12,21 @@ namespace FreneticScript
     /// Fires in priority order.
     /// </summary>
     /// <typeparam name="T">The event arguments type to use.</typeparam>
-    public class FreneticScriptEventHandler<T> where T: FreneticEventArgs
+    public class FreneticScriptEventHandler<T> where T : FreneticEventArgs
     {
         /// <summary>
         /// All handlers in the event.
-        /// TODO: Type choice - is this the most efficient option (mainly for reading the set, as a key crunch point)?
+        /// TODO: Type choice - is this the most efficient option - for both reading and adding?
         /// </summary>
-        public SortedDictionary<FreneticScriptEventEntry<T>, FreneticScriptEventEntry<T>> InternalActions = new SortedDictionary<FreneticScriptEventEntry<T>, FreneticScriptEventEntry<T>>();
-        
+        public List<FreneticScriptEventEntry<T>> InternalActions = new List<FreneticScriptEventEntry<T>>();
+
         /// <summary>
         /// Fires the event handlers.
         /// </summary>
         /// <param name="args">The arguments to fire with.</param>
         public void Fire(T args)
         {
-            foreach (FreneticScriptEventEntry<T> a in InternalActions.Keys)
+            foreach (FreneticScriptEventEntry<T> a in InternalActions)
             {
                 args.Priority = a.Priority;
                 a.Act(args);
@@ -41,9 +41,18 @@ namespace FreneticScript
         public void Add(Action<T> act, int priority)
         {
             FreneticScriptEventEntry<T> fee = new FreneticScriptEventEntry<T>(act) { Priority = priority };
-            InternalActions.Add(fee, fee);
+            int ind = 0;
+            for (int i = 0; i < InternalActions.Count; i++)
+            {
+                if (InternalActions[i].Priority > priority)
+                {
+                    ind = i;
+                    break;
+                }
+            }
+            InternalActions.Insert(ind, fee);
         }
-        
+
         /// <summary>
         /// Returns whether the given action is contained with the given priority.
         /// </summary>
@@ -53,7 +62,7 @@ namespace FreneticScript
         public bool Contains(Action<T> act, int priority)
         {
             FreneticScriptEventEntry<T> fee = new FreneticScriptEventEntry<T>(act) { Priority = priority };
-            return InternalActions.ContainsKey(fee);
+            return InternalActions.Contains(fee);
         }
 
         /// <summary>
@@ -94,12 +103,12 @@ namespace FreneticScript
             return evt;
         }
     }
-    
+
     /// <summary>
     /// Represents a prioritized event entry.
     /// </summary>
     /// <typeparam name="T">The type of the event arguments.</typeparam>
-    public class FreneticScriptEventEntry<T>: IComparable<FreneticScriptEventEntry<T>>, IEquatable<FreneticScriptEventEntry<T>>
+    public class FreneticScriptEventEntry<T> : IComparable<FreneticScriptEventEntry<T>>, IEquatable<FreneticScriptEventEntry<T>>
     {
         /// <summary>
         /// Constructs a prioritized event entry.
