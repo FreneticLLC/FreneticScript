@@ -76,17 +76,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The map represented by the input text.</returns>
         public static MapTag For(string input)
         {
-            string[] dat = input.SplitFast('|');
+            string[] dat = input.SplitFastFS('|');
             MapTag map = new MapTag();
             for (int i = 0; i < dat.Length; i++)
             {
-                string[] kvp = dat[i].SplitFast(':');
+                string[] kvp = dat[i].SplitFastFS(':');
                 if (kvp.Length != 2)
                 {
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFast()] = new TextArgumentBit(TagParser.Unescape(kvp[1]), false).InputValue;
+                map.Internal[kvp[0].ToLowerFastFS()] = new TextArgumentBit(TagParser.Unescape(kvp[1]), false).InputValue;
             }
             return map;
         }
@@ -100,17 +100,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The map represented by the input text.</returns>
         public static MapTag CreateFromSaved(string input, TagData data)
         {
-            string[] dat = input.SplitFast('|');
+            string[] dat = input.SplitFastFS('|');
             MapTag map = new MapTag();
             for (int i = 0; i < dat.Length; i++)
             {
-                string[] kvp = dat[i].SplitFast(':');
+                string[] kvp = dat[i].SplitFastFS(':');
                 if (kvp.Length != 2)
                 {
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFast()] = data.TagSystem.ParseFromSaved(TagParser.Unescape(kvp[1]), data);
+                map.Internal[kvp[0].ToLowerFastFS()] = data.TagSystem.ParseFromSaved(TagParser.Unescape(kvp[1]), data);
             }
             return map;
         }
@@ -210,7 +210,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains(MapTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal.ContainsKey(modifier.Internal.ToLowerFast()));
+            return new BooleanTag(obj.Internal.ContainsKey(modifier.Internal.ToLowerFastFS()));
         }
 
         [TagMeta(TagType = TYPE, Name = "get", Group = "Map Entries", ReturnType = DynamicTag.TYPE,
@@ -219,7 +219,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Get(MapTag obj, TagData data)
         {
-            string modif = data.GetModifier(0).ToLowerFast();
+            string modif = data.GetModifier(0).ToLowerFastFS();
             if (obj.Internal.TryGetValue(modif, out TemplateObject outp))
             {
                 return new DynamicTag(outp);
@@ -273,10 +273,10 @@ namespace FreneticScript.TagHandlers.Objects
         {
             if (names != null && names.Length == 1)
             {
-                Internal[names[0].ToLowerFast()] = val;
+                Internal[names[0].ToLowerFastFS()] = val;
                 return;
             }
-            if (names != null && names.Length > 1 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
+            if (names != null && names.Length > 1 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -292,7 +292,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to add.</param>
         public override void Add(string[] names, TemplateObject val)
         {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -309,7 +309,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to subtract.</param>
         public override void Subtract(string[] names, TemplateObject val)
         {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -326,7 +326,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to multiply.</param>
         public override void Multiply(string[] names, TemplateObject val)
         {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
@@ -343,7 +343,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="val">The value to divide.</param>
         public override void Divide(string[] names, TemplateObject val)
         {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
+            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);

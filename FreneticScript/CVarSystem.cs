@@ -54,7 +54,7 @@ namespace FreneticScript
         /// <returns>The registered CVar.</returns>
         public CVar Register(string CVar, string value, CVarFlag flags, string description = null)
         {
-            CVar cvar = new CVar(CVar.ToLowerFast(), value, flags, this)
+            CVar cvar = new CVar(CVar.ToLowerFastFS(), value, flags, this)
             {
                 Description = description
             };
@@ -108,7 +108,7 @@ namespace FreneticScript
         /// <returns>The found CVar, or null if none.</returns>
         public CVar Get(string CVar)
         {
-            string cvlow = CVar.ToLowerFast();
+            string cvlow = CVar.ToLowerFastFS();
             if (CVars.TryGetValue(cvlow, out CVar cvar))
             {
                 return cvar;

@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFast();
+            string inp = input.ToString().ToLowerFastFS();
             if (inp == "loud" || inp == "quiet" || inp == "error")
             {
                 return new TextTag(inp);
@@ -48,10 +48,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string loud = entry.GetArgument(queue, 0).ToLowerFast();
+            string loud = entry.GetArgument(queue, 0).ToLowerFastFS();
             for (int i = 1; i < entry.Arguments.Count; i++)
             {
-                string arg = entry.GetArgument(queue, i).ToLowerFast();
+                string arg = entry.GetArgument(queue, i).ToLowerFastFS();
                 CommandStackEntry cse = queue.CurrentEntry;
                 // TODO: Restore this command. Use compilation!
                 /*

@@ -115,13 +115,13 @@ namespace FreneticScript.CommandSystem
                     waitfor = true;
                     BaseCommand = BaseCommand.Substring(1);
                 }
-                string BaseCommandLow = BaseCommand.ToLowerFast();
+                string BaseCommandLow = BaseCommand.ToLowerFastFS();
                 args.RemoveAt(0);
                 for (int i = 0; i < args.Count - 1; i++)
                 {
                     if (!args[i].WasQuoted && args[i].ToString().StartsWith("--"))
                     {
-                        nameds[args[i].ToString().Substring(2).ToLowerFast()] = args[i + 1];
+                        nameds[args[i].ToString().Substring(2).ToLowerFastFS()] = args[i + 1];
                         args.RemoveRange(i, 2);
                         i -= 2;
                     }
@@ -325,7 +325,7 @@ namespace FreneticScript.CommandSystem
         {
             if (NamedArguments.TryGetValue(id, out Argument arg))
             {
-                return arg.ToString().ToLowerFast();
+                return arg.ToString().ToLowerFastFS();
             }
             return defaultval;
         }

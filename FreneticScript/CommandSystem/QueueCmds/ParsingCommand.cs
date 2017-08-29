@@ -53,7 +53,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFast();
+            string inp = input.ToString().ToLowerFastFS();
             if (inp == "on" || inp == "off")
             {
                 return new TextTag(inp);

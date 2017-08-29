@@ -83,7 +83,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
-            fname = fname.ToLowerFast();
+            fname = fname.ToLowerFastFS();
             CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {
@@ -98,7 +98,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CompiledCommandStackEntry cse = script.Created.Duplicate();
             foreach (string var in entry.NamedArguments.Keys)
             {
-                if (!var.StartsWithNull())
+                if (!var.StartsWithNullFS())
                 {
                     /*
                     if (cse.Variables.ContainsKey(var))

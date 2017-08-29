@@ -68,13 +68,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            return new TextTag(val.ToLowerFast());
+            return new TextTag(val.ToLowerFastFS());
         }
 
         TemplateObject TestValidity(TemplateObject input)
         {
             string val = input.ToString();
-            string low = val.ToLowerFast();
+            string low = val.ToLowerFastFS();
             if (low == "error" || low == "warning" || low == "quiet")
             {
                 return new TextTag(low);
@@ -93,7 +93,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return;
             }
-            string id = entry.GetArgument(queue, 0).ToLowerFast();
+            string id = entry.GetArgument(queue, 0).ToLowerFastFS();
             if (queue.CommandSystem.OnceBlocks.Add(id))
             {
                 if (entry.ShouldShowGood(queue))
@@ -102,7 +102,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            string errorMode = entry.Arguments.Count > 1 ? entry.GetArgument(queue, 1).ToLowerFast() : "error";
+            string errorMode = entry.Arguments.Count > 1 ? entry.GetArgument(queue, 1).ToLowerFastFS() : "error";
             if (errorMode == "quiet")
             {
                 if (entry.ShouldShowGood(queue))

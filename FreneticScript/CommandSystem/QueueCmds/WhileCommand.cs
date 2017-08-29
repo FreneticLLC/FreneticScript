@@ -69,7 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good(queue, "While stopping.");
                 }
             }
-            else if (count.ToLowerFast() == "stop")
+            else if (count.ToLowerFastFS() == "stop")
             {
                 CommandStackEntry cse = queue.CurrentEntry;
                 for (int i = 0; i < cse.Entries.Length; i++)
@@ -86,7 +86,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 queue.HandleError(entry, "Cannot stop while: not in one!");
             }
-            else if (count.ToLowerFast() == "next")
+            else if (count.ToLowerFastFS() == "next")
             {
                 CommandStackEntry cse = queue.CurrentEntry;
                 for (int i = cse.Index - 1; i > 0; i--)

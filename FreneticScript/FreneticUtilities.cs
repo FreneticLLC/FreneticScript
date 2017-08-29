@@ -16,7 +16,7 @@ namespace FreneticScript
         /// </summary>
         /// <param name="input">The original string.</param>
         /// <returns>A lowercase version.</returns>
-        public static string ToLowerFast(this string input)
+        public static string ToLowerFastFS(this string input)
         {
             char[] dt = input.ToCharArray();
             for (int i = 0; i < dt.Length; i++)
@@ -34,7 +34,7 @@ namespace FreneticScript
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>A boolean.</returns>
-        public static bool StartsWithNull(this string input)
+        public static bool StartsWithNullFS(this string input)
         {
             return input.Length > 0 && input[0] == '\0';
         }
@@ -46,7 +46,7 @@ namespace FreneticScript
         /// <param name="splitter">What to split it by.</param>
         /// <param name="count">The maximum number of times to split it.</param>
         /// <returns>The split string pieces.</returns>
-        public static string[] SplitFast(this string input, char splitter, int count = int.MaxValue)
+        public static string[] SplitFastFS(this string input, char splitter, int count = int.MaxValue)
         {
             int len = input.Length;
             int c = 0;
@@ -139,12 +139,12 @@ namespace FreneticScript
         /// <returns>The date-time.</returns>
         public static DateTimeOffset? StringToDateTime(string input)
         {
-            string[] bdat = input.SplitFast(' ');
+            string[] bdat = input.SplitFastFS(' ');
             if (bdat.Length != 3)
             {
                 return null;
             }
-            string[] ymd = bdat[0].SplitFast('/');
+            string[] ymd = bdat[0].SplitFastFS('/');
             if (ymd.Length != 3)
             {
                 return null;
@@ -152,7 +152,7 @@ namespace FreneticScript
             int year = StringToInt(ymd[0]);
             int month = StringToInt(ymd[1]);
             int day = StringToInt(ymd[2]);
-            string[] hmsm = bdat[1].SplitFast(':');
+            string[] hmsm = bdat[1].SplitFastFS(':');
             if (hmsm.Length != 3 && hmsm.Length != 4)
             {
                 return null;
@@ -165,8 +165,8 @@ namespace FreneticScript
             int offM = 0;
             if (bdat[2].Contains('-'))
             {
-                string[] offsetinfo = bdat[2].SplitFast('-');
-                string[] subinf = offsetinfo[1].SplitFast(':');
+                string[] offsetinfo = bdat[2].SplitFastFS('-');
+                string[] subinf = offsetinfo[1].SplitFastFS(':');
                 if (subinf.Length != 2)
                 {
                     return null;
@@ -176,12 +176,12 @@ namespace FreneticScript
             }
             else
             {
-                string[] offsetinfo = bdat[2].SplitFast('+');
+                string[] offsetinfo = bdat[2].SplitFastFS('+');
                 if (offsetinfo.Length != 2)
                 {
                     return null;
                 }
-                string[] subinf = offsetinfo[1].SplitFast(':');
+                string[] subinf = offsetinfo[1].SplitFastFS(':');
                 if (subinf.Length != 2)
                 {
                     return null;

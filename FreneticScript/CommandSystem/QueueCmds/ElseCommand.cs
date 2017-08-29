@@ -68,7 +68,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            if (inp.ToLowerFast() == "if")
+            if (inp.ToLowerFastFS() == "if")
             {
                 return new TextTag("if");
             }

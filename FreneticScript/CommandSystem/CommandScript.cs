@@ -302,7 +302,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, DebugMode mode = DebugMode.FULL)
         {
             Debug = mode;
-            Name = _name.ToLowerFast();
+            Name = _name.ToLowerFastFS();
             List<CommandEntry> Commands = _commands;
             Commands = new List<CommandEntry>(_commands);
             for (int i = 0; i < Commands.Count; i++)
@@ -513,7 +513,7 @@ namespace FreneticScript.CommandSystem
                     if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                     {
                         string type_name = tab.Bits[x].Variable.ToString();
-                        TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
+                        TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFastFS()];
                         returnable = type_res;
                     }
                     else
@@ -583,7 +583,7 @@ namespace FreneticScript.CommandSystem
                 if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                 {
                     string type_name = tab.Bits[x].Variable.ToString();
-                    prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
+                    prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFastFS()];
                     ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for this tag.
                 }
                 else // For normal tags...

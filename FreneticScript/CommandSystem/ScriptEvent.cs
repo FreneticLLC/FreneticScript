@@ -154,7 +154,7 @@ namespace FreneticScript.CommandSystem
         public ScriptEvent(Commands _system, string _name, bool cancellable)
         {
             System = _system;
-            Name = _name.ToLowerFast();
+            Name = _name.ToLowerFastFS();
             Cancellable = cancellable;
         }
 

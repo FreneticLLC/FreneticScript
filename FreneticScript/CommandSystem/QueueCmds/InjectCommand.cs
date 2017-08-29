@@ -62,7 +62,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
-            fname = fname.ToLowerFast();
+            fname = fname.ToLowerFastFS();
             CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {

@@ -85,7 +85,7 @@ namespace FreneticScript.TagHandlers
         public void Register(TagType type, Func<string, TagData, TemplateObject> creator)
         {
             Types.Add(type.TypeName, type);
-            SaveCreators[type.TypeName.ToLowerFast()] = creator;
+            SaveCreators[type.TypeName.ToLowerFastFS()] = creator;
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace FreneticScript.TagHandlers
         public TemplateObject ParseFromSaved(string input, TagData data)
         {
             Console.WriteLine(input);
-            string[] dat = input.SplitFast(TemplateObject.SAVE_MARK[0], 1);
+            string[] dat = input.SplitFastFS(TemplateObject.SAVE_MARK[0], 1);
             if (SaveCreators.TryGetValue(dat[0], out Func<string, TagData, TemplateObject> creator))
             {
                 return creator(dat[1], data);
@@ -494,7 +494,7 @@ namespace FreneticScript.TagHandlers
                                 break;
                             }
                         }
-                        string[] split = value.SplitFast('.');
+                        string[] split = value.SplitFastFS('.');
                         for (int s = 0; s < split.Length; s++)
                         {
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
@@ -507,7 +507,7 @@ namespace FreneticScript.TagHandlers
                             {
                                 int index = split[x].IndexOf('[');
                                 bit.Variable = SplitToArgument(split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
-                                split[x] = split[x].Substring(0, index).ToLowerFast();
+                                split[x] = split[x].Substring(0, index).ToLowerFastFS();
                                 if (split[x].Length == 0)
                                 {
                                     if (x == 0)
@@ -522,7 +522,7 @@ namespace FreneticScript.TagHandlers
                             }
                             else
                             {
-                                split[x] = split[x].ToLowerFast();
+                                split[x] = split[x].ToLowerFastFS();
                                 bit.Variable = new Argument();
                             }
                             bit.Key = split[x];
@@ -531,9 +531,9 @@ namespace FreneticScript.TagHandlers
                         TagArgumentBit tab = new TagArgumentBit(CommandSystem, bits.ToArray());
                         if (tab.Bits.Length > 0)
                         {
-                            if (!CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
+                            if (!CommandSystem.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFastFS(), out TemplateTagBase start))
                             {
-                                throw new ErrorInducedException("Invalid tag base '" + tab.Bits[0].Key.ToLowerFast() + "'!");
+                                throw new ErrorInducedException("Invalid tag base '" + tab.Bits[0].Key.ToLowerFastFS() + "'!");
                             }
                             tab.Start = start;
                         }

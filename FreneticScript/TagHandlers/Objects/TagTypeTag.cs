@@ -49,7 +49,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A TagTypeTag, or null.</returns>
         public static TagTypeTag For(TagData data, string input)
         {
-            if (data.TagSystem.Types.TryGetValue(input.ToLowerFast(), out TagType type))
+            if (data.TagSystem.Types.TryGetValue(input.ToLowerFastFS(), out TagType type))
             {
                 return new TagTypeTag(type);
             }

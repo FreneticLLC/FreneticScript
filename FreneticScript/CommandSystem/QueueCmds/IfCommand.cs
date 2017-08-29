@@ -152,7 +152,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return !GetBool(error, str.Substring(1));
             }
-            string low = str.ToLowerFast();
+            string low = str.ToLowerFastFS();
             if (low == "true")
             {
                 return true;

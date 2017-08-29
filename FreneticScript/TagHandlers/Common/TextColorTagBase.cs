@@ -46,7 +46,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public TemplateObject HandleOneObjective(TagData data)
         {
-            if (Colors.TryGetValue(data.GetModifier(0).ToLowerFast(), out Func<string> getter))
+            if (Colors.TryGetValue(data.GetModifier(0).ToLowerFastFS(), out Func<string> getter))
             {
                 return new TextTag(getter());
             }

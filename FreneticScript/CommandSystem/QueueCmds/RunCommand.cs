@@ -70,7 +70,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The command details to be ran.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string fname = entry.GetArgument(queue, 0).ToLowerFast();
+            string fname = entry.GetArgument(queue, 0).ToLowerFastFS();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs() { ScriptName = fname };
             RunCommand rcmd = entry.Command as RunCommand;
             if (rcmd.OnScriptRanPreEvent != null)

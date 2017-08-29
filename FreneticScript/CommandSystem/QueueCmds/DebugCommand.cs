@@ -58,7 +58,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFast();
+            string inp = input.ToString().ToLowerFastFS();
             if (inp == "full" || inp == "minimal" || inp == "none")
             {
                 return new TextTag(inp);
@@ -75,7 +75,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             string modechoice = entry.GetArgument(queue, 0);
             CommandStackEntry cse = queue.CurrentEntry;
-            switch (modechoice.ToLowerFast())
+            switch (modechoice.ToLowerFastFS())
             {
                 case "full":
                     cse.Debug = DebugMode.FULL;

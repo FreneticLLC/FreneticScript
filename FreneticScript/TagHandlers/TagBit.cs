@@ -57,7 +57,7 @@ namespace FreneticScript.TagHandlers
             {
                 return Key;
             }
-            else if (Key.StartsWithNull())
+            else if (Key.StartsWithNullFS())
             {
                 return "[" + OVar.ToString() + "]";
             }

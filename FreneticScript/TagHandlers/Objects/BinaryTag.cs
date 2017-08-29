@@ -167,7 +167,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             byte[] Internal = obj.Internal;
             string modif = data.GetModifier(0);
-            string[] split = modif.SplitFast(',');
+            string[] split = modif.SplitFastFS(',');
             if (split.Length != 2)
             {
                 data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");

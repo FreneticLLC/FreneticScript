@@ -58,7 +58,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="a">The argument index.</param>
         public override TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, int a)
         {
-            string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
+            string vn = tab.Bits[0].Variable.ToString().ToLowerFastFS();
             CommandEntry entry = ccse.Entries[i];
             for (int n = 0; n < entry.CILVars.Length; n++)
             {

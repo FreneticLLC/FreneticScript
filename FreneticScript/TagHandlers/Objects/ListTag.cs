@@ -72,7 +72,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid list.</returns>
         public static ListTag For(string list)
         {
-            string[] baselist = list.SplitFast('|');
+            string[] baselist = list.SplitFastFS('|');
             ListTag tlist = new ListTag();
             for (int i = 0; i < baselist.Length; i++)
             {
@@ -95,7 +95,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid list.</returns>
         public static ListTag CreateFromSaved(string list, TagData data)
         {
-            string[] baselist = list.SplitFast('|');
+            string[] baselist = list.SplitFastFS('|');
             ListTag tlist = new ListTag();
             for (int i = 0; i < baselist.Length; i++)
             {

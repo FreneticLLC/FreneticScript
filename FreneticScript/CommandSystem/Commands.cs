@@ -146,7 +146,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript GetFunction(string script)
         {
             CommandScript commandscript;
-            if (Functions.TryGetValue(script.ToLowerFast(), out commandscript))
+            if (Functions.TryGetValue(script.ToLowerFastFS(), out commandscript))
             {
                 return commandscript;
             }
@@ -166,7 +166,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 script = script.Replace("\r", "").Replace("\0", "\\0");
-                string[] dat = script.SplitFast('\n');
+                string[] dat = script.SplitFastFS('\n');
                 bool shouldarun = false;
                 int arun = 0;
                 for (int i = 0; i < dat.Length; i++)
@@ -178,8 +178,8 @@ namespace FreneticScript.CommandSystem
                     }
                     if (trimmed.StartsWith("///"))
                     {
-                        string[] args = trimmed.Substring(3).SplitFast('=');
-                        string mode = args[0].Trim().ToLowerFast();
+                        string[] args = trimmed.Substring(3).SplitFastFS('=');
+                        string mode = args[0].Trim().ToLowerFastFS();
                         if (mode == "autorun")
                         {
                             shouldarun = true;
@@ -268,7 +268,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
-            command.Name = command.Name.ToLowerFast(); // Just a quick backup in case somebody messed up.
+            command.Name = command.Name.ToLowerFastFS(); // Just a quick backup in case somebody messed up.
             command.CommandSystem = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
@@ -286,7 +286,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="name">The name of the command to remove.</param>
         public void UnregisterCommand(string name)
         {
-            string namelow = name.ToLowerFast();
+            string namelow = name.ToLowerFastFS();
             AbstractCommand cmd;
             if (RegisteredCommands.TryGetValue(namelow, out cmd))
             {

@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            string larg = cent.Arguments[0].ToString().ToLowerFast();
+            string larg = cent.Arguments[0].ToString().ToLowerFastFS();
             if (values.LocalVariableLocation(larg) >= 0)
             {
                 throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Duplicate local variable: " + larg + "!");
@@ -80,11 +80,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             TagType type = null;
             if (cent.Arguments.Count > 4)
             {
-                string type_name = cent.Arguments[4].ToString().ToLowerFast();
+                string type_name = cent.Arguments[4].ToString().ToLowerFastFS();
                 type = cent.System.TagSystem.Types[type_name];
                 isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
             }
-            int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFast());
+            int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFastFS());
             // This method:
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
             // or:
@@ -153,7 +153,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify2(TemplateObject input)
         {
-            if (input.ToString().ToLowerFast() == "as")
+            if (input.ToString().ToLowerFastFS() == "as")
             {
                 return new TextTag("as");
             }

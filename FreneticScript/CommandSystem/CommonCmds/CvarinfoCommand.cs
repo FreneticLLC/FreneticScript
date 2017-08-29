@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             }
             else
             {
-                string target = entry.GetArgument(queue, 0).ToLowerFast();
+                string target = entry.GetArgument(queue, 0).ToLowerFastFS();
                 List<CVar> cvars = new List<CVar>();
                 for (int i = 0; i < queue.CommandSystem.Output.CVarSys.CVars.Count; i++)
                 {

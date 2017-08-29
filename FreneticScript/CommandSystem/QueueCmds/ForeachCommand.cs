@@ -99,7 +99,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            string inp = input.ToString().ToLowerFast();
+            string inp = input.ToString().ToLowerFastFS();
             if (inp == "start" || inp == "stop" || inp == "next")
             {
                 return new TextTag(inp);

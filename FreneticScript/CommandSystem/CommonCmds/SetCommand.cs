@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFast();
+            string inp = input.ToString().ToLowerFastFS();
             if (inp == "force" || inp == "remove" || inp == "do_not_save")
             {
                 return new TextTag(inp);
@@ -53,7 +53,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         {
             string target = entry.GetArgument(queue, 0);
             string newvalue = entry.GetArgument(queue, 1);
-            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(queue, 2).ToLowerFast() : "";
+            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(queue, 2).ToLowerFastFS() : "";
             bool force = a2 == "force";
             bool remove = a2 == "remove";
             bool do_not_save = a2 == "do_not_save";
