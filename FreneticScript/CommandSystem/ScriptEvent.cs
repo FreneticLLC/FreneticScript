@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -200,8 +201,7 @@ namespace FreneticScript.CommandSystem
                         CommandScript script = Handlers[i].Value;
                         Dictionary<string, ObjectHolder> Variables = new Dictionary<string, ObjectHolder>();
                         Variables["context"].Internal = new MapTag(GetVariables());
-                        CommandQueue queue;
-                        System.ExecuteScript(script, ref Variables, out queue, DebugMode.MINIMAL);
+                        System.ExecuteScript(script, ref Variables, out CommandQueue queue, DebugMode.MINIMAL);
                         if (Variables != null && Variables.ContainsKey("context"))
                         {
                             UpdateVariables(MapTag.For(Variables["context"].Internal).Internal);
@@ -217,9 +217,9 @@ namespace FreneticScript.CommandSystem
                     }
                     catch (Exception ex)
                     {
-                        if (ex is System.Threading.ThreadAbortException)
+                        if (ex is ThreadAbortException)
                         {
-                            throw ex;
+                            throw;
                         }
                         System.Output.BadOutput("Exception running script event: " + ex.ToString());
                     }
@@ -232,8 +232,10 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public virtual Dictionary<string, TemplateObject> GetVariables()
         {
-            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
-            vars.Add("cancelled", new TextTag(Cancelled ? "true": "false"));
+            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>()
+            {
+                { "cancelled", new TextTag(Cancelled ? "true": "false") }
+            };
             return vars;
         }
 

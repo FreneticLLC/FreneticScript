@@ -58,7 +58,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 if (ex is ThreadAbortException)
                 {
-                    throw ex;
+                    throw;
                 }
                 if (!dat.HasFallback)
                 {

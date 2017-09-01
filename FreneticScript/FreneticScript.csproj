@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>FreneticScript.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>

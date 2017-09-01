@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection.Emit;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers.Common;
+using System.Threading;
 
 namespace FreneticScript.CommandSystem
 {
@@ -276,9 +277,9 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
-                if (ex is System.Threading.ThreadAbortException)
+                if (ex is ThreadAbortException)
                 {
-                    throw ex;
+                    throw;
                 }
                 system.Output.BadOutput("Generating script for file '" + filename + "': " + ex.ToString());
                 return null;

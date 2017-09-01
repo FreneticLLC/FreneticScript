@@ -14,6 +14,7 @@ using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.CommandSystem.CommonCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.CommandEvents;
+using System.Threading;
 
 namespace FreneticScript.CommandSystem
 {
@@ -153,8 +154,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>A script, or null if there's no match.</returns>
         public CommandScript GetFunction(string script)
         {
-            CommandScript commandscript;
-            if (Functions.TryGetValue(script.ToLowerFastFS(), out commandscript))
+            if (Functions.TryGetValue(script.ToLowerFastFS(), out CommandScript commandscript))
             {
                 return commandscript;
             }
@@ -218,9 +218,9 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
-                if (ex is System.Threading.ThreadAbortException)
+                if (ex is ThreadAbortException)
                 {
-                    throw ex;
+                    throw;
                 }
                 Output.BadOutput("Found exception while precalculating script '" + name + "'...: " + ex.ToString());
             }
@@ -295,8 +295,7 @@ namespace FreneticScript.CommandSystem
         public void UnregisterCommand(string name)
         {
             string namelow = name.ToLowerFastFS();
-            AbstractCommand cmd;
-            if (RegisteredCommands.TryGetValue(namelow, out cmd))
+            if (RegisteredCommands.TryGetValue(namelow, out AbstractCommand cmd))
             {
                 RegisteredCommands.Remove(namelow);
                 RegisteredCommandList.Remove(cmd);

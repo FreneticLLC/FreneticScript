@@ -16,6 +16,7 @@ namespace FreneticScript.CommandSystem
     /// <summary>
     /// Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.
     /// </summary>
+    [Serializable]
     public class ErrorInducedException: Exception
     {
         /// <summary>

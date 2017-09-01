@@ -52,7 +52,7 @@ namespace FreneticScript
             {
                 if (index < 0 || index >= Length)
                 {
-                    throw new IndexOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
                 }
                 return Objects[Head + index];
             }
@@ -60,7 +60,7 @@ namespace FreneticScript
             {
                 if (index < 0 || index >= Length)
                 {
-                    throw new IndexOutOfRangeException();
+                    throw new ArgumentOutOfRangeException();
                 }
                 Objects[Head + index] = value;
             }

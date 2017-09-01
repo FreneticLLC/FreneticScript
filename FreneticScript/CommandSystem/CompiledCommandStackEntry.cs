@@ -92,7 +92,7 @@ namespace FreneticScript.CommandSystem
             {
                 if (ex is ThreadAbortException)
                 {
-                    throw ex;
+                    throw;
                 }
                 if (!(ex is ErrorInducedException))
                 {
@@ -102,11 +102,11 @@ namespace FreneticScript.CommandSystem
                     }
                     catch (Exception ex2)
                     {
-                        if (ex is ThreadAbortException)
+                        if (ex2 is ThreadAbortException)
                         {
-                            throw ex;
+                            throw;
                         }
-                        if (!(ex is ErrorInducedException))
+                        if (!(ex2 is ErrorInducedException))
                         {
                             string message = ex2.ToString();
                             if (Debug <= DebugMode.MINIMAL)
