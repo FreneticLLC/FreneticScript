@@ -372,7 +372,7 @@ namespace FreneticScript.CommandSystem
                     for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
                     {
                         Argument arg = ccse.Entries[i].Arguments[a];
-                        for (int b = 0; b < arg.Bits.Count; b++)
+                        for (int b = 0; b < arg.Bits.Length; b++)
                         {
                             if (arg.Bits[b] is TagArgumentBit tab)
                             {
@@ -476,7 +476,7 @@ namespace FreneticScript.CommandSystem
             }
             for (int sx = 0; sx < altArgs.Count; sx++)
             {
-                for (int b = 0; b < altArgs[sx].Bits.Count; b++)
+                for (int b = 0; b < altArgs[sx].Bits.Length; b++)
                 {
                     if (altArgs[sx].Bits[b] is TagArgumentBit)
                     {

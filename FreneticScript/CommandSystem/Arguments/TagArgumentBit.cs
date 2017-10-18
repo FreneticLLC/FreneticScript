@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers.Common;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace FreneticScript.CommandSystem.Arguments
 {
@@ -107,7 +108,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="cse">The command stack entry.</param>
         /// <returns>The parsed final object.</returns>
-        public override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sealed override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
             // TODO: This isn't very thread safe.
             Data.Error = error;

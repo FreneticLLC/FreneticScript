@@ -447,12 +447,13 @@ namespace FreneticScript.TagHandlers
         {
             if (input.Length == 0)
             {
-                return new Argument();
+                return new Argument() { Bits = new ArgumentBit[0] };
             }
             if (input.IndexOf("<") < 0)
             {
                 Argument a = new Argument() { WasQuoted = wasquoted };
-                a.Bits.Add(new TextArgumentBit(input, wasquoted) { CommandSystem = CommandSystem });
+                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted) { CommandSystem = CommandSystem } };
+                a.Compile();
                 return a;
             }
             Argument arg = new Argument() { WasQuoted = wasquoted };
@@ -461,6 +462,7 @@ namespace FreneticScript.TagHandlers
             int brackets = 0;
             StringBuilder blockbuilder = new StringBuilder();
             StringBuilder tbuilder = new StringBuilder();
+            List<ArgumentBit> bitos = new List<ArgumentBit>();
             for (int i = 0; i < len; i++)
             {
                 if (input[i] == '<')
@@ -478,7 +480,7 @@ namespace FreneticScript.TagHandlers
                     {
                         if (tbuilder.Length > 0)
                         {
-                            arg.Bits.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
+                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
                             tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
@@ -546,7 +548,7 @@ namespace FreneticScript.TagHandlers
                             tab.Start = start;
                         }
                         tab.Fallback = fallback == null ? null : SplitToArgument(fallback, false);
-                        arg.Bits.Add(tab);
+                        bitos.Add(tab);
                         blockbuilder = new StringBuilder();
                         continue;
                     }
@@ -588,8 +590,10 @@ namespace FreneticScript.TagHandlers
             }
             if (tbuilder.Length > 0)
             {
-                arg.Bits.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
+                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
             }
+            arg.Bits = bitos.ToArray();
+            arg.Compile();
             return arg;
         }
         

@@ -61,7 +61,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag input text.</returns>
         public override string ToString()
         {
-            if (Variable == null || Variable.Bits.Count == 0)
+            if (Variable == null || Variable.Bits == null || Variable.Bits.Length == 0)
             {
                 return Key;
             }

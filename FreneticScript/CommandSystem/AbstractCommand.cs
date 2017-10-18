@@ -115,7 +115,7 @@ namespace FreneticScript.CommandSystem
             {
                 for (int i = 0; i < entry.Arguments.Count; i++)
                 {
-                    if (entry.Arguments[i].Bits.Count == 1
+                    if (entry.Arguments[i].Bits.Length == 1
                         && entry.Arguments[i].Bits[0] is TextArgumentBit
                         && i < ObjectTypes.Count)
                     {
@@ -138,7 +138,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The entry.</param>
         public CommandEntry GetFollower(CommandEntry entry)
         {
-            return new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() {
+            return new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new ArgumentBit[] {
                 new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
@@ -316,6 +316,28 @@ namespace FreneticScript.CommandSystem
             {
                 Internal.Emit(code, dat);
                 Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="t">The associated data.</param>
+            public void Emit(OpCode code, Type t)
+            {
+                Internal.Emit(code, t);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, t));
+            }
+
+            /// <summary>
+            /// Emits an operation.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="t">The associated data.</param>
+            public void Emit(OpCode code, ConstructorInfo t)
+            {
+                Internal.Emit(code, t);
+                Codes.Add(new KeyValuePair<OpCode, object>(code, t));
             }
 
             /// <summary>

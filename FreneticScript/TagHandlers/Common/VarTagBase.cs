@@ -78,7 +78,7 @@ namespace FreneticScript.TagHandlers.Common
                         tab.Bits[0].Key = "\0lvar";
                         tab.Bits[0].Handler = null;
                         tab.Bits[0].OVar = tab.Bits[0].Variable;
-                        tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new List<ArgumentBit>() { new TextArgumentBit(entry.CILVars[n].LVariables[x].Item1) } };
+                        tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(entry.CILVars[n].LVariables[x].Item1) } };
                         return entry.CILVars[n].LVariables[x].Item3;
                     }
                 }

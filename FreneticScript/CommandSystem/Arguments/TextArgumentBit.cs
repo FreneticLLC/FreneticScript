@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.CompilerServices;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
@@ -56,8 +57,6 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
         public TextArgumentBit(string _text, bool wasquoted)
         {
-            long ti;
-            double tn;
             if (wasquoted)
             {
                 InputValue = new TextTag(_text);
@@ -78,12 +77,12 @@ namespace FreneticScript.CommandSystem.Arguments
                 InputValue = new NullTag();
                 ResType = NullTag.TYPE;
             }
-            else if (long.TryParse(_text, out ti) && ti.ToString() == _text)
+            else if (long.TryParse(_text, out long ti) && ti.ToString() == _text)
             {
                 InputValue = new IntegerTag(ti);
                 ResType = IntegerTag.TYPE;
             }
-            else if (double.TryParse(_text, out tn) && tn.ToString() == _text)
+            else if (double.TryParse(_text, out double tn) && tn.ToString() == _text)
             {
                 InputValue = new NumberTag(tn);
                 ResType = NumberTag.TYPE;
@@ -126,7 +125,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="cse">The command stack entry.</param>
         /// <returns>The parsed final text.</returns>
-        public override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public sealed override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
             return InputValue;
         }

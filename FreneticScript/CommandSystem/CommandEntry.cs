@@ -151,7 +151,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw new ErrorInducedException("Error on script line: " + line + "(" + command + "): " + ex.Message);
                 }
-                throw new ErrorInducedException("Internal exception occured on script line: " + line + "(" + command + ")", ex);
+                throw new ErrorInducedException("Internal exception occured on script line: " + line + "(" + command + "): " + ex.ToString());
             }
         }
 
@@ -161,7 +161,7 @@ namespace FreneticScript.CommandSystem
         public static CommandEntry CreateErrorOutput(string message, Commands system, string script, string tabs)
         {
             return new CommandEntry("error \"" + TagParser.Escape(message.Replace('\"', '\'')) + "\"", 0, 0, system.RegisteredCommands["error"],
-                new List<Argument>() { new Argument() { Bits = new List<ArgumentBit>() { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs, system);
+                new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs, system);
 
         }
 
