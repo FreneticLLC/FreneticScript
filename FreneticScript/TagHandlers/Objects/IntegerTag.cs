@@ -98,9 +98,9 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return null;
             }
-            if (input is IntegerTag)
+            if (input is IntegerTag it)
             {
-                return (IntegerTag)input;
+                return it;
             }
             return TryFor(input.ToString());
         }

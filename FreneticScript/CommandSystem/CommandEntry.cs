@@ -460,7 +460,7 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// Gets the data associated with this entry in the queue.
+        /// Sets the data associated with this entry in the queue.
         /// </summary>
         /// <param name="queue">The queue holding the data.</param>
         /// <param name="x">The data to set to.</param>
