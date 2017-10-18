@@ -36,6 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
             string vn = cent.Arguments[0].ToString().ToLowerFastFS();
+            // TODO: Index "after" check instead of splitty weirdness?
             string[] dat = vn.SplitFastFS('.');
             StringBuilder res = new StringBuilder(vn.Length);
             for (int i = 1; i < dat.Length; i++)
@@ -49,14 +50,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
             vn = dat[0];
             int lvarloc = cent.VarLoc(vn);
             string mode = cent.Arguments[1].ToString();
+            bool fasto = mode == "=" && res.ToString().Length == 0;
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
-            values.ILGen.Emit(OpCodes.Ldstr, res.ToString());
+            if (!fasto)
+            {
+                values.ILGen.Emit(OpCodes.Ldstr, res.ToString());
+            }
             values.LoadQueue();
             values.LoadEntry(entry);
             switch (mode)
             {
                 case "=":
-                    values.ILGen.Emit(OpCodes.Call, Method_SetImmediate);
+                    values.ILGen.Emit(OpCodes.Call, fasto ? Method_SetImmediateFast : Method_SetImmediate);
                     break;
                 case "+=":
                     values.ILGen.Emit(OpCodes.Call, Method_AddImmediate);
@@ -75,11 +80,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
+        static MethodInfo Method_SetImmediateFast = typeof(DebugVarSetCommand).GetMethod("SetImmediateFast");
         static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
         static MethodInfo Method_AddImmediate = typeof(DebugVarSetCommand).GetMethod("AddImmediate");
         static MethodInfo Method_SubtractImmediate = typeof(DebugVarSetCommand).GetMethod("SubtractImmediate");
         static MethodInfo Method_MultiplyImmediate = typeof(DebugVarSetCommand).GetMethod("MultiplyImmediate");
         static MethodInfo Method_DivideImmediate = typeof(DebugVarSetCommand).GetMethod("DivideImmediate");
+
+        static string[] EMPTY = new string[0];
+
+        /// <summary>
+        /// Immediately sets a var, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void SetImmediateFast(int loc, CommandQueue queue, CommandEntry entry)
+        {
+            queue.CurrentEntry.LocalVariables[loc].Internal.SetFast(entry.GetArgumentObject(queue, 2));
+        }
 
         /// <summary>
         /// Immediately sets a var, for compiler reasons.
@@ -90,7 +109,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            queue.CurrentEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? new string[0] : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
+            // TODO: Pre-split!
+            queue.CurrentEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -102,7 +122,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void AddImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            queue.CurrentEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? new string[0] : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
+            // TODO: Pre-split!
+            queue.CurrentEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -114,7 +135,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void SubtractImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            queue.CurrentEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? new string[0] : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
+            // TODO: Pre-split!
+            queue.CurrentEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -126,7 +148,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void MultiplyImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            queue.CurrentEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? new string[0] : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
+            // TODO: Pre-split!
+            queue.CurrentEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>
@@ -138,7 +161,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The relevant entry.</param>
         public static void DivideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
-            queue.CurrentEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? new string[0] : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
+            // TODO: Pre-split!
+            queue.CurrentEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2));
         }
 
         /// <summary>

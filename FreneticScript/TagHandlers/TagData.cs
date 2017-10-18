@@ -24,6 +24,15 @@ namespace FreneticScript.TagHandlers
     public class TagData
     {
         /// <summary>
+        /// Returns a shallow duplicate of this object.
+        /// </summary>
+        /// <returns>The shallow duplicate.</returns>
+        public TagData DuplicateShallow()
+        {
+            return MemberwiseClone() as TagData;
+        }
+
+        /// <summary>
         /// The "Start" field.
         /// </summary>
         public static FieldInfo Field_Start = typeof(TagData).GetField("Start");

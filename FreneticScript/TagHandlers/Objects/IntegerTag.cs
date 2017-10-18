@@ -314,6 +314,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Sets a value on the object, fast.
+        /// </summary>
+        /// <param name="val">The value to set it to.</param>
+        public override void SetFast(TemplateObject val)
+        {
+            Internal = TryFor(val).Internal;
+        }
+
+        /// <summary>
         /// Sets a value on the object.
         /// </summary>
         /// <param name="names">The name of the value.</param>

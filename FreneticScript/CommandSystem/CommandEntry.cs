@@ -361,7 +361,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument.</returns>
         public TemplateObject GetArgumentObject(CommandQueue queue, int place)
         {
-            if (queue.ParseTags != TagParseMode.OFF) // TODO: Compile parse tags option
+            if (queue.ParseTags != TagParseMode.OFF) // TODO: Compile parse tags option?!
             {
                 return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry);
             }

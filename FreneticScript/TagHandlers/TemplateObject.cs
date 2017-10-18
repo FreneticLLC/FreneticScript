@@ -50,6 +50,15 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
+        /// Sets a value on the object, fast.
+        /// </summary>
+        /// <param name="val">The value to set it to.</param>
+        public virtual void SetFast(TemplateObject val)
+        {
+            Set(null, val);
+        }
+
+        /// <summary>
         /// Sets a value on the object.
         /// </summary>
         /// <param name="names">The name of the value.</param>
