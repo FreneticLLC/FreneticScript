@@ -97,7 +97,7 @@ namespace FreneticScript.CommandSystem
                     {
                         Argument varname = args[0];
                         args.RemoveRange(0, 2);
-                        nameds["\0varname"] = varname;
+                        nameds["\0varname"] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFastFS(), true) } };
                     }
                 }
                 int marker = 0;
@@ -483,6 +483,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Returns whether commands should output 'good' results.
         /// </summary>
+        /// <param name="queue">The relevant queue.</param>
         /// <returns>Whether commands should output 'good' results.</returns>
         public bool ShouldShowGood(CommandQueue queue)
         {
@@ -554,21 +555,20 @@ namespace FreneticScript.CommandSystem
         public CILVariables[] CILVars;
 
         /// <summary>
+        /// A lookup table for CIL variables.
+        /// </summary>
+        public Dictionary<string, int> VarLookup;
+
+        /// <summary>
         /// Gets the location of a variable from its name.
         /// </summary>
         /// <param name="name">The name of the variable.</param>
         /// <returns>The location of the variable.</returns>
         public int VarLoc(string name)
         {
-            for (int i = 0; i < CILVars.Length; i++)
+            if (VarLookup.TryGetValue(name, out int x))
             {
-                for (int x = 0; x < CILVars[i].LVariables.Count; x++)
-                {
-                    if (CILVars[i].LVariables[x].Item2 == name)
-                    {
-                        return CILVars[i].LVariables[x].Item1;
-                    }
-                }
+                return x;
             }
             return -1;
         }

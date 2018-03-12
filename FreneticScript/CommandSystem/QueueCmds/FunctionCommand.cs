@@ -30,7 +30,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // Use "function stop" inside a function to end the function call without killing the queue that started it.
     // TODO: Explain more!
     // @Example
-    // // This example creates function "helloworld" which, when called, outputs "hello world", then stops before it can output a "!"
+    // // This example creates function "helloworld" which, when called, outputs "hello world", then stops before it can output a "!".
     // function define helloworld
     // {
     //     echo "hello world";
@@ -79,7 +79,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public FunctionCommand()
         {
             Name = "function";
-            Arguments = "'stop'/'define' [name of function] ['quiet_fail']";
+            Arguments = "'stop'/'define'/'undefine' [name of function] ['quiet_fail']";
             Description = "Creates a new function of the following command block, and adds it to the script cache.";
             IsFlow = true;
             Asyncable = true;
@@ -116,7 +116,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 // ...
             }
-            else
+            else // "define"
             {
                 values.PushVarSet();
                 // ...

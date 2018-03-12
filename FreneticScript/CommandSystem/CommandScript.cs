@@ -362,29 +362,41 @@ namespace FreneticScript.CommandSystem
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
                     CILVariables[] ttvars = new CILVariables[values.LVarIDs.Count];
+                    CommandEntry curEnt = ccse.Entries[i];
                     int tcounter = 0;
                     foreach (int tv in values.LVarIDs)
                     {
                         ttvars[tcounter] = values.CLVariables[tv];
                         tcounter++;
                     }
-                    ccse.Entries[i].CILVars = ttvars;
-                    for (int a = 0; a < ccse.Entries[i].Arguments.Count; a++)
+                    curEnt.CILVars = ttvars;
+                    for (int a = 0; a < curEnt.Arguments.Count; a++)
                     {
-                        Argument arg = ccse.Entries[i].Arguments[a];
+                        Argument arg = curEnt.Arguments[a];
                         for (int b = 0; b < arg.Bits.Length; b++)
                         {
                             if (arg.Bits[b] is TagArgumentBit tab)
                             {
                                 tagID++;
-                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, a, toClean));
+                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
                             }
                         }
                     }
-                    bool isCallback = ccse.Entries[i].Arguments.Count > 0 && ccse.Entries[i].Arguments[0].ToString() == "\0CALLBACK";
+                    foreach (Argument arg in curEnt.NamedArguments.Values)
+                    {
+                        for (int b = 0; b < arg.Bits.Length; b++)
+                        {
+                            if (arg.Bits[b] is TagArgumentBit tab)
+                            {
+                                tagID++;
+                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                            }
+                        }
+                    }
+                    bool isCallback = curEnt.Arguments.Count > 0 && curEnt.Arguments[0].ToString() == "\0CALLBACK";
                     if (!isCallback)
                     {
-                        ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                        curEnt.Command.PreAdaptToCIL(values, i);
                     }
                     CILVariables[] tvars = new CILVariables[values.LVarIDs.Count];
                     int counter = 0;
@@ -393,7 +405,23 @@ namespace FreneticScript.CommandSystem
                         tvars[counter] = values.CLVariables[tv];
                         counter++;
                     }
-                    ccse.Entries[i].CILVars = tvars;
+                    curEnt.CILVars = tvars;
+                    Dictionary<string, int> varlookup = new Dictionary<string, int>(tvars.Length);
+                    foreach (CILVariables tv in tvars)
+                    {
+                        foreach (Tuple<int, string, TagType> tvt in tv.LVariables)
+                        {
+                            varlookup.Add(tvt.Item2, tvt.Item1);
+                        }
+                    }
+                    curEnt.VarLookup = varlookup;
+                    if (curEnt.NamedArguments.TryGetValue("\0varname", out Argument avarname))
+                    {
+                        if (!varlookup.ContainsKey(avarname.ToString()))
+                        {
+                            throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine + "): Invalid variable save name: " + avarname.ToString());
+                        }
+                    }
                     if (isCallback)
                     {
                         ccse.Entries[i].Command.PreAdaptToCIL(values, i);
@@ -456,10 +484,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="tID">The ID of the tag.</param>
         /// <param name="values">The helper values.</param>
         /// <param name="i">The command entry index.</param>
-        /// <param name="a">The argument index.</param>
         /// <param name="toClean">Cleanable tag bits.</param>
         public static CILAdaptationValues.ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
-            ref int tID, CILAdaptationValues values, int i, int a, List<TagArgumentBit> toClean)
+            ref int tID, CILAdaptationValues values, int i, List<TagArgumentBit> toClean)
         {
             int id = tID;
             List<Argument> altArgs = new List<Argument>();
@@ -481,7 +508,7 @@ namespace FreneticScript.CommandSystem
                     if (altArgs[sx].Bits[b] is TagArgumentBit)
                     {
                         tID++;
-                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, i, a, toClean);
+                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, i, toClean);
                     }
                 }
             }
@@ -490,7 +517,7 @@ namespace FreneticScript.CommandSystem
             TagType returnable = tab.Start.ResultType;
             if (returnable == null)
             {
-                returnable = tab.Start.Adapt(ccse, tab, i, a);
+                returnable = tab.Start.Adapt(ccse, tab, i);
             }
             if (returnable == null)
             {

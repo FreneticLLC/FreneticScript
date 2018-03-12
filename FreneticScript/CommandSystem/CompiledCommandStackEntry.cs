@@ -14,12 +14,13 @@ using System.Threading;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem
 {
     /// <summary>
-    /// Represetns a precompiled command stack entry.
+    /// Represents a precompiled command stack entry.
     /// </summary>
     public class CompiledCommandStackEntry: CommandStackEntry
     {
@@ -32,6 +33,11 @@ namespace FreneticScript.CommandSystem
         /// Where in the CIL code each entry starts.
         /// </summary>
         public Label[] AdaptedILPoints;
+
+        /// <summary>
+        /// Represents the field "LocalVariables" in the class CompiledCommandStackEntry.
+        /// </summary>
+        public static FieldInfo COMPILEDCOMMANDSTACKENTRY_LOCALVARIABLES = typeof(CompiledCommandStackEntry).GetField("LocalVariables");
 
         /// <summary>
         /// Variables local to the compiled function.

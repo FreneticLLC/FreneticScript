@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
+using System.Reflection;
 
 namespace FreneticScript.CommandSystem
 {
@@ -26,6 +27,11 @@ namespace FreneticScript.CommandSystem
         /// The current stack of all command execution data.
         /// </summary>
         public Stack<CompiledCommandStackEntry> CommandStack = new Stack<CompiledCommandStackEntry>();
+
+        /// <summary>
+        /// Represents the field "CurrentEntry" in the class CommandQueue.
+        /// </summary>
+        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField("CurrentEntry");
 
         /// <summary>
         /// The current stack entry being used.
@@ -160,6 +166,31 @@ namespace FreneticScript.CommandSystem
             return CurrentEntry.Entries[index];
         }
         
+        /// <summary>
+        /// Returns whether commands should output 'good' results.
+        /// </summary>
+        /// <returns>Whether commands should output 'good' results.</returns>
+        public bool ShouldShowGood()
+        {
+            return CurrentEntry.Debug == DebugMode.FULL;
+        }
+        
+        /// <summary>
+        /// Used to output a success message.
+        /// </summary>
+        /// <param name="text">The text to output.</param>
+        public void GoodOutput(string text)
+        {
+            if (CurrentEntry.Debug == DebugMode.FULL)
+            {
+                CommandSystem.Output.GoodOutput(text);
+                if (Outputsystem != null)
+                {
+                    Outputsystem.Invoke(text, MessageType.GOOD);
+                }
+            }
+        }
+
         /// <summary>
         /// Immediately stops the Command Queue by jumping to the end.
         /// </summary>

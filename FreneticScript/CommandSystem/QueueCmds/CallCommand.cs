@@ -19,13 +19,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // <--[command]
     // @Name call
-    // @Arguments <function to call> [-variable value ...]
+    // @Arguments <function to call> [--variable value ...]
     // @Short Runs a function.
     // @Updated 2016/04/27
     // @Authors mcmonkey
     // @Group Queue
     // @Minimum 1
-    // @Maximum -1
+    // @Maximum 1
     // @ReturnsValue true
     // @VarEqual MapTag the map of variables tracked at the end of the function call.
     // @Description
@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // call helloworld;
     // @Example
     // // This example calls the function 'outputme' with variable 'text' set to 'hello world'.
-    // call outputme -text "hello world";
+    // call outputme --text "hello world";
     // @Example
     // This example echoes the result of the function 'getinfo', from the tracked variable 'result'. Note that unexpected functionality may occur if 'getinfo' delays the variable set.
     // info ^= call getinfo;
@@ -60,12 +60,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public CallCommand()
         {
             Name = "call";
-            Arguments = "<function to call> [-<variable> <value> ...]";
+            Arguments = "<function to call> [--<variable> <value> ...]";
             Description = "Runs a function.";
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
-            MaximumArguments = -1;
+            MaximumArguments = 1;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
                 TextTag.For
@@ -102,45 +102,66 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Calling '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
-            // TODO: Restore variable sending!
             CompiledCommandStackEntry cse = script.Created.Duplicate();
-            foreach (string var in entry.NamedArguments.Keys)
+            if (cse.Entries.Length > 0)
             {
-                if (!var.StartsWithNullFS())
+                Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
+                foreach (string var in entry.NamedArguments.Keys)
                 {
-                    /*
-                    if (cse.Variables.ContainsKey(var))
+                    if (!var.StartsWithNullFS())
                     {
-                        vars[var].Internal = entry.GetNamedArgumentObject(queue, var);
+                        if (varlookup.TryGetValue(var, out int varx))
+                        {
+                            // TODO: Type verification!
+                            if (cse.LocalVariables[varx] != null)
+                            {
+                                cse.LocalVariables[varx].Internal = entry.GetNamedArgumentObject(queue, var);
+                            }
+                            else
+                            {
+                                cse.LocalVariables[varx] = new ObjectHolder() { Internal = entry.GetNamedArgumentObject(queue, var) };
+                            }
+                        }
                     }
-                    else
-                    {
-                        vars[var] = new ObjectHolder() { Internal = entry.GetNamedArgumentObject(queue, var) };
-                    }
-                    */
                 }
             }
             if (entry.NamedArguments.ContainsKey("\0varname"))
             {
                 bool sgood = entry.ShouldShowGood(queue);
-                string vname = entry.GetNamedArgumentObject(queue, "\0varname").ToString(); // TODO: Should this go through parsing at all? Probably not!
+                string vname = entry.NamedArguments["\0varname"].ToString();
                 if (sgood)
                 {
                     entry.Good(queue, "Noticing variable track for " + vname + ".");
                 }
-                // TODO: Save the variable to the queue properly!
+                CompiledCommandStackEntry ccse = queue.CurrentEntry;
+                int x = -1;
+                if (!entry.VarLookup.TryGetValue(vname, out x))
+                {
+                    queue.HandleError(entry, "Invalid save-to variable: " + vname + "!");
+                    return;
+                }
                 cse.Callback = () =>
                 {
-                    /*
-                    if (existingVars.ContainsKey(vname))
+                    if (cse.Entries.Length > 0)
                     {
-                        existingVars[vname].Internal = new MapTag(cse.Variables);
+                        MapTag mt = new MapTag();
+                        Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
+                        foreach (KeyValuePair<string, int> vara in varlookup)
+                        {
+                            if (cse.LocalVariables[vara.Value]?.Internal != null)
+                            {
+                                mt.Internal.Add(vara.Key, cse.LocalVariables[vara.Value].Internal);
+                            }
+                        }
+                        if (ccse.LocalVariables[x] != null)
+                        {
+                            ccse.LocalVariables[x].Internal = mt;
+                        }
+                        else
+                        {
+                            ccse.LocalVariables[x] = new ObjectHolder() { Internal = mt };
+                        }
                     }
-                    else
-                    {
-                        existingVars[vname] = new ObjectHolder() { Internal = new MapTag(cse.Variables) };
-                    }
-                    */
                     if (sgood)
                     {
                         entry.Good(queue, "Call complete.");
