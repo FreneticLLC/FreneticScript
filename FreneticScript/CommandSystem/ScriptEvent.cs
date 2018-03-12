@@ -199,12 +199,14 @@ namespace FreneticScript.CommandSystem
                         // TODO: Handle cancelling stuff here?
                         // IE, don't fire if cancelled and we don't want to fire?
                         CommandScript script = Handlers[i].Value;
-                        Dictionary<string, ObjectHolder> Variables = new Dictionary<string, ObjectHolder>();
-                        Variables["context"].Internal = new MapTag(GetVariables());
+                        Dictionary<string, TemplateObject> Variables = new Dictionary<string, TemplateObject>()
+                        {
+                            {  "context", new MapTag(GetVariables()) }
+                        };
                         System.ExecuteScript(script, ref Variables, out CommandQueue queue, DebugMode.MINIMAL);
                         if (Variables != null && Variables.ContainsKey("context"))
                         {
-                            UpdateVariables(MapTag.For(Variables["context"].Internal).Internal);
+                            UpdateVariables(MapTag.For(Variables["context"]).Internal);
                         }
                         else
                         {

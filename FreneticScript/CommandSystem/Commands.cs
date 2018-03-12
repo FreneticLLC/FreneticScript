@@ -120,20 +120,38 @@ namespace FreneticScript.CommandSystem
         /// <param name="Variables">What variables to add to the commandqueue.</param>
         /// <param name="queue">Outputs the generated queue (already ran or running).</param>
         /// <param name="mode">The debug mode to run it in.</param>
-        public void ExecuteScript(CommandScript script, ref Dictionary<string, ObjectHolder> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
+        public void ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
         {
             queue = script.ToQueue(this);
+            CompiledCommandStackEntry cse = queue.CommandStack.Peek();
             if (Variables != null)
             {
-                // TODO: Restore variable tracking!
-                /*foreach (KeyValuePair<string, ObjectHolder> variable in Variables)
+                if (cse.Entries.Length > 0)
                 {
-                    queue.SetVariable(variable.Key, variable.Value.Internal);
-                }*/
+                    Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
+                    foreach (KeyValuePair<string, TemplateObject> var in Variables)
+                    {
+                        if (!var.Key.StartsWithNullFS())
+                        {
+                            if (varlookup.TryGetValue(var.Key, out int varx))
+                            {
+                                // TODO: Type verification!
+                                if (cse.LocalVariables[varx] != null)
+                                {
+                                    cse.LocalVariables[varx].Internal = var.Value;
+                                }
+                                else
+                                {
+                                    cse.LocalVariables[varx] = new ObjectHolder() { Internal = var.Value };
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            CommandStackEntry cse = queue.CommandStack.Peek();
             cse.Debug = mode; // TODO: Scrap this debug changer?
             queue.Execute();
+            // TODO: Restore the variable map set.
             //Variables = queue.LowestVariables;
         }
 
