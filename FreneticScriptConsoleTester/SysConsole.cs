@@ -149,10 +149,7 @@ namespace FreneticScriptConsoleTester
         {
             lock (ConsoleLock)
             {
-                if (Written != null)
-                {
-                    Written(null, new ConsoleWrittenEventArgs() { Text = text, BColor = bcolor });
-                }
+                Written?.Invoke(null, new ConsoleWrittenEventArgs() { Text = text, BColor = bcolor });
                 Waiting.Add(new KeyValuePair<string, string>(bcolor, text));
             }
         }

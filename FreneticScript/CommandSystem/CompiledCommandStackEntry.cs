@@ -100,11 +100,18 @@ namespace FreneticScript.CommandSystem
                 {
                     throw;
                 }
-                if (!(ex is ErrorInducedException))
+                if (!(ex is ErrorInducedException eie && string.IsNullOrEmpty(eie.Message)))
                 {
                     try
                     {
-                        queue.HandleError(Entries[c.Internal], "Internal exception: " + ex.ToString());
+                        if (ex is ErrorInducedException)
+                        {
+                            queue.HandleError(Entries[c.Internal], ex.Message);
+                        }
+                        else
+                        {
+                            queue.HandleError(Entries[c.Internal], "Internal exception: " + ex.ToString());
+                        }
                     }
                     catch (Exception ex2)
                     {
