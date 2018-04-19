@@ -94,7 +94,7 @@ namespace FreneticScript.TagHandlers.Objects
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFastFS()] = new TextArgumentBit(TagParser.Unescape(kvp[1]), false).InputValue;
+                map.Internal[kvp[0].ToLowerFastFS()] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false).InputValue;
             }
             return map;
         }
@@ -118,7 +118,7 @@ namespace FreneticScript.TagHandlers.Objects
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFastFS()] = data.TagSystem.ParseFromSaved(TagParser.Unescape(kvp[1]), data);
+                map.Internal[UnescapeTagBase.Unescape(kvp[0]).ToLowerFastFS()] = data.TagSystem.ParseFromSaved(UnescapeTagBase.Unescape(kvp[1]), data);
             }
             return map;
         }
@@ -273,24 +273,54 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Sets a value on the object.
+        /// Recursive sub-call of Set.
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to set it to.</param>
-        public override void Set(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public void RecurseSet(string[] names, TemplateObject val, ObjectEditSource src)
         {
-            if (names != null && names.Length == 1)
+            if (names.Length == 1)
             {
                 Internal[names[0].ToLowerFastFS()] = val;
                 return;
             }
-            if (names != null && names.Length > 1 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
+            if (Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Set(n2, val);
+                if (obj is MapTag mt)
+                {
+                    mt.RecurseSet(n2, val, src);
+                }
+                else
+                {
+                    obj.Set(n2, val, src);
+                }
+                return;
             }
-            base.Set(names, val);
+            base.Set(names, val, src);
+        }
+
+        /// <summary>
+        /// Sets a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to set it to.</param>
+        /// <param name="src">Source data.</param>
+        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
+        {
+            if (names == null)
+            {
+                base.Set(names, val, src);
+                return;
+            }
+            if (names.Length == 0)
+            {
+                Internal = For(val).Internal;
+                return;
+            }
+            RecurseSet(names, val, src);
         }
 
         /// <summary>
@@ -298,16 +328,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to add.</param>
-        public override void Add(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Add(n2, val);
+                obj.Add(n2, val, src);
                 return;
             }
-            base.Add(names, val);
+            base.Add(names, val, src);
         }
 
         /// <summary>
@@ -315,16 +346,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to subtract.</param>
-        public override void Subtract(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Subtract(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Subtract(n2, val);
+                obj.Subtract(n2, val, src);
                 return;
             }
-            base.Subtract(names, val);
+            base.Subtract(names, val, src);
         }
 
         /// <summary>
@@ -332,16 +364,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to multiply.</param>
-        public override void Multiply(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Multiply(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Multiply(n2, val);
+                obj.Multiply(n2, val, src);
                 return;
             }
-            base.Multiply(names, val);
+            base.Multiply(names, val, src);
         }
 
         /// <summary>
@@ -349,16 +382,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to divide.</param>
-        public override void Divide(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Divide(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFastFS(), out TemplateObject obj))
             {
                 string[] n2 = new string[names.Length - 1];
                 Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Divide(n2, val);
+                obj.Divide(n2, val, src);
                 return;
             }
-            base.Divide(names, val);
+            base.Divide(names, val, src);
         }
     }
 }

@@ -618,6 +618,7 @@ namespace FreneticScript.CommandSystem
                 // If we're running the specially compiled 'DynamicTag.as' tag...
                 if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
                 {
+                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                     string type_name = tab.Bits[x].Variable.ToString();
                     prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFastFS()];
                     ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for this tag.
@@ -645,10 +646,6 @@ namespace FreneticScript.CommandSystem
                             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                             ilgen.Emit(OpCodes.Call, modt.CreatorMethod); // Run the creator method to convert the tag to the correct type.
                         }
-                    }
-                    else
-                    {
-                        ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                     }
                     ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
                 }

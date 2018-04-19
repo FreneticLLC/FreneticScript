@@ -45,6 +45,35 @@ namespace FreneticScript.TagHandlers.Objects
         /// Get an integer tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
         /// Never null!
         /// </summary>
+        /// <param name="err">Error call if something goes wrong.</param>
+        /// <param name="input">The input text to create a integer from.</param>
+        /// <returns>The integer tag.</returns>
+        public static IntegerTag For(Action<string> err, string input)
+        {
+            if (long.TryParse(input, out long tval))
+            {
+                return new IntegerTag(tval);
+            }
+            err("Invalid integer: '" + TagParser.Escape(input) + "'!");
+            return new IntegerTag(0);
+        }
+
+        /// <summary>
+        /// Get an integer tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
+        /// Never null!
+        /// </summary>
+        /// <param name="err">Error call if something goes wrong.</param>
+        /// <param name="input">The input text to create a integer from.</param>
+        /// <returns>The integer tag.</returns>
+        public static IntegerTag For(TemplateObject input, Action<string> err)
+        {
+            return input as IntegerTag ?? For(err, input.ToString());
+        }
+
+        /// <summary>
+        /// Get an integer tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
+        /// Never null!
+        /// </summary>
         /// <param name="dat">The TagData used to construct this IntegerTag.</param>
         /// <param name="input">The input text to create a integer from.</param>
         /// <returns>The integer tag.</returns>
@@ -314,7 +343,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Sets a value on the object, fast.
+        /// Sets a value on the integer object, fast.
         /// </summary>
         /// <param name="val">The value to set it to.</param>
         public override void SetFast(TemplateObject val)
@@ -327,14 +356,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to set it to.</param>
-        public override void Set(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
-                Internal = TryFor(val).Internal;
+                Internal = For(val, src.Error).Internal;
                 return;
             }
-            base.Set(names, val);
+            base.Set(names, val, src);
         }
 
         /// <summary>
@@ -342,14 +372,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to add.</param>
-        public override void Add(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
-                Internal += TryFor(val).Internal;
+                Internal += For(val, src.Error).Internal;
                 return;
             }
-            base.Add(names, val);
+            base.Add(names, val, src);
         }
 
         /// <summary>
@@ -357,14 +388,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to subtract.</param>
-        public override void Subtract(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Subtract(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
-                Internal -= TryFor(val).Internal;
+                Internal -= For(val, src.Error).Internal;
                 return;
             }
-            base.Subtract(names, val);
+            base.Subtract(names, val, src);
         }
 
         /// <summary>
@@ -372,14 +404,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to multiply.</param>
-        public override void Multiply(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Multiply(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
-                Internal *= TryFor(val).Internal;
+                Internal *= For(val, src.Error).Internal;
                 return;
             }
-            base.Multiply(names, val);
+            base.Multiply(names, val, src);
         }
 
         /// <summary>
@@ -387,14 +420,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to divide.</param>
-        public override void Divide(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Divide(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
-                Internal /= TryFor(val).Internal;
+                Internal /= For(val, src.Error).Internal;
                 return;
             }
-            base.Divide(names, val);
+            base.Divide(names, val, src);
         }
     }
 }

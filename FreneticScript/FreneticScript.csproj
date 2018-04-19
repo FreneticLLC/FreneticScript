@@ -131,6 +131,7 @@
     <Compile Include="TagHandlers\Common\TextTagBase.cs" />
     <Compile Include="TagHandlers\Common\UnescapeTagBase.cs" />
     <Compile Include="TagHandlers\Common\VarTagBase.cs" />
+    <Compile Include="TagHandlers\ObjectEditSource.cs" />
     <Compile Include="TagHandlers\Objects\BinaryTag.cs" />
     <Compile Include="TagHandlers\Objects\CVarTag.cs" />
     <Compile Include="TagHandlers\Objects\DynamicTag.cs" />

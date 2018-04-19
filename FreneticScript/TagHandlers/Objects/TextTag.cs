@@ -352,14 +352,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to set it to.</param>
-        public override void Set(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
                 Internal = val.ToString();
                 return;
             }
-            base.Set(names, val);
+            base.Set(names, val, src);
         }
 
         /// <summary>
@@ -367,14 +368,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to add.</param>
-        public override void Add(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
         {
             if (names == null || names.Length == 0)
             {
                 Internal += val.ToString();
                 return;
             }
-            base.Add(names, val);
+            base.Add(names, val, src);
         }
     }
 }

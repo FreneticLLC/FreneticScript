@@ -160,7 +160,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public static CommandEntry CreateErrorOutput(string message, Commands system, string script, string tabs)
         {
-            return new CommandEntry("error \"" + TagParser.Escape(message.Replace('\"', '\'')) + "\"", 0, 0, system.RegisteredCommands["error"],
+            return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
                 new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs, system);
 
         }

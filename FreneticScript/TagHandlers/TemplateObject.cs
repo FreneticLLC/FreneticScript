@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
@@ -20,7 +21,7 @@ namespace FreneticScript.TagHandlers
     public abstract class TemplateObject
     {
         /// <summary>
-        /// Returns the input as-is, for use with ObjecTypes.
+        /// Returns the input as-is, for use with Object Types.
         /// </summary>
         /// <param name="obj">The object input.</param>
         /// <returns>The object input.</returns>
@@ -50,12 +51,19 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
-        /// Sets a value on the object, fast.
+        /// A generic edit source, where errors are treated as exceptions.
+        /// </summary>
+        public static readonly ObjectEditSource GENERIC_EDIT_SOURCE = new ObjectEditSource() { Error = (s) => throw new ErrorInducedException("Error in edit operation: " + s) };
+
+        /// <summary>
+        /// Sets a value on the object, fast. This generally fully overrides the value of an object (as it does not have a sub-key name).
+        /// This is expected to operate as a quick brute set. There is no sourcing data and failures may result in system level exceptions. ErrorInducedExceptions should be handled more cleanly.
+        /// This is used purely for efficiency with simpler sets. Implementations should only be made if they can run faster or better than a normal Set call.
         /// </summary>
         /// <param name="val">The value to set it to.</param>
         public virtual void SetFast(TemplateObject val)
         {
-            Set(null, val);
+            Set(null, val, GENERIC_EDIT_SOURCE);
         }
 
         /// <summary>
@@ -63,21 +71,35 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to set it to.</param>
-        public virtual void Set(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public virtual void Set(string[] names, TemplateObject val, ObjectEditSource src)
         {
-            throw new Exception("Invalid object setter!");
+            if (names == null || names.Length == 0)
+            {
+                src.Error("Invalid object setter for object '" + GetSavableString() + "' (direct set).");
+            }
+            else
+            {
+                src.Error("Invalid object setter for object '" + GetSavableString() + "', had sub-name(s) expected: '" + string.Join(".", names) + "'");
+            }
         }
-
-        // TODO: replace virtuals below with automatic tag magic!
-
+        
         /// <summary>
         /// Adds a value to a value on the object.
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to add.</param>
-        public virtual void Add(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public virtual void Add(string[] names, TemplateObject val, ObjectEditSource src)
         {
-            throw new Exception("Invalid object adder!");
+            if (names == null || names.Length == 0)
+            {
+                src.Error("Invalid object adder for object '" + GetSavableString() + "' (direct add).");
+            }
+            else
+            {
+                src.Error("Invalid object adder for object '" + GetSavableString() + "', had sub-name(s) expected: '" + string.Join(".", names) + "'");
+            }
         }
 
         /// <summary>
@@ -85,9 +107,17 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to subtract.</param>
-        public virtual void Subtract(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public virtual void Subtract(string[] names, TemplateObject val, ObjectEditSource src)
         {
-            throw new Exception("Invalid object subtractor!");
+            if (names == null || names.Length == 0)
+            {
+                src.Error("Invalid object subtractor for object '" + GetSavableString() + "' (direct subtract).");
+            }
+            else
+            {
+                src.Error("Invalid object subtractor for object '" + GetSavableString() + "', had sub-name(s) expected: '" + string.Join(".", names) + "'");
+            }
         }
 
         /// <summary>
@@ -95,9 +125,17 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to multiply.</param>
-        public virtual void Multiply(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public virtual void Multiply(string[] names, TemplateObject val, ObjectEditSource src)
         {
-            throw new Exception("Invalid object multiplier!");
+            if (names == null || names.Length == 0)
+            {
+                src.Error("Invalid object multiplier for object '" + GetSavableString() + "' (direct multiply).");
+            }
+            else
+            {
+                src.Error("Invalid object multiplier for object '" + GetSavableString() + "', had sub-name(s) expected: '" + string.Join(".", names) + "'");
+            }
         }
 
         /// <summary>
@@ -105,9 +143,17 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to divide.</param>
-        public virtual void Divide(string[] names, TemplateObject val)
+        /// <param name="src">Source data.</param>
+        public virtual void Divide(string[] names, TemplateObject val, ObjectEditSource src)
         {
-            throw new Exception("Invalid object divider!");
+            if (names == null || names.Length == 0)
+            {
+                src.Error("Invalid object divider for object '" + GetSavableString() + "' (direct divide).");
+            }
+            else
+            {
+                src.Error("Invalid object divider for object '" + GetSavableString() + "', had sub-name(s) expected: '" + string.Join(".", names) + "'");
+            }
         }
     }
 }

@@ -24,6 +24,16 @@ namespace FreneticScript.TagHandlers
     public class TagData
     {
         /// <summary>
+        /// A field reference to the <see cref="SIMPLE_ERROR"/> field.
+        /// </summary>
+        public static readonly FieldInfo FIELD_TAGDATA_SIMPLE_ERROR = typeof(TagData).GetField("SIMPLE_ERROR", BindingFlags.Static | BindingFlags.Public);
+
+        /// <summary>
+        /// A simple error TagData object.
+        /// </summary>
+        public static readonly TagData SIMPLE_ERROR = new TagData(null, new TagBit[0], null, DebugMode.FULL, (s) => throw new Exception("Script error occured: " + s), null, null);
+
+        /// <summary>
         /// Returns a shallow duplicate of this object.
         /// </summary>
         /// <returns>The shallow duplicate.</returns>

@@ -104,16 +104,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
-            if (!isCorrect)
-            {
-                values.ILGen.Emit(OpCodes.Ldnull); // Prep a null (TagData) // TODO: maybe get a proper tag data/error object from contextual data?
-            }
             values.LoadEntry(entry); // Load the entry
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, 2); // Prep a '2'
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod); // Get the specified argument
             if (!isCorrect)
             {
+                values.ILGen.Emit(OpCodes.Ldsfld, TagData.FIELD_TAGDATA_SIMPLE_ERROR); // Load a 'simple error' TagData object, to fill the input argument as simply as possible.
                 values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
             }
             if (debug) // If in debug mode...
