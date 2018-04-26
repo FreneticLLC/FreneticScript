@@ -647,7 +647,10 @@ namespace FreneticScript.CommandSystem
                             ilgen.Emit(OpCodes.Call, modt.CreatorMethod); // Run the creator method to convert the tag to the correct type.
                         }
                     }
-                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                    else
+                    {
+                        ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                    }
                     ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
                 }
             }

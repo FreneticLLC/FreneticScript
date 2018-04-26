@@ -214,7 +214,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Gets the modifier at a specified place, handling any tags within.
         /// </summary>
-        /// <param name="place">What place to get a modifier from.</param>
+        /// <param name="place">What place to get a modifier from (relative to current index).</param>
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObject(int place)
         {
