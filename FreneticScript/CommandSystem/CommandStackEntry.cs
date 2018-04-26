@@ -54,13 +54,13 @@ namespace FreneticScript.CommandSystem
             stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
                 + ": (" + entry.Name + ")\n");
             queue.WaitingOn = null;
-            CommandStackEntry cse = queue.CommandStack.Count > 0 ? queue.CommandStack.Peek() : null;
+            CompiledCommandStackEntry cse = queue.CommandStack.Count > 0 ? queue.CommandStack.Peek() : null;
             DebugMode dbmode = cse == null ? DebugMode.FULL : cse.Debug;
             while (cse != null)
             {
                 for (int i = cse.Index; i < cse.Entries.Length; i++)
                 {
-                    CommandEntry entr = queue.GetCommand(i);
+                    CommandEntry entr = cse.Entries[i];
                     if (entr.Command is TryCommand &&
                         entr.Arguments[0].ToString() == "\0CALLBACK")
                     {
@@ -75,6 +75,7 @@ namespace FreneticScript.CommandSystem
                 if (queue.CommandStack.Count > 0)
                 {
                     cse = queue.CommandStack.Peek();
+                    queue.CurrentEntry = cse;
                     if (cse.Index <= cse.Entries.Length)
                     {
                         stacktrace.Append("    in script '" + cse.Entries[cse.Index - 1].ScriptName + "' at line " + (cse.Entries[cse.Index - 1].ScriptLine + 1)
