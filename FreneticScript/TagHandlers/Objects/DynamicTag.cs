@@ -69,6 +69,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         /// <summary>
         /// Creates a DynamicTag from the saved object.
+        /// Shouldn't realistically ever be called (as dynamic tags will not save as dynamic).
         /// </summary>
         /// <param name="input">The input data.</param>
         /// <param name="data">The tag data.</param>
@@ -110,7 +111,8 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The data.</returns>
         public override string GetSavableString()
         {
-            return TYPE + SAVE_MARK + Internal.GetSavableString();
+            // Intentionally discard that this tag is dynamic.
+            return Internal.GetSavableString();
         }
 
         /// <summary>
