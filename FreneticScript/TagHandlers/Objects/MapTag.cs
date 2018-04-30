@@ -94,7 +94,7 @@ namespace FreneticScript.TagHandlers.Objects
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFastFS()] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false).InputValue;
+                map.Internal[kvp[0].ToLowerFastFS()] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false, true).InputValue;
             }
             return map;
         }
@@ -233,7 +233,7 @@ namespace FreneticScript.TagHandlers.Objects
                 return new DynamicTag(outp);
             }
             data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
-            return new NullTag();
+            return NullTag.NULL_VALUE;
         }
 
 #pragma warning restore 1591

@@ -197,11 +197,11 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = NullTag.TYPE,
                 SubTypeName = TextTag.TYPE,
-                TypeGetter = (data, obj) => new NullTag(),
+                TypeGetter = (data, obj) => NullTag.NULL_VALUE,
                 GetNextTypeDown = TextTag.For, // TODO: Or an error?
                 SubHandlers = null,
                 RawType = typeof(NullTag)
-            }, (inp, dat) => new NullTag());
+            }, (inp, dat) => NullTag.NULL_VALUE);
             Register(Type_Number = new TagType()
             {
                 TypeName = NumberTag.TYPE,
@@ -433,7 +433,7 @@ namespace FreneticScript.TagHandlers
                 return creator(dat[1], data);
             }
             data.Error("Invalid save loader type (Was a tag type spelled wrong?)!");
-            return new NullTag();
+            return NullTag.NULL_VALUE;
         }
 
         /// <summary>
@@ -451,7 +451,7 @@ namespace FreneticScript.TagHandlers
             if (input.IndexOf("<") < 0)
             {
                 Argument a = new Argument() { WasQuoted = wasquoted };
-                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted) { CommandSystem = CommandSystem } };
+                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted) { CommandSystem = CommandSystem } };
                 a.Compile();
                 return a;
             }
@@ -479,7 +479,7 @@ namespace FreneticScript.TagHandlers
                     {
                         if (tbuilder.Length > 0)
                         {
-                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
+                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { CommandSystem = CommandSystem });
                             tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
@@ -589,7 +589,7 @@ namespace FreneticScript.TagHandlers
             }
             if (tbuilder.Length > 0)
             {
-                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted) { CommandSystem = CommandSystem });
+                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { CommandSystem = CommandSystem });
             }
             arg.Bits = bitos.ToArray();
             arg.Compile();

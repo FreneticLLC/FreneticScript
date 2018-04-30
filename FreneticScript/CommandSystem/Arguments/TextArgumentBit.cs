@@ -55,7 +55,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// </summary>
         /// <param name="_text">The input text.</param>
         /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
-        public TextArgumentBit(string _text, bool wasquoted)
+        /// <param name="perfect">Whether the argument must parse back "perfectly" (meaning, it will ToString to the exact original input).</param>
+        public TextArgumentBit(string _text, bool wasquoted, bool perfect)
         {
             if (wasquoted)
             {
@@ -74,7 +75,7 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             else if (_text == "&{NULL}")
             {
-                InputValue = new NullTag();
+                InputValue = NullTag.NULL_VALUE;
                 ResType = NullTag.TYPE;
             }
             else if (long.TryParse(_text, out long ti) && ti.ToString() == _text)
@@ -82,7 +83,7 @@ namespace FreneticScript.CommandSystem.Arguments
                 InputValue = new IntegerTag(ti);
                 ResType = IntegerTag.TYPE;
             }
-            else if (double.TryParse(_text, out double tn) && tn.ToString() == _text)
+            else if (double.TryParse(_text, out double tn) && (!perfect || tn.ToString() == _text))
             {
                 InputValue = new NumberTag(tn);
                 ResType = NumberTag.TYPE;

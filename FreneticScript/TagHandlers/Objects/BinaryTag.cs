@@ -149,7 +149,7 @@ namespace FreneticScript.TagHandlers.Objects
                 {
                     data.Error("Invalid byte_at tag: " + ind + " is not in the exclusive range of 1 to " + Internal.Length);
                 }
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             return new IntegerTag(Internal[ind - 1]);
         }
@@ -179,19 +179,19 @@ namespace FreneticScript.TagHandlers.Objects
             if (split.Length != 2)
             {
                 data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             IntegerTag num1 = IntegerTag.For(data, split[0]);
             IntegerTag num2 = IntegerTag.For(data, split[1]);
             if (Internal.Length == 0)
             {
                 data.Error("Read 'range' tag on empty BinaryTag!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             if (num1 == null || num2 == null)
             {
                 data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             int number = (int)num1.Internal - 1;
             int number2 = (int)num2.Internal - 1;
@@ -206,17 +206,17 @@ namespace FreneticScript.TagHandlers.Objects
             if (number >= Internal.Length)
             {
                 data.Error("Invalid range tag!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             if (number2 >= Internal.Length)
             {
                 data.Error("Invalid range tag!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             if (number2 < number)
             {
                 data.Error("Invalid range tag!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             byte[] ndat = new byte[number2 - number + 1];
             Array.Copy(Internal, number, ndat, 0, ndat.Length);
@@ -244,7 +244,7 @@ namespace FreneticScript.TagHandlers.Objects
                     {
                         data.Error("Invalid to_integer binary data length: " + Internal.Length);
                     }
-                    return new NullTag();
+                    return NullTag.NULL_VALUE;
             }
         }
 
@@ -265,7 +265,7 @@ namespace FreneticScript.TagHandlers.Objects
                     {
                         data.Error("Invalid to_number binary data length: " + Internal.Length);
                     }
-                    return new NullTag();
+                    return NullTag.NULL_VALUE;
             }
         }
 

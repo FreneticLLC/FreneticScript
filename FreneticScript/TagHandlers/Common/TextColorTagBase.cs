@@ -59,7 +59,7 @@ namespace FreneticScript.TagHandlers.Common
                 return new TextTag(getter());
             }
             data.Error("Invalid text color specified!");
-            return new NullTag();
+            return NullTag.NULL_VALUE;
         }
     }
 }

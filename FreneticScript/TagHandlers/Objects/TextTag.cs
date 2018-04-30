@@ -181,7 +181,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (modif.Internal.Count != 2)
             {
                 data.Error("Invalid replace tag! Not two entries in the list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             return new TextTag(obj.Internal.Replace(modif.Internal[0].ToString(), modif.Internal[1].ToString()));
         }
@@ -198,7 +198,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             int num1 = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
             int num2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
@@ -325,14 +325,14 @@ namespace FreneticScript.TagHandlers.Objects
                 if (bits == null)
                 {
                     data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "'!");
-                    return new NullTag();
+                    return NullTag.NULL_VALUE;
                 }
                 return new BinaryTag(bits);
             }
             catch (FormatException ex)
             {
                 data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
         }
 

@@ -89,7 +89,7 @@ namespace FreneticScript.TagHandlers.Objects
                     break;
                 }
                 string dat = UnescapeTagBase.Unescape(baselist[i]);
-                TextArgumentBit tab = new TextArgumentBit(dat, false);
+                TextArgumentBit tab = new TextArgumentBit(dat, false, true);
                 tlist.Internal.Add(tab.InputValue);
             }
             return tlist;
@@ -264,7 +264,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (Internal.Count == 0)
             {
                 data.Error("Read 'first' tag on empty list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             return new DynamicTag(Internal[0]);
         }
@@ -278,7 +278,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (Internal.Count == 0)
             {
                 data.Error("Read 'random' tag on empty list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             return new DynamicTag(Internal[data.TagSystem.CommandSystem.random.Next(Internal.Count)]);
         }
@@ -292,7 +292,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (Internal.Count == 0)
             {
                 data.Error("Read 'last' tag on empty list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             return new DynamicTag(Internal[Internal.Count - 1]);
         }
@@ -308,7 +308,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (Internal.Count == 0)
             {
                 data.Error("Read 'get' tag on empty list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             int number = (int)num.Internal - 1;
             if (number < 0)
@@ -333,14 +333,14 @@ namespace FreneticScript.TagHandlers.Objects
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             int number = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
             int number2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'range' tag on empty list!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             if (number < 0)
             {
@@ -353,12 +353,12 @@ namespace FreneticScript.TagHandlers.Objects
             if (number >= Internal.Count)
             {
                 data.Error("Invalid range tag!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             if (number2 >= Internal.Count)
             {
                 data.Error("Invalid range tag!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             if (number2 < number)
             {
@@ -393,7 +393,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (modif.Internal.Count == 0)
             {
                 data.Error("Empty list to insert!");
-                return new NullTag();
+                return NullTag.NULL_VALUE;
             }
             IntegerTag index = IntegerTag.For(modif.Internal[0], data);
             modif.Internal.RemoveAt(0);

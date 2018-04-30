@@ -27,6 +27,11 @@ namespace FreneticScript.TagHandlers.Objects
         // -->
 
         /// <summary>
+        /// A reference to a pregenerated NullTag. As all NullTag objects are the same, this value can be used anywhere a NullTag is needed.
+        /// </summary>
+        public static readonly NullTag NULL_VALUE = new NullTag();
+
+        /// <summary>
         /// Return the type name of this tag.
         /// </summary>
         /// <returns>The tag type name.</returns>
@@ -48,14 +53,14 @@ namespace FreneticScript.TagHandlers.Objects
         public const string TYPE = "nulltag";
 
         /// <summary>
-        /// Creates a SystemTag for the given input data.
+        /// Creates a NullTag for the given input data.
         /// </summary>
         /// <param name="data">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid time tag.</returns>
         public static NullTag CreateFor(TemplateObject input, TagData data)
         {
-            return new NullTag();
+            return NULL_VALUE;
         }
 
 #pragma warning disable 1591
@@ -64,7 +69,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NullTag Tag_Duplicate(NullTag obj, TagData data)
         {
-            return new NullTag();
+            return NULL_VALUE;
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (NullTag).")]

@@ -123,7 +123,7 @@ namespace FreneticScript.CommandSystem
                         if (obj == null)
                         {
                             return "Invalid argument '" + TagParser.Escape(entry.Arguments[i].ToString())
-                                + "', translates to NULL for this command's input expectation (Command is " + TagParser.Escape(entry.Command.Name) + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
+                                + "', translates to internal NULL for this command's input expectation (Command is " + TagParser.Escape(entry.Command.Name) + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
                         }
                         ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = obj;
                     }
@@ -139,7 +139,7 @@ namespace FreneticScript.CommandSystem
         public CommandEntry GetFollower(CommandEntry entry)
         {
             return new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new ArgumentBit[] {
-                new TextArgumentBit("\0CALLBACK", false) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
+                new TextArgumentBit("\0CALLBACK", false, true) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
         /// <summary>

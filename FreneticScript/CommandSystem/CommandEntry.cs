@@ -97,7 +97,7 @@ namespace FreneticScript.CommandSystem
                     {
                         Argument varname = args[0];
                         args.RemoveRange(0, 2);
-                        nameds["\0varname"] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFastFS(), true) } };
+                        nameds["\0varname"] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFastFS(), true, true) } };
                     }
                 }
                 int marker = 0;
@@ -161,7 +161,7 @@ namespace FreneticScript.CommandSystem
         public static CommandEntry CreateErrorOutput(string message, Commands system, string script, string tabs)
         {
             return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
-                new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true) } } }, "error", 0, script, 0, tabs, system);
+                new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", 0, script, 0, tabs, system);
 
         }
 
