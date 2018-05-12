@@ -661,17 +661,29 @@ namespace FreneticScript.CommandSystem
             }
             ilgen.Emit(OpCodes.Ret); // Return.
 #if NET_4_5
-            methodbuild_c.SetCustomAttribute(new CustomAttributeBuilder(typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) }), new object[] { MethodImplOptions.AggressiveInlining }));
+            methodbuild_c.SetCustomAttribute(new CustomAttributeBuilder(Ctor_MethodImplAttribute_Options, Input_Params_AggrInline));
 #endif
             tab.GetResultMethod = methodbuild_c;
             toClean.Add(tab);
             return ilgen;
         }
 
+#if NET_4_5
         /// <summary>
-        /// The method Func[TagData, TemplateObject, TemplateObject] -> Invoke.
+        /// The <see cref="MethodImplAttribute(MethodImplOptions)"/> constructor.
         /// </summary>
-        public static MethodInfo Method_Func_TD_TO_TO_Invoke = typeof(Func<TagData, TemplateObject, TemplateObject>).GetMethod("Invoke");
+        public static readonly ConstructorInfo Ctor_MethodImplAttribute_Options = typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) });
+
+        /// <summary>
+        /// An input object array reusable that contains <see cref="MethodImplOptions.AggressiveInlining"/>.
+        /// </summary>
+        public static readonly object[] Input_Params_AggrInline = new object[] { MethodImplOptions.AggressiveInlining };
+#endif
+
+        /// <summary>
+        /// The method <see cref="Func{TagData, TemplateObject, TemplateObject}.Invoke(TagData, TemplateObject)"/> with typeparams <see cref="TagData"/>, <see cref="TemplateObject"/>, <see cref="TemplateObject"/>.
+        /// </summary>
+        public static readonly MethodInfo Method_Func_TD_TO_TO_Invoke = typeof(Func<TagData, TemplateObject, TemplateObject>).GetMethod(nameof(Func<TagData, TemplateObject, TemplateObject>.Invoke));
 
         static long IDINCR = 0;
         
@@ -735,7 +747,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// This class's "Run(queue)" method.
         /// </summary>
-        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod("Run", new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
+        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
 
         /// <summary>
         /// Runs the runnable.

@@ -452,7 +452,6 @@ namespace FreneticScript.TagHandlers
             {
                 Argument a = new Argument() { WasQuoted = wasquoted };
                 a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted) { CommandSystem = CommandSystem } };
-                a.Compile();
                 return a;
             }
             Argument arg = new Argument() { WasQuoted = wasquoted };
@@ -592,7 +591,6 @@ namespace FreneticScript.TagHandlers
                 bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { CommandSystem = CommandSystem });
             }
             arg.Bits = bitos.ToArray();
-            arg.Compile();
             return arg;
         }
         

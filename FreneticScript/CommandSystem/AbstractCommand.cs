@@ -229,37 +229,37 @@ namespace FreneticScript.CommandSystem
         public CommandScript Script;
 
         /// <summary>
-        /// Represents the field "CSEntry" in the class CompiledCommandRunnable.
+        /// Represents the <see cref="CompiledCommandRunnable.CSEntry"/> field.
         /// </summary>
-        public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField("CSEntry");
+        public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(CompiledCommandRunnable.CSEntry));
 
         /// <summary>
-        /// Represents the field "Entries" in the class CommandStackEntry.
+        /// Represents the <see cref="CommandStackEntry.Entries"/> field.
         /// </summary>
-        public static readonly FieldInfo EntriesField = typeof(CommandStackEntry).GetField("Entries");
+        public static readonly FieldInfo EntriesField = typeof(CommandStackEntry).GetField(nameof(CommandStackEntry.Entries));
 
         /// <summary>
-        /// Represents the field "Command" in the class CommandEntry.
+        /// Represents the <see cref="CommandEntry.Command"/> field.
         /// </summary>
-        public static readonly FieldInfo Entry_CommandField = typeof(CommandEntry).GetField("Command");
+        public static readonly FieldInfo Entry_CommandField = typeof(CommandEntry).GetField(nameof(CommandEntry.Command));
 
         /// <summary>
-        /// Represents the field "GetArgumentObject" in the class CommandEntry.
+        /// Represents the <see cref="CommandEntry.GetArgumentObject(CommandQueue, int)"/> method.
         /// </summary>
-        public static readonly MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod("GetArgumentObject", new Type[] { typeof(CommandQueue), typeof(int) });
+        public static readonly MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod(nameof(CommandEntry.GetArgumentObject), new Type[] { typeof(CommandQueue), typeof(int) });
 
         /// <summary>
-        /// Represents the field "Internal" in the class IntHolder.
+        /// Represents the <see cref="IntHolder.Internal"/> field.
         /// </summary>
-        public static readonly FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField("Internal");
+        public static readonly FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField(nameof(IntHolder.Internal));
         
         /// <summary>
-        /// Represents the "SetLocalVar(c, value)" method in the class CommandQueue.
+        /// Represents the <see cref="CommandQueue.SetLocalVar(int, TemplateObject)"/> method.
         /// </summary>
-        public static readonly MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod("SetLocalVar", new Type[] { typeof(int), typeof(TemplateObject) });
+        public static readonly MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod(nameof(CommandQueue.SetLocalVar), new Type[] { typeof(int), typeof(TemplateObject) });
         
         /// <summary>
-        /// The type of the class CommandEntry.
+        /// The type of the class <see cref="CommandEntry"/> class.
         /// </summary>
         public static readonly Type CommandEntryType = typeof(CommandEntry);
 

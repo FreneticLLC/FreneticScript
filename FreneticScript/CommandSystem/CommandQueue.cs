@@ -29,9 +29,9 @@ namespace FreneticScript.CommandSystem
         public Stack<CompiledCommandStackEntry> CommandStack = new Stack<CompiledCommandStackEntry>();
 
         /// <summary>
-        /// Represents the field "CurrentEntry" in the class CommandQueue.
+        /// Represents the <see cref="CommandQueue.CurrentEntry"/> field.
         /// </summary>
-        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField("CurrentEntry");
+        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CommandQueue.CurrentEntry));
 
         /// <summary>
         /// The current stack entry being used.

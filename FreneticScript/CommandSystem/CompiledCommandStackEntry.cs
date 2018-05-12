@@ -35,9 +35,9 @@ namespace FreneticScript.CommandSystem
         public Label[] AdaptedILPoints;
 
         /// <summary>
-        /// Represents the field "LocalVariables" in the class CompiledCommandStackEntry.
+        /// Represents the <see cref="CompiledCommandStackEntry.LocalVariables"/> field.
         /// </summary>
-        public static FieldInfo COMPILEDCOMMANDSTACKENTRY_LOCALVARIABLES = typeof(CompiledCommandStackEntry).GetField("LocalVariables");
+        public static readonly FieldInfo CompiledCommandStackEntry_LocalVariables = typeof(CompiledCommandStackEntry).GetField(nameof(CompiledCommandStackEntry.LocalVariables));
 
         /// <summary>
         /// Variables local to the compiled function.

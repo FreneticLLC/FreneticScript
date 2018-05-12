@@ -26,7 +26,7 @@ namespace FreneticScript.TagHandlers.Objects
         // @Description Represents any text.
         // @Other <@link explanation Text Tags>What are text tags?<@/link>
         // -->
-
+        
         /// <summary>
         /// Return the type name of this tag.
         /// </summary>

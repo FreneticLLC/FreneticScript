@@ -81,7 +81,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             int locArr = values.ILGen.DeclareLocal(typeof(ObjectHolder[]));
             values.LoadQueue();
             values.ILGen.Emit(OpCodes.Ldfld, CommandQueue.COMMANDQUEUE_CURRENTENTRY);
-            values.ILGen.Emit(OpCodes.Ldfld, CompiledCommandStackEntry.COMPILEDCOMMANDSTACKENTRY_LOCALVARIABLES);
+            values.ILGen.Emit(OpCodes.Ldfld, CompiledCommandStackEntry.CompiledCommandStackEntry_LocalVariables);
             values.ILGen.Emit(OpCodes.Stloc, locArr);
             foreach (string varn in mt.Internal.Keys)
             {

@@ -103,6 +103,19 @@ namespace FreneticScript.CommandSystem.Arguments
         public TagData Data;
 
         /// <summary>
+        /// Preps the parsing of a <see cref="TagArgumentBit"/>.
+        /// </summary>
+        /// <param name="error">What to invoke if there is an error.</param>
+        /// <param name="cse">The command stack entry.</param>
+        public void PrepParse(Action<string> error, CompiledCommandStackEntry cse)
+        {
+            Data.Error = error;
+            Data.cInd = 0;
+            Data.Remaining = Bits.Length;
+            Data.CSE = cse;
+        }
+
+        /// <summary>
         /// Parse the argument part, reading any tags.
         /// </summary>
         /// <param name="error">What to invoke if there is an error.</param>
