@@ -50,6 +50,31 @@ namespace FreneticScript.CommandSystem.Arguments
         }
 
         private static long IDINCR = 0;
+        
+        /// <summary>
+        /// All valid duplicator calls known. Null values indicate that there is known to not be a duplicator.
+        /// </summary>
+        public static Dictionary<Type, MethodInfo> DuplicatorCalls = new Dictionary<Type, MethodInfo>(128);
+
+        /// <summary>
+        /// Automatically duplicates an object, if duplication is required.
+        /// </summary>
+        /// <param name="ilgen">The IL generator object.</param>
+        /// <param name="tab">The text argument bit.</param>
+        public static void Compile_DuplicateIfNeeded(CILAdaptationValues.ILGeneratorTracker ilgen, TextArgumentBit tab)
+        {
+            Type tx = tab.InputValue.GetType();
+            if (!DuplicatorCalls.TryGetValue(tx, out MethodInfo metinf))
+            {
+                metinf = tx.GetMethod("RequiredDuplicate", BindingFlags.Instance | BindingFlags.Public);
+                DuplicatorCalls.Add(tx, metinf);
+            }
+            if (metinf == null)
+            {
+                return;
+            }
+            ilgen.Emit(OpCodes.Call, metinf);
+        }
 
         /// <summary>
         /// Compiles the argument.
@@ -81,9 +106,10 @@ namespace FreneticScript.CommandSystem.Arguments
                 ilgen.Emit(OpCodes.Ldfld, Argument_Bits); // Load the bits array
                 ilgen.Emit(OpCodes.Ldc_I4, 0); // Load integer 0, as the bit is always in the first slot (for bits array length 1)
                 ilgen.Emit(OpCodes.Ldelem_Ref); // Load the ArgumentBit
-                if (Bits[0] is TextArgumentBit)
+                if (Bits[0] is TextArgumentBit textab)
                 {
-                    ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the tab's input value directly
+                    ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the textab's input value directly
+                    Compile_DuplicateIfNeeded(ilgen, textab);
                 }
                 else if (Bits[0] is TagArgumentBit tab)
                 {

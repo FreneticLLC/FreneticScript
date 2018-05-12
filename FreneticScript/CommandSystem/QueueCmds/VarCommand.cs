@@ -131,7 +131,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// References <see cref="DebugHelper(TemplateObject, CommandQueue, CommandEntry)"/>.
         /// </summary>
-        public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod("DebugHelper");
+        public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod(nameof(DebugHelper));
 
         /// <summary>
         /// Helps debug output for the var command.

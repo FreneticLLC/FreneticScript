@@ -41,6 +41,16 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public double Internal;
 
+
+        /// <summary>
+        /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
+        /// </summary>
+        /// <returns>A duplicate object.</returns>
+        public NumberTag RequiredDuplicate()
+        {
+            return new NumberTag(Internal);
+        }
+
         /// <summary>
         /// Get a number tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
         /// Never null!

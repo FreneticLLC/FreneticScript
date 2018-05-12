@@ -49,6 +49,15 @@ namespace FreneticScript.TagHandlers.Objects
         {
             Internal = _text;
         }
+        
+        /// <summary>
+        /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
+        /// </summary>
+        /// <returns>A duplicate object.</returns>
+        public TextTag RequiredDuplicate()
+        {
+            return new TextTag(Internal);
+        }
 
         /// <summary>
         /// Converts a template object to a text tag.
