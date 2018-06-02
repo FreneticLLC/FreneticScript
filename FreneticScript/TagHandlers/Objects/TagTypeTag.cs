@@ -54,14 +54,34 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="input">The input text.</param>
-        /// <returns>A TagTypeTag, or null.</returns>
+        /// <returns>A TagTypeTag.</returns>
         public static TagTypeTag For(TagData data, string input)
         {
             if (data.TagSystem.Types.TryGetValue(input.ToLowerFastFS(), out TagType type))
             {
-                return new TagTypeTag(type);
+                return new TagTypeTag(type); // TODO: No re-alloc, just have a pre-made tag object?
             }
-            return null;
+            data.Error("Unrecognized TagType '" + input + "'");
+            return new TagTypeTag(data.TagSystem.Type_Null);
+        }
+
+        /// <summary>
+        /// Creates a TagTypeTag for the given input data.
+        /// </summary>
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid TagTypeTag.</returns>
+        public static TagTypeTag CreateFor(TemplateObject input, TagData dat)
+        {
+            switch (input)
+            {
+                case TagTypeTag tttag:
+                    return tttag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
+                default:
+                    return For(dat, input.ToString());
+            }
         }
 
         /// <summary>

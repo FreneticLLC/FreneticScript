@@ -281,7 +281,11 @@ namespace FreneticScript.TagHandlers
                     type.SubType = Types[type.SubTypeName];
                 }
                 type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
-                if (type.RawType != null)
+                if (type.RawType == null)
+                {
+                    CommandSystem.Output.BadOutput("Possible bad tag declaration (no RawType): " + type.TypeName);
+                }
+                else
                 {
                     foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.Public))
                     {
@@ -290,17 +294,14 @@ namespace FreneticScript.TagHandlers
                         {
                             TagHelpInfo thi = new TagHelpInfo(method);
                             thi.Meta.Ready(this);
-                            if (thi.Meta.TagType == DynamicTag.TYPE && thi.Meta.Name == "as")
+                            if (thi.Meta.SpecialCompiler)
                             {
-                                // Special exception! Specially compiled tag!
+                                thi.Meta.SpecialCompileAction = method.CreateDelegate(typeof(Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>))
+                                    as Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>;
                             }
-                            else
+                            else if (thi.Meta.ReturnTypeResult == null)
                             {
-                                thi.Meta.ReturnTypeResult = Types[thi.Meta.ReturnType];
-                                if (thi.Meta.ReturnTypeResult == null)
-                                {
-                                    CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
-                                }
+                                CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
                             }
                             type.TagHelpers.Add(tm.Name, thi);
                         }
@@ -318,6 +319,10 @@ namespace FreneticScript.TagHandlers
                     auto_thi.Meta.ReturnTypeResult = Types[auto_thi.Meta.ReturnType];
                     auto_thi.Meta.ActualType = type;
                     type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
+                    if (type.CreatorMethod == null)
+                    {
+                        CommandSystem.Output.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
+                    }
                 }
             }
         }
@@ -342,7 +347,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// References <see cref="AutoTag_Or_Else(TemplateObject, TagData)"/>.
         /// </summary>
-        public static MethodInfo AUTO_OR_ELSE = typeof(TagParser).GetMethod("AutoTag_Or_Else");
+        public static MethodInfo AUTO_OR_ELSE = typeof(TagParser).GetMethod(nameof(AutoTag_Or_Else));
         
         /// <summary>
         /// The BinaryTag type.
@@ -597,7 +602,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Reference to <see cref="DebugTagHelper(TemplateObject, TagData)"/>.
         /// </summary>
-        public static MethodInfo Method_DebugTagHelper = typeof(TagParser).GetMethod("DebugTagHelper");
+        public static MethodInfo Method_DebugTagHelper = typeof(TagParser).GetMethod(nameof(DebugTagHelper));
 
         /// <summary>
         /// Helper for debugging compiled tags.

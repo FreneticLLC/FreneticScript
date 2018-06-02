@@ -39,6 +39,8 @@ namespace FreneticScript.TagHandlers.Common
             ResultTypeString = "ternarypasstag";
         }
 
+        // TODO: Special compiler to handle type continuation (the "or_else[]" should be treated as returning the type input to both "pass[]" and "or_else[]")
+
         /// <summary>
         /// Handles the 'ternary[]' tag.
         /// </summary>
@@ -90,9 +92,28 @@ namespace FreneticScript.TagHandlers.Common
             /// <param name="input">The input.</param>
             public static TernaryPassTag For(TemplateObject input, TagData data)
             {
-                return input is TernaryPassTag ? (TernaryPassTag)input : For(data, input.ToString());
+                return input as TernaryPassTag ?? For(data, input.ToString());
             }
-            
+
+            /// <summary>
+            /// Creates a TernaryPassTag for the given input data.
+            /// </summary>
+            /// <param name="dat">The tag data.</param>
+            /// <param name="input">The text input.</param>
+            /// <returns>A valid TernaryPassTag.</returns>
+            public static TernaryPassTag CreateFor(TemplateObject input, TagData dat)
+            {
+                switch (input)
+                {
+                    case TernaryPassTag tptag:
+                        return tptag;
+                    case DynamicTag dtag:
+                        return CreateFor(dtag.Internal, dat);
+                    default:
+                        return For(dat, input.ToString());
+                }
+            }
+
             /// <summary>
             /// Returns a boolean true or false as text.
             /// </summary>

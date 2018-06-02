@@ -82,7 +82,7 @@ namespace FreneticScript.TagHandlers.Common
                     }
                 }
             }
-            return null;
+            throw new ErrorInducedException("Var tag cannot compile: unknown variable name input '" + vn + "' (That variable name cannot be found. Have you declared it in this script section? Consider using the 'require' command.)");
         }
     }
 }

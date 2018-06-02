@@ -11,6 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -41,6 +45,11 @@ namespace FreneticScript.TagHandlers.Objects
         /// The represented tag object.
         /// </summary>
         public TemplateObject Internal;
+
+        /// <summary>
+        /// The field <see cref="Internal"/>.
+        /// </summary>
+        public static readonly FieldInfo Field_DynamicTag_Internal = typeof(DynamicTag).GetField(nameof(Internal));
 
         /// <summary>
         /// Constructs a new DynamicTag.
@@ -92,15 +101,19 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(DynamicTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Null);
+            return new TagTypeTag(data.TagSystem.Type_Dynamic);
         }
 
-        [TagMeta(TagType = TYPE, Name = "as", Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
+        [TagMeta(TagType = TYPE, Name = "as", SpecialCompiler = true, Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_As(TemplateObject obj, TagData data)
+        public static TagType Tag_As(CILAdaptationValues.ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
         {
-            // This will be specially compiled.
-            throw new NotImplementedException();
+            ilgen.Emit(OpCodes.Ldfld, Field_DynamicTag_Internal); // Load field "Internal" on the input DynamicTag instance.
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            string type_name = tab.Bits[bit].Variable.ToString();
+            prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFastFS()];
+            ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for the type on the input tag.
+            return prevType;
         }
 
 #pragma warning restore 1591

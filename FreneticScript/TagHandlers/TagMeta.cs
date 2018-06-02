@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.TagHandlers
 {
@@ -64,6 +66,16 @@ namespace FreneticScript.TagHandlers
         /// The internal modifier tag type of this tag.
         /// </summary>
         public TagType ModifierType;
+
+        /// <summary>
+        /// Indicates that this tag is to be treated as a special self-compiler tag.
+        /// </summary>
+        public bool SpecialCompiler;
+
+        /// <summary>
+        /// The special compiler callable for this tag, if marked with <see cref="SpecialCompiler"/>.
+        /// </summary>
+        public Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType> SpecialCompileAction;
 
         /// <summary>
         /// Prepares the tag meta.

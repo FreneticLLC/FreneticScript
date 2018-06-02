@@ -93,6 +93,25 @@ namespace FreneticScript.TagHandlers.Common
             }
 
             /// <summary>
+            /// Creates a SystemTag for the given input data.
+            /// </summary>
+            /// <param name="dat">The tag data.</param>
+            /// <param name="input">The text input.</param>
+            /// <returns>A valid SystemTag.</returns>
+            public static SystemTag CreateFor(TemplateObject input, TagData dat)
+            {
+                switch (input)
+                {
+                    case SystemTag stag:
+                        return stag;
+                    case DynamicTag dtag:
+                        return CreateFor(dtag.Internal, dat);
+                    default:
+                        return For(dat, input.ToString());
+                }
+            }
+
+            /// <summary>
             /// Constructs a System tag.
             /// </summary>
             public SystemTag()

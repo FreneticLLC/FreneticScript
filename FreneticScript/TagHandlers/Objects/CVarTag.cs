@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Objects
         // @Type CVarTag
         // @SubType TextTag
         // @Group Variables
-        // @Description Represents a global control variable.
+        // @Description Represents a control variable.
         // -->
 
         /// <summary>
@@ -49,6 +49,25 @@ namespace FreneticScript.TagHandlers.Objects
         public static CVarTag For(TemplateObject input, TagData data)
         {
             return input as CVarTag ?? For(data, input.ToString());
+        }
+
+        /// <summary>
+        /// Creates a CVarTag for the given input data.
+        /// </summary>
+        /// <param name="dat">The tag data.</param>
+        /// <param name="input">The text input.</param>
+        /// <returns>A valid CVarTag.</returns>
+        public static CVarTag CreateFor(TemplateObject input, TagData dat)
+        {
+            switch (input)
+            {
+                case CVarTag ctag:
+                    return ctag;
+                case DynamicTag dtag:
+                    return CreateFor(dtag.Internal, dat);
+                default:
+                    return For(dat, input.ToString());
+            }
         }
 
         /// <summary>

@@ -615,13 +615,10 @@ namespace FreneticScript.CommandSystem
                     }
                     need_shrink = 0;
                 }
-                // If we're running the specially compiled 'DynamicTag.as' tag...
-                if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
+                // If we're running a specially compiled tag...
+                if (tab.Bits[x].TagHandler.Meta.SpecialCompiler)
                 {
-                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                    string type_name = tab.Bits[x].Variable.ToString();
-                    prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFastFS()];
-                    ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for this tag.
+                    prevType = tab.Bits[x].TagHandler.Meta.SpecialCompileAction(ilgen, tab, x, prevType);
                 }
                 else // For normal tags...
                 {
