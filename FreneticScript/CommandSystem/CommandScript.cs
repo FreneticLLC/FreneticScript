@@ -378,25 +378,48 @@ namespace FreneticScript.CommandSystem
                             if (arg.Bits[b] is TagArgumentBit tab)
                             {
                                 tagID++;
-                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                                try
+                                {
+                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                                }
+                                catch (ErrorInducedException ex)
+                                {
+                                    throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine
+                                        + "), in argument " + a + " while compiling tag " + tab.ToString() + ", error occured: " + ex.Message);
+                                }
                             }
                         }
                     }
-                    foreach (Argument arg in curEnt.NamedArguments.Values)
+                    foreach (KeyValuePair<string, Argument> argPair in curEnt.NamedArguments)
                     {
-                        for (int b = 0; b < arg.Bits.Length; b++)
+                        for (int b = 0; b < argPair.Value.Bits.Length; b++)
                         {
-                            if (arg.Bits[b] is TagArgumentBit tab)
+                            if (argPair.Value.Bits[b] is TagArgumentBit tab)
                             {
                                 tagID++;
-                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                                try
+                                {
+                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                                }
+                                catch (ErrorInducedException ex)
+                                {
+                                    throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine
+                                        + "), in named argument '" + argPair.Key + "' while compiling tag " + tab.ToString() + ", error occured: " + ex.Message);
+                                }
                             }
                         }
                     }
                     bool isCallback = curEnt.Arguments.Count > 0 && curEnt.Arguments[0].ToString() == "\0CALLBACK";
                     if (!isCallback)
                     {
-                        curEnt.Command.PreAdaptToCIL(values, i);
+                        try
+                        {
+                            curEnt.Command.PreAdaptToCIL(values, i);
+                        }
+                        catch (ErrorInducedException ex)
+                        {
+                            throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
+                        }
                     }
                     CILVariables[] tvars = new CILVariables[values.LVarIDs.Count];
                     int counter = 0;
@@ -424,7 +447,14 @@ namespace FreneticScript.CommandSystem
                     }
                     if (isCallback)
                     {
-                        ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                        try
+                        {
+                            ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                        }
+                        catch (ErrorInducedException ex)
+                        {
+                            throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
+                        }
                     }
                 }
                 ccse.LocalVariables = new ObjectHolder[values.CLVarID];
@@ -441,7 +471,14 @@ namespace FreneticScript.CommandSystem
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
                     ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
-                    ccse.Entries[i].Command.AdaptToCIL(values, i);
+                    try
+                    {
+                        ccse.Entries[i].Command.AdaptToCIL(values, i);
+                    }
+                    catch (ErrorInducedException ex)
+                    {
+                        throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine + "), compile error (Adapt) occured: " + ex.Message);
+                    }
                 }
                 ilgen.MarkLabel(ccse.AdaptedILPoints[ccse.AdaptedILPoints.Length - 1]);
                 values.MarkCommand(ccse.Entries.Length);
@@ -521,8 +558,7 @@ namespace FreneticScript.CommandSystem
             }
             if (returnable == null)
             {
-                throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                    + "): Invalid tag top-handler '" + tab.Start.Name + "' for tag: " + tab.ToString());
+                throw new ErrorInducedException("Invalid tag top-handler '" + tab.Start.Name + "' (failed to identify return type)!");
             }
             TagType prevType = returnable;
             for (int x = 1; x < tab.Bits.Length; x++)
@@ -538,24 +574,20 @@ namespace FreneticScript.CommandSystem
                             goto ready;
                         }
                     }
-                    throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                        + "): Invalid sub-tag '" + key + "' for tag: " + tab.ToString());
+                    throw new ErrorInducedException("Invalid sub-tag '" + key + "' for type '" + returnable.TypeName + "' (sub-tag doesn't seem to exist)!");
                 }
                 ready:
                 TagHelpInfo tsh = returnable.TagHelpers[key];
                 tab.Bits[x].TagHandler = tsh;
                 if (tsh.Meta.ReturnTypeResult == null)
                 {
-                    if (tab.Bits[x].TagHandler.Meta.TagType == DynamicTag.TYPE && tab.Bits[x].TagHandler.Meta.Name == "as")
+                    if (tab.Bits[x].TagHandler.Meta.SpecialTypeHelper != null)
                     {
-                        string type_name = tab.Bits[x].Variable.ToString();
-                        TagType type_res = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFastFS()];
-                        returnable = type_res;
+                        returnable = tab.Bits[x].TagHandler.Meta.SpecialTypeHelper(tab, x);
                     }
                     else
                     {
-                        throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine
-                        + "): Invalid tag ReturnType '" + tsh.Meta.ReturnType + "' for tag: " + tab.ToString());
+                        throw new ErrorInducedException("Invalid tag ReturnType '" + tsh.Meta.ReturnType + " for tag '" + tsh.Meta.ActualType.TypeName + "." + tsh.Meta.Name + "', cannot process properly!");
                     }
                 }
                 else
@@ -628,7 +660,8 @@ namespace FreneticScript.CommandSystem
                         prevType = prevType.SubType;
                         if (prevType == null)
                         {
-                            throw new Exception("Failed to parse down a tag: type reached the base type without finding the expected tag type!");
+                            throw new Exception("Failed to parse down a tag: type reached the base type without finding the expected tag type! (Compiler bug?)"
+                                + " Processing tag " + tab + " on bit " + x);
                         }
                     }
                     prevType = tab.Bits[x].TagHandler.Meta.ReturnTypeResult;

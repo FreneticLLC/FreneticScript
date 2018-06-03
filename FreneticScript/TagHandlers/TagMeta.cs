@@ -78,6 +78,17 @@ namespace FreneticScript.TagHandlers
         public Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType> SpecialCompileAction;
 
         /// <summary>
+        /// The method name of the type helper for this tag, if any.
+        /// Must be a static method within the same class as the tag method itself.
+        /// </summary>
+        public string SpecialTypeHelperName;
+
+        /// <summary>
+        /// The special type helper callable for this tag, if named by <see cref="SpecialTypeHelperName"/>.
+        /// </summary>
+        public Func<TagArgumentBit, int, TagType> SpecialTypeHelper;
+
+        /// <summary>
         /// Prepares the tag meta.
         /// </summary>
         /// <param name="tags">The tag parser.</param>

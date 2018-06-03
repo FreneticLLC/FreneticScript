@@ -49,6 +49,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             vn = dat[0];
             int lvarloc = cent.VarLoc(vn);
+            if (lvarloc < 0)
+            {
+                throw new ErrorInducedException("Unknown variable name '" + vn + "' - cannot set its value.");
+            }
             string mode = cent.Arguments[1].ToString();
             bool fasto = mode == "=" && res.ToString().Length == 0;
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);

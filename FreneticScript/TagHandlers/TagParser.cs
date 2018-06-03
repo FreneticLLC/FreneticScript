@@ -303,6 +303,11 @@ namespace FreneticScript.TagHandlers
                             {
                                 CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
                             }
+                            if (thi.Meta.SpecialTypeHelperName != null)
+                            {
+                                thi.Meta.SpecialTypeHelper = type.RawType.GetMethod(thi.Meta.SpecialTypeHelperName, BindingFlags.Static | BindingFlags.Public)
+                                    .CreateDelegate(typeof(Func<TagArgumentBit, int, TagType>)) as Func<TagArgumentBit, int, TagType>;
+                            }
                             type.TagHelpers.Add(tm.Name, thi);
                         }
                         else if (method.Name == "CreateFor")

@@ -104,7 +104,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            if (int.TryParse(input.ToString(), out int rep))
+            if (long.TryParse(input.ToString(), out long rep))
             {
                 return new IntegerTag(rep);
             }
@@ -117,19 +117,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the "TryRepeatCIL(queue, entry)" method.
+        /// Represents the <see cref="TryRepeatCIL(CommandQueue, CommandEntry, int)"/> method.
         /// </summary>
-        public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatCIL");
+        public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatCIL));
 
         /// <summary>
-        /// Represents the "TryRepeatCILNoDebug(queue, entry)" method.
+        /// Represents the <see cref="TryRepeatCILNoDebug(CommandQueue, int, int)"/> method.
         /// </summary>
-        public static MethodInfo TryRepeatCILMethodNoDebug = typeof(RepeatCommand).GetMethod("TryRepeatCILNoDebug");
+        public static MethodInfo TryRepeatCILMethodNoDebug = typeof(RepeatCommand).GetMethod(nameof(TryRepeatCILNoDebug));
 
         /// <summary>
-        /// Represents the "TryRepeatNumberedCIL(queue, entry)" method.
+        /// Represents the <see cref="TryRepeatNumberedCIL(CommandQueue, CommandEntry, int)"/> method.
         /// </summary>
-        public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod("TryRepeatNumberedCIL");
+        public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatNumberedCIL));
 
         /// <summary>
         /// Adapts a command entry to CIL.
@@ -174,7 +174,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         return;
                     }
                 }
-                throw new Exception("Invalid 'repeat stop' command: not inside a repeat block!");
+                throw new ErrorInducedException("Invalid 'repeat stop' command: not inside a repeat block!");
             }
             else if (arg == "next")
             {
@@ -192,7 +192,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         return;
                     }
                 }
-                throw new Exception("Invalid 'repeat next' command: not inside a repeat block!");
+                throw new ErrorInducedException("Invalid 'repeat next' command: not inside a repeat block!");
             }
             else
             {
@@ -228,7 +228,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // TODO: scope properly!
             if (values.LocalVariableLocation(sn) >= 0)
             {
-                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Already have a repeat_index var (labeled '" + sn + "')?!");
+                throw new ErrorInducedException("Already have a repeat_index var (labeled '" + sn + "')?!");
             }
             TagType type = cent.System.TagSystem.Type_Integer;
             values.AddVariable(sn, type);
