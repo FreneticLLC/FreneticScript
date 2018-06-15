@@ -107,7 +107,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DynamicTag Tag_For(TagTypeTag obj, TagData data)
         {
-            return new DynamicTag((obj.Internal.TypeGetter(data.GetModifierObject(0), data)));
+            return new DynamicTag((obj.Internal.TypeGetter(data.GetModifierObjectCurrent(), data)));
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]

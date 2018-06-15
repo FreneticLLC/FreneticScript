@@ -26,12 +26,12 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// A field reference to the <see cref="SIMPLE_ERROR"/> field.
         /// </summary>
-        public static readonly FieldInfo FIELD_TAGDATA_SIMPLE_ERROR = typeof(TagData).GetField("SIMPLE_ERROR", BindingFlags.Static | BindingFlags.Public);
+        public static readonly FieldInfo FIELD_TAGDATA_SIMPLE_ERROR = typeof(TagData).GetField(nameof(SIMPLE_ERROR), BindingFlags.Static | BindingFlags.Public);
 
         /// <summary>
         /// A simple error TagData object.
         /// </summary>
-        public static readonly TagData SIMPLE_ERROR = new TagData(null, new TagBit[0], null, DebugMode.FULL, (s) => throw new Exception("Script error occured: " + s), null, null);
+        public static readonly TagData SIMPLE_ERROR = new TagData(null, new Argument[0], new TagBit[0], null, DebugMode.FULL, (s) => throw new Exception("Script error occured: " + s), null, null);
 
         /// <summary>
         /// Returns a shallow duplicate of this object.
@@ -78,9 +78,14 @@ namespace FreneticScript.TagHandlers
         public int cInd = 0;
 
         /// <summary>
-        /// The tag's current simplified input data.
+        /// The tag's current variable arguments.
         /// </summary>
-        public TagBit[] InputKeys = null;
+        public Argument[] Variables = null;
+
+        /// <summary>
+        /// The tag bigs this tag data sources from.
+        /// </summary>
+        public TagBit[] Bits = null;
         
         /// <summary>
         /// What to be returned if the tag fills null.
@@ -130,37 +135,26 @@ namespace FreneticScript.TagHandlers
         /// Constructs the tag information container.
         /// </summary>
         /// <param name="_system">The command system to use.</param>
-        /// <param name="_input">The input tag pieces.</param>
+        /// <param name="_vars">The variable argument pieces.</param>
+        /// <param name="_bits">The tag bits.</param>
         /// <param name="_basecolor">The default color to use for output.</param>
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
         /// <param name="_cse">The relevant command stack entry, if any.</param>
-        public TagData(TagParser _system, TagBit[] _input, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
+        public TagData(TagParser _system, Argument[] _vars, TagBit[] _bits, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;
             mode = _mode;
             Error = _error;
             Fallback = fallback;
-            Remaining = _input.Length;
-            InputKeys = _input;
+            Remaining = _bits.Length;
+            Variables = _vars;
+            Bits = _bits;
             CSE = _cse;
         }
         
-        /// <summary>
-        /// Gets the key at a specified index.
-        /// </summary>
-        /// <param name="ind">The index.</param>
-        /// <returns>The key.</returns>
-        public string this[int ind]
-        {
-            get
-            {
-                return InputKeys[ind + cInd].Key;
-            }
-        }
-
         /// <summary>
         /// Shrinks the data amount by X at the start, and returns itself.
         /// </summary>
@@ -187,6 +181,15 @@ namespace FreneticScript.TagHandlers
         public int Remaining;
 
         /// <summary>
+        /// Gets the modifier at the current position, handling any tags within - returning a string.
+        /// </summary>
+        /// <returns>The tag-parsed modifier as a string.</returns>
+        public string GetModifierCurrent()
+        {
+            return GetModifierObjectCurrent().ToString();
+        }
+
+        /// <summary>
         /// Gets the modifier at a specified place, handling any tags within - returning a string.
         /// </summary>
         /// <param name="place">What place to get a modifier from.</param>
@@ -208,7 +211,16 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObjectKnown(int place)
         {
-            return InputKeys[place].Variable.Parse(Error, CSE);
+            return Variables[place].Parse(Error, CSE);
+        }
+
+        /// <summary>
+        /// Gets the modifier at the current position, handling any tags within.
+        /// </summary>
+        /// <returns>The tag-parsed modifier.</returns>
+        public TemplateObject GetModifierObjectCurrent()
+        {
+            return Variables[cInd].Parse(Error, CSE);
         }
 
         /// <summary>
@@ -218,7 +230,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObject(int place)
         {
-            return InputKeys[place + cInd].Variable.Parse(Error, CSE);
+            return Variables[place + cInd].Parse(Error, CSE);
         }
     }
 }

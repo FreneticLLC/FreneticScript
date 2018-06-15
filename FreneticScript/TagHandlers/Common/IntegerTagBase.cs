@@ -44,7 +44,7 @@ namespace FreneticScript.TagHandlers.Common
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Auto-apply!
         public static TemplateObject HandleOne(TagData data)
         {
-            return IntegerTag.For(data.GetModifierObject(0), data);
+            return IntegerTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

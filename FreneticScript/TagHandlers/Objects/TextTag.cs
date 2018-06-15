@@ -130,7 +130,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Number(TextTag obj, TagData data)
         {
-            return new BooleanTag(NumberTag.TryFor(obj) != null);
+            return BooleanTag.ForBool(NumberTag.TryFor(obj) != null);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_integer", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents an integer.",
@@ -138,7 +138,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Integer(TextTag obj, TagData data)
         {
-            return new BooleanTag(IntegerTag.TryFor(obj) != null);
+            return BooleanTag.ForBool(IntegerTag.TryFor(obj) != null);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_boolean", Group = "Conversion", ReturnType = BooleanTag.TYPE, Returns = "Whether the text represents a boolean.",
@@ -146,7 +146,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Boolean(TextTag obj, TagData data)
         {
-            return new BooleanTag(BooleanTag.TryFor(obj) != null);
+            return BooleanTag.ForBool(BooleanTag.TryFor(obj) != null);
         }
 
         [TagMeta(TagType = TYPE, Name = "to_upper", Group = "Text Modification", ReturnType = TYPE, Returns = "The text in full upper-case.",
@@ -186,7 +186,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Replace(TextTag obj, TagData data)
         {
-            ListTag modif = ListTag.CreateFor(data.GetModifierObject(0));
+            ListTag modif = ListTag.CreateFor(data.GetModifierObjectCurrent());
             if (modif.Internal.Count != 2)
             {
                 data.Error("Invalid replace tag! Not two entries in the list!");
@@ -203,7 +203,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Substring(TextTag obj, TagData data)
         {
             string text = obj.Internal;
-            ListTag inputs = ListTag.For(data.GetModifierObject(0), data);
+            ListTag inputs = ListTag.For(data.GetModifierObjectCurrent(), data);
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
@@ -264,7 +264,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals(TextTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal == modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal == modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "does_not_equal", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -273,7 +273,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Does_Not_Equal(TextTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal != modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal != modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "equals_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -282,7 +282,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals_Ignore_Case(TextTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal.ToLowerFastFS() == modifier.Internal.ToLowerFastFS());
+            return BooleanTag.ForBool(obj.Internal.ToLowerFastFS() == modifier.Internal.ToLowerFastFS());
         }
 
         [TagMeta(TagType = TYPE, Name = "does_not_equal_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -291,7 +291,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Does_Not_Equal_Ignore_Case(TextTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal.ToLowerFastFS() != modifier.Internal.ToLowerFastFS());
+            return BooleanTag.ForBool(obj.Internal.ToLowerFastFS() != modifier.Internal.ToLowerFastFS());
         }
 
         [TagMeta(TagType = TYPE, Name = "contains", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -300,7 +300,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains(TextTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal.Contains(modifier.Internal));
+            return BooleanTag.ForBool(obj.Internal.Contains(modifier.Internal));
         }
 
         [TagMeta(TagType = TYPE, Name = "contains_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -309,7 +309,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains_Ignore_Case(TextTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal.ToLowerFastFS().Contains(modifier.Internal.ToLowerFastFS()));
+            return BooleanTag.ForBool(obj.Internal.ToLowerFastFS().Contains(modifier.Internal.ToLowerFastFS()));
         }
 
         [TagMeta(TagType = TYPE, Name = "to_utf8_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE,

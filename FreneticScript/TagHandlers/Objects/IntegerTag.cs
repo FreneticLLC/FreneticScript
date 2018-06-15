@@ -17,7 +17,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a number as a usable tag.
     /// </summary>
-    public class IntegerTag : TemplateObject
+    public class IntegerTag : TemplateObject, IntegerTagForm, NumberTagForm
     {
         // <--[object]
         // @Type IntegerTag
@@ -40,6 +40,32 @@ namespace FreneticScript.TagHandlers.Objects
         /// The integer this IntegerTag represents.
         /// </summary>
         public long Internal;
+
+        /// <summary>
+        /// The integer value of this IntegerTag-like object.
+        /// </summary>
+        public long IntegerForm
+        {
+            get
+            {
+                return Internal;
+            }
+        }
+
+        /// <summary>
+        /// The number value of this NumberTag-like object.
+        /// </summary>
+        public double NumberForm
+        {
+            get
+            {
+                return Internal;
+            }
+        }
+
+        // TODO: Have a pre-built array of common small values (say, -256 to +256) to allow easy object grabbing.
+        // TODO: This could potentially have a pool (concurrent safe) for reusing short-need instances?
+        // TODO: Find a way to avoid the pain of Internal being settable preventing object reuse (and requiring duplication of objects).
 
         /// <summary>
         /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
@@ -169,6 +195,8 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 case IntegerTag itag:
                     return itag;
+                case IntegerTagForm itf:
+                    return new IntegerTag(itf.IntegerForm);
                 case DynamicTag dtag:
                     return CreateFor(dtag.Internal, dat);
                 default:
@@ -277,7 +305,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Greater_Than(IntegerTag obj, IntegerTag modifier)
         {
-            return new BooleanTag(obj.Internal > modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal > modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_greater_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -286,7 +314,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Greater_Than_Or_Equal_To(IntegerTag obj, IntegerTag modifier)
         {
-            return new BooleanTag(obj.Internal >= modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal >= modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_less_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -295,7 +323,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Less_Than(IntegerTag obj, IntegerTag modifier)
         {
-            return new BooleanTag(obj.Internal < modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal < modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_less_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -304,7 +332,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Less_Than_Or_Equal_To(IntegerTag obj, IntegerTag modifier)
         {
-            return new BooleanTag(obj.Internal <= modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal <= modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "equals", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -313,7 +341,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals(IntegerTag obj, IntegerTag modifier)
         {
-            return new BooleanTag(obj.Internal == modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal == modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "sign", Group = "Mathematics", ReturnType = TYPE, Returns = "The sign of the integer, which can be -1, 0, or 1.",

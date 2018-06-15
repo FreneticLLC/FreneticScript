@@ -230,8 +230,8 @@ namespace FreneticScript.TagHandlers.Objects
             for (int i = 0; i < Internal.Count; i++)
             {
                 // TODO: Restore: vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                TemplateObject tobj = data.InputKeys[data.cInd].Variable.Parse(data.Error, data.CSE);
-                if ((tobj is BooleanTag ? (BooleanTag)tobj : BooleanTag.For(data, tobj.ToString())).Internal)
+                TemplateObject tobj = data.Variables[data.cInd].Parse(data.Error, data.CSE);
+                if (BooleanTag.CreateFor(tobj, data).Internal)
                 {
                     newlist.Internal.Add(Internal[i]);
                 }
@@ -250,7 +250,7 @@ namespace FreneticScript.TagHandlers.Objects
             for (int i = 0; i < Internal.Count; i++)
             {
                 // TODO: Restore: vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                newlist.Internal.Add(data.InputKeys[data.cInd].Variable.Parse(data.Error, data.CSE));
+                newlist.Internal.Add(data.Variables[data.cInd].Parse(data.Error, data.CSE));
             }
             return newlist;
         }
@@ -303,7 +303,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Get(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
-            TemplateObject modif = data.GetModifierObject(0);
+            TemplateObject modif = data.GetModifierObjectCurrent();
             IntegerTag num = IntegerTag.For(modif, data);
             if (Internal.Count == 0)
             {
@@ -329,7 +329,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Range(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
-            ListTag inputs = ListTag.CreateFor(data.GetModifierObject(0));
+            ListTag inputs = ListTag.CreateFor(data.GetModifierObjectCurrent());
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
@@ -389,7 +389,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Insert(ListTag obj, TagData data)
         {
-            ListTag modif = CreateFor(data.GetModifierObject(0));
+            ListTag modif = CreateFor(data.GetModifierObjectCurrent());
             if (modif.Internal.Count == 0)
             {
                 data.Error("Empty list to insert!");

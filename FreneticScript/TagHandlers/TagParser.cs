@@ -344,7 +344,7 @@ namespace FreneticScript.TagHandlers
             // TODO: Special compiler code, to not need a dynamic tag?
             if (obj is NullTag)
             {
-                return new DynamicTag(data.GetModifierObject(0));
+                return new DynamicTag(data.GetModifierObjectCurrent());
             }
             return new DynamicTag(obj);
         }
@@ -620,7 +620,7 @@ namespace FreneticScript.TagHandlers
             if (data.mode <= DebugMode.FULL)
             {
                 data.TagSystem.CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
-                    new TagArgumentBit(data.TagSystem.CommandSystem, data.InputKeys).ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
+                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
                     + TextStyle.Color_Outgood + "\".");
             }
             return res;

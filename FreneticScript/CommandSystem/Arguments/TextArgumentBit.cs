@@ -27,7 +27,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="_text">The input boolean.</param>
         public TextArgumentBit(bool _text)
         {
-            InputValue = new BooleanTag(_text);
+            InputValue = BooleanTag.ForBool(_text);
             ResType = BooleanTag.TYPE;
         }
 
@@ -65,12 +65,12 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             else if (_text == "true")
             {
-                InputValue = new BooleanTag(true);
+                InputValue = BooleanTag.TRUE;
                 ResType = BooleanTag.TYPE;
             }
             else if (_text == "false")
             {
-                InputValue = new BooleanTag(false);
+                InputValue = BooleanTag.FALSE;
                 ResType = BooleanTag.TYPE;
             }
             else if (_text == "&{NULL}")

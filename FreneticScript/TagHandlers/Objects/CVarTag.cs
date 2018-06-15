@@ -104,7 +104,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Value_Boolean(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.ValueB);
+            return BooleanTag.ForBool(obj.Internal.ValueB);
         }
 
         [TagMeta(TagType = TYPE, Name = "value_integer", Group = "Variables", ReturnType = IntegerTag.TYPE,
@@ -152,7 +152,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Server_Controlled(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.ServerControl));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.ServerControl));
         }
 
         [TagMeta(TagType = TYPE, Name = "read_only", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -160,7 +160,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Read_Only(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.ReadOnly));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.ReadOnly));
         }
 
         [TagMeta(TagType = TYPE, Name = "is_boolean", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -168,7 +168,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Boolean(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.Boolean));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.Boolean));
         }
 
         [TagMeta(TagType = TYPE, Name = "is_number", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -176,7 +176,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Number(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.Numeric));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.Numeric));
         }
 
         [TagMeta(TagType = TYPE, Name = "is_text", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -184,7 +184,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Text(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.Textual));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.Textual));
         }
 
         [TagMeta(TagType = TYPE, Name = "delayed", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -192,7 +192,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Delayed(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.Delayed));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.Delayed));
         }
 
         [TagMeta(TagType = TYPE, Name = "init_only", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -200,7 +200,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Init_Only(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.InitOnly));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.InitOnly));
         }
 
         [TagMeta(TagType = TYPE, Name = "user_made", Group = "Variables", ReturnType = BooleanTag.TYPE,
@@ -208,7 +208,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_User_Made(CVarTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal.Flags.HasFlag(CVarFlag.UserMade));
+            return BooleanTag.ForBool(obj.Internal.Flags.HasFlag(CVarFlag.UserMade));
         }
 
 #pragma warning restore 1591

@@ -218,7 +218,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains(MapTag obj, TextTag modifier)
         {
-            return new BooleanTag(obj.Internal.ContainsKey(modifier.Internal.ToLowerFastFS()));
+            return BooleanTag.ForBool(obj.Internal.ContainsKey(modifier.Internal.ToLowerFastFS()));
         }
 
         [TagMeta(TagType = TYPE, Name = "get", Group = "Map Entries", ReturnType = DynamicTag.TYPE,
@@ -227,7 +227,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TemplateObject Tag_Get(MapTag obj, TagData data)
         {
-            string modif = data.GetModifier(0).ToLowerFastFS();
+            string modif = data.GetModifierCurrent().ToLowerFastFS();
             if (obj.Internal.TryGetValue(modif, out TemplateObject outp))
             {
                 return new DynamicTag(outp);

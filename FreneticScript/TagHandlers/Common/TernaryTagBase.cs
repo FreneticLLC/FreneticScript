@@ -47,7 +47,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            bool basevalue = (BooleanTag.TryFor(data.GetModifierObject(0)) ?? new BooleanTag(false)).Internal;
+            bool basevalue = (BooleanTag.TryFor(data.GetModifierObjectCurrent()) ?? BooleanTag.FALSE).Internal;
             return new TernaryPassTag() { Passed = basevalue };
         }
         
@@ -119,7 +119,7 @@ namespace FreneticScript.TagHandlers.Common
             /// </summary>
             public override string ToString()
             {
-                return new BooleanTag(Passed).ToString();
+                return BooleanTag.ForBool(Passed).ToString();
             }
         }
     }

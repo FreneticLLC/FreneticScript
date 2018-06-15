@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            return BooleanTag.For(data.GetModifierObject(0), data);
+            return BooleanTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

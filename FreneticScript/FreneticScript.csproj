@@ -146,6 +146,7 @@
     <Compile Include="TagHandlers\Objects\TimeTag.cs" />
     <Compile Include="TagHandlers\TagBit.cs" />
     <Compile Include="TagHandlers\TagData.cs" />
+    <Compile Include="TagHandlers\TagForms.cs" />
     <Compile Include="TagHandlers\TagHelpInfo.cs" />
     <Compile Include="TagHandlers\TagMeta.cs" />
     <Compile Include="TagHandlers\TagParser.cs" />

@@ -40,6 +40,8 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public DateTimeOffset Internal;
 
+        // TODO: DurationTag, to represent spans of time.
+
         /// <summary>
         /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
         /// </summary>

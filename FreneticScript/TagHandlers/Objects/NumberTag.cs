@@ -17,7 +17,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a number as a usable tag.
     /// </summary>
-    public class NumberTag : TemplateObject
+    public class NumberTag : TemplateObject, NumberTagForm
     {
         // <--[object]
         // @Type NumberTag
@@ -41,6 +41,18 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public double Internal;
 
+        /// <summary>
+        /// The number value of this NumberTag-like object.
+        /// </summary>
+        public double NumberForm
+        {
+            get
+            {
+                return Internal;
+            }
+        }
+
+        // TODO: Find a way to avoid the pain of Internal being settable preventing object reuse (and requiring duplication of objects).
 
         /// <summary>
         /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
@@ -178,6 +190,10 @@ namespace FreneticScript.TagHandlers.Objects
                     return ntag;
                 case IntegerTag itag:
                     return new NumberTag(itag.Internal);
+                case IntegerTagForm itf:
+                    return new NumberTag(itf.IntegerForm);
+                case NumberTagForm ntf:
+                    return new NumberTag(ntf.NumberForm);
                 case DynamicTag dtag:
                     return CreateFor(dtag.Internal, dat);
                 default:
@@ -199,7 +215,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Greater_Than(NumberTag obj, NumberTag modifier)
         {
-            return new BooleanTag(obj.Internal > modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal > modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_greater_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -209,7 +225,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Greater_Than_Or_Equal_To(NumberTag obj, NumberTag modifier)
         {
-            return new BooleanTag(obj.Internal >= modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal >= modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_less_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -219,7 +235,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Less_Than(NumberTag obj, NumberTag modifier)
         {
-            return new BooleanTag(obj.Internal < modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal < modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "is_less_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -229,7 +245,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Is_Less_Than_Or_Equal_To(NumberTag obj, NumberTag modifier)
         {
-            return new BooleanTag(obj.Internal <= modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal <= modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "equals", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -239,7 +255,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals(NumberTag obj, NumberTag modifier)
         {
-            return new BooleanTag(obj.Internal == modifier.Internal);
+            return BooleanTag.ForBool(obj.Internal == modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "add", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,

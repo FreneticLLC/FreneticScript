@@ -65,7 +65,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            string modif = data.GetModifier(0);
+            string modif = data.GetModifierCurrent();
             return new TextTag(Escape(modif));
         }
     }

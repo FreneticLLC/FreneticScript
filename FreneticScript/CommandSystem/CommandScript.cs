@@ -595,6 +595,12 @@ namespace FreneticScript.CommandSystem
                     returnable = tsh.Meta.ReturnTypeResult;
                 }
             }
+            int vxLen = tab.Bits.Length;
+            Argument[] varBits = new Argument[vxLen];
+            for (int vxi = 0; vxi < vxLen; vxi++)
+            {
+                varBits[vxi] = tab.Bits[vxi].Variable;
+            }
             tab.Data = new TagData()
             {
                 BaseColor = TextStyle.Color_Simple,
@@ -602,7 +608,8 @@ namespace FreneticScript.CommandSystem
                 CSE = ccse,
                 Error = null,
                 Fallback = tab.Fallback,
-                InputKeys = tab.Bits,
+                Bits = tab.Bits,
+                Variables = varBits,
                 mode = ccse.Debug,
                 Remaining = tab.Bits.Length,
                 Start = tab.Start,

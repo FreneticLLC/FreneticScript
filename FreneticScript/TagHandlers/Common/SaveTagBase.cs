@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return new TextTag(data.GetModifierObject(0).GetSavableString());
+            return new TextTag(data.GetModifierObjectCurrent().GetSavableString());
         }
     }
 }

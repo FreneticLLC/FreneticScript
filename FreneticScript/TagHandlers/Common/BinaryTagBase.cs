@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return BinaryTag.CreateFor(data.GetModifierObject(0), data);
+            return BinaryTag.CreateFor(data.GetModifierObjectCurrent(), data);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace FreneticScript.TagHandlers.Objects
 
         /// <summary>
         /// Constructs a null tag.
+        /// Don't use this. Use <see cref="NULL_VALUE"/>.
         /// </summary>
         public NullTag()
         {

@@ -51,7 +51,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return new TextTag(data.GetModifier(0));
+            return new TextTag(data.GetModifierCurrent());
         }
     }
 }

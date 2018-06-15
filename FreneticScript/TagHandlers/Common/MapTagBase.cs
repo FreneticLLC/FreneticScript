@@ -50,7 +50,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return MapTag.For(data.GetModifierObject(0), data);
+            return MapTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

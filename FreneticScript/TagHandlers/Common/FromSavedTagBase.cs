@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return new DynamicTag(data.TagSystem.ParseFromSaved(data.GetModifier(0), data));
+            return new DynamicTag(data.TagSystem.ParseFromSaved(data.GetModifierCurrent(), data));
         }
     }
 }

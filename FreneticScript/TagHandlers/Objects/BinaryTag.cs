@@ -142,7 +142,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Byte_At(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
-            int ind = (int)IntegerTag.For(data, data.GetModifier(0)).Internal;
+            int ind = (int)IntegerTag.For(data, data.GetModifierCurrent()).Internal;
             if (ind < 1 || ind > Internal.Length)
             {
                 if (!data.HasFallback)
@@ -174,7 +174,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TemplateObject Tag_Range(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
-            string modif = data.GetModifier(0);
+            string modif = data.GetModifierCurrent();
             string[] split = modif.SplitFastFS(',');
             if (split.Length != 2)
             {

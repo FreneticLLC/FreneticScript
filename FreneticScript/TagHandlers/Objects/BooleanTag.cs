@@ -41,6 +41,27 @@ namespace FreneticScript.TagHandlers.Objects
         public bool Internal;
 
         /// <summary>
+        /// A true value.
+        /// </summary>
+        public static readonly BooleanTag TRUE = new BooleanTag(true);
+
+        /// <summary>
+        /// A false value.
+        /// </summary>
+        public static readonly BooleanTag FALSE = new BooleanTag(false);
+
+        /// <summary>
+        /// Gets a boolean tag for the input bool value.
+        /// Never null!
+        /// </summary>
+        /// <param name="val">The boolean value.</param>
+        /// <returns>A valid BooleanTag.</returns>
+        public static BooleanTag ForBool(bool val)
+        {
+            return val ? TRUE : FALSE;
+        }
+
+        /// <summary>
         /// Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
         /// Never null!
         /// </summary>
@@ -52,17 +73,17 @@ namespace FreneticScript.TagHandlers.Objects
             string low = input.ToLowerFastFS();
             if (low == "true")
             {
-                return new BooleanTag(true);
+                return TRUE;
             }
             if (low == "false")
             {
-                return new BooleanTag(false);
+                return FALSE;
             }
             if (!dat.HasFallback)
             {
                 dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
             }
-            return new BooleanTag(false);
+            return FALSE;
         }
 
         /// <summary>
@@ -87,11 +108,11 @@ namespace FreneticScript.TagHandlers.Objects
             string low = input.ToLowerFastFS();
             if (low == "true")
             {
-                return new BooleanTag(true);
+                return TRUE;
             }
             if (low == "false")
             {
-                return new BooleanTag(false);
+                return FALSE;
             }
             return null;
         }
@@ -107,15 +128,16 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return null;
             }
-            if (input is BooleanTag)
+            if (input is BooleanTag bt)
             {
-                return (BooleanTag)input;
+                return bt;
             }
             return TryFor(input.ToString());
         }
 
         /// <summary>
         /// Constructs a boolean tag.
+        /// Do not use this! Use <see cref="ForBool(bool)"/>.
         /// </summary>
         /// <param name="_val">The internal boolean to use.</param>
         public BooleanTag(bool _val)
@@ -154,7 +176,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Not(BooleanTag obj, TagData data)
         {
-            return new BooleanTag(!obj.Internal);
+            return ForBool(!obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "and", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
@@ -163,7 +185,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_And(BooleanTag obj, BooleanTag modifier)
         {
-            return new BooleanTag(obj.Internal && modifier.Internal);
+            return ForBool(obj.Internal && modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
@@ -172,7 +194,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Or(BooleanTag obj, BooleanTag modifier)
         {
-            return new BooleanTag(obj.Internal || modifier.Internal);
+            return ForBool(obj.Internal || modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
@@ -181,14 +203,14 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Xor(BooleanTag obj, BooleanTag modifier)
         {
-            return new BooleanTag(obj.Internal != modifier.Internal);
+            return ForBool(obj.Internal != modifier.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Duplicate(BooleanTag obj, TagData data)
         {
-            return new BooleanTag(obj.Internal);
+            return ForBool(obj.Internal);
         }
 
         [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of the tag (BooleanTag).")]
