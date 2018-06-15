@@ -13,15 +13,14 @@ using System.Text;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Diagnostics.CodeAnalysis;
 
 namespace FreneticScript
 {
     /// <summary>
-    /// Helper for enum types. Do not use with non-enum types!
+    /// Helper for enum types.
     /// </summary>
     /// <typeparam name="T">The enum type.</typeparam>
-    public static class EnumHelper<T>
+    public static class EnumHelper<T> where T: Enum
     {
         /// <summary>
         /// A map of names to values for this enum.
@@ -97,16 +96,9 @@ namespace FreneticScript
         /// (Other than just implementing the mathematical comparison inline).
         /// </summary>
         public static readonly Func<T, T, bool> FlagTester;
-
-        // Special case: if this throws an exception, it's because somebody fed a very invalid option as a type parameter.
-        // In the future, (C# 7.3), an Enum constraint will be used instead.
-        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+        
         static EnumHelper()
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new Exception("EnumHelper got non-enum type parameter: " + typeof(T).FullName);
-            }
             Names = Enum.GetNames(typeof(T));
             NameSet = new HashSet<string>(Names);
             Values = Enum.GetValues(typeof(T)) as T[];
