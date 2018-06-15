@@ -13,6 +13,7 @@ using System.Text;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FreneticScript
 {
@@ -97,6 +98,9 @@ namespace FreneticScript
         /// </summary>
         public static readonly Func<T, T, bool> FlagTester;
 
+        // Special case: if this throws an exception, it's because somebody fed a very invalid option as a type parameter.
+        // In the future, (C# 7.3), an Enum constraint will be used instead.
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         static EnumHelper()
         {
             if (!typeof(T).IsEnum)
