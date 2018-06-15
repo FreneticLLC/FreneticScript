@@ -75,7 +75,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
                         entry.Good(queue, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(target) + "<{text_color[base]}>' cannot be removed, it doesn't exist!");
                     }
                 }
-                else if (!Cvar.Flags.HasFlag(CVarFlag.UserMade))
+                else if (!Cvar.Flags.HasFlagsFS(CVarFlag.UserMade))
                 {
                     queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(Cvar.Name) + "<{text_color[base]}>' cannot be removed, it wasn't user made!");
                 }
@@ -92,20 +92,20 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 return;
             }
             CVar cvar = queue.CommandSystem.Output.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave : CVarFlag.None);
-            if (cvar.Flags.HasFlag(CVarFlag.ServerControl) && !force)
+            if (cvar.Flags.HasFlagsFS(CVarFlag.ServerControl) && !force)
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is server controlled!");
                 return;
             }
-            if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
+            if (cvar.Flags.HasFlagsFS(CVarFlag.ReadOnly))
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is a read-only system variable!");
             }
-            else if (cvar.Flags.HasFlag(CVarFlag.InitOnly) && !queue.CommandSystem.Output.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Output.Initializing)
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified after game initialization.");
             }
-            else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !queue.CommandSystem.Output.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Output.Initializing)
             {
                 entry.Good(queue, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' is delayed, and its value will be calculated after the game is reloaded.");
             }

@@ -54,19 +54,19 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' does not exist!");
                 return;
             }
-            if (cvar.Flags.HasFlag(CVarFlag.ServerControl))
+            if (cvar.Flags.HasFlagsFS(CVarFlag.ServerControl))
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is server controlled!");
             }
-            if (cvar.Flags.HasFlag(CVarFlag.ReadOnly))
+            if (cvar.Flags.HasFlagsFS(CVarFlag.ReadOnly))
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is a read-only system variable!");
             }
-            else if (cvar.Flags.HasFlag(CVarFlag.InitOnly) && !queue.CommandSystem.Output.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Output.Initializing)
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified after game initialization.");
             }
-            else if (cvar.Flags.HasFlag(CVarFlag.Delayed) && !queue.CommandSystem.Output.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Output.Initializing)
             {
                 cvar.Set(cvar.ValueB ? "false" : "true");
                 if (entry.ShouldShowGood(queue))

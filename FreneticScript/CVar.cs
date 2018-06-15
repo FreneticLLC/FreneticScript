@@ -12,19 +12,19 @@ using FreneticScript.TagHandlers.Objects;
 namespace FreneticScript
 {
     /// <summary>
-    /// Adds HasFlag to the CVarFlag enum, for .NET 3.5 usage of a .NET 4.0 trick.
+    /// Helper for <see cref="CVarFlag"/>.
     /// </summary>
-    public static class EnumExtensions
+    public static class CVarFlagEnumExtensions
     {
         /// <summary>
-        /// Returns whether the Flag set has a specific flag.
+        /// Returns whether the mainVal (as a bitflag set) has the required testVal (as a bitflag set).
         /// </summary>
-        /// <param name="tenum">The flag set.</param>
-        /// <param name="val">The specific flag.</param>
-        /// <returns>Whether it is had.</returns>
-        public static bool HasFlag(this CVarFlag tenum, CVarFlag val)
+        /// <param name="mainVal">The set of flags present.</param>
+        /// <param name="testVal">The set of flags required.</param>
+        /// <returns>Whether the flags are present as required.</returns>
+        public static bool HasFlagsFS(this CVarFlag mainVal, CVarFlag testVal)
         {
-            return (tenum & val) != 0;
+            return (mainVal & testVal) == testVal;
         }
     }
 
@@ -176,15 +176,15 @@ namespace FreneticScript
             {
                 return;
             }
-            if (Flags.HasFlag(CVarFlag.ReadOnly))
+            if (Flags.HasFlagsFS(CVarFlag.ReadOnly))
             {
                 return;
             }
-            if (Flags.HasFlag(CVarFlag.InitOnly) && !system.Output.Initializing)
+            if (Flags.HasFlagsFS(CVarFlag.InitOnly) && !system.Output.Initializing)
             {
                 return;
             }
-            if (Flags.HasFlag(CVarFlag.ServerControl) && !force)
+            if (Flags.HasFlagsFS(CVarFlag.ServerControl) && !force)
             {
                 return;
             }
@@ -207,15 +207,15 @@ namespace FreneticScript
         /// <param name="value">The value to set the CVar to.</param>
         public void Set(bool value)
         {
-            if (Flags.HasFlag(CVarFlag.ReadOnly))
+            if (Flags.HasFlagsFS(CVarFlag.ReadOnly))
             {
                 return;
             }
-            if (Flags.HasFlag(CVarFlag.InitOnly) && !system.Output.Initializing)
+            if (Flags.HasFlagsFS(CVarFlag.InitOnly) && !system.Output.Initializing)
             {
                 return;
             }
-            if (Flags.HasFlag(CVarFlag.ServerControl))
+            if (Flags.HasFlagsFS(CVarFlag.ServerControl))
             {
                 return;
             }
@@ -251,11 +251,11 @@ namespace FreneticScript
                 return "None";
             }
             ListTag list = new ListTag();
-            foreach (CVarFlag flag in Enum.GetValues(typeof(CVarFlag)))
+            foreach (CVarFlag flag in EnumHelper<CVarFlag>.Values)
             {
-                if (flag != CVarFlag.None && Flags.HasFlag(flag))
+                if (flag != CVarFlag.None && Flags.HasFlagsFS(flag))
                 {
-                    list.Internal.Add(new TextTag(flag.ToString()));
+                    list.Internal.Add(new TextTag(EnumHelper<CVarFlag>.GetName(flag)));
                 }
             }
             return list.Formatted();
