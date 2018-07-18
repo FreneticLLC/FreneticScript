@@ -37,6 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>FreneticScript.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FreneticDataSyntax">
