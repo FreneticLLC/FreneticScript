@@ -511,6 +511,14 @@ namespace FreneticScript
         }
 
         /// <summary>
+        /// Used for <see cref="DateTimeToString(DateTimeOffset, bool)"/>.
+        /// </summary>
+        private static string QPad(string input, int length = 2)
+        {
+            return input.PadLeft(length, '0');
+        }
+
+        /// <summary>
         /// Returns a string representation of the specified time.
         /// </summary>
         /// <param name="dt">The datetime object.</param>
@@ -521,41 +529,15 @@ namespace FreneticScript
             string utcoffset;
             if (dt.Offset.TotalMilliseconds < 0)
             {
-                utcoffset = "-" + Pad(((int)Math.Abs(Math.Floor(dt.Offset.TotalHours))).ToString(), '0', 2) + ":" + Pad(dt.Offset.Minutes.ToString(), '0', 2);
+                utcoffset = "-" + QPad(((int)Math.Abs(Math.Floor(dt.Offset.TotalHours))).ToString()) + ":" + QPad(dt.Offset.Minutes.ToString());
             }
             else
             {
-                utcoffset = "+" + Pad(((int)Math.Floor(dt.Offset.TotalHours)).ToString(), '0', 2) + ":" + Pad(dt.Offset.Minutes.ToString(), '0', 2);
+                utcoffset = "+" + QPad(((int)Math.Floor(dt.Offset.TotalHours)).ToString()) + ":" + QPad(dt.Offset.Minutes.ToString());
             }
-            return Pad(dt.Year.ToString(), '0', 4) + "/" + Pad(dt.Month.ToString(), '0', 2) + "/" +
-                Pad(dt.Day.ToString(), '0', 2) + " " + Pad(dt.Hour.ToString(), '0', 2) + ":" +
-                Pad(dt.Minute.ToString(), '0', 2) + ":" + Pad(dt.Second.ToString(), '0', 2) + (ms ? ":" + Pad(dt.Millisecond.ToString(), '0', 4): "") + " UTC" + utcoffset;
-        }
-
-        /// <summary>
-        /// Pads a string to a specified length with a specified input, on a specified side.
-        /// </summary>
-        /// <param name="input">The original string.</param>
-        /// <param name="padding">The symbol to pad with.</param>
-        /// <param name="length">How far to pad it to.</param>
-        /// <param name="left">Whether to pad left (true), or right (false).</param>
-        /// <returns>The padded string.</returns>
-        public static string Pad(string input, char padding, int length, bool left = true)
-        {
-            int targetlength = length - input.Length;
-            StringBuilder pad = new StringBuilder(targetlength <= 0 ? 1 : targetlength);
-            for (int i = 0; i < targetlength; i++)
-            {
-                pad.Append(padding);
-            }
-            if (left)
-            {
-                return pad + input;
-            }
-            else
-            {
-                return input + pad;
-            }
+            return QPad(dt.Year.ToString(), 4) + "/" + QPad(dt.Month.ToString()) + "/" +
+                QPad(dt.Day.ToString()) + " " + QPad(dt.Hour.ToString()) + ":" +
+                QPad(dt.Minute.ToString()) + ":" + QPad(dt.Second.ToString()) + (ms ? ":" + QPad(dt.Millisecond.ToString(), 4): "") + " UTC" + utcoffset;
         }
     }
 }
