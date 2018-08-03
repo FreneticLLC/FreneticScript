@@ -32,49 +32,49 @@ namespace FreneticScript
     /// The various possible information flags a CVar can hold.
     /// </summary>
     [Flags]
-    public enum CVarFlag
+    public enum CVarFlag : int
     {
         /// <summary>
         /// No information.
         /// </summary>
-        None = 0x0000,
+        None = 0,
         /// <summary>
         /// This flag cannot be edited, and exists to represent system information.
         /// </summary>
-        ReadOnly = 0x0001,
+        ReadOnly = 1,
         /// <summary>
         /// This flag should be treated as text.
         /// </summary>
-        Textual = 0x0002,
+        Textual = 1 << 1,
         /// <summary>
         /// This tag should be treated as a number.
         /// </summary>
-        Numeric = 0x0004,
+        Numeric = 1 << 2,
         /// <summary>
         /// This flag should be treated as true/false.
         /// </summary>
-        Boolean = 0x0008,
+        Boolean = 1 << 3,
         /// <summary>
         /// This flag won't immediately have an effect when edited.
         /// </summary>
-        Delayed = 0x0010,
+        Delayed = 1 << 4,
         /// <summary>
         /// This flag was made by a user.
         /// </summary>
-        UserMade = 0x0020,
+        UserMade = 1 << 5,
         /// <summary>
         /// This flag can only be modified during load time.
         /// </summary>
-        InitOnly = 0x0040,
+        InitOnly = 1 << 6,
         /// <summary>
         /// This flag is on a client, but controlled by the server.
         /// </summary>
-        ServerControl = 0x0080,
+        ServerControl = 1 << 7,
         /// <summary>
         /// This flag should not be saved across system restarts.
         /// Useful for scripts to use when tracking temporary data.
         /// </summary>
-        DoNotSave = 0x0100,
+        DoNotSave = 1 << 8,
     }
 
     // <--[explanation]
