@@ -348,7 +348,7 @@ namespace FreneticScript.CommandSystem
         {
             if (NamedArguments.TryGetValue(name, out Argument arg))
             {
-                return arg.Parse((o) => queue.HandleError(this, o), queue.CurrentEntry);
+                return arg.Parse((o) => queue.HandleError(this, o), queue.CurrentEntry); // TODO: Non-lambda error path
             }
             return null;
         }
@@ -363,7 +363,7 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.ParseTags != TagParseMode.OFF) // TODO: Compile parse tags option?!
             {
-                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry);
+                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry); // TODO: Non-lambda error path
             }
             else
             {
@@ -381,7 +381,7 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.ParseTags != TagParseMode.OFF)
             {
-                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry).ToString();
+                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry).ToString(); // TODO: Non-lambda error path
             }
             else
             {

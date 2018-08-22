@@ -94,6 +94,7 @@ namespace FreneticScript.CommandSystem
             {
                 BasicTagData = TagData.GenerateSimpleErrorTagData();
                 BasicTagData.TagSystem = CommandSystem.TagSystem;
+                BasicTagData.Error = HandleError;
             }
             BasicTagData.CSE = CurrentEntry;
             BasicTagData.DBMode = CurrentEntry == null ? DebugMode.FULL : CurrentEntry.Debug;
@@ -174,6 +175,15 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Handles an error as appropriate to the situation, in the current queue, from the current command.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        public void HandleError(string message)
+        {
+            HandleError(CurrentEntry.Entries[CurrentEntry.Index], message);
+        }
+
+        /// <summary>
+        /// Handles an error as appropriate to the situation, in the current queue, from the specified command.
         /// </summary>
         /// <param name="entry">The command entry that errored.</param>
         /// <param name="message">The error message.</param>
