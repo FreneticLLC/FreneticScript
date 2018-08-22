@@ -610,7 +610,7 @@ namespace FreneticScript.CommandSystem
                 Fallback = tab.Fallback,
                 Bits = tab.Bits,
                 Variables = varBits,
-                mode = ccse.Debug,
+                DBMode = ccse.Debug,
                 Remaining = tab.Bits.Length,
                 Start = tab.Start,
                 TagSystem = tab.CommandSystem.TagSystem

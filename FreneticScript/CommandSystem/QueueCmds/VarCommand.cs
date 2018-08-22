@@ -92,7 +92,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 type = cent.System.TagSystem.Types[type_name];
                 isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
             }
-            int lvarloc = cent.VarLoc(cent.Arguments[0].ToString().ToLowerFastFS());
+            string lvarname = cent.Arguments[0].ToString().ToLowerFastFS();
+            int lvarloc = cent.VarLoc(lvarname);
             // This method:
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
             // or:
@@ -110,7 +111,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod); // Get the specified argument
             if (!isCorrect)
             {
-                values.ILGen.Emit(OpCodes.Ldsfld, TagData.FIELD_TAGDATA_SIMPLE_ERROR); // Load a 'simple error' TagData object, to fill the input argument as simply as possible.
+                values.LoadTagData(); // Load a basic TagData object appropriate to the queue.
                 values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
             }
             if (debug) // If in debug mode...
@@ -122,6 +123,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (debug) // If in debug mode...
             {
                 values.ILGen.Emit(OpCodes.Ldloc, localInd); // Load variable 'o'.
+                values.ILGen.Emit(OpCodes.Ldstr, lvarname); // Load the variable name as a string.
                 values.LoadQueue(); // Load the queue
                 values.LoadEntry(entry); // Load the entry
                 values.ILGen.Emit(OpCodes.Call, Method_DebugHelper); // Call the debug method
@@ -129,7 +131,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// References <see cref="DebugHelper(TemplateObject, CommandQueue, CommandEntry)"/>.
+        /// References <see cref="DebugHelper(TemplateObject, string, CommandQueue, CommandEntry)"/>.
         /// </summary>
         public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod(nameof(DebugHelper));
 
@@ -137,13 +139,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Helps debug output for the var command.
         /// </summary>
         /// <param name="res">The object saved as a var.</param>
+        /// <param name="varName">The variable name stored into.</param>
         /// <param name="queue">The queue.</param>
         /// <param name="entry">The entry.</param>
-        public static void DebugHelper(TemplateObject res, CommandQueue queue, CommandEntry entry)
+        public static void DebugHelper(TemplateObject res, string varName, CommandQueue queue, CommandEntry entry)
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Stored variable with value: " + TextStyle.Color_Separate + res);
+                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Color_Separate + varName + TextStyle.Color_Outgood + "' with value: " + TextStyle.Color_Separate + res);
             }
         }
 

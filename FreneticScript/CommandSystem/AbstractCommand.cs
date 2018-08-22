@@ -507,6 +507,15 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Loads a tag data object appropriate to the queue. Can trigger some logic to run.
+        /// </summary>
+        public void LoadTagData()
+        {
+            LoadQueue();
+            ILGen.Emit(OpCodes.Call, CommandQueue.COMMANDQUEUE_GETTAGDATA);
+        }
+
+        /// <summary>
         /// Marks the command as the correct entry. Should be called with every command!
         /// </summary>
         /// <param name="entry">The entry location.</param>

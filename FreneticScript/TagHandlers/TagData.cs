@@ -31,7 +31,15 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// A simple error TagData object.
         /// </summary>
-        public static readonly TagData SIMPLE_ERROR = new TagData(null, new Argument[0], new TagBit[0], null, DebugMode.FULL, (s) => throw new Exception("Script error occured: " + s), null, null);
+        public static readonly TagData SIMPLE_ERROR = GenerateSimpleErrorTagData();
+        
+        /// <summary>
+        /// Generates a simple error tag data instance that can be repurposed.
+        /// </summary>
+        public static TagData GenerateSimpleErrorTagData()
+        {
+            return new TagData(null, new Argument[0], new TagBit[0], null, DebugMode.FULL, (s) => throw new Exception("Script error occured: " + s), null, null);
+        }
 
         /// <summary>
         /// Returns a shallow duplicate of this object.
@@ -70,7 +78,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// What debug mode to use while filling tags.
         /// </summary>
-        public DebugMode mode;
+        public DebugMode DBMode;
 
         /// <summary>
         /// The current index in this tag.
@@ -83,7 +91,7 @@ namespace FreneticScript.TagHandlers
         public Argument[] Variables = null;
 
         /// <summary>
-        /// The tag bigs this tag data sources from.
+        /// The tag bits this tag data sources from.
         /// </summary>
         public TagBit[] Bits = null;
         
@@ -107,6 +115,17 @@ namespace FreneticScript.TagHandlers
         /// The tag system this tag data is used for.
         /// </summary>
         public TagParser TagSystem;
+
+        /// <summary>
+        /// Gets the command system this tag data is used for (gathered from <see cref="TagSystem"/>).
+        /// </summary>
+        public Commands CommandSystem
+        {
+            get
+            {
+                return TagSystem.CommandSystem;
+            }
+        }
 
         /// <summary>
         /// The 'base color' set by the tag requesting code.
@@ -146,7 +165,7 @@ namespace FreneticScript.TagHandlers
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;
-            mode = _mode;
+            DBMode = _mode;
             Error = _error;
             Fallback = fallback;
             Remaining = _bits.Length;

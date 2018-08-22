@@ -617,7 +617,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>Res, unmodified.</returns>
         public static TemplateObject DebugTagHelper(TemplateObject res, TagData data)
         {
-            if (data.mode <= DebugMode.FULL)
+            if (data.DBMode <= DebugMode.FULL)
             {
                 data.TagSystem.CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
                     new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()

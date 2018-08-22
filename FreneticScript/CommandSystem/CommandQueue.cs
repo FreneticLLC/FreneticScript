@@ -34,6 +34,11 @@ namespace FreneticScript.CommandSystem
         public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CommandQueue.CurrentEntry));
 
         /// <summary>
+        /// Represents the <see cref="GetTagData"/> method.
+        /// </summary>
+        public static MethodInfo COMMANDQUEUE_GETTAGDATA = typeof(CommandQueue).GetMethod(nameof(GetTagData));
+
+        /// <summary>
         /// The current stack entry being used.
         /// </summary>
         public CompiledCommandStackEntry CurrentEntry;
@@ -73,6 +78,27 @@ namespace FreneticScript.CommandSystem
         /// What function to invoke when output is generated.
         /// </summary>
         public Commands.OutputFunction Outputsystem = null;
+
+        /// <summary>
+        /// A basic tag data object for this queue. Not necessarily generated, use <see cref="GetTagData"/>.
+        /// </summary>
+        public TagData BasicTagData = null;
+
+        /// <summary>
+        /// Gets a basic tag data object appropriate to this queue.
+        /// </summary>
+        /// <returns>The tag data object.</returns>
+        public TagData GetTagData()
+        {
+            if (BasicTagData == null)
+            {
+                BasicTagData = TagData.GenerateSimpleErrorTagData();
+                BasicTagData.TagSystem = CommandSystem.TagSystem;
+            }
+            BasicTagData.CSE = CurrentEntry;
+            BasicTagData.DBMode = CurrentEntry == null ? DebugMode.FULL : CurrentEntry.Debug;
+            return BasicTagData;
+        }
 
         /// <summary>
         /// Constructs a new CommandQueue - generally kept to the FreneticScript internals.
