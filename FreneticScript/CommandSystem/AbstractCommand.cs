@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Diagnostics;
 
 namespace FreneticScript.CommandSystem
 {
@@ -272,11 +273,26 @@ namespace FreneticScript.CommandSystem
             /// Internal generator.
             /// </summary>
             public ILGenerator Internal;
+            
+            /// <summary>
+            /// All codes generated. Only has a value when compiled in DEBUG mode.
+            /// </summary>
+            public List<KeyValuePair<OpCode, object>> Codes
+#if DEBUG
+                = new List<KeyValuePair<OpCode, object>>()
+#endif
+                ;
 
             /// <summary>
-            /// All codes generated.
+            /// When compiled in DEBUG mode, adds a code value to the <see cref="Codes"/> list. Does nothing outside of DEBUG mode.
             /// </summary>
-            public List<KeyValuePair<OpCode, object>> Codes = new List<KeyValuePair<OpCode, object>>();
+            /// <param name="code">The OpCode used (or 'nop' for special comments).</param>
+            /// <param name="val">The value attached to the opcode, if any.</param>
+            [Conditional("DEBUG")]
+            public void AddCode(OpCode code, object val)
+            {
+                Codes.Add(new KeyValuePair<OpCode, object>(code, val));
+            }
 
             /// <summary>
             /// Defines a label.
@@ -294,7 +310,7 @@ namespace FreneticScript.CommandSystem
             public void MarkLabel(Label label)
             {
                 Internal.MarkLabel(label);
-                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Mark label>: " + label));
+                AddCode(OpCodes.Nop, "<Mark label>: " + label);
             }
 
             /// <summary>
@@ -304,7 +320,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code)
             {
                 Internal.Emit(code);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, null));
+                AddCode(code, null);
             }
 
             /// <summary>
@@ -315,7 +331,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, FieldInfo dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+                AddCode(code, dat);
             }
 
             /// <summary>
@@ -326,7 +342,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, Type t)
             {
                 Internal.Emit(code, t);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, t));
+                AddCode(code, t);
             }
 
             /// <summary>
@@ -337,7 +353,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, ConstructorInfo t)
             {
                 Internal.Emit(code, t);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, t));
+                AddCode(code, t);
             }
 
             /// <summary>
@@ -348,7 +364,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, Label[] dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+                AddCode(code, dat);
             }
 
             /// <summary>
@@ -359,7 +375,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, MethodInfo dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat + ": " + dat.DeclaringType.Name));
+                AddCode(code, dat + ": " + dat.DeclaringType.Name);
             }
 
             /// <summary>
@@ -370,7 +386,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, Label dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+                AddCode(code, dat);
             }
 
             /// <summary>
@@ -381,7 +397,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, string dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+                AddCode(code, dat);
             }
 
             /// <summary>
@@ -392,7 +408,7 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, int dat)
             {
                 Internal.Emit(code, dat);
-                Codes.Add(new KeyValuePair<OpCode, object>(code, dat));
+                AddCode(code, dat);
             }
 
             /// <summary>
@@ -402,7 +418,7 @@ namespace FreneticScript.CommandSystem
             public int DeclareLocal(Type t)
             {
                 int x = Internal.DeclareLocal(t).LocalIndex;
-                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "<Declare local>: " + t.FullName + " as " + x));
+                AddCode(OpCodes.Nop, "<Declare local>: " + t.FullName + " as " + x);
                 return x;
             }
 
@@ -412,7 +428,7 @@ namespace FreneticScript.CommandSystem
             /// <param name="str">The comment text.</param>
             public void Comment(string str)
             {
-                Codes.Add(new KeyValuePair<OpCode, object>(OpCodes.Nop, "// Comment -- " + str + " --"));
+                AddCode(OpCodes.Nop, "// Comment -- " + str + " --");
             }
         }
 
