@@ -238,7 +238,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The debug mode for this specific entry.
         /// </summary>
-        public DebugMode DBMode;
+        public DebugMode DBMode = DebugMode.FULL;
 
         /// <summary>
         /// Gets the correct debug mode for this entry and a specified queue.

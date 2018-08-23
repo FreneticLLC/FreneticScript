@@ -122,6 +122,50 @@ namespace FreneticScript.CommandSystem
         public EventHandler<CommandQueueEventArgs> Complete;
 
         /// <summary>
+        /// Current highest ID.
+        /// </summary>
+        public static long HighestID = 1;
+
+        /// <summary>
+        /// This queue's ID.
+        /// </summary>
+        public long ID;
+
+        /// <summary>
+        /// Whether the last queue entry should output.
+        /// </summary>
+        /// <param name="entry">The last entry.</param>
+        /// <returns>Whether it should output.</returns>
+        public bool ShouldOutputLast(out CommandEntry entry)
+        {
+            if (CurrentEntry == null)
+            {
+                entry = null;
+                return false;
+            }
+            if (CurrentEntry.Index > CurrentEntry.Entries.Length)
+            {
+                entry = CurrentEntry.At(CurrentEntry.Entries.Length - 1);
+            }
+            else
+            {
+                entry = CurrentEntry.At(CurrentEntry.Index - 1);
+            }
+            return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
+        }
+
+        /// <summary>
+        /// Whether the current queue entry should output.
+        /// </summary>
+        /// <param name="entry">The current entry.</param>
+        /// <returns>Whether it should output.</returns>
+        public bool ShouldOutputCurrent(out CommandEntry entry)
+        {
+            entry = CurrentEntry?.CurrentCommandEntry;
+            return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
+        }
+        
+        /// <summary>
         /// Starts running the command queue.
         /// </summary>
         public void Execute()
@@ -131,12 +175,23 @@ namespace FreneticScript.CommandSystem
                 return;
             }
             Running = true;
+            ID = HighestID++; // TODO: thread-safe atomic increment?
+            CurrentEntry = CommandStack.Peek();
+            if (ShouldOutputCurrent(out CommandEntry first))
+            {
+                first.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " started.");
+            }
             Tick(0f);
             if (Running)
             {
                 CommandSystem.Queues.Add(this);
             }
         }
+
+        /// <summary>
+        /// Whether the last run of this queue had waited.
+        /// </summary>
+        public bool DidWaitLast = false;
 
         /// <summary>
         /// Recalculates and advances the command queue.
@@ -157,12 +212,25 @@ namespace FreneticScript.CommandSystem
                 }
                 Wait = 0f;
             }
+            if (DidWaitLast)
+            {
+                DidWaitLast = false;
+                if (ShouldOutputCurrent(out CommandEntry current))
+                {
+                    current.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " processing.");
+                }
+            }
             while (CommandStack.Count > 0)
             {
                 CurrentEntry = CommandStack.Peek();
                 CommandStackRetVal ret = CurrentEntry.Run(this);
                 if (ret == CommandStackRetVal.BREAK)
                 {
+                    if (ShouldOutputLast(out CommandEntry current))
+                    {
+                        current.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " waiting.");
+                    }
+                    DidWaitLast = true;
                     return;
                 }
                 else if (ret == CommandStackRetVal.STOP)
@@ -172,6 +240,10 @@ namespace FreneticScript.CommandSystem
             }
             Complete?.Invoke(this, new CommandQueueEventArgs(this));
             Running = false;
+            if (ShouldOutputLast(out CommandEntry last))
+            {
+                last.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " completed.");
+            }
         }
 
         /// <summary>

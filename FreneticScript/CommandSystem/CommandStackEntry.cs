@@ -41,6 +41,31 @@ namespace FreneticScript.CommandSystem
         /// Run this when the CommandStackEntry STOPs.
         /// </summary>
         public Action Callback;
+
+        /// <summary>
+        /// Gets the command entry at a specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The command entry, or null.</returns>
+        public CommandEntry At(int index)
+        {
+            if (index < 0 || index >= Entries.Length)
+            {
+                return null;
+            }
+            return Entries[index];
+        }
+
+        /// <summary>
+        /// Gets the current command entry, or null.
+        /// </summary>
+        public CommandEntry CurrentCommandEntry
+        {
+            get
+            {
+                return At(Index);
+            }
+        }
         
         /// <summary>
         /// Handles an error as appropriate to the situation, in the current queue, from the current command.
