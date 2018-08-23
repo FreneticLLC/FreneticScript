@@ -133,6 +133,30 @@ namespace FreneticScript.CommandSystem.Arguments
         }
 
         /// <summary>
+        /// Returns the tag as tag input text, highlighting a specific index. Does not include wrapping tag marks.
+        /// </summary>
+        /// <param name="index">The index to highlight at.</param>
+        /// <param name="highlight">The highlight string.</param>
+        /// <returns>Tag input text.</returns>
+        public string HighlightString(int index, string highlight)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < Bits.Length; i++)
+            {
+                if (i == index)
+                {
+                    sb.Append(highlight);
+                }
+                sb.Append(Bits[i].ToString());
+                if (i + 1 < Bits.Length)
+                {
+                    sb.Append(".");
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Returns the tag as tag input text.
         /// </summary>
         /// <returns>Tag input text.</returns>

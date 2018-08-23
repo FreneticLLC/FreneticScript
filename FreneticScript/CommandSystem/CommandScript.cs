@@ -384,10 +384,13 @@ namespace FreneticScript.CommandSystem
                                 {
                                     ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
                                 }
+                                catch (TagErrorInducedException ex)
+                                {
+                                    TagException(ccse.Entries[i], "argument " + TextStyle.Color_Separate + a + TextStyle.Color_Base, tab, ex.SubTagIndex, ex);
+                                }
                                 catch (ErrorInducedException ex)
                                 {
-                                    throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine
-                                        + "), in argument " + a + " while compiling tag " + tab.ToString() + ", error occured: " + ex.Message);
+                                    TagException(ccse.Entries[i], "argument " + TextStyle.Color_Separate + a + TextStyle.Color_Base, tab, 0, ex);
                                 }
                             }
                         }
@@ -403,10 +406,13 @@ namespace FreneticScript.CommandSystem
                                 {
                                     ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
                                 }
+                                catch (TagErrorInducedException ex)
+                                {
+                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Color_Separate + argPair.Key + TextStyle.Color_Base + "'", tab, ex.SubTagIndex, ex);
+                                }
                                 catch (ErrorInducedException ex)
                                 {
-                                    throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine
-                                        + "), in named argument '" + argPair.Key + "' while compiling tag " + tab.ToString() + ", error occured: " + ex.Message);
+                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Color_Separate + argPair.Key + TextStyle.Color_Base + "'", tab, 0, ex);
                                 }
                             }
                         }
@@ -516,6 +522,24 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Throws a tag failure exception.
+        /// </summary>
+        /// <param name="entry">Relevant command entry.</param>
+        /// <param name="argumentNote">Note for the argument, like: in named argument 'fail'.</param>
+        /// <param name="tab"></param>
+        /// <param name="tagIndex"></param>
+        /// <param name="ex"></param>
+        public void TagException(CommandEntry entry, string argumentNote, TagArgumentBit tab, int tagIndex, ErrorInducedException ex)
+        {
+            throw new ErrorInducedException("On script line " + TextStyle.Color_Separate + entry.ScriptLine
+                + TextStyle.Color_Base + " (" + TextStyle.Color_Separate + entry.CommandLine
+                + TextStyle.Color_Base + "), in " + argumentNote
+                + " while compiling tag " + TextStyle.Color_Separate +
+                "<" + tab.HighlightString(tagIndex, TextStyle.Color_Warning) + TextStyle.Color_Separate + ">"
+                + TextStyle.Color_Base + ", error occured: " + ex.Message);
+        }
+
+        /// <summary>
         /// Generates tag CIL.
         /// </summary>
         /// <param name="typeBuild_c">The type to contain this tag.</param>
@@ -561,7 +585,9 @@ namespace FreneticScript.CommandSystem
             }
             if (returnable == null)
             {
-                throw new ErrorInducedException("Invalid tag top-handler '" + tab.Start.Name + "' (failed to identify return type)!");
+                throw new TagErrorInducedException("Invalid tag top-handler '"
+                    + TextStyle.Color_Separate + tab.Start.Name
+                    + TextStyle.Color_Base + "' (failed to identify return type)!", 0);
             }
             TagType prevType = returnable;
             for (int x = 1; x < tab.Bits.Length; x++)
@@ -577,7 +603,11 @@ namespace FreneticScript.CommandSystem
                             goto ready;
                         }
                     }
-                    throw new ErrorInducedException("Invalid sub-tag '" + key + "' for type '" + returnable.TypeName + "' (sub-tag doesn't seem to exist)!");
+                    throw new TagErrorInducedException("Invalid sub-tag '"
+                        + TextStyle.Color_Separate + key + TextStyle.Color_Base + "' at sub-tag index "
+                        + TextStyle.Color_Separate + x + TextStyle.Color_Base + " for type '"
+                        + TextStyle.Color_Separate + prevType.TypeName + TextStyle.Color_Base
+                        + (key.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"), x);
                 }
                 ready:
                 TagHelpInfo tsh = returnable.TagHelpers[key];
@@ -590,7 +620,9 @@ namespace FreneticScript.CommandSystem
                     }
                     else
                     {
-                        throw new ErrorInducedException("Invalid tag ReturnType '" + tsh.Meta.ReturnType + " for tag '" + tsh.Meta.ActualType.TypeName + "." + tsh.Meta.Name + "', cannot process properly!");
+                        throw new TagErrorInducedException("Invalid tag ReturnType '" + TextStyle.Color_Separate + tsh.Meta.ReturnType
+                            + TextStyle.Color_Base + " for tag '" + TextStyle.Color_Separate + tsh.Meta.ActualType.TypeName + "."
+                            + TextStyle.Color_Separate + tsh.Meta.Name + TextStyle.Color_Base + "', cannot process properly!", x);
                     }
                 }
                 else

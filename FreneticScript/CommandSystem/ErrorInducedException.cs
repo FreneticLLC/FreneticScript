@@ -24,10 +24,8 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public ErrorInducedException()
         {
-
         }
-
-
+        
         /// <summary>
         /// Constructs an error induced exception with a message and inner exception.
         /// </summary>
@@ -45,6 +43,55 @@ namespace FreneticScript.CommandSystem
         public ErrorInducedException(string message) :
             base(message)
         {
+        }
+    }
+
+    /// <summary>
+    /// Represents an exception induced by a script error related to a tag. Should be ignored/re-thrown to let the error propogate up to the script level.
+    /// </summary>
+    [Serializable]
+    public class TagErrorInducedException : ErrorInducedException
+    {
+        /// <summary>
+        /// Constructs a plain tag error induced exception.
+        /// </summary>
+        public TagErrorInducedException()
+        {
+        }
+
+        /// <summary>
+        /// Constructs a tag error induced exception with a message and inner exception.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="inner">The inner exception.</param>
+        public TagErrorInducedException(string message, Exception inner) :
+            base(message, inner)
+        {
+        }
+
+        /// <summary>
+        /// Constructs a tag error induced exception with a message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public TagErrorInducedException(string message) :
+            base(message)
+        {
+        }
+
+        /// <summary>
+        /// Relevant sub-tag index.
+        /// </summary>
+        public int SubTagIndex;
+
+        /// <summary>
+        /// Constructs a tag error induced exception with a message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="tagIndex">The relevant sub-tag index.</param>
+        public TagErrorInducedException(string message, int tagIndex) :
+            base(message)
+        {
+            SubTagIndex = tagIndex;
         }
     }
 }
