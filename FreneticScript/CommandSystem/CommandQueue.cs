@@ -85,6 +85,11 @@ namespace FreneticScript.CommandSystem
         public TagData BasicTagData = null;
 
         /// <summary>
+        /// Error handler action.
+        /// </summary>
+        public Action<string> Error;
+
+        /// <summary>
         /// Gets a basic tag data object appropriate to this queue.
         /// </summary>
         /// <returns>The tag data object.</returns>
@@ -94,7 +99,7 @@ namespace FreneticScript.CommandSystem
             {
                 BasicTagData = TagData.GenerateSimpleErrorTagData();
                 BasicTagData.TagSystem = CommandSystem.TagSystem;
-                BasicTagData.Error = HandleError;
+                BasicTagData.Error = Error;
             }
             BasicTagData.CSE = CurrentEntry;
             BasicTagData.DBMode = CurrentEntry == null ? DebugMode.FULL : CurrentEntry.Debug;
@@ -108,6 +113,7 @@ namespace FreneticScript.CommandSystem
         {
             Script = _script;
             CommandSystem = _system;
+            Error = HandleError;
         }
         
         /// <summary>
@@ -190,6 +196,16 @@ namespace FreneticScript.CommandSystem
         public void HandleError(CommandEntry entry, string message)
         {
             CurrentEntry.HandleError(this, entry, message);
+        }
+
+        /// <summary>
+        /// Parse an argument within this queue.
+        /// </summary>
+        /// <param name="arg">The argument.</param>
+        /// <returns>The object result.</returns>
+        public TemplateObject ParseArgument(Argument arg)
+        {
+            return arg.Parse(Error, CurrentEntry);
         }
 
         /// <summary>

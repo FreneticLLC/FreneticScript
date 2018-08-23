@@ -348,7 +348,7 @@ namespace FreneticScript.CommandSystem
         {
             if (NamedArguments.TryGetValue(name, out Argument arg))
             {
-                return arg.Parse((o) => queue.HandleError(this, o), queue.CurrentEntry); // TODO: Non-lambda error path
+                return arg.Parse(queue.Error, queue.CurrentEntry);
             }
             return null;
         }
@@ -363,7 +363,7 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.ParseTags != TagParseMode.OFF) // TODO: Compile parse tags option?!
             {
-                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry); // TODO: Non-lambda error path
+                return Arguments[place].Parse(queue.Error, queue.CurrentEntry);
             }
             else
             {
@@ -381,12 +381,22 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.ParseTags != TagParseMode.OFF)
             {
-                return Arguments[place].Parse((o) => queue.HandleError(this, o), queue.CurrentEntry).ToString(); // TODO: Non-lambda error path
+                return Arguments[place].Parse(queue.Error, queue.CurrentEntry).ToString();
             }
             else
             {
                 return Arguments[place].ToString();
             }
+        }
+
+        /// <summary>
+        /// Generates an appropriate queue + entry error handling action. Use this to retain an error handler after command execution. Otherwise, use <see cref="CommandQueue.Error"/>.
+        /// </summary>
+        /// <param name="queue">The queue for the context.</param>
+        /// <returns>The Action object.</returns>
+        public Action<string> ContextualErrorHandler(CommandQueue queue)
+        {
+            return (s) => queue.HandleError(this, s);
         }
 
         /// <summary>

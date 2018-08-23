@@ -118,10 +118,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The queue.</param>
         /// <param name="entry">The entry.</param>
-        /// <returns></returns>
+        /// <returns>The edit source.</returns>
         public static ObjectEditSource GetOES(CommandQueue queue, CommandEntry entry)
         {
-            return new ObjectEditSource() { Queue = queue, Entry = entry, Error = (o) => queue.HandleError(entry, o) };
+            return new ObjectEditSource() { Queue = queue, Entry = entry, Error = queue.Error };
         }
 
         /// <summary>

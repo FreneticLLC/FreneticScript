@@ -188,15 +188,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "Invalid IF: No arguments!");
                 return false;
             }
-            Action<string> error = (o) => queue.HandleError(entry, o);
             if (arguments.Count == 1)
             {
-                TemplateObject theto = arguments[0].Parse(error, queue.CurrentEntry);
+                TemplateObject theto = arguments[0].Parse(queue.Error, queue.CurrentEntry);
                 if (theto is BooleanTag)
                 {
                     return (theto as BooleanTag).Internal;
                 }
-                return GetBool(error, theto.ToString());
+                return GetBool(queue.Error, theto.ToString());
             }
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -248,12 +247,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                TemplateObject theto = arguments[0].Parse(error, queue.CurrentEntry);
+                TemplateObject theto = arguments[0].Parse(queue.Error, queue.CurrentEntry);
                 if (theto is BooleanTag)
                 {
                     return (theto as BooleanTag).Internal;
                 }
-                return GetBool(error, theto.ToString());
+                return GetBool(queue.Error, theto.ToString());
             }
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -300,9 +299,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "Invalid IF: Two-argument input unclear in intent!");
                 return false;
             }
-            TemplateObject to = arguments[0].Parse(error, queue.CurrentEntry);
+            TemplateObject to = arguments[0].Parse(queue.Error, queue.CurrentEntry);
             NumberTag n1 = NumberTag.TryFor(to);
-            to = arguments[2].Parse(error, queue.CurrentEntry);
+            to = arguments[2].Parse(queue.Error, queue.CurrentEntry);
             NumberTag n2 = NumberTag.TryFor(to);
             string comp = arguments[1].ToString();
             if (comp == "==")
