@@ -129,11 +129,11 @@ namespace FreneticScript.CommandSystem
             {
                 if (ex is ErrorInducedException)
                 {
-                    system.Output.BadOutput("Error parsing script: " + ex.Message);
+                    system.Context.BadOutput("Error parsing script: " + ex.Message);
                 }
                 else
                 {
-                    system.Output.BadOutput("Exception parsing script: " + ex.ToString());
+                    system.Context.BadOutput("Exception parsing script: " + ex.ToString());
                 }
                 return null;
             }
@@ -245,7 +245,7 @@ namespace FreneticScript.CommandSystem
                     if (msg != null)
                     {
                         string fullmsg = "FAILED TO COMPILE SCRIPT '" + name + "': (line " + toret[i].ScriptLine + "): " + msg;
-                        system.Output.BadOutput(fullmsg);
+                        system.Context.BadOutput(fullmsg);
                         had_error = true;
                         toret.Clear();
                         // TODO: Maybe throw an exception?
@@ -269,7 +269,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 string fname = filename + ".cfg";
-                return SeparateCommands(filename, system.Output.ReadTextFile(fname), system);
+                return SeparateCommands(filename, system.Context.ReadTextFile(fname), system);
             }
             catch (System.IO.FileNotFoundException)
             {
@@ -281,7 +281,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw;
                 }
-                system.Output.BadOutput("Generating script for file '" + filename + "': " + ex.ToString());
+                system.Context.BadOutput("Generating script for file '" + filename + "': " + ex.ToString());
                 return null;
             }
         }

@@ -235,7 +235,7 @@ namespace FreneticScript.CommandSystem
         {
             if (CurrentEntry.Debug == DebugMode.FULL)
             {
-                CommandSystem.Output.GoodOutput(text);
+                CommandSystem.Context.GoodOutput(text);
                 if (Outputsystem != null)
                 {
                     Outputsystem.Invoke(text, MessageType.GOOD);

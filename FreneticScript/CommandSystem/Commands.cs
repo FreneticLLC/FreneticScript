@@ -61,9 +61,9 @@ namespace FreneticScript.CommandSystem
         public TagParser TagSystem;
 
         /// <summary>
-        /// The output system.
+        /// The script engine context.
         /// </summary>
-        public Outputter Output;
+        public ScriptEngineContext Context;
 
         /// <summary>
         /// The AbstractCommand for the invalid command-command.
@@ -109,7 +109,7 @@ namespace FreneticScript.CommandSystem
                     evt.RemoveEventHandler(handl.Value.Name);
                 }
             }
-            Output.Reload();
+            Context.Reload();
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw;
                 }
-                Output.BadOutput("Found exception while precalculating script '" + name + "'...: " + ex.ToString());
+                Context.BadOutput("Found exception while precalculating script '" + name + "'...: " + ex.ToString());
             }
         }
 
@@ -298,7 +298,7 @@ namespace FreneticScript.CommandSystem
             command.CommandSystem = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
-                Output.BadOutput("Multiply registered command: " + command.Name + "!");
+                Context.BadOutput("Multiply registered command: " + command.Name + "!");
                 return;
             }
             RegisteredCommands.Add(command.Name, command);

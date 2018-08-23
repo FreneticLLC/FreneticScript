@@ -62,7 +62,7 @@ namespace FreneticScript.TagHandlers.Objects
                 }
                 if (!dat.HasFallback)
                 {
-                    dat.TagSystem.CommandSystem.Output.WriteLine(ex.ToString());
+                    dat.TagSystem.CommandSystem.Context.WriteLine(ex.ToString());
                     dat.Error("Invalid binary data: '" + TagParser.Escape(input) + "'!");
                 }
                 return null;

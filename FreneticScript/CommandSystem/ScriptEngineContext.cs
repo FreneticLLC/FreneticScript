@@ -14,9 +14,9 @@ using System.Text;
 namespace FreneticScript.CommandSystem
 {
     /// <summary>
-    /// An abstract class, implementations should provide methods that output to a console or equivalent.
+    /// An abstract class for the script engine to interface properly with the context it is running in.
     /// </summary>
-    public abstract class Outputter
+    public abstract class ScriptEngineContext
     {
         /// <summary>
         /// Writes a line of text to the console or text window. Used for informational output.

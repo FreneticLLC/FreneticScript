@@ -26,11 +26,11 @@ namespace FreneticScriptConsoleTester
         static void Main(string[] args)
         {
             SysConsole.Init();
-            CommandSystem = new Commands() { Output = new ConsoleTestOutputter() };
+            CommandSystem = new Commands() { Context = new ConsoleTesterContext() };
             CommandSystem.Init();
             // Register things here!
             CommandSystem.PostInit();
-            CVarSystem cs = new CVarSystem(CommandSystem.Output);
+            CVarSystem cs = new CVarSystem(CommandSystem.Context);
             Task.Factory.StartNew(() =>
             {
                 while (true)

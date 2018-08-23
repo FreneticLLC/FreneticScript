@@ -283,7 +283,7 @@ namespace FreneticScript.TagHandlers
                 type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
                 if (type.RawType == null)
                 {
-                    CommandSystem.Output.BadOutput("Possible bad tag declaration (no RawType): " + type.TypeName);
+                    CommandSystem.Context.BadOutput("Possible bad tag declaration (no RawType): " + type.TypeName);
                 }
                 else
                 {
@@ -301,7 +301,7 @@ namespace FreneticScript.TagHandlers
                             }
                             else if (thi.Meta.ReturnTypeResult == null)
                             {
-                                CommandSystem.Output.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                CommandSystem.Context.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
                             }
                             if (thi.Meta.SpecialTypeHelperName != null)
                             {
@@ -326,7 +326,7 @@ namespace FreneticScript.TagHandlers
                     type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
                     if (type.CreatorMethod == null)
                     {
-                        CommandSystem.Output.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
+                        CommandSystem.Context.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
                     }
                 }
             }
@@ -619,7 +619,7 @@ namespace FreneticScript.TagHandlers
         {
             if (data.DBMode <= DebugMode.FULL)
             {
-                data.TagSystem.CommandSystem.Output.GoodOutput("Filled tag " + TextStyle.Color_Separate +
+                data.TagSystem.CommandSystem.Context.GoodOutput("Filled tag " + TextStyle.Color_Separate +
                     new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
                     + TextStyle.Color_Outgood + "\".");
             }

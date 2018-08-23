@@ -78,7 +78,7 @@
     <Compile Include="CommandSystem\CommonCmds\SetCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\ToggleCommand.cs" />
     <Compile Include="CommandSystem\ErrorInducedException.cs" />
-    <Compile Include="CommandSystem\Outputter.cs" />
+    <Compile Include="CommandSystem\ScriptEngineContext.cs" />
     <Compile Include="CommandSystem\QueueCmds\BreakCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\CallCommand.cs" />
     <Compile Include="CommandSystem\QueueCmds\CatchCommand.cs" />

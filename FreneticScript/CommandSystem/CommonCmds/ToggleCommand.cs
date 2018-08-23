@@ -48,7 +48,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string target = entry.GetArgument(queue, 0);
-            CVar cvar = queue.CommandSystem.Output.CVarSys.Get(target);
+            CVar cvar = queue.CommandSystem.Context.CVarSys.Get(target);
             if (cvar == null)
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' does not exist!");
@@ -62,11 +62,11 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is a read-only system variable!");
             }
-            else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Output.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Context.Initializing)
             {
                 queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified after game initialization.");
             }
-            else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Output.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Context.Initializing)
             {
                 cvar.Set(cvar.ValueB ? "false" : "true");
                 if (entry.ShouldShowGood(queue))

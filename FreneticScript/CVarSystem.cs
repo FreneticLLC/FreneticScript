@@ -32,7 +32,7 @@ namespace FreneticScript
         /// <summary>
         /// The client/server outputter to use.
         /// </summary>
-        public Outputter Output;
+        public ScriptEngineContext Output;
 
         /// <summary>
         /// Whether the system has been modified or updated since this variable was last set to false.
@@ -44,7 +44,7 @@ namespace FreneticScript
         /// Constructs the CVar system.
         /// </summary>
         /// <param name="_output">The outputter to use.</param>
-        public CVarSystem(Outputter _output)
+        public CVarSystem(ScriptEngineContext _output)
         {
             CVars = new Dictionary<string, CVar>();
             CVarList = new List<CVar>();

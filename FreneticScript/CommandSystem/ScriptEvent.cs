@@ -210,7 +210,7 @@ namespace FreneticScript.CommandSystem
                         }
                         else
                         {
-                            System.Output.BadOutput("Context undefined for script event '" + Name + "'?");
+                            System.Context.BadOutput("Context undefined for script event '" + Name + "'?");
                         }
                         if (i >= Handlers.Count || Handlers[i].Value != script)
                         {
@@ -223,7 +223,7 @@ namespace FreneticScript.CommandSystem
                         {
                             throw;
                         }
-                        System.Output.BadOutput("Exception running script event: " + ex.ToString());
+                        System.Context.BadOutput("Exception running script event: " + ex.ToString());
                     }
                 }
             }

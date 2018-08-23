@@ -91,7 +91,7 @@ namespace FreneticScript.CommandSystem
             message = stacktrace.ToString().Substring(0, stacktrace.Length - 1);
             if (dbmode <= DebugMode.MINIMAL)
             {
-                queue.CommandSystem.Output.BadOutput(message);
+                queue.CommandSystem.Context.BadOutput(message);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(message, MessageType.BAD);

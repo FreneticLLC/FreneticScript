@@ -17,7 +17,7 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScriptConsoleTester
 {
-    public class ConsoleTestOutputter : Outputter
+    public class ConsoleTesterContext : ScriptEngineContext
     {
         public override void BadOutput(string text)
         {

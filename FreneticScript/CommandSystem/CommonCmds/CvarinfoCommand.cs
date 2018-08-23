@@ -48,10 +48,10 @@ namespace FreneticScript.CommandSystem.CommonCmds
         {
             if (entry.Arguments.Count < 1)
             {
-                entry.Info(queue, "Listing <{text_color[emphasis]}>" + queue.CommandSystem.Output.CVarSys.CVars.Count + "<{text_color[base]}> CVars...");
-                for (int i = 0; i < queue.CommandSystem.Output.CVarSys.CVars.Count; i++)
+                entry.Info(queue, "Listing <{text_color[emphasis]}>" + queue.CommandSystem.Context.CVarSys.CVars.Count + "<{text_color[base]}> CVars...");
+                for (int i = 0; i < queue.CommandSystem.Context.CVarSys.CVars.Count; i++)
                 {
-                    CVar cvar = queue.CommandSystem.Output.CVarSys.CVarList[i];
+                    CVar cvar = queue.CommandSystem.Context.CVarSys.CVarList[i];
                     entry.Info(queue, "<{text_color[emphasis]}>" + (i + 1).ToString() + "<{text_color[simple]}>)<{text_color[emphasis]}> " + TagParser.Escape(cvar.Info()));
                 }
             }
@@ -59,11 +59,11 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 string target = entry.GetArgument(queue, 0).ToLowerFastFS();
                 List<CVar> cvars = new List<CVar>();
-                for (int i = 0; i < queue.CommandSystem.Output.CVarSys.CVars.Count; i++)
+                for (int i = 0; i < queue.CommandSystem.Context.CVarSys.CVars.Count; i++)
                 {
-                    if (queue.CommandSystem.Output.CVarSys.CVarList[i].Name.StartsWith(target))
+                    if (queue.CommandSystem.Context.CVarSys.CVarList[i].Name.StartsWith(target))
                     {
-                        cvars.Add(queue.CommandSystem.Output.CVarSys.CVarList[i]);
+                        cvars.Add(queue.CommandSystem.Context.CVarSys.CVarList[i]);
                     }
                 }
                 if (cvars.Count == 0)

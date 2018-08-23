@@ -171,7 +171,7 @@ namespace FreneticScript.CommandSystem
         public static CommandEntry CreateInvalidOutput(string name, List<Argument> _arguments,
             Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs, Dictionary<string, Argument> nameds, Commands sys)
         {
-            if (sys.Output.ShouldErrorOnInvalidCommand())
+            if (sys.Context.ShouldErrorOnInvalidCommand())
             {
                 throw new ErrorInducedException("Unknown command '" + name + "'!");
             }
@@ -445,7 +445,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output.</param>
         public void InfoOutput(CommandQueue queue, string text)
         {
-            queue.CommandSystem.Output.WriteLine(text);
+            queue.CommandSystem.Context.WriteLine(text);
             if (queue.Outputsystem != null)
             {
                 queue.Outputsystem.Invoke(text, MessageType.INFO);
@@ -461,7 +461,7 @@ namespace FreneticScript.CommandSystem
         {
             if (queue.CurrentEntry.Debug == DebugMode.FULL)
             {
-                queue.CommandSystem.Output.GoodOutput(text);
+                queue.CommandSystem.Context.GoodOutput(text);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(text, MessageType.GOOD);
@@ -510,7 +510,7 @@ namespace FreneticScript.CommandSystem
             if (queue.CurrentEntry.Debug <= DebugMode.MINIMAL)
             {
                 text = "WARNING in script '" + ScriptName + "' on line " + (ScriptLine + 1) + ": " + text;
-                queue.CommandSystem.Output.BadOutput(text);
+                queue.CommandSystem.Context.BadOutput(text);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(text, MessageType.BAD);
