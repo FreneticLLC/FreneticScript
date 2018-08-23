@@ -1,6 +1,6 @@
 //
 // This file is created by Frenetic LLC.
-// This code is Copyright (C) 2016-2017 Frenetic LLC under the terms of a strict license.
+// This code is Copyright (C) 2016-2018 Frenetic LLC under the terms of a strict license.
 // See README.md or LICENSE.txt in the source root for the contents of the license.
 // If neither of these are available, assume that neither you nor anyone other than the copyright holder
 // hold any right or permission to use this software until such time as the official license is identified.
@@ -12,6 +12,8 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -50,7 +52,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public DebugCommand()
         {
             Name = "debug";
-            Arguments = "'full'/'minimal'/'none'";
+            Arguments = "'full'/'minimal'/'none'/'default'";
             Description = "Modifies the debug mode of the current queue.";
             IsFlow = true;
             Asyncable = true;
@@ -62,16 +64,76 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        // TODO: Compile this command neatly!
-
         TemplateObject Verify(TemplateObject input)
         {
             string inp = input.ToString().ToLowerFastFS();
-            if (inp == "full" || inp == "minimal" || inp == "none")
+            if (inp == "full" || inp == "minimal" || inp == "none" || inp == "default")
             {
                 return new TextTag(inp);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Prepares to adapt a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The relevant entry ID.</param>
+        public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            string larg = cent.Arguments[0].ToString().ToLowerFastFS();
+            switch (larg)
+            {
+                case "full":
+                    values.DBMode = DebugMode.FULL;
+                    break;
+                case "minimal":
+                    values.DBMode = DebugMode.MINIMAL;
+                    break;
+                case "none":
+                    values.DBMode = DebugMode.NONE;
+                    break;
+                case "default":
+                    values.DBMode = values.Entry.Debug;
+                    break;
+                default:
+                    throw new ErrorInducedException("Unknown debug mode: " + TextStyle.Color_Separate + larg + TextStyle.Color_Error + "!");
+            }
+        }
+
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The relevant entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.CommandAt(entry);
+            if (cent.DBMode == DebugMode.FULL)
+            {
+                values.LoadQueue();
+                values.LoadEntry(entry);
+                values.ILGen.Emit(OpCodes.Call, Method_DebugOutput);
+            }
+        }
+
+        /// <summary>
+        /// A reference to <see cref="DebugOutput(CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_DebugOutput = typeof(DebugCommand).GetMethod(nameof(DebugOutput));
+
+        /// <summary>
+        /// Helper to output debug message informing of debug mode change.
+        /// </summary>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void DebugOutput(CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.Good(queue, "Debug mode set to " + TextStyle.Color_Separate + entry.DBMode + TextStyle.Color_Outgood + ".");
+            }
         }
 
         /// <summary>
@@ -81,35 +143,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string modechoice = entry.GetArgument(queue, 0);
-            CommandStackEntry cse = queue.CurrentEntry;
-            switch (modechoice.ToLowerFastFS())
-            {
-                case "full":
-                    cse.Debug = DebugMode.FULL;
-                    if (entry.ShouldShowGood(queue))
-                    {
-                        entry.Good(queue, "Queue debug mode set to <{text_color[emphasis]}>full<{text_color[base]}>.");
-                    }
-                    break;
-                case "minimal":
-                    cse.Debug = DebugMode.MINIMAL;
-                    if (entry.ShouldShowGood(queue))
-                    {
-                        entry.Good(queue, "Queue debug mode set to <{text_color[emphasis]}>minimal<{text_color[base]}>.");
-                    }
-                    break;
-                case "none":
-                    cse.Debug = DebugMode.NONE;
-                    if (entry.ShouldShowGood(queue))
-                    {
-                        entry.Good(queue, "Queue debug mode set to <{text_color[emphasis]}>none<{text_color[base]}>.");
-                    }
-                    break;
-                default:
-                    queue.HandleError(entry, "Unknown debug mode '<{text_color[emphasis]}>" + modechoice + "<{text_color[base]}>'.");
-                    break;
-            }
+            queue.HandleError(entry, "The debug command MUST be compiled!");
         }
     }
 }

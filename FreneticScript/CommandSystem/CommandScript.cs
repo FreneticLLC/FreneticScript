@@ -292,7 +292,7 @@ namespace FreneticScript.CommandSystem
         public string Name;
 
         /// <summary>
-        /// The default debugmode for queues running this script.
+        /// The default debugmode for this script (until set otherwise by the debug command).
         /// </summary>
         public DebugMode Debug = DebugMode.FULL;
 
@@ -348,7 +348,8 @@ namespace FreneticScript.CommandSystem
                     Entry = ccse,
                     Script = this,
                     ILGen = ilgen,
-                    Method = methodbuild_c
+                    Method = methodbuild_c,
+                    DBMode = Debug
                 };
                 values.PushVarSet();
                 for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
@@ -361,6 +362,7 @@ namespace FreneticScript.CommandSystem
                 List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
+                    ccse.Entries[i].DBMode = values.DBMode;
                     CILVariables[] ttvars = new CILVariables[values.LVarIDs.Count];
                     CommandEntry curEnt = ccse.Entries[i];
                     int tcounter = 0;
@@ -456,6 +458,7 @@ namespace FreneticScript.CommandSystem
                             throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
                         }
                     }
+                    ccse.Entries[i].DBMode = values.DBMode;
                 }
                 ccse.LocalVariables = new ObjectHolder[values.CLVarID];
                 for (int n = 0; n < values.CLVariables.Count; n++)
@@ -520,10 +523,10 @@ namespace FreneticScript.CommandSystem
         /// <param name="tab">The tag data.</param>
         /// <param name="tID">The ID of the tag.</param>
         /// <param name="values">The helper values.</param>
-        /// <param name="i">The command entry index.</param>
+        /// <param name="entryIndex">The command entry index.</param>
         /// <param name="toClean">Cleanable tag bits.</param>
         public static CILAdaptationValues.ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
-            ref int tID, CILAdaptationValues values, int i, List<TagArgumentBit> toClean)
+            ref int tID, CILAdaptationValues values, int entryIndex, List<TagArgumentBit> toClean)
         {
             int id = tID;
             List<Argument> altArgs = new List<Argument>();
@@ -545,7 +548,7 @@ namespace FreneticScript.CommandSystem
                     if (altArgs[sx].Bits[b] is TagArgumentBit)
                     {
                         tID++;
-                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, i, toClean);
+                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, entryIndex, toClean);
                     }
                 }
             }
@@ -554,7 +557,7 @@ namespace FreneticScript.CommandSystem
             TagType returnable = tab.Start.ResultType;
             if (returnable == null)
             {
-                returnable = tab.Start.Adapt(ccse, tab, i);
+                returnable = tab.Start.Adapt(ccse, tab, entryIndex);
             }
             if (returnable == null)
             {
@@ -601,6 +604,7 @@ namespace FreneticScript.CommandSystem
             {
                 varBits[vxi] = tab.Bits[vxi].Variable;
             }
+            CommandEntry relevantEntry = ccse.Entries[entryIndex];
             tab.Data = new TagData()
             {
                 BaseColor = TextStyle.Color_Simple,
@@ -610,7 +614,7 @@ namespace FreneticScript.CommandSystem
                 Fallback = tab.Fallback,
                 Bits = tab.Bits,
                 Variables = varBits,
-                DBMode = ccse.Debug,
+                DBMode = relevantEntry.DBMode,
                 Remaining = tab.Bits.Length,
                 Start = tab.Start,
                 TagSystem = tab.CommandSystem.TagSystem

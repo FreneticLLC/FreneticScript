@@ -138,14 +138,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            CommandEntry cent = values.Entry.Entries[entry];
+            CommandEntry cent = values.CommandAt(entry);
             string arg = cent.Arguments[0].ToString();
             if (arg == "\0CALLBACK")
             {
                 string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("repeat_index");
                 int lvar_ind_loc = cent.VarLoc(sn);
                 values.LoadQueue();
-                bool db = values.Entry.Debug <= DebugMode.FULL;
+                bool db = cent.DBMode <= DebugMode.FULL;
                 if (db)
                 {
                     values.LoadEntry(entry);

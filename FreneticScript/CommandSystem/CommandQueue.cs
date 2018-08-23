@@ -275,7 +275,8 @@ namespace FreneticScript.CommandSystem
     }
 
     /// <summary>
-    /// An enumerattion of the possible debug modes a queue can have.
+    /// An enumeration of the possible debug modes a queue can have.
+    /// Lower values show more debug output. Higher values show less.
     /// </summary>
     public enum DebugMode : byte
     {

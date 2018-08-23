@@ -71,8 +71,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            bool debug = values.Entry.Debug <= DebugMode.FULL;
-            CommandEntry cent = values.Entry.Entries[entry];
+            CommandEntry cent = values.CommandAt(entry);
+            bool debug = cent.DBMode <= DebugMode.FULL;
             MapTag mt = MapTag.For(cent.Arguments[0].ToString());
             if (mt.Internal.Count == 0)
             {

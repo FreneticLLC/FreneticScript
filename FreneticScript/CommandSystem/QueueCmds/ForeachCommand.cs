@@ -144,7 +144,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("foreach_value");
                 int lvar_ind_loc = cent.VarLoc(sn);
                 values.LoadQueue();
-                bool db = values.Entry.Debug <= DebugMode.FULL;
+                bool db = cent.DBMode <= DebugMode.FULL;
                 if (db)
                 {
                     values.LoadEntry(entry);

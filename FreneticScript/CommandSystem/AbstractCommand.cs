@@ -147,7 +147,7 @@ namespace FreneticScript.CommandSystem
         /// Adapts a command entry to CIL.
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
-        /// <param name="entry">The present entry ID.</param>
+        /// <param name="entry">The relevant entry ID.</param>
         public virtual void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             values.CallExecute(entry, this);
@@ -157,7 +157,7 @@ namespace FreneticScript.CommandSystem
         /// Prepares to adapt a command entry to CIL.
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
-        /// <param name="entry">The present entry ID.</param>
+        /// <param name="entry">The relevant entry ID.</param>
         public virtual void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             // Do nothing.
@@ -228,6 +228,21 @@ namespace FreneticScript.CommandSystem
         /// The compiling script.
         /// </summary>
         public CommandScript Script;
+
+        /// <summary>
+        /// The debug mode currently in use.
+        /// </summary>
+        public DebugMode DBMode;
+
+        /// <summary>
+        /// Gets the command at the index.
+        /// </summary>
+        /// <param name="index">The index value.</param>
+        /// <returns>The command.</returns>
+        public CommandEntry CommandAt(int index)
+        {
+            return Entry.Entries[index];
+        }
 
         /// <summary>
         /// Represents the <see cref="CompiledCommandRunnable.CSEntry"/> field.

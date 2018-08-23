@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Prepares to adapt a command entry to CIL.
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
-        /// <param name="entry">The present entry ID.</param>
+        /// <param name="entry">The relevant entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
@@ -78,12 +78,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Adapts a command entry to CIL.
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
-        /// <param name="entry">The present entry ID.</param>
+        /// <param name="entry">The relevant entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            bool debug = values.Entry.Debug <= DebugMode.FULL;
+            CommandEntry cent = values.CommandAt(entry);
+            bool debug = cent.DBMode <= DebugMode.FULL;
             values.MarkCommand(entry);
-            CommandEntry cent = values.Entry.Entries[entry];
             bool isCorrect = true;
             TagType type = null;
             if (cent.Arguments.Count > 4)
