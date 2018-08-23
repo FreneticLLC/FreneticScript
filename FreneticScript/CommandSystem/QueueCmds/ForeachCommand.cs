@@ -94,6 +94,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 1;
             MaximumArguments = 2;
             IsBreakable = true;
+            SaveMode = CommandSaveMode.REQUIRED_NAME;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
                 Verify,
@@ -137,12 +138,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            CommandEntry cent = values.Entry.Entries[entry];
+            CommandEntry cent = values.CommandAt(entry);
             string arg = cent.Arguments[0].ToString();
             if (arg == "\0CALLBACK")
             {
-                string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse("foreach_value");
-                int lvar_ind_loc = cent.VarLoc(sn);
+                int lvar_ind_loc = GetSaveLoc(values, entry);
                 values.LoadQueue();
                 bool db = cent.DBMode <= DebugMode.FULL;
                 if (db)
@@ -227,14 +227,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return;
             }
             values.PushVarSet();
-            string sn = cent.GetSaveNameNoParse("foreach_value");
             // TODO: scope properly!
-            if (values.LocalVariableLocation(sn) >= 0)
-            {
-                throw new ErrorInducedException("Already have a foreach_value var (labeled '" + sn + "')?!");
-            }
-            TagType type = cent.System.TagSystem.Type_Dynamic;
-            values.AddVariable(sn, type);
+            PreAdaptSaveMode(values, entry, false, cent.System.TagSystem.Type_Dynamic);
         }
 
         /// <summary>

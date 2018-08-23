@@ -15,6 +15,7 @@ using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
+using System.Threading;
 
 namespace FreneticScript.CommandSystem
 {
@@ -175,7 +176,7 @@ namespace FreneticScript.CommandSystem
                 return;
             }
             Running = true;
-            ID = HighestID++; // TODO: thread-safe atomic increment?
+            ID = Interlocked.Increment(ref HighestID);
             CurrentEntry = CommandStack.Peek();
             if (ShouldOutputCurrent(out CommandEntry first))
             {

@@ -186,6 +186,17 @@ namespace FreneticScript.CommandSystem
         public Commands System;
 
         /// <summary>
+        /// The relevant tag system.
+        /// </summary>
+        public TagParser TagSystem
+        {
+            get
+            {
+                return System.TagSystem;
+            }
+        }
+
+        /// <summary>
         /// The index of this entry in its block.
         /// </summary>
         public int OwnIndex;
@@ -343,6 +354,11 @@ namespace FreneticScript.CommandSystem
         public int Marker = 0;
 
         /// <summary>
+        /// The save variable location, if any.
+        /// </summary>
+        public int SaveLoc;
+
+        /// <summary>
         /// Gets the save name for this entry, without parsing it.
         /// </summary>
         /// <param name="defaultval">The default value.</param>
@@ -355,6 +371,16 @@ namespace FreneticScript.CommandSystem
                 return arg.ToString().ToLowerFastFS();
             }
             return defaultval;
+        }
+
+        /// <summary>
+        /// Saves the result of this command, if <see cref="AbstractCommand.SaveMode"/> is set.
+        /// </summary>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="resultObj">The result object.</param>
+        public void SaveResult(CommandQueue queue, TemplateObject resultObj)
+        {
+            queue.SetLocalVar(SaveLoc, resultObj);
         }
         
         /// <summary>

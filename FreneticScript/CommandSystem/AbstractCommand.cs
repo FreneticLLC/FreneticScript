@@ -57,6 +57,16 @@ namespace FreneticScript.CommandSystem
         public string Description = "DESCRIPTION:UNSET";
 
         /// <summary>
+        /// In what way the command saves. Also set <see cref="DefaultSaveName"/> if relevant.
+        /// </summary>
+        public CommandSaveMode SaveMode = CommandSaveMode.NO_SAVE;
+
+        /// <summary>
+        /// The default save name, if <see cref="SaveMode"/> is set to <see cref="CommandSaveMode.DEFAULT_NAME"/>.
+        /// </summary>
+        public string DefaultSaveName = null;
+
+        /// <summary>
         /// Whether the command is for debugging purposes.
         /// </summary>
         public bool IsDebug = false;
@@ -160,7 +170,57 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The relevant entry ID.</param>
         public virtual void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
-            // Do nothing.
+            if (SaveMode == CommandSaveMode.DEFAULT_NAME && DefaultSaveName != null)
+            {
+                PreAdaptSaveMode(values, entry, true, values.CommandAt(entry).System.TagSystem.Type_Dynamic, DefaultSaveName);
+            }
+        }
+
+        /// <summary>
+        /// Pre-Adapt helper for save targets.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The relevant entry ID.</param>
+        /// <param name="canPreExist">Whether the variable is allowed to already exist.</param>
+        /// <param name="tagType">The required type.</param>
+        /// <param name="defaultName">The default name (or null if none).</param>
+        public void PreAdaptSaveMode(CILAdaptationValues values, int entry, bool canPreExist, TagType tagType, string defaultName = null)
+        {
+            CommandEntry cent = values.CommandAt(entry);
+            string saveName = cent.GetSaveNameNoParse(defaultName);
+            if (saveName == null)
+            {
+                throw new ErrorInducedException("Command requires a save name, but none was given.");
+            }
+            int preVarLoc = values.LocalVariableLocation(saveName, out TagType preVarType);
+            if (preVarLoc >= 0)
+            {
+                if (!canPreExist)
+                {
+                    throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "')?!");
+                }
+                if (preVarType != tagType)
+                {
+                    throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "', with type '" + preVarType.TypeName + "') of wrong type (expected '" + tagType.TypeName + "').");
+                }
+            }
+            else
+            {
+                values.AddVariable(saveName, tagType);
+            }
+        }
+
+        /// <summary>
+        /// Gets the save variable location (used in Adapt, after using <see cref="PreAdaptSaveMode(CILAdaptationValues, int, bool, TagType, string)"/> in PreAdapt).
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The relevant entry ID.</param>
+        /// <param name="defaultName">The default name (or null if none).</param>
+        public int GetSaveLoc(CILAdaptationValues values, int entry, string defaultName = null)
+        {
+            CommandEntry cent = values.CommandAt(entry);
+            string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse(defaultName);
+            return cent.VarLoc(sn);
         }
 
         /// <summary>
@@ -464,16 +524,29 @@ namespace FreneticScript.CommandSystem
         /// <returns>The location.</returns>
         public int LocalVariableLocation(string name)
         {
+            return LocalVariableLocation(name, out _);
+        }
+
+        /// <summary>
+        /// Returns the location of a local variable's name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="type">The type of the local variable.</param>
+        /// <returns>The location.</returns>
+        public int LocalVariableLocation(string name, out TagType type)
+        {
             foreach (int i in LVarIDs)
             {
                 for (int x = 0; x < CLVariables[i].LVariables.Count; x++)
                 {
                     if (CLVariables[i].LVariables[x].Item2 == name)
                     {
+                        type = CLVariables[i].LVariables[x].Item3;
                         return CLVariables[i].LVariables[x].Item1;
                     }
                 }
             }
+            type = null;
             return -1;
         }
 
@@ -584,5 +657,24 @@ namespace FreneticScript.CommandSystem
             PrepareExecutionCall(entry);
             ILGen.Emit(OpCodes.Call, cmd.ExecuteMethod);
         }
+    }
+
+    /// <summary>
+    /// Enumeration of modes describing the way a command saves.
+    /// </summary>
+    public enum CommandSaveMode
+    {
+        /// <summary>
+        /// The command does not save.
+        /// </summary>
+        NO_SAVE = 0,
+        /// <summary>
+        /// The command can only save when a name is given.
+        /// </summary>
+        REQUIRED_NAME = 1,
+        /// <summary>
+        /// The command has a default save name value.
+        /// </summary>
+        DEFAULT_NAME = 2
     }
 }
