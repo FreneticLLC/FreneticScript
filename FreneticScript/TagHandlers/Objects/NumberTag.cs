@@ -197,7 +197,7 @@ namespace FreneticScript.TagHandlers.Objects
                 case DynamicTag dtag:
                     return CreateFor(dtag.Internal, dat);
                 default:
-                    return TryFor(input.ToString());
+                    return For(dat, input.ToString());
             }
         }
 

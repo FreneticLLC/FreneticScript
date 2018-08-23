@@ -109,9 +109,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="cse">The command stack entry.</param>
         public void PrepParse(Action<string> error, CompiledCommandStackEntry cse)
         {
-            Data.Error = error;
+            Data.ErrorHandler = error;
             Data.cInd = 0;
-            Data.Remaining = Bits.Length;
             Data.CSE = cse;
         }
 
@@ -125,9 +124,8 @@ namespace FreneticScript.CommandSystem.Arguments
         public sealed override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
             // TODO: This isn't very thread safe.
-            Data.Error = error;
+            Data.ErrorHandler = error;
             Data.cInd = 0;
-            Data.Remaining = Bits.Length;
             Data.CSE = cse;
             return GetResultHelper(Data);
         }

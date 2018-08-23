@@ -379,6 +379,35 @@ namespace FreneticScript.CommandSystem
             }
 
             /// <summary>
+            /// Starts a filtered 'try' block.
+            /// </summary>
+            /// <returns>The block label.</returns>
+            public Label BeginExceptionBlock()
+            {
+                Label toRet = Internal.BeginExceptionBlock();
+                AddCode(OpCodes.Nop, "<start try block, label>: " + toRet);
+                return toRet;
+            }
+
+            /// <summary>
+            /// Starts a catch block for a specific exception type.
+            /// </summary>
+            public void BeginCatchBlock(Type exType)
+            {
+                Internal.BeginCatchBlock(exType);
+                AddCode(OpCodes.Nop, "<begin catch block, type:> " + exType.FullName);
+            }
+
+            /// <summary>
+            /// Ends an exception block.
+            /// </summary>
+            public void EndExceptionBlock()
+            {
+                Internal.EndExceptionBlock();
+                AddCode(OpCodes.Nop, "<end exception block>");
+            }
+
+            /// <summary>
             /// Marks a label.
             /// </summary>
             /// <param name="label">The label.</param>

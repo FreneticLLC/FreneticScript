@@ -100,7 +100,7 @@ namespace FreneticScript.CommandSystem
             {
                 BasicTagData = TagData.GenerateSimpleErrorTagData();
                 BasicTagData.TagSystem = CommandSystem.TagSystem;
-                BasicTagData.Error = Error;
+                BasicTagData.ErrorHandler = Error;
             }
             BasicTagData.CSE = CurrentEntry;
             BasicTagData.DBMode = CurrentEntry == null ? DebugMode.FULL : CurrentEntry.Debug;

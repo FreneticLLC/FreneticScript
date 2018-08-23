@@ -63,6 +63,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Gets the object of the next type down the tree of types.
         /// REQUIRES a PUBLIC STATIC METHOD be referenced!
+        /// TODO: Replace with direct method referencing (to avoid casting trouble).
         /// </summary>
         public Func<TemplateObject, TemplateObject> GetNextTypeDown;
     }

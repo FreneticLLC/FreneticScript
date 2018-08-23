@@ -382,7 +382,7 @@ namespace FreneticScript.CommandSystem
                                 tagID++;
                                 try
                                 {
-                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, a.ToString()));
                                 }
                                 catch (TagErrorInducedException ex)
                                 {
@@ -404,7 +404,7 @@ namespace FreneticScript.CommandSystem
                                 tagID++;
                                 try
                                 {
-                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean));
+                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key));
                                 }
                                 catch (TagErrorInducedException ex)
                                 {
@@ -549,8 +549,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="values">The helper values.</param>
         /// <param name="entryIndex">The command entry index.</param>
         /// <param name="toClean">Cleanable tag bits.</param>
+        /// <param name="argumentId">Source command argument ID.</param>
         public static CILAdaptationValues.ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
-            ref int tID, CILAdaptationValues values, int entryIndex, List<TagArgumentBit> toClean)
+            ref int tID, CILAdaptationValues values, int entryIndex, List<TagArgumentBit> toClean, string argumentId)
         {
             int id = tID;
             List<Argument> altArgs = new List<Argument>();
@@ -572,7 +573,7 @@ namespace FreneticScript.CommandSystem
                     if (altArgs[sx].Bits[b] is TagArgumentBit)
                     {
                         tID++;
-                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, entryIndex, toClean);
+                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, entryIndex, toClean, argumentId);
                     }
                 }
             }
@@ -642,15 +643,18 @@ namespace FreneticScript.CommandSystem
                 BaseColor = TextStyle.Color_Simple,
                 cInd = 0,
                 CSE = ccse,
-                Error = null,
+                ErrorHandler = null,
                 Fallback = tab.Fallback,
                 Bits = tab.Bits,
                 Variables = varBits,
                 DBMode = relevantEntry.DBMode,
-                Remaining = tab.Bits.Length,
                 Start = tab.Start,
-                TagSystem = tab.CommandSystem.TagSystem
+                TagSystem = tab.CommandSystem.TagSystem,
+                SourceArgumentID = argumentId
             };
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
+            ilgen.Emit(OpCodes.Ldc_I4_0); // Load a '0' int32
+            ilgen.Emit(OpCodes.Stfld, TagData.Field_cInd); // Store x into TagData.cInd
             if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
@@ -671,25 +675,12 @@ namespace FreneticScript.CommandSystem
             {
                 ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOne); // Run static method: TemplateTagBase -> HandleOne.
             }
-            int need_shrink = 0;
             for (int x = 1; x < tab.Bits.Length; x++)
             {
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
+                ilgen.Emit(OpCodes.Ldc_I4, x); // Load the current sub-tag index as an int32
+                ilgen.Emit(OpCodes.Stfld, TagData.Field_cInd); // Store x into TagData.cInd
                 TagType modt = tab.Bits[x].TagHandler.Meta.ModifierType;
-                need_shrink++;
-                if (modt == null) // If no direct modifier input is required, just a generic TagData input...
-                {
-                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                    if (need_shrink > 1) // If we need to shrink several at once...
-                    {
-                        ilgen.Emit(OpCodes.Ldc_I4, need_shrink); // Load the number of times a shrink is needed.
-                        ilgen.Emit(OpCodes.Call, TagData.Method_ShrinkMulti); // Run method: TagData -> ShrinkMulti.
-                    }
-                    else
-                    {
-                        ilgen.Emit(OpCodes.Call, TagData.Method_Shrink); // Run method: TagData -> Shrink.
-                    }
-                    need_shrink = 0;
-                }
                 // If we're running a specially compiled tag...
                 if (tab.Bits[x].TagHandler.Meta.SpecialCompiler)
                 {
@@ -727,7 +718,7 @@ namespace FreneticScript.CommandSystem
                     ilgen.Emit(OpCodes.Call, tab.Bits[x].TagHandler.Method); // Run the tag's own runner method.
                 }
             }
-            if (ccse.Debug <= DebugMode.FULL) // If debug mode is on...
+            if (relevantEntry.DBMode <= DebugMode.FULL) // If debug mode is on...
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                 ilgen.Emit(OpCodes.Call, TagParser.Method_DebugTagHelper); // Debug the tag as a final step. Will give back the object to the stack.

@@ -76,7 +76,7 @@ namespace FreneticScript.CommandSystem
         public void HandleError(CommandQueue queue, CommandEntry entry, string message)
         {
             StringBuilder stacktrace = new StringBuilder();
-            stacktrace.Append("ERROR: \"" + message + "\"\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
+            stacktrace.Append("ERROR: " + message + "\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
                 + ": (" + entry.Name + ")\n");
             queue.WaitingOn = null;
             CompiledCommandStackEntry cse = queue.CommandStack.Count > 0 ? queue.CommandStack.Peek() : null;

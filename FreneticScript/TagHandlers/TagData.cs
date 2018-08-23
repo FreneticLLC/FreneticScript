@@ -1,6 +1,6 @@
 //
 // This file is created by Frenetic LLC.
-// This code is Copyright (C) 2016-2017 Frenetic LLC under the terms of a strict license.
+// This code is Copyright (C) 2016-2018 Frenetic LLC under the terms of a strict license.
 // See README.md or LICENSE.txt in the source root for the contents of the license.
 // If neither of these are available, assume that neither you nor anyone other than the copyright holder
 // hold any right or permission to use this software until such time as the official license is identified.
@@ -51,24 +51,14 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
-        /// The "Start" field.
+        /// The <see cref="Start"/> field.
         /// </summary>
-        public static FieldInfo Field_Start = typeof(TagData).GetField("Start");
-
+        public static FieldInfo Field_Start = typeof(TagData).GetField(nameof(Start));
+        
         /// <summary>
-        /// The "InputKeys" field.
+        /// The <see cref="cInd"/> field.
         /// </summary>
-        public static FieldInfo Field_InputKeys = typeof(TagData).GetField("InputKeys");
-
-        /// <summary>
-        /// The "ShrinkMulti" method.
-        /// </summary>
-        public static MethodInfo Method_ShrinkMulti = typeof(TagData).GetMethod("ShrinkMulti");
-
-        /// <summary>
-        /// The "Shrink" method.
-        /// </summary>
-        public static MethodInfo Method_Shrink = typeof(TagData).GetMethod("Shrink");
+        public static FieldInfo Field_cInd = typeof(TagData).GetField(nameof(cInd));
 
         /// <summary>
         /// The start of this data.
@@ -99,6 +89,11 @@ namespace FreneticScript.TagHandlers
         /// What to be returned if the tag fills null.
         /// </summary>
         public Argument Fallback = null;
+
+        /// <summary>
+        /// The source argument ID within the command.
+        /// </summary>
+        public string SourceArgumentID = "<none>";
 
         /// <summary>
         /// Whether this tag has an alternate response if it fills null.
@@ -133,9 +128,23 @@ namespace FreneticScript.TagHandlers
         public string BaseColor = null;
 
         /// <summary>
-        /// What to invoke if there is an error. Given string contains valid tags - any user input should be escaped!
+        /// What to invoke if there is an error. Used for setting a resultant call. If an error is encountered in a tag, use <see cref="Error(string)"/>.
         /// </summary>
-        public Action<string> Error;
+        public Action<string> ErrorHandler;
+
+        /// <summary>
+        /// Call to start the error handling system.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public void Error(string message)
+        {
+            RunError(message);
+        }
+
+        /// <summary>
+        /// Callable action for handling errors.
+        /// </summary>
+        public Action<string> ErrorAction;
 
         /// <summary>
         /// The relevant command stack entry, if any.
@@ -143,10 +152,50 @@ namespace FreneticScript.TagHandlers
         public CompiledCommandStackEntry CSE;
 
         /// <summary>
+        /// Runs a clean error for this tag.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        public void RunError(string message)
+        {
+            ErrorHandler(message + "\n    while handling tag "
+                + TextStyle.Color_Separate + "<" + HighlightString(cInd, TextStyle.Color_Warning)
+                + TextStyle.Color_Separate + ">" + TextStyle.Color_Base + " under sub-tag '"
+                + TextStyle.Color_Separate + Bits[cInd].ToString() + TextStyle.Color_Base + "' for type '"
+                + TextStyle.Color_Separate + Bits[cInd].TagHandler.Meta.ActualType.TypeName + TextStyle.Color_Base + "' at index "
+                + TextStyle.Color_Separate + cInd + TextStyle.Color_Base + " in command argument "
+                + TextStyle.Color_Separate + SourceArgumentID + TextStyle.Color_Base);
+        }
+
+        /// <summary>
+        /// Returns the tag as tag input text, highlighting a specific index. Does not include wrapping tag marks.
+        /// </summary>
+        /// <param name="index">The index to highlight at.</param>
+        /// <param name="highlight">The highlight string.</param>
+        /// <returns>Tag input text.</returns>
+        public string HighlightString(int index, string highlight)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < Bits.Length; i++)
+            {
+                if (i == index)
+                {
+                    sb.Append(highlight);
+                }
+                sb.Append(Bits[i].ToString());
+                if (i + 1 < Bits.Length)
+                {
+                    sb.Append(".");
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Constructs an empty unfilled tag data (FILL THIS OBJECT AFTER USING THIS).
         /// </summary>
         public TagData()
         {
+            ErrorAction = Error;
             // Assume the Tag system will fill vars.
         }
 
@@ -166,39 +215,25 @@ namespace FreneticScript.TagHandlers
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Color_Simple;
             DBMode = _mode;
-            Error = _error;
+            ErrorHandler = _error;
             Fallback = fallback;
-            Remaining = _bits.Length;
             Variables = _vars;
             Bits = _bits;
             CSE = _cse;
-        }
-        
-        /// <summary>
-        /// Shrinks the data amount by X at the start, and returns itself.
-        /// </summary>
-        /// <returns>This object.</returns>
-        public void ShrinkMulti(int x)
-        {
-            cInd += x;
-            Remaining -= x;
-        }
-
-        /// <summary>
-        /// Shrinks the data amount by one at the start, and returns itself.
-        /// </summary>
-        /// <returns>This object.</returns>
-        public void Shrink()
-        {
-            cInd++;
-            Remaining--;
+            ErrorAction = Error;
         }
 
         /// <summary>
         /// How many tag positions are left.
         /// </summary>
-        public int Remaining;
-
+        public int Remaining
+        {
+            get
+            {
+                return Bits.Length - cInd;
+            }
+        }
+        
         /// <summary>
         /// Gets the modifier at the current position, handling any tags within - returning a string.
         /// </summary>
@@ -230,7 +265,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObjectKnown(int place)
         {
-            return Variables[place].Parse(Error, CSE);
+            return Variables[place].Parse(ErrorAction, CSE);
         }
 
         /// <summary>
@@ -239,7 +274,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObjectCurrent()
         {
-            return Variables[cInd].Parse(Error, CSE);
+            return Variables[cInd].Parse(ErrorAction, CSE);
         }
 
         /// <summary>
@@ -249,7 +284,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObject(int place)
         {
-            return Variables[place + cInd].Parse(Error, CSE);
+            return Variables[place + cInd].Parse(ErrorAction, CSE);
         }
     }
 }

@@ -112,6 +112,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandEntry cent = values.CommandAt(entry);
             if (cent.DBMode == DebugMode.FULL)
             {
+                values.MarkCommand(entry);
                 values.LoadQueue();
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Call, Method_DebugOutput);
