@@ -607,7 +607,7 @@ namespace FreneticScript.CommandSystem
                     throw new TagErrorInducedException("Invalid sub-tag '"
                         + TextStyle.Color_Separate + key + TextStyle.Color_Base + "' at sub-tag index "
                         + TextStyle.Color_Separate + x + TextStyle.Color_Base + " for type '"
-                        + TextStyle.Color_Separate + prevType.TypeName + TextStyle.Color_Base
+                        + TextStyle.Color_Separate + returnable.TypeName + TextStyle.Color_Base
                         + (key.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"), x);
                 }
                 ready:
