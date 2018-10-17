@@ -170,9 +170,19 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The relevant entry ID.</param>
         public virtual void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
+            CommandEntry cent = values.CommandAt(entry);
             if (SaveMode == CommandSaveMode.DEFAULT_NAME && DefaultSaveName != null)
             {
-                PreAdaptSaveMode(values, entry, true, values.CommandAt(entry).System.TagSystem.Type_Dynamic, DefaultSaveName);
+                PreAdaptSaveMode(values, entry, true, cent.System.TagSystem.Type_Dynamic, DefaultSaveName);
+            }
+            if (SaveMode != CommandSaveMode.NO_SAVE)
+            {
+                string saveName = cent.GetSaveNameNoParse(DefaultSaveName);
+                if (saveName != null)
+                {
+                    int varLoc = values.LocalVariableLocation(saveName, out TagType preVarType);
+                    cent.SaveLoc = varLoc;
+                }
             }
         }
 
