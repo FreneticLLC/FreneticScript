@@ -21,6 +21,11 @@ namespace FreneticScript.CommandSystem
     public class CommandEntry
     {
         /// <summary>
+        /// The named argument ID for theh name of a variable to save into.
+        /// </summary>
+        public const string SAVE_NAME_ARG_ID = "\0varname";
+
+        /// <summary>
         /// Creates a CommandEntry from the given input and queue information.
         /// </summary>
         /// <param name="command">The command line text itself.</param>
@@ -97,7 +102,7 @@ namespace FreneticScript.CommandSystem
                     {
                         Argument varname = args[0];
                         args.RemoveRange(0, 2);
-                        nameds["\0varname"] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFastFS(), true, true) } };
+                        nameds[SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFastFS(), true, true) } };
                     }
                 }
                 int marker = 0;
@@ -364,7 +369,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="defaultval">The default value.</param>
         /// <param name="id">The ID of the saver.</param>
         /// <returns>The save name.</returns>
-        public string GetSaveNameNoParse(string defaultval, string id = "save")
+        public string GetSaveNameNoParse(string defaultval, string id = SAVE_NAME_ARG_ID)
         {
             if (NamedArguments.TryGetValue(id, out Argument arg))
             {

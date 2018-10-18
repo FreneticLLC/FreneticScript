@@ -125,10 +125,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                 }
             }
-            if (entry.NamedArguments.ContainsKey("\0varname"))
+            if (entry.NamedArguments.ContainsKey(CommandEntry.SAVE_NAME_ARG_ID))
             {
                 bool sgood = entry.ShouldShowGood(queue);
-                string vname = entry.NamedArguments["\0varname"].ToString();
+                string vname = entry.NamedArguments[CommandEntry.SAVE_NAME_ARG_ID].ToString();
                 if (sgood)
                 {
                     entry.Good(queue, "Noticing variable track for " + vname + ".");

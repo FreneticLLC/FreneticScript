@@ -446,7 +446,7 @@ namespace FreneticScript.CommandSystem
                         }
                     }
                     curEnt.VarLookup = varlookup;
-                    if (curEnt.NamedArguments.TryGetValue("\0varname", out Argument avarname))
+                    if (curEnt.NamedArguments.TryGetValue(CommandEntry.SAVE_NAME_ARG_ID, out Argument avarname))
                     {
                         if (!varlookup.ContainsKey(avarname.ToString()))
                         {
