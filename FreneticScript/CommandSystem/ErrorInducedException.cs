@@ -48,6 +48,7 @@ namespace FreneticScript.CommandSystem
 
     /// <summary>
     /// Represents an exception induced by a script error related to a tag. Should be ignored/re-thrown to let the error propogate up to the script level.
+    /// <para>Only for use within the internal script engine systems.</para>
     /// </summary>
     [Serializable]
     public class TagErrorInducedException : ErrorInducedException

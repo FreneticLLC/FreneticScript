@@ -23,9 +23,38 @@ namespace FreneticScript.CommandSystem.Arguments
     public class Argument
     {
         /// <summary>
+        /// Empty argument bit array.
+        /// </summary>
+        public static readonly ArgumentBit[] EMPTY_BITS = new ArgumentBit[0];
+
+        /// <summary>
+        /// Raw value of the parts that build up the argument.
+        /// </summary>
+        public ArgumentBit[] RawBits = EMPTY_BITS;
+
+        /// <summary>
         /// The parts that build up the argument.
         /// </summary>
-        public ArgumentBit[] Bits = new ArgumentBit[0];
+        public ArgumentBit[] Bits
+        {
+            get
+            {
+                return RawBits;
+            }
+            set
+            {
+                RawBits = value;
+                if (value.Length != 0)
+                {
+                    FirstBit = value[0];
+                }
+            }
+        }
+
+        /// <summary>
+        /// The first bit in <see cref="Bits"/>.
+        /// </summary>
+        public ArgumentBit FirstBit;
 
         /// <summary>
         /// Whether the argument was input with "quotes" around it.
@@ -64,7 +93,7 @@ namespace FreneticScript.CommandSystem.Arguments
         public static void Compile_DuplicateIfNeeded(CILAdaptationValues.ILGeneratorTracker ilgen, TextArgumentBit tab)
         {
             Type tx = tab.InputValue.GetType();
-            if (!DuplicatorCalls.TryGetValue(tx, out MethodInfo metinf))
+            if (!DuplicatorCalls.TryGetValue(tx, out MethodInfo metinf)) // TODO: Store this early in TagType
             {
                 metinf = tx.GetMethod("RequiredDuplicate", BindingFlags.Instance | BindingFlags.Public);
                 DuplicatorCalls.Add(tx, metinf);
@@ -98,27 +127,28 @@ namespace FreneticScript.CommandSystem.Arguments
             {
                 ilgen.Emit(OpCodes.Ldstr, ""); // Load an empty string
                 ilgen.Emit(OpCodes.Newobj, TextTag_CTOR); // Construct a texttag of the empty string
-                // Note: have to construct new text tag every time, ask text tag value can be modified (via Set call).
+                // Note: have to construct new text tag every time, as text tag value can be modified (via Set call).
             }
             else if (Bits.Length == 1) // One argument input
             {
+                int tab_tracker_loc = 0;
+                int object_result_loc = 1;
+                if (FirstBit is TagArgumentBit)
+                {
+                    tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)); // Declare variable of type TagArgumentBit as local-0
+                    object_result_loc = ilgen.DeclareLocal(typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
+                }
                 ilgen.Emit(OpCodes.Ldarg_0); // Load the argument object
-                ilgen.Emit(OpCodes.Ldfld, Argument_Bits); // Load the bits array
-                ilgen.Emit(OpCodes.Ldc_I4, 0); // Load integer 0, as the bit is always in the first slot (for bits array length 1)
-                ilgen.Emit(OpCodes.Ldelem_Ref); // Load the ArgumentBit
-                if (Bits[0] is TextArgumentBit textab)
+                ilgen.Emit(OpCodes.Ldfld, Argument_FirstBit); // Load the only argument bit
+                if (FirstBit is TextArgumentBit textab)
                 {
                     ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the textab's input value directly
                     Compile_DuplicateIfNeeded(ilgen, textab);
                 }
-                else if (Bits[0] is TagArgumentBit tab)
+                else if (FirstBit is TagArgumentBit tab)
                 {
-                    ilgen.Emit(OpCodes.Dup); // Duplicate the ArgumentBit (so we can use it for the Data field read)
-                    ilgen.Emit(OpCodes.Ldarg_1); // Load Action<string> 'error'
-                    ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandStackEntry 'cse'
-                    ilgen.Emit(OpCodes.Call, TagArgumentBit_PrepParse); // Prep the tag parse (on the current tab, with the two input params)
-                    ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
-                    ilgen.Emit(OpCodes.Call, tab.GetResultMethod); // Directly call the get result method (static, with input 'data')
+                    tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
+                    ilgen.Emit(OpCodes.Ldloc, object_result_loc); // Load the object result
                 }
                 else
                 {
@@ -129,34 +159,49 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             else // Complex argument input
             {
-                int ind = ilgen.DeclareLocal(typeof(StringBuilder));
-                int cx = 0;
+                int result_string_loc = ilgen.DeclareLocal(typeof(StringBuilder)); // Declare variable of type StringBuilder as local-0
+                bool hasTag = false;
                 for (int i = 0; i < Bits.Length; i++)
                 {
-                    cx += Bits[i].ToString().Length;
+                    if (Bits[i] is TagArgumentBit tab)
+                    {
+                        hasTag = true;
+                        break;
+                    }
+                }
+                int object_result_loc = ilgen.DeclareLocal(typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
+                int tab_tracker_loc = 0;
+                if (hasTag)
+                {
+                    tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)); // Declare variable of type TagArgumentBit as local-2
+                }
+                int cx = 2;
+                for (int i = 0; i < Bits.Length; i++)
+                {
+                    cx += Bits[i].ToString().Length + 1;
                 }
                 ilgen.Emit(OpCodes.Ldc_I4, cx); // Load the integer value of the approximated length (to set an estimated capacity for the stringbuilder)
                 ilgen.Emit(OpCodes.Newobj, StringBuilder_CTOR); // Construct an empty stringbuilder with that length
-                ilgen.Emit(OpCodes.Stloc, ind); // Store the stringbuilder to a local variable
+                ilgen.Emit(OpCodes.Stloc, result_string_loc); // Store the stringbuilder to a local variable
                 for (int i = 0; i < Bits.Length; i++)
                 {
-                    ilgen.Emit(OpCodes.Ldloc, ind); // Load the local variable containing the string builder
+                    if (!(Bits[i] is TagArgumentBit))
+                    {
+                        ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the local variable containing the string builder
+                    }
                     ilgen.Emit(OpCodes.Ldarg_0); // Load the argument object
-                    ilgen.Emit(OpCodes.Ldfld, Argument_Bits); // Load the bits array
+                    ilgen.Emit(OpCodes.Ldfld, Argument_RawBits); // Load the bits array
                     ilgen.Emit(OpCodes.Ldc_I4, i); // Load the current index (will be a constant integer load at runtime)
                     ilgen.Emit(OpCodes.Ldelem_Ref); // Load the ArgumentBit
-                    if (Bits[i] is TextArgumentBit)
+                    if (Bits[i] is TagArgumentBit tab)
+                    {
+                        tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
+                        ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the local variable containing the string builder
+                        ilgen.Emit(OpCodes.Ldloc, object_result_loc); // Load the object result
+                    }
+                    else if (Bits[i] is TextArgumentBit)
                     {
                         ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the tab's input value directly
-                    }
-                    else if (Bits[i] is TagArgumentBit tab)
-                    {
-                        ilgen.Emit(OpCodes.Dup); // Duplicate the ArgumentBit (so we can use it for the Data field read)
-                        ilgen.Emit(OpCodes.Ldarg_1); // Load Action<string> 'error'
-                        ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandStackEntry 'cse'
-                        ilgen.Emit(OpCodes.Call, TagArgumentBit_PrepParse); // Prep the tag parse (on the current tab, with the two input params)
-                        ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
-                        ilgen.Emit(OpCodes.Call, tab.GetResultMethod); // Directly call the get result method (static, with input 'data')
                     }
                     else
                     {
@@ -168,7 +213,7 @@ namespace FreneticScript.CommandSystem.Arguments
                     ilgen.Emit(OpCodes.Call, StringBuilder_Append); // Append it to the string builder
                     ilgen.Emit(OpCodes.Pop); // Remove the stringbuilder.append return value from the stack, as it's not needed (final assembly code should automatically discard the return push-n-pop)
                 }
-                ilgen.Emit(OpCodes.Ldloc, ind); // Load the stringbuilder
+                ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the stringbuilder
                 ilgen.Emit(OpCodes.Callvirt, Object_ToString); // ToString it (maybe this doesn't need to be virtual?)
                 ilgen.Emit(OpCodes.Newobj, TextTag_CTOR); // Construct a texttag of the full complex input
             }
@@ -201,9 +246,14 @@ namespace FreneticScript.CommandSystem.Arguments
         public static ConstructorInfo TextTag_CTOR = typeof(TextTag).GetConstructor(new Type[] { typeof(string) });
 
         /// <summary>
-        /// The <see cref="Bits"/> field.
+        /// The <see cref="RawBits"/> field.
         /// </summary>
-        public static FieldInfo Argument_Bits = typeof(Argument).GetField(nameof(Bits));
+        public static FieldInfo Argument_RawBits = typeof(Argument).GetField(nameof(RawBits));
+
+        /// <summary>
+        /// The <see cref="FirstBit"/> field.
+        /// </summary>
+        public static FieldInfo Argument_FirstBit = typeof(Argument).GetField(nameof(FirstBit));
 
         /// <summary>
         /// The <see cref="Parse(Action{string}, CompiledCommandStackEntry)"/> method.
@@ -219,16 +269,6 @@ namespace FreneticScript.CommandSystem.Arguments
         /// The <see cref="TextArgumentBit.InputValue"/> field.
         /// </summary>
         public static FieldInfo TextArgumentBit_InputValue = typeof(TextArgumentBit).GetField(nameof(TextArgumentBit.InputValue));
-
-        /// <summary>
-        /// The <see cref="TagArgumentBit.Data"/> field.
-        /// </summary>
-        public static FieldInfo TagArgumentBit_Data = typeof(TagArgumentBit).GetField(nameof(TagArgumentBit.Data));
-
-        /// <summary>
-        /// The <see cref="TagArgumentBit.PrepParse(Action{string}, CompiledCommandStackEntry)"/> method.
-        /// </summary>
-        public static MethodInfo TagArgumentBit_PrepParse = typeof(TagArgumentBit).GetMethod(nameof(TagArgumentBit.PrepParse));
 
         /// <summary>
         /// The "true form" of this argument.
@@ -249,27 +289,7 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             return TrueForm.Parse(error, cse);
         }
-
-        /// <summary>
-        /// Parse the argument, reading any tags or other special data.
-        /// </summary>
-        /// <param name="error">What to invoke if there is an error.</param>
-        /// <param name="cse">The command stack entry.</param>
-        /// <returns>The parsed final text.</returns>
-        public TemplateObject ParseSlow(Action<string> error, CompiledCommandStackEntry cse)
-        {
-            if (Bits.Length == 1)
-            {
-                return Bits[0].Parse(error, cse);
-            }
-            StringBuilder built = new StringBuilder();
-            for (int i = 0; i < Bits.Length; i++)
-            {
-                built.Append(Bits[i].Parse(error, cse).ToString());
-            }
-            return new TextTag(built.ToString());
-        }
-
+        
         /// <summary>
         /// Returns the argument as plain input text.
         /// </summary>

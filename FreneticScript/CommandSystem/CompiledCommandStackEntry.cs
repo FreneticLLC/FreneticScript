@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The newly duplicated stack entry.</returns>
         public CompiledCommandStackEntry Duplicate()
         {
-            CompiledCommandStackEntry ccse = (CompiledCommandStackEntry)MemberwiseClone();
+            CompiledCommandStackEntry ccse = MemberwiseClone() as CompiledCommandStackEntry;
             ccse.LocalVariables = new ObjectHolder[LocalVariables.Length];
             for (int i = 0; i < ccse.LocalVariables.Length; i++)
             {

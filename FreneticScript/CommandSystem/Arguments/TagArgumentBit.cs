@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers.Common;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
 namespace FreneticScript.CommandSystem.Arguments
@@ -24,6 +25,16 @@ namespace FreneticScript.CommandSystem.Arguments
     public class TagArgumentBit: ArgumentBit
     {
         /// <summary>
+        /// The <see cref="PrepParse(Action{string}, CompiledCommandStackEntry)"/> method.
+        /// </summary>
+        public static MethodInfo TagArgumentBit_PrepParse = typeof(TagArgumentBit).GetMethod(nameof(PrepParse));
+
+        /// <summary>
+        /// The <see cref="Data"/> field.
+        /// </summary>
+        public static FieldInfo TagArgumentBit_Data = typeof(TagArgumentBit).GetField(nameof(Data));
+
+        /// <summary>
         /// The pieces that make up the tag.
         /// </summary>
         public TagBit[] Bits;
@@ -32,19 +43,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// The method that gets the result of this TagArgumentBit.
         /// </summary>
         public MethodInfo GetResultMethod;
-
-        /// <summary>
-        /// Calls the method directly.
-        /// </summary>
-        public MethodHandler GetResultHelper;
-
-        /// <summary>
-        /// Parse the tag.
-        /// </summary>
-        /// <param name="data">The relevant tag data.</param>
-        /// <returns>The parsed final object.</returns>
-        public delegate TemplateObject MethodHandler(TagData data);
-
+        
         /// <summary>
         /// Constructs a TagArgumentBit.
         /// </summary>
@@ -54,6 +53,39 @@ namespace FreneticScript.CommandSystem.Arguments
         {
             CommandSystem = system;
             Bits = bits;
+        }
+
+        /// <summary>
+        /// Generates a compiled call to the TagArgumentBit.
+        /// </summary>
+        /// <param name="ilgen">The IL Generator.</param>
+        /// <param name="tab_loc">The TagArgumentBit helper local-variable location.</param>
+        /// <param name="load_Error">The OpCode to load the error object.</param>
+        /// <param name="load_Cse">The OpCode to load the CSE object.</param>
+        /// <param name="obj_loc">The TemplateObject helper local-variable location.</param>
+        public void GenerateCall(CILAdaptationValues.ILGeneratorTracker ilgen, int tab_loc, OpCode load_Error, OpCode load_Cse, int obj_loc)
+        {
+            ilgen.Emit(OpCodes.Stloc, tab_loc); // Store the TAB to the proper location
+            Label exceptionLabel = ilgen.BeginExceptionBlock(); // try {
+            ilgen.Emit(OpCodes.Ldloc, tab_loc); // Load the tag onto stack
+            ilgen.Emit(OpCodes.Dup); // Duplicate the tag for repeated usage
+            ilgen.Emit(load_Error); // Load the error object onto stack
+            ilgen.Emit(load_Cse); // Load the CSE object onto stack.
+            ilgen.Emit(OpCodes.Call, TagArgumentBit_PrepParse); // Call the PrepParse method (pulls TagArgumentBit + Error + CSE from stack)
+            ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
+            ilgen.Emit(OpCodes.Call, GetResultMethod); // Call the GetResultMethod (takes one param: TagData, returns a TemplateObject).
+            ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
+            ilgen.Emit(OpCodes.Leave, exceptionLabel); // }
+            ilgen.BeginCatchBlock(typeof(TagErrorInducedException)); // catch (Exception ex) {
+            ilgen.Emit(OpCodes.Pop); // pop the exception off stack
+            ilgen.Emit(OpCodes.Ldloc, tab_loc); // Load the tag onto stack
+            ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
+            ilgen.Emit(OpCodes.Ldfld, TagData.Field_Fallback); // Read 'data'.Fallback field
+            ilgen.Emit(load_Error); // Load the error object onto stack
+            ilgen.Emit(load_Cse); // Load the CSE object onto stack.
+            ilgen.Emit(OpCodes.Callvirt, Argument.Argument_Parse); // Virtual call the Argument.Parse method, which returns a TemplateObject
+            ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
+            ilgen.EndExceptionBlock(); // }
         }
 
         /// <summary>
@@ -69,18 +101,7 @@ namespace FreneticScript.CommandSystem.Arguments
                 if (Start is LvarTagBase)
                 {
                     int var = (int)(((Bits[0].Variable.Bits[0]) as TextArgumentBit).InputValue as IntegerTag).Internal;
-                    // TODO: Simpler lookup for var types. Probably a var type array.
-                    for (int n = 0; n < values.CLVariables.Count; n++)
-                    {
-                        for (int i = 0; i < values.CLVariables[n].LVariables.Count; i++)
-                        {
-                            if (values.CLVariables[n].LVariables[i].Item1 == var)
-                            {
-                                return values.CLVariables[n].LVariables[i].Item3;
-                            }
-                        }
-                    }
-                    return null; // TODO: Error?
+                    return values.LocalVariableType(var);
                 }
                 return Start.ResultType;
             }
@@ -109,25 +130,22 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="cse">The command stack entry.</param>
         public void PrepParse(Action<string> error, CompiledCommandStackEntry cse)
         {
+            // TODO: This isn't very thread safe.
             Data.ErrorHandler = error;
             Data.cInd = 0;
             Data.CSE = cse;
         }
 
         /// <summary>
-        /// Parse the argument part, reading any tags.
+        /// Parse the argument part, reading any tags or other special data.
+        /// For TagArgumentBit objects, this will result in a failure exception (as it should be compiled normally).
         /// </summary>
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="cse">The command stack entry.</param>
-        /// <returns>The parsed final object.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public sealed override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
+        /// <returns>The parsed final text.</returns>
+        public override TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
         {
-            // TODO: This isn't very thread safe.
-            Data.ErrorHandler = error;
-            Data.cInd = 0;
-            Data.CSE = cse;
-            return GetResultHelper(Data);
+            throw new NotSupportedException("Use the compiled argument parse handler.");
         }
 
         /// <summary>

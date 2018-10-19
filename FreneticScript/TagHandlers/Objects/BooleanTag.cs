@@ -79,11 +79,8 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return FALSE;
             }
-            if (!dat.HasFallback)
-            {
-                dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
-            }
-            return FALSE;
+            dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
+            return null;
         }
 
         /// <summary>

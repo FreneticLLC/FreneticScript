@@ -258,13 +258,13 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "first", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "The first entry in the list.",
             Examples = new string[] { "'one|two|three|' .first.as[TextTag] returns 'one'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_First(ListTag obj, TagData data)
+        public static DynamicTag Tag_First(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'first' tag on empty list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             return new DynamicTag(Internal[0]);
         }
@@ -272,13 +272,13 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "random", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A random entry from the list.",
             Examples = new string[] { "'one|two|three|' .random returns 'one', 'two', or 'three'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Random(ListTag obj, TagData data)
+        public static DynamicTag Tag_Random(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'random' tag on empty list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             return new DynamicTag(Internal[data.TagSystem.CommandSystem.random.Next(Internal.Count)]);
         }
@@ -286,13 +286,13 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "last", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A last entry in the list.",
             Examples = new string[] { "'one|two|three|' .last returns 'three'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Last(ListTag obj, TagData data)
+        public static DynamicTag Tag_Last(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'last' tag on empty list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             return new DynamicTag(Internal[Internal.Count - 1]);
         }
@@ -300,7 +300,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "get", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A specified entry in the list.",
             Examples = new string[] { "'one|two|three|' .get[2] returns 'two'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Get(ListTag obj, TagData data)
+        public static DynamicTag Tag_Get(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
             TemplateObject modif = data.GetModifierObjectCurrent();
@@ -308,7 +308,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (Internal.Count == 0)
             {
                 data.Error("Read 'get' tag on empty list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             int number = (int)num.Internal - 1;
             if (number < 0)
@@ -326,21 +326,21 @@ namespace FreneticScript.TagHandlers.Objects
             Examples = new string[] { "'one|two|three|four|' .range[2|3] returns 'two|three|'.", "'one|two|three|' .range[2|2] returns 'two|'." }, 
             Others = new String[] { "Note that indices are one-based." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Range(ListTag obj, TagData data)
+        public static ListTag Tag_Range(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
             ListTag inputs = ListTag.CreateFor(data.GetModifierObjectCurrent());
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             int number = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
             int number2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
             if (Internal.Count == 0)
             {
                 data.Error("Read 'range' tag on empty list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             if (number < 0)
             {
@@ -353,12 +353,12 @@ namespace FreneticScript.TagHandlers.Objects
             if (number >= Internal.Count)
             {
                 data.Error("Invalid range tag!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             if (number2 >= Internal.Count)
             {
                 data.Error("Invalid range tag!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             if (number2 < number)
             {
@@ -387,13 +387,13 @@ namespace FreneticScript.TagHandlers.Objects
             Examples = new string[] { "'one|two|three|' .insert[1|a|b|] returns 'one|a|b|two|three|'." },
             Others = new String[] { "Note that indices are one-based.", "Specify 0 as the index to insert at the beginning." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Insert(ListTag obj, TagData data)
+        public static ListTag Tag_Insert(ListTag obj, TagData data)
         {
             ListTag modif = CreateFor(data.GetModifierObjectCurrent());
             if (modif.Internal.Count == 0)
             {
-                data.Error("Empty list to insert!");
-                return NullTag.NULL_VALUE;
+                data.Error("Empty list to insert (need to specify at least the insertion index value)!");
+                return null;
             }
             IntegerTag index = IntegerTag.For(modif.Internal[0], data);
             modif.Internal.RemoveAt(0);

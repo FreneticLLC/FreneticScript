@@ -495,11 +495,6 @@ namespace FreneticScript.CommandSystem
                 typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
                 Type t_c = typebuild_c.CreateType();
                 Type tP_c2 = typebuild_c2.CreateType();
-                for (int i = 0; i < toClean.Count; i++)
-                {
-                    toClean[i].GetResultMethod = tP_c2.GetMethod(toClean[i].GetResultMethod.Name);
-                    toClean[i].GetResultHelper = (TagArgumentBit.MethodHandler)toClean[i].GetResultMethod.CreateDelegate(typeof(TagArgumentBit.MethodHandler));
-                }
                 ccse.MainCompiledRunnable = Activator.CreateInstance(t_c) as CompiledCommandRunnable;
                 ccse.MainCompiledRunnable.CSEntry = ccse;
 #if SAVE
@@ -525,10 +520,10 @@ namespace FreneticScript.CommandSystem
         /// Throws a tag failure exception.
         /// </summary>
         /// <param name="entry">Relevant command entry.</param>
-        /// <param name="argumentNote">Note for the argument, like: in named argument 'fail'.</param>
-        /// <param name="tab"></param>
-        /// <param name="tagIndex"></param>
-        /// <param name="ex"></param>
+        /// <param name="argumentNote">Note for the argument, like: "in named argument 'fail'."</param>
+        /// <param name="tab">Relevant tag.</param>
+        /// <param name="tagIndex">Index of failure bit within the tag.</param>
+        /// <param name="ex">Source exception.</param>
         public void TagException(CommandEntry entry, string argumentNote, TagArgumentBit tab, int tagIndex, ErrorInducedException ex)
         {
             throw new ErrorInducedException("On script line " + TextStyle.Color_Separate + entry.ScriptLine

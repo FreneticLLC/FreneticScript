@@ -32,6 +32,11 @@ namespace FreneticScript.TagHandlers.Objects
         public static readonly NullTag NULL_VALUE = new NullTag();
 
         /// <summary>
+        /// A reference to a pregenerated DynamicTag referencing <see cref="NULL_VALUE"/>. As all NullTag objects are the same, this value can be used anywhere a DynamicTag of a NullTag is needed.
+        /// </summary>
+        public static readonly DynamicTag DYNAMIC_NULL_VALUE = new DynamicTag(NULL_VALUE);
+
+        /// <summary>
         /// Return the type name of this tag.
         /// </summary>
         /// <returns>The tag type name.</returns>

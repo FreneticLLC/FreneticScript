@@ -64,20 +64,20 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Get a number tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
+        /// Get a number tag relevant to the specified input, erroring on the command system if invalid input is given.
         /// Never null!
         /// </summary>
         /// <param name="err">Error call if something goes wrong.</param>
         /// <param name="input">The input text to create a number from.</param>
         /// <returns>The number tag.</returns>
-        public static NumberTag For(Action<string> err, string input)
+        public static NumberTag For(Action<string> err, string input) // TODO: Remove this method signature (in favor of TagData variant and TryFor variant).
         {
             if (double.TryParse(input, out double tval))
             {
                 return new NumberTag(tval);
             }
-            err("Invalid number: '" + TagParser.Escape(input) + "'!");
-            return new NumberTag(0);
+            err("Invalid number: '" + TextStyle.Color_Separate + input + TextStyle.Color_Base + "'!");
+            throw new Exception("Error didn't cause exception.");
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="err">Error call if something goes wrong.</param>
         /// <param name="input">The input text to create a number from.</param>
         /// <returns>The number tag.</returns>
-        public static NumberTag For(TemplateObject input, Action<string> err)
+        public static NumberTag For(TemplateObject input, Action<string> err) // TODO: Remove this method signature (in favor of TagData variant and TryFor variant).
         {
             return input as NumberTag ?? For(err, input.ToString());
         }
@@ -105,11 +105,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new NumberTag(tval);
             }
-            if (!dat.HasFallback)
-            {
-                dat.Error("Invalid number: '" + TagParser.Escape(input) + "'!");
-            }
-            return new NumberTag(0);
+            throw dat.Error("Invalid number: '" + TextStyle.Color_Separate + input + TextStyle.Color_Base + "'!");
         }
 
         /// <summary>

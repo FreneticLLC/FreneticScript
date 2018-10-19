@@ -6,6 +6,10 @@
 // hold any right or permission to use this software until such time as the official license is identified.
 //
 
+#if DEBUG
+#define VALIDATE
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -369,6 +373,71 @@ namespace FreneticScript.CommandSystem
                 ;
 
             /// <summary>
+            /// Stack size tracker, for validation.
+            /// </summary>
+            public int StackSize = 0;
+            
+            /// <summary>
+            /// Gives a warning if stack size is not the exact correct size.
+            /// </summary>
+            /// <param name="situation">The current place in the code that requires a validation.</param>
+            /// <param name="expected">The expected stack size.</param>
+            [Conditional("VALIDATE")]
+            public void ValidateStackSizeIs(string situation, int expected)
+            {
+                if (StackSize != expected)
+                {
+                    Console.WriteLine("Stack not well sized at " + situation + "... size = " + StackSize + " but should be " + expected + " for code:\n" + Stringify());
+                }
+            }
+
+            /// <summary>
+            /// Gives a warning if stack size is not at least the given size.
+            /// </summary>
+            /// <param name="situation">The current place in the code that requires a validation.</param>
+            /// <param name="expected">The expected minimum stack size.</param>
+            [Conditional("VALIDATE")]
+            public void ValidateStackSizeIsAtLeast(string situation, int expected)
+            {
+                if (StackSize < expected)
+                {
+                    Console.WriteLine("Stack not well sized at " + situation + "... size = " + StackSize + " but should be at least " + expected + " for code:\n" + Stringify());
+                }
+            }
+
+            /// <summary>
+            /// Gives a warning if stack size is not at most the given size.
+            /// </summary>
+            /// <param name="situation">The current place in the code that requires a validation.</param>
+            /// <param name="expected">The expected maxium stack size.</param>
+            [Conditional("VALIDATE")]
+            public void ValidateStackSizeIsAtMost(string situation, int expected)
+            {
+                if (StackSize > expected)
+                {
+                    Console.WriteLine("Stack not well sized at " + situation + "... size = " + StackSize + " but should be at most " + expected + " for code:\n" + Stringify());
+                }
+            }
+
+            /// <summary>
+            /// Creates a string of all the generated CIL code.
+            /// </summary>
+            /// <returns>Generated CIL code string.</returns>
+            public string Stringify()
+            {
+#if DEBUG
+                StringBuilder fullResult = new StringBuilder();
+                foreach (KeyValuePair<OpCode, object> code in Codes)
+                {
+                    fullResult.Append(code.Key.Name + ": " + code.Value + "\n");
+                }
+                return fullResult.ToString();
+#else
+                return "(Generator Not Tracked)";
+#endif
+            }
+
+            /// <summary>
             /// When compiled in DEBUG mode, adds a code value to the <see cref="Codes"/> list. Does nothing outside of DEBUG mode.
             /// </summary>
             /// <param name="code">The OpCode used (or 'nop' for special comments).</param>
@@ -377,6 +446,104 @@ namespace FreneticScript.CommandSystem
             public void AddCode(OpCode code, object val)
             {
                 Codes.Add(new KeyValuePair<OpCode, object>(code, val));
+                Validator(code, val);
+            }
+
+            /// <summary>
+            /// Validation call for stack size wrangling.
+            /// </summary>
+            /// <param name="code">The operation code.</param>
+            /// <param name="val">The object value.</param>
+            [Conditional("VALIDATE")]
+            public void Validator(OpCode code, object val)
+            {
+                if (code == OpCodes.Nop)
+                {
+                    // Do nothing
+                }
+                if (code == OpCodes.Ret)
+                {
+                    ValidateStackSizeIsAtMost("return op", 1);
+                    StackSize = 0;
+                }
+                else if (code == OpCodes.Call || code == OpCodes.Callvirt)
+                {
+                    if (!(val is MethodInfo method))
+                    {
+                        Console.WriteLine("Invalid call (code " + code + ", to object " + val + ") - not a method reference");
+                    }
+                    else
+                    {
+                        int paramCount = method.GetParameters().Length;
+                        if (!method.IsStatic)
+                        {
+                            paramCount++;
+                        }
+                        ValidateStackSizeIsAtLeast("calll opcode " + code, paramCount);
+                        StackSize -= paramCount;
+                        if (method.ReturnType != typeof(void))
+                        {
+                            StackSize += 1;
+                        }
+                    }
+                }
+                else if (code == OpCodes.Leave || code == OpCodes.Leave_S)
+                {
+                    ValidateStackSizeIs("Leaving exception block", 0);
+                }
+                else
+                {
+                    switch (code.StackBehaviourPop)
+                    {
+                        case StackBehaviour.Pop0:
+                            break;
+                        case StackBehaviour.Varpop:
+                        case StackBehaviour.Pop1:
+                        case StackBehaviour.Popref:
+                        case StackBehaviour.Popi:
+                            ValidateStackSizeIsAtLeast("opcode " + code, 1);
+                            StackSize -= 1;
+                            break;
+                        case StackBehaviour.Pop1_pop1:
+                        case StackBehaviour.Popi_pop1:
+                        case StackBehaviour.Popi_popi:
+                        case StackBehaviour.Popi_popi8:
+                        case StackBehaviour.Popi_popr4:
+                        case StackBehaviour.Popi_popr8:
+                        case StackBehaviour.Popref_pop1:
+                        case StackBehaviour.Popref_popi:
+                            ValidateStackSizeIsAtLeast("opcode " + code, 2);
+                            StackSize -= 2;
+                            break;
+                        case StackBehaviour.Popi_popi_popi:
+                        case StackBehaviour.Popref_popi_popi:
+                        case StackBehaviour.Popref_popi_popi8:
+                        case StackBehaviour.Popref_popi_popr4:
+                        case StackBehaviour.Popref_popi_popr8:
+                        case StackBehaviour.Popref_popi_popref:
+                        case StackBehaviour.Popref_popi_pop1:
+                            ValidateStackSizeIsAtLeast("opcode " + code, 3);
+                            StackSize -= 3;
+                            break;
+                    }
+                    switch (code.StackBehaviourPush)
+                    {
+                        case StackBehaviour.Push0:
+                            break;
+                        case StackBehaviour.Push1:
+                        case StackBehaviour.Pushi:
+                        case StackBehaviour.Pushi8:
+                        case StackBehaviour.Pushr4:
+                        case StackBehaviour.Pushr8:
+                        case StackBehaviour.Pushref:
+                        case StackBehaviour.Varpush:
+                            StackSize += 1;
+                            break;
+                        case StackBehaviour.Push1_push1:
+                            StackSize += 2;
+                            break;
+                    }
+                }
             }
 
             /// <summary>
@@ -390,12 +557,24 @@ namespace FreneticScript.CommandSystem
 
             /// <summary>
             /// Starts a filtered 'try' block.
+            /// Usage pattern:
+            /// <code>
+            /// Label exceptionLabel = BeginExceptionBlock();
+            /// ... risky code ...
+            /// Emit(OpCodes.Leave, exceptionLabel);
+            /// BeginCatchBlock(typeof(Exception));
+            /// ... catch code ...
+            /// EndExceptionBlock();
+            /// </code>
             /// </summary>
             /// <returns>The block label.</returns>
             public Label BeginExceptionBlock()
             {
                 Label toRet = Internal.BeginExceptionBlock();
                 AddCode(OpCodes.Nop, "<start try block, label>: " + toRet);
+#if VALIDATE
+                ValidateStackSizeIs("Starting exception block", 0);
+#endif
                 return toRet;
             }
 
@@ -406,6 +585,10 @@ namespace FreneticScript.CommandSystem
             {
                 Internal.BeginCatchBlock(exType);
                 AddCode(OpCodes.Nop, "<begin catch block, type:> " + exType.FullName);
+#if VALIDATE
+                ValidateStackSizeIs("Starting catch block", 0);
+                StackSize += 1;
+#endif
             }
 
             /// <summary>
@@ -415,6 +598,9 @@ namespace FreneticScript.CommandSystem
             {
                 Internal.EndExceptionBlock();
                 AddCode(OpCodes.Nop, "<end exception block>");
+#if VALIDATE
+                ValidateStackSizeIs("Ending exception block", 0);
+#endif
             }
 
             /// <summary>
@@ -489,7 +675,8 @@ namespace FreneticScript.CommandSystem
             public void Emit(OpCode code, MethodInfo dat)
             {
                 Internal.Emit(code, dat);
-                AddCode(code, dat + ": " + dat.DeclaringType.Name);
+                AddCode(OpCodes.Nop, code + ": " + dat + ": " + dat.DeclaringType.Name);
+                Validator(code, dat);
             }
 
             /// <summary>
@@ -556,6 +743,26 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public MethodBuilder Method;
 
+        /// <summary>
+        /// Returns the return-type of a variable by its location ID.
+        /// </summary>
+        /// <param name="varId">The variable location ID.</param>
+        /// <returns>The return-type of the tag.</returns>
+        public TagType LocalVariableType(int varId)
+        {
+            for (int n = 0; n < CLVariables.Count; n++)
+            {
+                for (int i = 0; i < CLVariables[n].LVariables.Count; i++)
+                {
+                    if (CLVariables[n].LVariables[i].Item1 == varId)
+                    {
+                        return CLVariables[n].LVariables[i].Item3;
+                    }
+                }
+            }
+            return null;
+        }
+        
         /// <summary>
         /// Returns the location of a local variable's name.
         /// </summary>

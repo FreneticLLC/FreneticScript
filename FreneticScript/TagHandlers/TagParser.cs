@@ -508,7 +508,7 @@ namespace FreneticScript.TagHandlers
                             if (brack == 0 && value[fb] == '|' && fb > 0 && value[fb - 1] == '|')
                             {
                                 fallback = value.Substring(fb + 1);
-                                value = value.Substring(0, fb);
+                                value = value.Substring(0, fb - 1);
                                 break;
                             }
                         }

@@ -60,11 +60,7 @@ namespace FreneticScript.TagHandlers.Objects
                 {
                     throw;
                 }
-                if (!dat.HasFallback)
-                {
-                    dat.TagSystem.CommandSystem.Context.WriteLine(ex.ToString());
-                    dat.Error("Invalid binary data: '" + TagParser.Escape(input) + "'!");
-                }
+                dat.Error("Invalid binary data: '" + TagParser.Escape(input) + "'!");
                 return null;
             }
         }
@@ -139,17 +135,14 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "byte_at", Group = "Binary Data", ReturnType = IntegerTag.TYPE, Returns = "The integer version of the byte at a specific 1-based index.",
             Examples = new string[] { "'102030' .byte_at[1] returns '1'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Byte_At(BinaryTag obj, TagData data)
+        public static IntegerTag Tag_Byte_At(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
             int ind = (int)IntegerTag.For(data, data.GetModifierCurrent()).Internal;
             if (ind < 1 || ind > Internal.Length)
             {
-                if (!data.HasFallback)
-                {
-                    data.Error("Invalid byte_at tag: " + ind + " is not in the exclusive range of 1 to " + Internal.Length);
-                }
-                return NullTag.NULL_VALUE;
+                data.Error("Invalid byte_at tag: " + ind + " is not in the exclusive range of 1 to " + Internal.Length);
+                return null;
             }
             return new IntegerTag(Internal[ind - 1]);
         }
@@ -171,7 +164,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "range", Group = "Binary Data", ReturnType = TYPE, Returns = "The specified set of bytes in the binary data.",
             Examples = new string[] { "'10203040' .range[2,3] returns '2030'.", "'10203040' .range[2,2] returns '20'." }, Others = new string[] { "Note that indices are one-based." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Range(BinaryTag obj, TagData data)
+        public static BinaryTag Tag_Range(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
             string modif = data.GetModifierCurrent();
@@ -179,19 +172,19 @@ namespace FreneticScript.TagHandlers.Objects
             if (split.Length != 2)
             {
                 data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             IntegerTag num1 = IntegerTag.For(data, split[0]);
             IntegerTag num2 = IntegerTag.For(data, split[1]);
             if (Internal.Length == 0)
             {
                 data.Error("Read 'range' tag on empty BinaryTag!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             if (num1 == null || num2 == null)
             {
                 data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             int number = (int)num1.Internal - 1;
             int number2 = (int)num2.Internal - 1;
@@ -206,17 +199,17 @@ namespace FreneticScript.TagHandlers.Objects
             if (number >= Internal.Length)
             {
                 data.Error("Invalid range tag!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             if (number2 >= Internal.Length)
             {
                 data.Error("Invalid range tag!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             if (number2 < number)
             {
                 data.Error("Invalid range tag!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             byte[] ndat = new byte[number2 - number + 1];
             Array.Copy(Internal, number, ndat, 0, ndat.Length);
@@ -226,7 +219,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = IntegerTag.TYPE, Returns = "The internal data converted to an integer value.",
             Examples = new string[] { "'1000000000000000' .to_integer returns '1'." }, Others = new string[] { "Note that this currently must be of length: 1, 2, 4, or 8 bytes." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_To_Integer(BinaryTag obj, TagData data)
+        public static IntegerTag Tag_To_Integer(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
             switch (Internal.Length)
@@ -240,18 +233,15 @@ namespace FreneticScript.TagHandlers.Objects
                 case 8:
                     return new IntegerTag(BitConverter.ToInt64(Internal, 0));
                 default:
-                    if (!data.HasFallback)
-                    {
-                        data.Error("Invalid to_integer binary data length: " + Internal.Length);
-                    }
-                    return NullTag.NULL_VALUE;
+                    data.Error("Invalid to_integer binary data length: " + Internal.Length);
+                    return null;
             }
         }
 
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The internal data converted to an floating-point number value.",
             Examples = new string[] { "'0000000000000FF3' .to_number returns '1'." }, Others = new string[] { "Note that this currently must be of length: 4, or 8 bytes." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_To_Number(BinaryTag obj, TagData data)
+        public static NumberTag Tag_To_Number(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
             switch (Internal.Length)
@@ -261,11 +251,8 @@ namespace FreneticScript.TagHandlers.Objects
                 case 8:
                     return new NumberTag(BitConverter.ToDouble(Internal, 0));
                 default:
-                    if (!data.HasFallback)
-                    {
-                        data.Error("Invalid to_number binary data length: " + Internal.Length);
-                    }
-                    return NullTag.NULL_VALUE;
+                    data.Error("Invalid to_number binary data length: " + Internal.Length);
+                    return null;
             }
         }
 

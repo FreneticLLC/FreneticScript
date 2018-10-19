@@ -225,7 +225,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "The specified entry value in the map.",
             Examples = new string[] { "'one:a|two:b' .get[one] returns 'a'.", "'one:a|two:b' .get[two] returns 'b'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Get(MapTag obj, TagData data)
+        public static DynamicTag Tag_Get(MapTag obj, TagData data)
         {
             string modif = data.GetModifierCurrent().ToLowerFastFS();
             if (obj.Internal.TryGetValue(modif, out TemplateObject outp))
@@ -233,7 +233,7 @@ namespace FreneticScript.TagHandlers.Objects
                 return new DynamicTag(outp);
             }
             data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
-            return NullTag.NULL_VALUE;
+            return null;
         }
 
 #pragma warning restore 1591

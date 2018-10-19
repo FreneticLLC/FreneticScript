@@ -61,6 +61,11 @@ namespace FreneticScript.TagHandlers
         public static FieldInfo Field_cInd = typeof(TagData).GetField(nameof(cInd));
 
         /// <summary>
+        /// The <see cref="Fallback"/> field.
+        /// </summary>
+        public static FieldInfo Field_Fallback = typeof(TagData).GetField(nameof(Fallback));
+
+        /// <summary>
         /// The start of this data.
         /// </summary>
         public TemplateTagBase Start;
@@ -133,12 +138,34 @@ namespace FreneticScript.TagHandlers
         public Action<string> ErrorHandler;
 
         /// <summary>
-        /// Call to start the error handling system.
+        /// Helper for <see cref="Action"/>s, a no-return call to <see cref="Error(string)"/>.
         /// </summary>
         /// <param name="message">Error message.</param>
-        public void Error(string message)
+        public void ErrorNoReturn(string message)
         {
+            Error(message);
+        }
+
+        /// <summary>
+        /// Call to start the error handling system. Guaranteed exception. Returns an exception to allow 'throw Error(...)' syntax, but is not required (method call will throw exception and never return).
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public Exception Error(string message)
+        {
+            PreError();
             RunError(message);
+            return new ErrorInducedException("TagData error handler did not throw exception.");
+        }
+
+        /// <summary>
+        /// Helper call to handle an error case without generating a full error message if available. No guaranteed exit.
+        /// </summary>
+        public void PreError()
+        {
+            if (HasFallback)
+            {
+                throw new TagErrorInducedException();
+            }
         }
 
         /// <summary>
@@ -160,10 +187,11 @@ namespace FreneticScript.TagHandlers
             ErrorHandler(message + "\n    while handling tag "
                 + TextStyle.Color_Separate + "<" + HighlightString(cInd, TextStyle.Color_Warning)
                 + TextStyle.Color_Separate + ">" + TextStyle.Color_Base + " under sub-tag '"
-                + TextStyle.Color_Separate + Bits[cInd].ToString() + TextStyle.Color_Base + "' for type '"
-                + TextStyle.Color_Separate + Bits[cInd].TagHandler.Meta.ActualType.TypeName + TextStyle.Color_Base + "' at index "
-                + TextStyle.Color_Separate + cInd + TextStyle.Color_Base + " in command argument "
-                + TextStyle.Color_Separate + SourceArgumentID + TextStyle.Color_Base);
+                + TextStyle.Color_Separate + Bits[cInd].ToString() + TextStyle.Color_Base
+                + (Bits[cInd].TagHandler == null ? "" : "' for type '"
+                + TextStyle.Color_Separate + Bits[cInd].TagHandler.Meta.ActualType.TypeName + TextStyle.Color_Base)
+                + "' at index " + TextStyle.Color_Separate + cInd + TextStyle.Color_Base + " in command argument "
+                + TextStyle.Color_Separate + (SourceArgumentID + 1) + TextStyle.Color_Base);
         }
 
         /// <summary>
@@ -195,7 +223,7 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public TagData()
         {
-            ErrorAction = Error;
+            ErrorAction = ErrorNoReturn;
             // Assume the Tag system will fill vars.
         }
 
@@ -220,7 +248,7 @@ namespace FreneticScript.TagHandlers
             Variables = _vars;
             Bits = _bits;
             CSE = _cse;
-            ErrorAction = Error;
+            ErrorAction = ErrorNoReturn;
         }
 
         /// <summary>

@@ -184,13 +184,13 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "The text with all instances of the first text replaced with the second.", 
             Examples = new string[] { "'alpha' .replace[a|b] returns 'blphb'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Replace(TextTag obj, TagData data)
+        public static TextTag Tag_Replace(TextTag obj, TagData data)
         {
             ListTag modif = ListTag.CreateFor(data.GetModifierObjectCurrent());
             if (modif.Internal.Count != 2)
             {
                 data.Error("Invalid replace tag! Not two entries in the list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             return new TextTag(obj.Internal.Replace(modif.Internal[0].ToString(), modif.Internal[1].ToString()));
         }
@@ -200,14 +200,14 @@ namespace FreneticScript.TagHandlers.Objects
             Examples = new string[] { "'alpha' .substring[2|4] returns 'lph'." , "'alpha' .substring[2|99999] will return 'lpha'." },
             Others = new string[] { "Note that indices are one-based (This means the first entry is at index 1)." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_Substring(TextTag obj, TagData data)
+        public static TextTag Tag_Substring(TextTag obj, TagData data)
         {
             string text = obj.Internal;
             ListTag inputs = ListTag.For(data.GetModifierObjectCurrent(), data);
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
             int num1 = (int)IntegerTag.For(inputs.Internal[0], data).Internal - 1;
             int num2 = (int)IntegerTag.For(inputs.Internal[1], data).Internal - 1;
@@ -325,7 +325,7 @@ namespace FreneticScript.TagHandlers.Objects
             Returns = "The binary data represented by this Base-64 text.", Examples = new string[] { "'aGk=' .from_base64 returns '6869'." },
             Others = new string[] { "Can be reverted via <@link tag BinaryTag.to_base64>BinaryTag.to_base64<@/link>." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TemplateObject Tag_From_Base64(TextTag obj, TagData data)
+        public static BinaryTag Tag_From_Base64(TextTag obj, TagData data)
         {
             string text = obj.Internal;
             try
@@ -334,14 +334,14 @@ namespace FreneticScript.TagHandlers.Objects
                 if (bits == null)
                 {
                     data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "'!");
-                    return NullTag.NULL_VALUE;
+                    return null;
                 }
                 return new BinaryTag(bits);
             }
             catch (FormatException ex)
             {
                 data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
-                return NullTag.NULL_VALUE;
+                return null;
             }
         }
 

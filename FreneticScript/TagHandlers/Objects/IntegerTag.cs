@@ -118,10 +118,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new IntegerTag(tval);
             }
-            if (!dat.HasFallback)
-            {
-                dat.Error("Invalid integer: '" + input + "'!");
-            }
+            dat.Error("Invalid integer: '" + input + "'!");
             return new IntegerTag(0);
         }
 
