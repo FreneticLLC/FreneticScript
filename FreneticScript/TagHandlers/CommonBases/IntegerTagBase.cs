@@ -11,37 +11,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
+using System.Runtime.CompilerServices;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
-    // <--[explanation]
-    // @Name Text Tags
-    // @Description
-    // TextTags are any random text, built into the tag system.
-    // TODO: Explain better
-    // TODO: Link tag system explanation
-    // -->
-
     /// <summary>
-    /// Handles the 'text' tag base.
+    /// Handles the 'integer' tag base.
     /// </summary>
-    public class TextTagBase : TemplateTagBase
+    public class IntegerTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base text[<TextTag>]
+        // @Base integer[<IntegerTag>]
         // @Group Common Base Types
-        // @ReturnType TextTag
-        // @Returns the input text as a TextTag.
-        // <@link explanation Text Tags>What are text tags?<@/link>
+        // @ReturnType IntegerTag
+        // @Returns the input number as a IntegerTag.
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public TextTagBase()
+        public IntegerTagBase()
         {
-            Name = "text";
-            ResultTypeString = "texttag";
+            Name = "integer";
+            ResultTypeString = "integertag";
         }
 
         /// <summary>
@@ -49,9 +41,10 @@ namespace FreneticScript.TagHandlers.Common
         /// </summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Auto-apply!
         public static TemplateObject HandleOne(TagData data)
         {
-            return new TextTag(data.GetModifierCurrent());
+            return IntegerTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

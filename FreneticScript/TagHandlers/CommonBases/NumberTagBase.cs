@@ -12,27 +12,27 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Handles the 'function' tag base.
+    /// Handles the 'number' tag base.
     /// </summary>
-    public class FunctionTagBase : TemplateTagBase
+    public class NumberTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base function[<FunctionTag>]
+        // @Base number[<NumberTag>]
         // @Group Common Base Types
-        // @ReturnType FunctionTag
-        // @Returns the input object as a FunctionTag.
+        // @ReturnType NumberTag
+        // @Returns the input number as a NumberTag.
         // -->
 
         /// <summary>
         /// Constructs the tag base.
         /// </summary>
-        public FunctionTagBase()
+        public NumberTagBase()
         {
-            Name = "function";
-            ResultTypeString = FunctionTag.TYPE;
+            Name = "number";
+            ResultTypeString = "numbertag";
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return FunctionTag.CreateFor(data.GetModifierObjectCurrent(), data);
+            return NumberTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

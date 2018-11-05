@@ -12,27 +12,27 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Handles the 'from_saved' tag base.
+    /// Handles the 'binary' tag base.
     /// </summary>
-    public class FromSavedTagBase : TemplateTagBase
+    public class BinaryTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base from_saved[<TextTag>]
+        // @Base binary[<BinaryTag>]
         // @Group Common Base Types
-        // @ReturnType DynamicTag
-        // @Returns the saved copy of a tag input converted to the correct tag type.
+        // @ReturnType BinaryTag
+        // @Returns the input data as a BinaryTag.
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public FromSavedTagBase()
+        public BinaryTagBase()
         {
-            Name = "from_saved";
-            ResultTypeString = DynamicTag.TYPE;
+            Name = "binary";
+            ResultTypeString = "binarytag";
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return new DynamicTag(data.TagSystem.ParseFromSaved(data.GetModifierCurrent(), data));
+            return BinaryTag.CreateFor(data.GetModifierObjectCurrent(), data);
         }
     }
 }

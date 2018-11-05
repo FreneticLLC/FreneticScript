@@ -12,36 +12,36 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Gets a time tag.
+    /// Gets a boolean tag.
     /// </summary>
-    public class TimeTagBase : TemplateTagBase
+    public class BooleanTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base time[<BooleanTag>]
+        // @Base boolean[<BooleanTag>]
         // @Group Common Base Types
-        // @ReturnType TimeTag
-        // @Returns the input time as a TimeTag.
+        // @ReturnType BooleanTag
+        // @Returns the input boolean as a BooleanTag.
         // -->
 
         /// <summary>
-        /// Constructs the TimeTagBase - for internal use only.
+        /// Constructs the BooleanTagBase - for internal use only.
         /// </summary>
-        public TimeTagBase()
+        public BooleanTagBase()
         {
-            Name = "time";
-            ResultTypeString = "timetag";
+            Name = "boolean";
+            ResultTypeString = "booleantag";
         }
 
         /// <summary>
-        /// Handles the 'time' tag.
+        /// Handles the 'boolean' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            return TimeTag.CreateFor(data.GetModifierObjectCurrent(), data);
+            return BooleanTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

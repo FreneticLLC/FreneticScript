@@ -16,7 +16,8 @@ using System.Reflection.Emit;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
-using FreneticScript.TagHandlers.Common;
+using FreneticScript.TagHandlers.CommonBases;
+using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.TagHandlers.Objects;
 using System.Runtime.CompilerServices;
 

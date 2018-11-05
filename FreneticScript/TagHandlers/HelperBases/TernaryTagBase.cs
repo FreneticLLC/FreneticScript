@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.HelperBases
 {
     /// <summary>
     /// Handles Ternary calculations.

@@ -12,27 +12,27 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Handles the 'dynamic' tag base.
+    /// Handles the 'tagtype' tag base.
     /// </summary>
-    public class DynamicTagBase : TemplateTagBase
+    public class TagTypeBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base dynamic[<DynamicTag>]
+        // @Base tagtype[<BinaryTag>]
         // @Group Common Base Types
-        // @ReturnType DynamicTag
-        // @Returns the input data as a DynamicTag.
+        // @ReturnType TagTypeTag
+        // @Returns the input data as a TagTypeTag.
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public DynamicTagBase()
+        public TagTypeBase()
         {
-            Name = "dynamic";
-            ResultTypeString = "dynamictag";
+            Name = "tagtype";
+            ResultTypeString = "tagtypetag";
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return DynamicTag.CreateFor(data.GetModifierObjectCurrent(), data);
+            return TagTypeTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

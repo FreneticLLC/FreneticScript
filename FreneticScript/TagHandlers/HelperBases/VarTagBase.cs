@@ -15,7 +15,7 @@ using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticUtilities.FreneticExtensions;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.HelperBases
 {
     // <--[explanation]
     // @Name Queue Variables

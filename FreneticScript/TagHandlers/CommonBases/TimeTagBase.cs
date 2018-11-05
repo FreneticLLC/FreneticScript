@@ -12,37 +12,36 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Returns CVar information.
+    /// Gets a time tag.
     /// </summary>
-    public class CVarTagBase : TemplateTagBase
+    public class TimeTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base cvar[<TextTag>]
-        // @Group Variables
-        // @ReturnType CVarTag
-        // @Returns the specified global control variable.
-        // <@link explanation cvars>What are CVars?<@/link>
+        // @Base time[<BooleanTag>]
+        // @Group Common Base Types
+        // @ReturnType TimeTag
+        // @Returns the input time as a TimeTag.
         // -->
 
         /// <summary>
-        /// Construct the CVarTags - for internal use only.
+        /// Constructs the TimeTagBase - for internal use only.
         /// </summary>
-        public CVarTagBase()
+        public TimeTagBase()
         {
-            Name = "cvar";
-            ResultTypeString = "cvartag";
+            Name = "time";
+            ResultTypeString = "timetag";
         }
-        
+
         /// <summary>
-        /// Handles a 'cvar' tag.
+        /// Handles the 'time' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            return CVarTag.For(data.GetModifierObjectCurrent(), data);
+            return TimeTag.CreateFor(data.GetModifierObjectCurrent(), data);
         }
     }
 }

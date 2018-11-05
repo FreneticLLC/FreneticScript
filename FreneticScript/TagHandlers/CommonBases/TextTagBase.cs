@@ -12,35 +12,36 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     // <--[explanation]
-    // @Name Lists
+    // @Name Text Tags
     // @Description
-    // A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
-    // TODO: Explain better!
+    // TextTags are any random text, built into the tag system.
+    // TODO: Explain better
+    // TODO: Link tag system explanation
     // -->
 
     /// <summary>
-    /// Handles the 'list' tag base.
+    /// Handles the 'text' tag base.
     /// </summary>
-    public class ListTagBase : TemplateTagBase
+    public class TextTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base list[<ListTag>]
-        // @Group Mathematics
-        // @ReturnType ListTag
-        // @Returns the specified input as a list.
-        // <@link explanation lists>What are lists?<@/link>
+        // @Base text[<TextTag>]
+        // @Group Common Base Types
+        // @ReturnType TextTag
+        // @Returns the input text as a TextTag.
+        // <@link explanation Text Tags>What are text tags?<@/link>
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public ListTagBase()
+        public TextTagBase()
         {
-            Name = "list";
-            ResultTypeString = "listtag";
+            Name = "text";
+            ResultTypeString = "texttag";
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return ListTag.CreateFor(data.GetModifierObjectCurrent());
+            return new TextTag(data.GetModifierCurrent());
         }
     }
 }

@@ -13,7 +13,8 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
-using FreneticScript.TagHandlers.Common;
+using FreneticScript.TagHandlers.CommonBases;
+using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers.Objects

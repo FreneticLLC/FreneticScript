@@ -12,35 +12,27 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
-    // <--[explanation]
-    // @Name Maps
-    // @Description
-    // A map is a relationship between textual names and object values.
-    // TODO: Explain better!
-    // -->
-
     /// <summary>
-    /// Handles the 'map' tag base.
+    /// Handles the 'dynamic' tag base.
     /// </summary>
-    public class MapTagBase : TemplateTagBase
+    public class DynamicTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base map[<MapTag>]
-        // @Group Mathematics
-        // @ReturnType MapTag
-        // @Returns the specified input as a map.
-        // <@link explanation maps>What are maps?<@/link>
+        // @Base dynamic[<DynamicTag>]
+        // @Group Common Base Types
+        // @ReturnType DynamicTag
+        // @Returns the input data as a DynamicTag.
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public MapTagBase()
+        public DynamicTagBase()
         {
-            Name = "map";
-            ResultTypeString = MapTag.TYPE;
+            Name = "dynamic";
+            ResultTypeString = "dynamictag";
         }
 
         /// <summary>
@@ -50,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return MapTag.For(data.GetModifierObjectCurrent(), data);
+            return DynamicTag.CreateFor(data.GetModifierObjectCurrent(), data);
         }
     }
 }

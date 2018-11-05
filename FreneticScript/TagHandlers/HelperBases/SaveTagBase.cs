@@ -12,27 +12,27 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.HelperBases
 {
     /// <summary>
-    /// Handles the 'tagtype' tag base.
+    /// Handles the 'save' tag base.
     /// </summary>
-    public class TagTypeBase : TemplateTagBase
+    public class SaveTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base tagtype[<BinaryTag>]
+        // @Base save[<DynamicTag>]
         // @Group Common Base Types
-        // @ReturnType TagTypeTag
-        // @Returns the input data as a TagTypeTag.
+        // @ReturnType TextTag
+        // @Returns the saved copy of a tag input.
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public TagTypeBase()
+        public SaveTagBase()
         {
-            Name = "tagtype";
-            ResultTypeString = "tagtypetag";
+            Name = "save";
+            ResultTypeString = TextTag.TYPE;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return TagTypeTag.For(data.GetModifierObjectCurrent(), data);
+            return new TextTag(data.GetModifierObjectCurrent().GetSavableString());
         }
     }
 }

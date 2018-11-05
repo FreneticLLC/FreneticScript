@@ -13,7 +13,7 @@ using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticUtilities.FreneticExtensions;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.HelperBases
 {
     /// <summary>
     /// Unescapes questionable text input.

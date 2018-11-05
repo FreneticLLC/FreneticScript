@@ -12,36 +12,37 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Gets a boolean tag.
+    /// Returns CVar information.
     /// </summary>
-    public class BooleanTagBase : TemplateTagBase
+    public class CVarTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base boolean[<BooleanTag>]
-        // @Group Common Base Types
-        // @ReturnType BooleanTag
-        // @Returns the input boolean as a BooleanTag.
+        // @Base cvar[<TextTag>]
+        // @Group Variables
+        // @ReturnType CVarTag
+        // @Returns the specified global control variable.
+        // <@link explanation cvars>What are CVars?<@/link>
         // -->
 
         /// <summary>
-        /// Constructs the BooleanTagBase - for internal use only.
+        /// Construct the CVarTags - for internal use only.
         /// </summary>
-        public BooleanTagBase()
+        public CVarTagBase()
         {
-            Name = "boolean";
-            ResultTypeString = "booleantag";
+            Name = "cvar";
+            ResultTypeString = "cvartag";
         }
-
+        
         /// <summary>
-        /// Handles the 'boolean' tag.
+        /// Handles a 'cvar' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
         public static TemplateObject HandleOne(TagData data)
         {
-            return BooleanTag.For(data.GetModifierObjectCurrent(), data);
+            return CVarTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

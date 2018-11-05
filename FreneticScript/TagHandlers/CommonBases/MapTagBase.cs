@@ -12,27 +12,35 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
+    // <--[explanation]
+    // @Name Maps
+    // @Description
+    // A map is a relationship between textual names and object values.
+    // TODO: Explain better!
+    // -->
+
     /// <summary>
-    /// Handles the 'null' tag base.
+    /// Handles the 'map' tag base.
     /// </summary>
-    public class NullTagBase : TemplateTagBase
+    public class MapTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base null
-        // @Group Common Base Types
-        // @ReturnType NullTag
-        // @Returns a NullTag.
+        // @Base map[<MapTag>]
+        // @Group Mathematics
+        // @ReturnType MapTag
+        // @Returns the specified input as a map.
+        // <@link explanation maps>What are maps?<@/link>
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public NullTagBase()
+        public MapTagBase()
         {
-            Name = "null";
-            ResultTypeString = NullTag.TYPE;
+            Name = "map";
+            ResultTypeString = MapTag.TYPE;
         }
 
         /// <summary>
@@ -42,7 +50,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return NullTag.NULL_VALUE;
+            return MapTag.For(data.GetModifierObjectCurrent(), data);
         }
     }
 }

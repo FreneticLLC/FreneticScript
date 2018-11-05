@@ -11,29 +11,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
-using System.Runtime.CompilerServices;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
+    // <--[explanation]
+    // @Name Lists
+    // @Description
+    // A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
+    // TODO: Explain better!
+    // -->
+
     /// <summary>
-    /// Handles the 'integer' tag base.
+    /// Handles the 'list' tag base.
     /// </summary>
-    public class IntegerTagBase : TemplateTagBase
+    public class ListTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base integer[<IntegerTag>]
-        // @Group Common Base Types
-        // @ReturnType IntegerTag
-        // @Returns the input number as a IntegerTag.
+        // @Base list[<ListTag>]
+        // @Group Mathematics
+        // @ReturnType ListTag
+        // @Returns the specified input as a list.
+        // <@link explanation lists>What are lists?<@/link>
         // -->
 
         /// <summary>
         /// Constructs the tag base data.
         /// </summary>
-        public IntegerTagBase()
+        public ListTagBase()
         {
-            Name = "integer";
-            ResultTypeString = "integertag";
+            Name = "list";
+            ResultTypeString = "listtag";
         }
 
         /// <summary>
@@ -41,10 +48,9 @@ namespace FreneticScript.TagHandlers.Common
         /// </summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Auto-apply!
         public static TemplateObject HandleOne(TagData data)
         {
-            return IntegerTag.For(data.GetModifierObjectCurrent(), data);
+            return ListTag.CreateFor(data.GetModifierObjectCurrent());
         }
     }
 }

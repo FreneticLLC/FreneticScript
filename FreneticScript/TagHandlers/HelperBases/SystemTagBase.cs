@@ -13,7 +13,7 @@ using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using System.Runtime.CompilerServices;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.HelperBases
 {
     /// <summary>
     /// System tags.

@@ -14,7 +14,7 @@ using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem;
 using System.Reflection;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.HelperBases
 {
     /// <summary>
     /// Handles internal compiled var tags.

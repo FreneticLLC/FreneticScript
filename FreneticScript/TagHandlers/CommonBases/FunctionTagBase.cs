@@ -12,27 +12,27 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.Common
+namespace FreneticScript.TagHandlers.CommonBases
 {
     /// <summary>
-    /// Handles the 'binary' tag base.
+    /// Handles the 'function' tag base.
     /// </summary>
-    public class BinaryTagBase : TemplateTagBase
+    public class FunctionTagBase : TemplateTagBase
     {
         // <--[tagbase]
-        // @Base binary[<BinaryTag>]
+        // @Base function[<FunctionTag>]
         // @Group Common Base Types
-        // @ReturnType BinaryTag
-        // @Returns the input data as a BinaryTag.
+        // @ReturnType FunctionTag
+        // @Returns the input object as a FunctionTag.
         // -->
 
         /// <summary>
-        /// Constructs the tag base data.
+        /// Constructs the tag base.
         /// </summary>
-        public BinaryTagBase()
+        public FunctionTagBase()
         {
-            Name = "binary";
-            ResultTypeString = "binarytag";
+            Name = "function";
+            ResultTypeString = FunctionTag.TYPE;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
         {
-            return BinaryTag.CreateFor(data.GetModifierObjectCurrent(), data);
+            return FunctionTag.CreateFor(data.GetModifierObjectCurrent(), data);
         }
     }
 }
