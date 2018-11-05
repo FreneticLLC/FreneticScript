@@ -229,7 +229,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.PushVarSet();
             // TODO: scope properly!
-            PreAdaptSaveMode(values, entry, false, cent.System.TagSystem.Type_Dynamic);
+            PreAdaptSaveMode(values, entry, false, cent.System.TagSystem.Types.Type_Dynamic);
         }
 
         /// <summary>

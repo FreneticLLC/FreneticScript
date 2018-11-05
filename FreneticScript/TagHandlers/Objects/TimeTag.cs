@@ -69,7 +69,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The TimeTag type.
         /// </summary>
-        public const string TYPE = "timetag";
+        public const string TYPE = "time";
 
         /// <summary>
         /// Creates a SystemTag for the given input data.
@@ -103,7 +103,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TimeTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Time);
+            return new TagTypeTag(data.TagSystem.Types.Type_Time);
         }
 
         // TODO: More 'Time Parts' tags!

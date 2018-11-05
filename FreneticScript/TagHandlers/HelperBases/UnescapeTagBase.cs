@@ -71,7 +71,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         public UnescapeTagBase()
         {
             Name = "unescape";
-            ResultTypeString = "texttag";
+            ResultTypeString = TextTag.TYPE;
         }
 
         /// <summary>

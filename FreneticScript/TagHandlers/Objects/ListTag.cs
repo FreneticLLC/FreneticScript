@@ -167,7 +167,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The ListTag type.
         /// </summary>
-        public const string TYPE = "listtag";
+        public const string TYPE = "list";
 
 #pragma warning disable 1591
 
@@ -419,7 +419,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(ListTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_List);
+            return new TagTypeTag(data.TagSystem.Types.Type_List);
         }
 
         // TODO: Sort, styled like filter/parse tags

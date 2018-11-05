@@ -40,7 +40,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public ListTagBase()
         {
             Name = "list";
-            ResultTypeString = "listtag";
+            ResultTypeString = ListTag.TYPE;
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         public TernaryTagBase()
         {
             Name = "ternary";
-            ResultTypeString = "ternarypasstag";
+            ResultTypeString = TernaryPassTag.TYPE;
         }
 
         // TODO: Special compiler to handle type continuation (the "or_else[]" should be treated as returning the type input to both "pass[]" and "or_else[]")
@@ -73,7 +73,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <summary>
             /// The TernaryPassTag type.
             /// </summary>
-            public static string TYPE = "ternarypasstag";
+            public static string TYPE = "ternarypasstagbase";
 
             /// <summary>
             /// Gets a ternary pass tag. Shouldn't be used.

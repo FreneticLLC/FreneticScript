@@ -56,7 +56,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             foreach (KeyValuePair<string, TemplateObject> pair in mt.Internal)
             {
                 string tname = pair.Value.ToString();
-                if (!cent.System.TagSystem.Types.TryGetValue(tname, out TagType t))
+                if (!cent.System.TagSystem.Types.RegisteredTypes.TryGetValue(tname, out TagType t))
                 {
                     throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + tname + "!");
                 }

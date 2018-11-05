@@ -146,7 +146,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The BooleanTag type.
         /// </summary>
-        public const string TYPE = "booleantag";
+        public const string TYPE = "boolean";
 
         /// <summary>
         /// Creates a BooleanTag for the given input data.
@@ -215,7 +215,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(BooleanTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Boolean);
+            return new TagTypeTag(data.TagSystem.Types.Type_Boolean);
         }
 
 #pragma warning restore 1591

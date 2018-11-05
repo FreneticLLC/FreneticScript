@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public TextTagBase()
         {
             Name = "text";
-            ResultTypeString = "texttag";
+            ResultTypeString = TextTag.TYPE;
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public CVarTagBase()
         {
             Name = "cvar";
-            ResultTypeString = "cvartag";
+            ResultTypeString = CVarTag.TYPE;
         }
         
         /// <summary>

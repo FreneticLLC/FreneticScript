@@ -84,7 +84,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The TextTag type.
         /// </summary>
-        public const string TYPE = "texttag";
+        public const string TYPE = "text";
 
 #pragma warning disable 1591
 
@@ -99,7 +99,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TextTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Text);
+            return new TagTypeTag(data.TagSystem.Types.Type_Text);
         }
 
         [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The text parsed as a number.",

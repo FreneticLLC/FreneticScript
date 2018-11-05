@@ -200,7 +200,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The NumberTag type.
         /// </summary>
-        public const string TYPE = "numbertag";
+        public const string TYPE = "number";
 
 #pragma warning disable 1591
 
@@ -541,7 +541,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(NumberTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Number);
+            return new TagTypeTag(data.TagSystem.Types.Type_Number);
         }
 
 #pragma warning restore 1591

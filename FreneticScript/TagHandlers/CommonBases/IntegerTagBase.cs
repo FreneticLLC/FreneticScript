@@ -33,7 +33,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public IntegerTagBase()
         {
             Name = "integer";
-            ResultTypeString = "integertag";
+            ResultTypeString = IntegerTag.TYPE;
         }
 
         /// <summary>

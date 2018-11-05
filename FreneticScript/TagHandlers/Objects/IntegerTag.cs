@@ -178,7 +178,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The IntegerTag type.
         /// </summary>
-        public const string TYPE = "integertag";
+        public const string TYPE = "integer";
         
         /// <summary>
         /// Creates an IntegerTag for the given input data.
@@ -214,7 +214,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(IntegerTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Integer);
+            return new TagTypeTag(data.TagSystem.Types.Type_Integer);
         }
 
         [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,

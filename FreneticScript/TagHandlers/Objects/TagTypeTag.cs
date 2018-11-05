@@ -58,12 +58,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A TagTypeTag.</returns>
         public static TagTypeTag For(TagData data, string input)
         {
-            if (data.TagSystem.Types.TryGetValue(input.ToLowerFast(), out TagType type))
+            if (data.TagSystem.Types.RegisteredTypes.TryGetValue(input.ToLowerFast(), out TagType type))
             {
                 return new TagTypeTag(type); // TODO: No re-alloc, just have a pre-made tag object?
             }
             data.Error("Unrecognized TagType '" + input + "'");
-            return new TagTypeTag(data.TagSystem.Type_Null);
+            return new TagTypeTag(data.TagSystem.Types.Type_Null);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The TagTypeTag type.
         /// </summary>
-        public const string TYPE = "tagtypetag";
+        public const string TYPE = "tagtype";
 
         /// <summary>
         /// Returns the input object as a TagTypeTag.
@@ -122,7 +122,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(TagTypeTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_TagType);
+            return new TagTypeTag(data.TagSystem.Types.Type_TagType);
         }
 
 #pragma warning restore 1591

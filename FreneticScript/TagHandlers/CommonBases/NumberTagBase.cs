@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public NumberTagBase()
         {
             Name = "number";
-            ResultTypeString = "numbertag";
+            ResultTypeString = NumberTag.TYPE;
         }
 
         /// <summary>

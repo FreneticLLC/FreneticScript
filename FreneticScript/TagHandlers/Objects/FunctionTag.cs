@@ -127,7 +127,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The FunctionTag type.
         /// </summary>
-        public const string TYPE = "functiontag";
+        public const string TYPE = "function";
 
         #pragma warning disable 1591
 
@@ -142,7 +142,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(FunctionTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Function);
+            return new TagTypeTag(data.TagSystem.Types.Type_Function);
         }
 
 #pragma warning restore 1591

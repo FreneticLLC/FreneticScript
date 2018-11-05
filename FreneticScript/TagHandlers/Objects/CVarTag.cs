@@ -81,7 +81,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The CVarTag type.
         /// </summary>
-        public const string TYPE = "cvartag";
+        public const string TYPE = "cvar";
 
 #pragma warning disable 1591
 
@@ -96,7 +96,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(CVarTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Cvar);
+            return new TagTypeTag(data.TagSystem.Types.Type_Cvar);
         }
 
         [TagMeta(TagType = TYPE, Name = "value_boolean", Group = "Variables", ReturnType = BooleanTag.TYPE,

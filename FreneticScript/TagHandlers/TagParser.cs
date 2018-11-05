@@ -74,9 +74,9 @@ namespace FreneticScript.TagHandlers
         public Dictionary<string, TemplateTagBase> Handlers = new Dictionary<string, TemplateTagBase>();
 
         /// <summary>
-        /// All tag types currently registered.
+        /// The tag types handler.
         /// </summary>
-        public Dictionary<string, TagType> Types = new Dictionary<string, TagType>();
+        public TagTypes Types = new TagTypes();
 
         /// <summary>
         /// Registers a handler object for later usage by tags.
@@ -85,17 +85,6 @@ namespace FreneticScript.TagHandlers
         public void Register(TemplateTagBase handler)
         {
             Handlers.Add(handler.Name, handler);
-        }
-
-        /// <summary>
-        /// Registers a type object for later usage by tags.
-        /// </summary>
-        /// <param name="type">The type object to register.</param>
-        /// <param name="creator">The tag creator method (for SAVABLE data).</param>
-        public void Register(TagType type, Func<string, TagData, TemplateObject> creator)
-        {
-            Types.Add(type.TypeName, type);
-            SaveCreators[type.TypeName.ToLowerFast()] = creator;
         }
 
         /// <summary>
@@ -109,166 +98,32 @@ namespace FreneticScript.TagHandlers
         public void Init(Commands _system)
         {
             CommandSystem = _system;
-            // Bases
+            // Common Object Bases
             Register(new BinaryTagBase());
             Register(new BooleanTagBase());
             Register(new CVarTagBase());
             Register(new DynamicTagBase());
-            Register(new EscapeTagBase());
-            Register(new FromSavedTagBase());
             Register(new FunctionTagBase());
             Register(new IntegerTagBase());
             Register(new ListTagBase());
-            Register(LVar = new LvarTagBase());
             Register(new MapTagBase());
             Register(new NullTagBase());
             Register(new NumberTagBase());
-            Register(new SaveTagBase());
-            Register(new SystemTagBase());
             Register(new TagTypeBase());
-            Register(new TernaryTagBase());
-            Register(new TextColorTagBase());
             Register(new TextTagBase());
             Register(new TimeTagBase());
+            // Helper Bases
+            Register(new EscapeTagBase());
+            Register(new FromSavedTagBase());
+            Register(LVar = new LvarTagBase());
+            Register(new SaveTagBase());
+            Register(new SystemTagBase());
+            Register(new TernaryTagBase());
+            Register(new TextColorTagBase());
             Register(new UnescapeTagBase());
             Register(new VarTagBase());
             // Object types
-            Register(Type_Binary = new TagType()
-            {
-                TypeName = BinaryTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = BinaryTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(BinaryTag)
-            }, (inp, dat) => BinaryTag.For(dat, inp));
-            Register(Type_Boolean = new TagType()
-            {
-                TypeName = BooleanTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = BooleanTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(BooleanTag)
-            }, (inp, dat) => BooleanTag.For(dat, inp));
-            Register(Type_Cvar = new TagType()
-            {
-                TypeName = CVarTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = CVarTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(CVarTag)
-            }, (inp, dat) => CVarTag.For(dat, inp));
-            Register(Type_Dynamic = new TagType()
-            {
-                TypeName = DynamicTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = DynamicTag.CreateFor,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(DynamicTag)
-            }, DynamicTag.CreateFromSaved);
-            Register(Type_Function = new TagType()
-            {
-                TypeName = FunctionTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = FunctionTag.CreateFor,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(FunctionTag)
-            }, (inp, dat) => FunctionTag.For(dat, inp));
-            Register(Type_Integer = new TagType()
-            {
-                TypeName = IntegerTag.TYPE,
-                SubTypeName = NumberTag.TYPE,
-                TypeGetter = IntegerTag.CreateFor,
-                GetNextTypeDown = NumberTag.ForIntegerTag,
-                SubHandlers = null,
-                RawType = typeof(IntegerTag)
-            }, (inp, dat) => IntegerTag.For(dat, inp));
-            Register(Type_List = new TagType()
-            {
-                TypeName = ListTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = ListTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(ListTag)
-            }, ListTag.CreateFromSaved);
-            Register(Type_Map = new TagType()
-            {
-                TypeName = MapTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = MapTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(MapTag)
-            }, MapTag.CreateFromSaved);
-            Register(Type_Null = new TagType()
-            {
-                TypeName = NullTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = (data, obj) => NullTag.NULL_VALUE,
-                GetNextTypeDown = TextTag.For, // TODO: Or an error?
-                SubHandlers = null,
-                RawType = typeof(NullTag)
-            }, (inp, dat) => NullTag.NULL_VALUE);
-            Register(Type_Number = new TagType()
-            {
-                TypeName = NumberTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = NumberTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(NumberTag)
-            }, (inp, dat) => NumberTag.For(dat, inp));
-            Register(Type_System = new TagType()
-            {
-                TypeName = SystemTagBase.SystemTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = SystemTagBase.SystemTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(SystemTagBase.SystemTag)
-            }, (inp, dat) => SystemTagBase.SystemTag.For(dat, inp));
-            Register(Type_TagType = new TagType()
-            {
-                TypeName = TagTypeTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = TagTypeTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(TagTypeTag)
-            }, (inp, dat) => TagTypeTag.For(dat, inp));
-            Register(Type_TernayPass = new TagType()
-            {
-                // TODO: Convert!
-                TypeName = "ternarypasstag",
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = TernaryTagBase.TernaryPassTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(TernaryTagBase.TernaryPassTag)
-            }, (inp, dat) => TernaryTagBase.TernaryPassTag.For(dat, inp));
-            Register(Type_Text = new TagType()
-            {
-                TypeName = TextTag.TYPE,
-                SubTypeName = null,
-                TypeGetter = TextTag.CreateFor,
-                GetNextTypeDown = null,
-                SubHandlers = null,
-                RawType = typeof(TextTag)
-            }, (inp, dat) => new TextTag(inp));
-            Register(Type_Time = new TagType()
-            {
-                TypeName = TimeTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = TimeTag.CreateFor,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(TimeTag)
-            }, (inp, dat) => TimeTag.For(inp));
+            Types.RegisterDefaultTypes();
         }
         /// <summary>
         /// Set up the tag engine after all input has be registered.
@@ -279,10 +134,13 @@ namespace FreneticScript.TagHandlers
             {
                 if (tagbase.ResultTypeString != null)
                 {
-                    tagbase.ResultType = Types[tagbase.ResultTypeString];
+                    if (!Types.RegisteredTypes.TryGetValue(tagbase.ResultTypeString, out tagbase.ResultType))
+                    {
+                        CommandSystem.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid result type '" + tagbase.ResultTypeString + "'.");
+                    }
                 }
             }
-            foreach (TagType type in Types.Values)
+            foreach (TagType type in Types.RegisteredTypes.Values)
             {
                 if (type.SubTypeName == null)
                 {
@@ -290,7 +148,7 @@ namespace FreneticScript.TagHandlers
                 }
                 else
                 {
-                    type.SubType = Types[type.SubTypeName];
+                    type.SubType = Types.RegisteredTypes[type.SubTypeName];
                 }
                 type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
                 if (type.RawType == null)
@@ -333,7 +191,7 @@ namespace FreneticScript.TagHandlers
                     }
                     TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
                     auto_thi.Meta = auto_thi.Meta.Duplicate();
-                    auto_thi.Meta.ReturnTypeResult = Types[auto_thi.Meta.ReturnType];
+                    auto_thi.Meta.ReturnTypeResult = Types.RegisteredTypes[auto_thi.Meta.ReturnType];
                     auto_thi.Meta.ActualType = type;
                     type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
                     if (type.CreatorMethod == null)
@@ -367,86 +225,6 @@ namespace FreneticScript.TagHandlers
         public static MethodInfo AUTO_OR_ELSE = typeof(TagParser).GetMethod(nameof(AutoTag_Or_Else));
         
         /// <summary>
-        /// The BinaryTag type.
-        /// </summary>
-        public TagType Type_Binary;
-
-        /// <summary>
-        /// The BooleanTag type.
-        /// </summary>
-        public TagType Type_Boolean;
-
-        /// <summary>
-        /// The CVar tag type.
-        /// </summary>
-        public TagType Type_Cvar;
-
-        /// <summary>
-        /// The DynamicTag type.
-        /// </summary>
-        public TagType Type_Dynamic;
-
-        /// <summary>
-        /// The FunctionTag type.
-        /// </summary>
-        public TagType Type_Function;
-
-        /// <summary>
-        /// The IntegerTag type.
-        /// </summary>
-        public TagType Type_Integer;
-
-        /// <summary>
-        /// The ListTag type.
-        /// </summary>
-        public TagType Type_List;
-
-        /// <summary>
-        /// The MapTag type.
-        /// </summary>
-        public TagType Type_Map;
-
-        /// <summary>
-        /// The NullTag type.
-        /// </summary>
-        public TagType Type_Null;
-
-        /// <summary>
-        /// The NumberTag type.
-        /// </summary>
-        public TagType Type_Number;
-
-        /// <summary>
-        /// The SystemTag type.
-        /// </summary>
-        public TagType Type_System;
-
-        /// <summary>
-        /// The TagTypeTag type.
-        /// </summary>
-        public TagType Type_TagType;
-
-        /// <summary>
-        /// The TernaryPassTag type.
-        /// </summary>
-        public TagType Type_TernayPass;
-
-        /// <summary>
-        /// The TextTag type.
-        /// </summary>
-        public TagType Type_Text;
-        
-        /// <summary>
-        /// The TimeTag type.
-        /// </summary>
-        public TagType Type_Time;
-
-        /// <summary>
-        /// Helpers to load tags for any given type, input by name.
-        /// </summary>
-        public Dictionary<string, Func<string, TagData, TemplateObject>> SaveCreators = new Dictionary<string, Func<string, TagData, TemplateObject>>();
-
-        /// <summary>
         /// Creates an object from saved data.
         /// </summary>
         /// <param name="input">The input save data.</param>
@@ -455,7 +233,7 @@ namespace FreneticScript.TagHandlers
         public TemplateObject ParseFromSaved(string input, TagData data)
         {
             string[] dat = input.SplitFast(TemplateObject.SAVE_MARK[0], 1);
-            if (SaveCreators.TryGetValue(dat[0], out Func<string, TagData, TemplateObject> creator))
+            if (Types.SaveCreators.TryGetValue(dat[0], out Func<string, TagData, TemplateObject> creator))
             {
                 return creator(dat[1], data);
             }

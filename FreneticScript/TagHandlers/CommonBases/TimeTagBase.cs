@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public TimeTagBase()
         {
             Name = "time";
-            ResultTypeString = "timetag";
+            ResultTypeString = TimeTag.TYPE;
         }
 
         /// <summary>

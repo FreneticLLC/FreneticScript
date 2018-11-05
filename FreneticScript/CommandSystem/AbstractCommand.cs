@@ -178,7 +178,7 @@ namespace FreneticScript.CommandSystem
             CommandEntry cent = values.CommandAt(entry);
             if (SaveMode == CommandSaveMode.DEFAULT_NAME && DefaultSaveName != null)
             {
-                PreAdaptSaveMode(values, entry, true, cent.System.TagSystem.Type_Dynamic, DefaultSaveName);
+                PreAdaptSaveMode(values, entry, true, cent.System.TagSystem.Types.Type_Dynamic, DefaultSaveName);
             }
             if (SaveMode != CommandSaveMode.NO_SAVE)
             {

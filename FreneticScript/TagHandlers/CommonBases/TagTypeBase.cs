@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public TagTypeBase()
         {
             Name = "tagtype";
-            ResultTypeString = "tagtypetag";
+            ResultTypeString = TagTypeTag.TYPE;
         }
 
         /// <summary>

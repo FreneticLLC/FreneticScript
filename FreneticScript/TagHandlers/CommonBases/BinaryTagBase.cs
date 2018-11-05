@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public BinaryTagBase()
         {
             Name = "binary";
-            ResultTypeString = "binarytag";
+            ResultTypeString = BinaryTag.TYPE;
         }
 
         /// <summary>

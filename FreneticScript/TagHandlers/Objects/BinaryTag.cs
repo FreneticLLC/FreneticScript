@@ -110,7 +110,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The BinaryTag type.
         /// </summary>
-        public const string TYPE = "binarytag";
+        public const string TYPE = "binary";
 
         /// <summary>
         /// Creates a BinaryTag for the given input data.
@@ -284,7 +284,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(BinaryTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Binary);
+            return new TagTypeTag(data.TagSystem.Types.Type_Binary);
         }
 
 #pragma warning restore 1591

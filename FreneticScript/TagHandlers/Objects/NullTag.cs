@@ -56,7 +56,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The NullTag type.
         /// </summary>
-        public const string TYPE = "nulltag";
+        public const string TYPE = "null";
 
         /// <summary>
         /// Creates a NullTag for the given input data.
@@ -82,7 +82,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(NullTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Null);
+            return new TagTypeTag(data.TagSystem.Types.Type_Null);
         }
         
 #pragma warning restore 1591

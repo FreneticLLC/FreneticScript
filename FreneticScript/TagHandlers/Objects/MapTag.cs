@@ -170,7 +170,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The MapTag type.
         /// </summary>
-        public const string TYPE = "maptag";
+        public const string TYPE = "map";
 
 #pragma warning disable 1591
 
@@ -185,7 +185,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(MapTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Map);
+            return new TagTypeTag(data.TagSystem.Types.Type_Map);
         }
 
         [TagMeta(TagType = TYPE, Name = "size", Group = "Map Entries", ReturnType = IntegerTag.TYPE, Returns = "The number of entries in the map.",

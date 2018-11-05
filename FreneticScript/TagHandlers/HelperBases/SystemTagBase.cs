@@ -33,7 +33,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         public SystemTagBase()
         {
             Name = "system";
-            ResultTypeString = "systemtag";
+            ResultTypeString = SystemTag.TYPE;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <summary>
             /// The SystemTag type.
             /// </summary>
-            public const string TYPE = "systemtag";
+            public const string TYPE = "systemtagbase";
 
             /// <summary>
             /// Creates a SystemTag for the given input data.
@@ -147,7 +147,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static TagTypeTag Tag_Type(IntegerTag obj, TagData data)
             {
-                return new TagTypeTag(data.TagSystem.Type_System);
+                return new TagTypeTag(data.TagSystem.Types.Type_System);
             }
 
             [TagMeta(TagType = TYPE, Name = "current_time_utc", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current system time (UTC).",

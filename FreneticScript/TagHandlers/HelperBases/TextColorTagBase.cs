@@ -34,7 +34,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         public TextColorTagBase()
         {
             Name = "text_color";
-            ResultTypeString = "texttag";
+            ResultTypeString = TextTag.TYPE;
             Colors.Add("emphasis", () => TextStyle.Color_Separate);
             Colors.Add("cmdhelp", () => TextStyle.Color_Commandhelp);
             Colors.Add("simple", () => TextStyle.Color_Simple);

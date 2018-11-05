@@ -64,7 +64,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// The DynamicTag type.
         /// </summary>
-        public const string TYPE = "dynamictag";
+        public const string TYPE = "dynamic";
 
         /// <summary>
         /// Creates a SystemTag for the given input data.
@@ -102,7 +102,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TagTypeTag Tag_Type(DynamicTag obj, TagData data)
         {
-            return new TagTypeTag(data.TagSystem.Type_Dynamic);
+            return new TagTypeTag(data.TagSystem.Types.Type_Dynamic);
         }
 
         [TagMeta(TagType = TYPE, Name = "as", SpecialCompiler = true, SpecialTypeHelperName = nameof(TypeHelper_Tag_As)
@@ -113,7 +113,7 @@ namespace FreneticScript.TagHandlers.Objects
             ilgen.Emit(OpCodes.Ldfld, Field_DynamicTag_Internal); // Load field "Internal" on the input DynamicTag instance.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
             string type_name = tab.Bits[bit].Variable.ToString();
-            prevType = tab.CommandSystem.TagSystem.Types[type_name.ToLowerFast()];
+            prevType = tab.CommandSystem.TagSystem.Types.RegisteredTypes[type_name.ToLowerFast()];
             ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for the type on the input tag.
             return prevType;
         }
@@ -121,7 +121,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TagType TypeHelper_Tag_As(TagArgumentBit tab, int bit)
         {
             string type_name = tab.Bits[bit].Variable.ToString().ToLowerFast();
-            if (tab.CommandSystem.TagSystem.Types.TryGetValue(type_name, out TagType type))
+            if (tab.CommandSystem.TagSystem.Types.RegisteredTypes.TryGetValue(type_name, out TagType type))
             {
                 return type;
             }

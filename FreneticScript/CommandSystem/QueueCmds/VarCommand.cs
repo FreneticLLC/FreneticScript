@@ -63,7 +63,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (cent.Arguments.Count >= 5)
             {
                 string tname = cent.Arguments[4].ToString();
-                if (!cent.System.TagSystem.Types.TryGetValue(tname, out t))
+                if (!cent.System.TagSystem.Types.RegisteredTypes.TryGetValue(tname, out t))
                 {
                     throw new ErrorInducedException("Invalid local variable type: " + larg + "!");
                 }
@@ -90,7 +90,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (cent.Arguments.Count > 4)
             {
                 string type_name = cent.Arguments[4].ToString().ToLowerFast();
-                type = cent.System.TagSystem.Types[type_name];
+                type = cent.System.TagSystem.Types.RegisteredTypes[type_name];
                 isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
             }
             string lvarname = cent.Arguments[0].ToString().ToLowerFast();

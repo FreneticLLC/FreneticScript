@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public BooleanTagBase()
         {
             Name = "boolean";
-            ResultTypeString = "booleantag";
+            ResultTypeString = BooleanTag.TYPE;
         }
 
         /// <summary>

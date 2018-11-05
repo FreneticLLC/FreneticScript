@@ -32,7 +32,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         public DynamicTagBase()
         {
             Name = "dynamic";
-            ResultTypeString = "dynamictag";
+            ResultTypeString = DynamicTag.TYPE;
         }
 
         /// <summary>

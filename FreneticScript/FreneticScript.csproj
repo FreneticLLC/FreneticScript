@@ -155,6 +155,7 @@
     <Compile Include="TagHandlers\TagParser.cs" />
     <Compile Include="TagHandlers\TagSubHandler.cs" />
     <Compile Include="TagHandlers\TagType.cs" />
+    <Compile Include="TagHandlers\TagTypes.cs" />
     <Compile Include="TagHandlers\TemplateObject.cs" />
     <Compile Include="TagHandlers\TemplateTagBase.cs" />
     <Compile Include="TagHandlers\Variable.cs" />
