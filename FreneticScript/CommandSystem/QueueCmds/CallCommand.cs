@@ -102,7 +102,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Calling '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
-            CompiledCommandStackEntry cse = script.Created.Duplicate();
+            CompiledCommandStackEntry cse = script.Compiled.Duplicate();
             if (cse.Entries.Length > 0)
             {
                 Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;

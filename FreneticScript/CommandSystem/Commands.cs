@@ -14,6 +14,7 @@ using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.CommandSystem.CommonCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.CommandEvents;
+using FreneticScript.ScriptSystems;
 using System.Threading;
 
 namespace FreneticScript.CommandSystem
@@ -217,7 +218,7 @@ namespace FreneticScript.CommandSystem
                 }
                 if (shouldarun)
                 {
-                    CommandScript cscript = CommandScript.SeparateCommands(name, script, this);
+                    CommandScript cscript = ScriptParser.SeparateCommands(name, script, this);
                     if (cscript == null)
                     {
                         return;
@@ -276,7 +277,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
-            CommandScript cs = CommandScript.SeparateCommands("command_line", commands, this);
+            CommandScript cs = ScriptParser.SeparateCommands("command_line", commands, this);
             if (cs == null)
             {
                 outputter?.Invoke("Invalid commands specified, error outputted to logs.", MessageType.BAD);

@@ -16,6 +16,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem
 {

@@ -19,6 +19,7 @@ using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Diagnostics;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem
 {

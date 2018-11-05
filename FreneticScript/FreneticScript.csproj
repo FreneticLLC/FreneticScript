@@ -112,6 +112,8 @@
     <Compile Include="ListQueue.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptSystems\ScriptCompiler.cs" />
+    <Compile Include="ScriptSystems\ScriptParser.cs" />
     <Compile Include="TagHandlers\Common\FromSavedTagBase.cs" />
     <Compile Include="TagHandlers\Common\SaveTagBase.cs" />
     <Compile Include="TagHandlers\Common\NullTagBase.cs" />
