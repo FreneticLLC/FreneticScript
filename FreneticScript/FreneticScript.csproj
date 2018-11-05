@@ -112,6 +112,7 @@
     <Compile Include="ScriptSystems\ScriptCompiler.cs" />
     <Compile Include="ScriptSystems\ScriptParser.cs" />
     <Compile Include="TagHandlers\Common\FromSavedTagBase.cs" />
+    <Compile Include="TagHandlers\Common\FunctionTagBase.cs" />
     <Compile Include="TagHandlers\Common\SaveTagBase.cs" />
     <Compile Include="TagHandlers\Common\NullTagBase.cs" />
     <Compile Include="TagHandlers\Common\DynamicTagBase.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="TagHandlers\Objects\NullTag.cs" />
     <Compile Include="TagHandlers\Objects\NumberTag.cs" />
     <Compile Include="TagHandlers\Objects\ListTag.cs" />
+    <Compile Include="TagHandlers\Objects\FunctionTag.cs" />
     <Compile Include="TagHandlers\Objects\TagTypeTag.cs" />
     <Compile Include="TagHandlers\Objects\TextTag.cs" />
     <Compile Include="TagHandlers\Objects\BooleanTag.cs" />

@@ -12,7 +12,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FreneticScript.CommandSystem;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.TagHandlers.Common;
 
 namespace FreneticScript.ScriptSystems
 {
@@ -28,20 +30,24 @@ namespace FreneticScript.ScriptSystems
         /// <param name="name">The name of the script.</param>
         /// <param name="commands">The command string to parse.</param>
         /// <param name="system">The command system to create the script within.</param>
+        /// <param name="currentLine">The current line, if reparsing middle-of-a-file script text.</param>
         /// <returns>A list of command strings.</returns>
-        public static CommandScript SeparateCommands(string name, string commands, Commands system)
+        public static CommandScript SeparateCommands(string name, string commands, Commands system, int currentLine = 0)
         {
             try
             {
+                commands = commands.Replace("\r\n", "\n").Replace('\r', '\n');
                 List<string> CommandList = new List<string>();
                 List<int> Lines = new List<int>();
-                int start = 0;
                 bool quoted = false;
                 bool qtype = false;
-                int line = 0;
+                int line = currentLine;
+                int anons = 0;
+                StringBuilder commandConstruct = new StringBuilder(256);
                 for (int i = 0; i < commands.Length; i++)
                 {
-                    if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '/')
+                    // One-Line Comments
+                    if (!quoted && commands[i] == '/' &&  commands.IndexEquals(i + 1, '/'))
                     {
                         int x = i;
                         while (x < commands.Length && commands[x] != '\n')
@@ -57,10 +63,11 @@ namespace FreneticScript.ScriptSystems
                             break;
                         }
                     }
-                    else if (!quoted && commands[i] == '/' && i + 1 < commands.Length && commands[i + 1] == '*')
+                    // Multi-Line Comments
+                    else if (!quoted && commands[i] == '/' && commands.IndexEquals(i + 1, '*'))
                     {
                         int x;
-                        for (x = i; x < commands.Length && !(commands[x] == '*' && x + 1 < commands.Length && commands[x + 1] == '/'); x++)
+                        for (x = i; x < commands.Length && !(commands[x] == '*' && commands.IndexEquals(x + 1, '/')); x++)
                         {
                             if (commands[x] == '\n')
                             {
@@ -76,46 +83,112 @@ namespace FreneticScript.ScriptSystems
                             break;
                         }
                     }
+                    // Double Quotes
                     else if (commands[i] == '"' && (!quoted || qtype))
                     {
                         qtype = true;
                         quoted = !quoted;
                     }
+                    // Single Quotes
                     else if (commands[i] == '\'' && (!quoted || !qtype))
                     {
                         qtype = false;
                         quoted = !quoted;
                     }
+                    // Semicolons to end commands
                     else if (!quoted && commands[i] == ';')
                     {
-                        if (start < i)
+                        if (commandConstruct.Length != 0)
                         {
                             Lines.Add(line);
-                            CommandList.Add(commands.Substring(start, i - start).Trim());
+                            CommandList.Add(commandConstruct.ToString());
+                            commandConstruct.Clear();
                         }
-                        start = i + 1;
-                    }
-                    else if (((commands[i] == '{' && (i == 0 || commands[i - 1] != '<')) || (commands[i] == '}' && (i + 1 >= commands.Length || commands[i + 1] != '>'))) && !quoted)
-                    {
-                        if (start < i)
-                        {
-                            Lines.Add(line);
-                            CommandList.Add(commands.Substring(start, i - start).Trim());
-                        }
-                        Lines.Add(line);
-                        CommandList.Add(commands[i].ToString());
-                        start = i + 1;
                         continue;
                     }
-                    if (commands[i] == '\n')
+                    // Anonymous functions
+                    else if (commands[i] == '<' && commands.IndexEquals(i + 1, '{'))
                     {
-                        line++;
+                        int funcStart = i + 2;
+                        int subFuncs = 0;
+                        int funcLine = line;
+                        for (i = funcStart; i < commands.Length; i++)
+                        {
+                            if (commands[i] == '<' && commands.IndexEquals(i + 1, '{'))
+                            {
+                                subFuncs++;
+                            }
+                            else if (commands[i] == '>' && commands[i - 1] == '}')
+                            {
+                                if (subFuncs == 0)
+                                {
+                                    break;
+                                }
+                                subFuncs--;
+                            }
+                            else if (commands[i] == '\n')
+                            {
+                                line++;
+                            }
+                        }
+                        string funcText = commands.Substring(funcStart, i - funcStart - 1);
+                        anons++;
+                        commandConstruct.Append("<function[anon|");
+                        commandConstruct.Append(EscapeTagBase.Escape(name + "#anon:" + anons)).Append("|");
+                        commandConstruct.Append(funcLine).Append("|");
+                        commandConstruct.Append(EscapeTagBase.Escape(funcText));
+                        commandConstruct.Append("]>");
+                        continue;
                     }
+                    // Braces open/close
+                    else if (((commands[i] == '{' && !commands.IndexEquals(i - 1, '<')) || (commands[i] == '}' && !commands.IndexEquals(i + 1, '>'))) && !quoted)
+                    {
+                        if (commandConstruct.Length != 0)
+                        {
+                            Lines.Add(line);
+                            CommandList.Add(commandConstruct.ToString());
+                            commandConstruct.Clear();
+                        }
+                        // Add the brace symbol as a command
+                        Lines.Add(line);
+                        CommandList.Add(commands[i].ToString());
+                        continue;
+                    }
+                    // Newlines
+                    else if (commands[i] == '\n')
+                    {
+                        bool isContinued = false;
+                        for (i += 1; i < commands.Length; i++)
+                        {
+                            if (commands[i] == '|')
+                            {
+                                isContinued = true;
+                                break;
+                            }
+                            if (commands[i] != ' ' && commands[i] != '\t' && commands[i] != '\n')
+                            {
+                                i -= 1;
+                                break;
+                            }
+                        }
+                        if (!isContinued)
+                        {
+                            if (commandConstruct.Length != 0)
+                            {
+                                Lines.Add(line);
+                                CommandList.Add(commandConstruct.ToString());
+                                commandConstruct.Clear();
+                            }
+                        }
+                        line++;
+                        continue;
+                    }
+                    commandConstruct.Append(commands[i]);
                 }
-                if (start < commands.Length)
+                if (commandConstruct.Length != 0)
                 {
                     Lines.Add(line);
-                    CommandList.Add(commands.Substring(start).Trim());
+                    CommandList.Add(commandConstruct.ToString().Trim());
                 }
                 return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), 0);
             }
@@ -132,7 +205,7 @@ namespace FreneticScript.ScriptSystems
                 return null;
             }
         }
-
+        
         /// <summary>
         /// Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.
         /// </summary>
@@ -331,7 +404,7 @@ namespace FreneticScript.ScriptSystems
                     {
                         Argument varname = args[0];
                         args.RemoveRange(0, 2);
-                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFastFS(), true, true) } };
+                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFast(), true, true) } };
                     }
                 }
                 int marker = 0;
@@ -357,13 +430,13 @@ namespace FreneticScript.ScriptSystems
                     waitfor = true;
                     BaseCommand = BaseCommand.Substring(1);
                 }
-                string BaseCommandLow = BaseCommand.ToLowerFastFS();
+                string BaseCommandLow = BaseCommand.ToLowerFast();
                 args.RemoveAt(0);
                 for (int i = 0; i < args.Count - 1; i++)
                 {
                     if (!args[i].WasQuoted && args[i].ToString().StartsWith("--"))
                     {
-                        nameds[args[i].ToString().Substring(2).ToLowerFastFS()] = args[i + 1];
+                        nameds[args[i].ToString().Substring(2).ToLowerFast()] = args[i + 1];
                         args.RemoveRange(i, 2);
                         i -= 2;
                     }

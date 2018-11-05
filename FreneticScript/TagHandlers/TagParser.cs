@@ -115,6 +115,7 @@ namespace FreneticScript.TagHandlers
             Register(new DynamicTagBase());
             Register(new EscapeTagBase());
             Register(new FromSavedTagBase());
+            Register(new FunctionTagBase());
             Register(new IntegerTagBase());
             Register(new ListTagBase());
             Register(LVar = new LvarTagBase());
@@ -167,6 +168,15 @@ namespace FreneticScript.TagHandlers
                 SubHandlers = null,
                 RawType = typeof(DynamicTag)
             }, DynamicTag.CreateFromSaved);
+            Register(Type_Function = new TagType()
+            {
+                TypeName = FunctionTag.TYPE,
+                SubTypeName = TextTag.TYPE,
+                TypeGetter = FunctionTag.CreateFor,
+                GetNextTypeDown = TextTag.For,
+                SubHandlers = null,
+                RawType = typeof(FunctionTag)
+            }, (inp, dat) => FunctionTag.For(dat, inp));
             Register(Type_Integer = new TagType()
             {
                 TypeName = IntegerTag.TYPE,
@@ -374,6 +384,11 @@ namespace FreneticScript.TagHandlers
         /// The DynamicTag type.
         /// </summary>
         public TagType Type_Dynamic;
+
+        /// <summary>
+        /// The FunctionTag type.
+        /// </summary>
+        public TagType Type_Function;
 
         /// <summary>
         /// The IntegerTag type.

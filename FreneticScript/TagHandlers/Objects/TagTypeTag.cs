@@ -51,7 +51,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Returns the type of this tag.
+        /// Returns a TagTypeTag for the given text.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="input">The input text.</param>

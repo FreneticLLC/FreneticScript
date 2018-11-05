@@ -184,6 +184,11 @@ namespace FreneticScript.TagHandlers
         /// <param name="message">The error message.</param>
         public void RunError(string message)
         {
+            if (Bits.Length == 0)
+            {
+                ErrorHandler(message);
+                return;
+            }
             ErrorHandler(message + "\n    while handling tag "
                 + TextStyle.Color_Separate + "<" + HighlightString(cInd, TextStyle.Color_Warning)
                 + TextStyle.Color_Separate + ">" + TextStyle.Color_Base + " under sub-tag '"

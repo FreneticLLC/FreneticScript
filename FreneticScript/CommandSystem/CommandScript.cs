@@ -75,6 +75,16 @@ namespace FreneticScript.CommandSystem
         public string Name;
 
         /// <summary>
+        /// Whether this script is an anonymous script.
+        /// </summary>
+        public bool IsAnonymous;
+
+        /// <summary>
+        /// The full original construction string, if the script is anonymous (use <see cref="IsAnonymous"/>).
+        /// </summary>
+        public string AnonymousString;
+        
+        /// <summary>
         /// The default debugmode for this script (until set otherwise by the debug command).
         /// </summary>
         public DebugMode Debug = DebugMode.FULL;
@@ -134,9 +144,8 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Gets the full command string that represents this script.
         /// </summary>
-        /// <param name="tabulation">How much space to include in front of the commands.</param>
         /// <returns>The full command string.</returns>
-        public string FullString(string tabulation = "")
+        public string FullString()
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < CommandArray.Length; i++)

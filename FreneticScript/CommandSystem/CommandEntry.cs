@@ -150,7 +150,7 @@ namespace FreneticScript.CommandSystem
         public CommandEntry()
         {
         }
-        
+
         /// <summary>
         /// Gets the full command string that represents this command.
         /// </summary>
@@ -175,7 +175,7 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// Space to include in front of this tab when outputting it as text.
+        /// Space to include in front of this entry when outputting it as text.
         /// </summary>
         public string FairTabulation = "";
 
