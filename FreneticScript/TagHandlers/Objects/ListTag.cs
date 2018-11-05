@@ -22,14 +22,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a list as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = ListTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a list of objects.")]
     public class ListTag: TemplateObject
     {
-        // <--[object]
-        // @Type ListTag
-        // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents a list of objects.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

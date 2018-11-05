@@ -11,20 +11,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
     /// Represents a date-time as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = TimeTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a point in time.",
+        Others = new string[] { "Representation format is YYYY/MM/DD hh:mm:ss:tttt UTC+OO:oo ... ':tttt' is optional, all else is required."})]
     public class TimeTag : TemplateObject
     {
-        // <--[object]
-        // @Type TimeTag
-        // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents a point in time.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.
@@ -49,7 +46,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The time tag, or null.</returns>
         public static TimeTag For(string input)
         {
-            DateTimeOffset? dt = FreneticScriptUtilities.StringToDateTime(input);
+            DateTimeOffset? dt = StringConversionHelper.StringToDateTime(input);
             if (dt == null)
             {
                 return null;
@@ -214,7 +211,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A string representation of the date-time.</returns>
         public override string ToString()
         {
-            return FreneticScriptUtilities.DateTimeToString(Internal, true);
+            return StringConversionHelper.DateTimeToString(Internal, true);
         }
     }
 }

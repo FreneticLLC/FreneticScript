@@ -17,14 +17,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a null value as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = NullTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents a null value.")]
     public class NullTag : TemplateObject
     {
-        // <--[object]
-        // @Type NullTag
-        // @SubType NONE
-        // @Group Mathematics
-        // @Description Represents a null value.
-        // -->
 
         /// <summary>
         /// A reference to a pregenerated NullTag. As all NullTag objects are the same, this value can be used anywhere a NullTag is needed.

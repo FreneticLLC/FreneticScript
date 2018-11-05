@@ -212,7 +212,7 @@ namespace FreneticScript.CommandSystem
                         if (mode == "autorun")
                         {
                             shouldarun = true;
-                            arun = FreneticScriptUtilities.StringToInt(args[1]);
+                            arun = StringConversionHelper.StringToInt(args[1]);
                         }
                         continue;
                     }

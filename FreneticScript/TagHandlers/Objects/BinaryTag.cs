@@ -19,15 +19,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents binary data.
     /// </summary>
+    [ObjectMeta(Name = BinaryTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents binary data.", Others = new string[] { "Text form is little-endian hexadecimal." })]
     public class BinaryTag : TemplateObject
     {
-        // <--[object]
-        // @Type BinaryTag
-        // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents binary data.
-        // @Other Text form is little-endian hexadecimal.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

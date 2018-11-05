@@ -22,14 +22,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a tag object of unknown type.
     /// </summary>
+    [ObjectMeta(Name = DynamicTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents any object, dynamically.")]
     public class DynamicTag : TemplateObject
     {
-        // <--[object]
-        // @Type DynamicTag
-        // @SubType TextTag
-        // @Group Tag System
-        // @Description Represents any object, dynamically.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

@@ -18,14 +18,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a TagType, as a tag.
     /// </summary>
+    [ObjectMeta(Name = TagTypeTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents the type of a tag.")]
     public class TagTypeTag : TemplateObject
     {
-        // <--[object]
-        // @Type TagTypeTag
-        // @SubType TextTag
-        // @Group Tag System
-        // @Description Represents the type of a tag.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

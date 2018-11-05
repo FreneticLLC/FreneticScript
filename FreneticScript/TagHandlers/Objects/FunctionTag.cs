@@ -20,16 +20,11 @@ using FreneticScript.ScriptSystems;
 namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
-    /// Represents a TagType, as a tag.
+    /// Represents a Function as a tag.
     /// </summary>
+    [ObjectMeta(Name = FunctionTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Command System", Description = "Represents a function.")]
     public class FunctionTag : TemplateObject
     {
-        // <--[object]
-        // @Type FunctionTag
-        // @SubType TextTag
-        // @Group Tag System
-        // @Description Represents a function.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

@@ -54,6 +54,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <summary>
         /// Handles Ternary calculations.
         /// </summary>
+        [ObjectMeta(Name = TernaryPassTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Utilities", Description = "Partial component for ternary tags.")]
         public class TernaryPassTag : TemplateObject
         {
             /// <summary>
@@ -73,7 +74,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <summary>
             /// The TernaryPassTag type.
             /// </summary>
-            public static string TYPE = "ternarypasstagbase";
+            public const string TYPE = "ternarypasstagbase";
 
             /// <summary>
             /// Gets a ternary pass tag. Shouldn't be used.

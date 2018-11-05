@@ -17,15 +17,10 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a number as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = NumberTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a number.",
+        Others = new string[] { "Note that the number is internally stored as a 64-bit signed floating point number (a 'double')." })]
     public class NumberTag : TemplateObject, NumberTagForm
     {
-        // <--[object]
-        // @Type NumberTag
-        // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents a number.
-        // @Other note that the number is internally stored as a 64-bit signed floating point number (a 'double').
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

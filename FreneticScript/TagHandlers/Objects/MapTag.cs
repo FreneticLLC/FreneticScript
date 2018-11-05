@@ -22,14 +22,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a relationship between textual names and object data.
     /// </summary>
+    [ObjectMeta(Name = MapTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a relationship between textual names and object data.")]
     public class MapTag : TemplateObject
     {
-        // <--[object]
-        // @Type MapTag
-        // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents a relationship between textual names and object data.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

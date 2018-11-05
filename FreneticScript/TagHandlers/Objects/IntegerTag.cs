@@ -15,17 +15,12 @@ using System.Runtime.CompilerServices;
 namespace FreneticScript.TagHandlers.Objects
 {
     /// <summary>
-    /// Represents a number as a usable tag.
+    /// Represents an integer number as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = IntegerTag.TYPE, SubTypeName = NumberTag.TYPE, Group = "Mathematics", Description = "Represents an integer.",
+        Others = new string[] { "Note that the number is internally stored as a 64-bit signed integer (a 'long')." })]
     public class IntegerTag : TemplateObject, IntegerTagForm, NumberTagForm
     {
-        // <--[object]
-        // @Type IntegerTag
-        // @SubType NumberTag
-        // @Group Mathematics
-        // @Description Represents an integer.
-        // @Other note that the number is internally stored as a 64-bit signed integer (a 'long').
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

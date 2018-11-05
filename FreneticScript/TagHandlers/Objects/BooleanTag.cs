@@ -18,14 +18,9 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents a true or false as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = BooleanTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a 'true' or 'false'.")]
     public class BooleanTag : TemplateObject
     {
-        // <--[object]
-        // @Type BooleanTag
-        // @SubType TextTag
-        // @Group Mathematics
-        // @Description Represents a 'true' or 'false'.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.

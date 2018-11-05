@@ -48,14 +48,9 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <summary>
         /// Helper for system-related tags.
         /// </summary>
+        [ObjectMeta(Name = SystemTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Utilities", Description = "Holds system-related helped tags.")]
         public class SystemTag : TemplateObject
         {
-            // <--[object]
-            // @Type SystemTag
-            // @SubType TextTag
-            // @Group Utilities
-            // @Description Holds system-related helped tags.
-            // -->
 
             /// <summary>
             /// Return the type name of this tag.

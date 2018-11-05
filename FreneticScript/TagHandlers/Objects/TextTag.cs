@@ -18,15 +18,10 @@ namespace FreneticScript.TagHandlers.Objects
     /// <summary>
     /// Represents text as a usable tag.
     /// </summary>
+    [ObjectMeta(Name = TextTag.TYPE, SubTypeName = null, Group = "", Description = "Represents any text.",
+        Others = new string[] { "<@link explanation Text Tags>What are text tags?<@/link>" })] // Not sure about "<@link>" format.
     public class TextTag : TemplateObject
     {
-        // <--[object]
-        // @Type TextTag
-        // @SubType NONE
-        // @Group Mathematics
-        // @Description Represents any text.
-        // @Other <@link explanation Text Tags>What are text tags?<@/link>
-        // -->
         
         /// <summary>
         /// Return the type name of this tag.

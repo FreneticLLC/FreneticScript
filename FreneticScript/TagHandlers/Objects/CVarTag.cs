@@ -15,14 +15,12 @@ using System.Runtime.CompilerServices;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    class CVarTag : TemplateObject
+    /// <summary>
+    /// The CVar tag object.
+    /// </summary>
+    [ObjectMeta(Name = CVarTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Variables", Description = "Represents a control variable.")]
+    public class CVarTag : TemplateObject
     {
-        // <--[object]
-        // @Type CVarTag
-        // @SubType TextTag
-        // @Group Variables
-        // @Description Represents a control variable.
-        // -->
 
         /// <summary>
         /// Return the type name of this tag.
@@ -33,6 +31,12 @@ namespace FreneticScript.TagHandlers.Objects
             return TYPE;
         }
 
+        /// <summary>
+        /// Gets an object for the input data.
+        /// </summary>
+        /// <param name="input">The input text.</param>
+        /// <param name="data">The input tag data.</param>
+        /// <returns>The object.</returns>
         public static CVarTag For(TagData data, string input)
         {
             CVar tcv = data.TagSystem.CommandSystem.Context.CVarSys.Get(input);
@@ -44,8 +48,17 @@ namespace FreneticScript.TagHandlers.Objects
             return new CVarTag(tcv);
         }
 
+        /// <summary>
+        /// The internal CVar object.
+        /// </summary>
         public CVar Internal;
         
+        /// <summary>
+        /// Gets an object for the input data.
+        /// </summary>
+        /// <param name="input">The input object.</param>
+        /// <param name="data">The input tag data.</param>
+        /// <returns>The object.</returns>
         public static CVarTag For(TemplateObject input, TagData data)
         {
             return input as CVarTag ?? For(data, input.ToString());
@@ -213,6 +226,10 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
+        /// <summary>
+        /// Gets the name of the CVar.
+        /// </summary>
+        /// <returns>The name.</returns>
         public override string ToString()
         {
             return Internal.Name;

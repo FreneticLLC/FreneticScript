@@ -190,9 +190,9 @@ namespace FreneticScript
                 return;
             }
             Value = newvalue;
-            ValueL = FreneticScriptUtilities.StringToLong(newvalue);
+            ValueL = StringConversionHelper.StringToLong(newvalue);
             ValueI = (int)ValueL;
-            ValueD = FreneticScriptUtilities.StringToDouble(newvalue);
+            ValueD = StringConversionHelper.StringToDouble(newvalue);
             ValueF = (float)ValueD;
             ValueB = newvalue.ToLowerFast() == "true" || ValueF > 0f;
             if (!force)

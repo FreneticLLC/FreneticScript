@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers
 {
@@ -20,7 +21,7 @@ namespace FreneticScript.TagHandlers
     /// Represents inline tag meta.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class TagMeta : Attribute
+    public class TagMeta : ScriptMetaAttribute
     {
         /// <summary>
         /// The type of the tag.
@@ -31,11 +32,6 @@ namespace FreneticScript.TagHandlers
         /// The name of the tag.
         /// </summary>
         public string Name;
-
-        /// <summary>
-        /// The group of the tag.
-        /// </summary>
-        public string Group;
 
         /// <summary>
         /// The return type of the tag.
@@ -106,11 +102,6 @@ namespace FreneticScript.TagHandlers
         /// The examples for the tag.
         /// </summary>
         public string[] Examples;
-
-        /// <summary>
-        /// Other data for the tag.
-        /// </summary>
-        public string[] Others;
 
         /// <summary>
         /// Returns a perfect duplicate of this meta.
