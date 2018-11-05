@@ -13,6 +13,7 @@ using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -65,7 +66,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="i">The command index.</param>
         public override TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i)
         {
-            string vn = tab.Bits[0].Variable.ToString().ToLowerFastFS();
+            string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
             CommandEntry entry = ccse.Entries[i];
             for (int n = 0; n < entry.CILVars.Length; n++)
             {

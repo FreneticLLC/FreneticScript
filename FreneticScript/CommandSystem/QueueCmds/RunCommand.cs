@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -78,7 +79,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The command details to be ran.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string fname = entry.GetArgument(queue, 0).ToLowerFastFS();
+            string fname = entry.GetArgument(queue, 0).ToLowerFast();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs() { ScriptName = fname };
             RunCommand rcmd = entry.Command as RunCommand;
             if (rcmd.OnScriptRanPreEvent != null)
@@ -94,7 +95,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            CommandScript script = queue.CommandSystem.GetScript(args.ScriptName);
+            CommandScript script = queue.CommandSystem.GetScriptFile(args.ScriptName, out string status);
             if (script != null)
             {
                 ScriptRanEventArgs args2 = new ScriptRanEventArgs() { Script = script };
@@ -148,7 +149,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                queue.HandleError(entry, "Cannot run script '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>': file does not exist!");
+                queue.HandleError(entry, "Cannot run script '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>': " + status + "!");
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 { 
                     queue.WaitingOn = null;

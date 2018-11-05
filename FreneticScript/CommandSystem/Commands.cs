@@ -16,6 +16,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.CommandEvents;
 using FreneticScript.ScriptSystems;
 using System.Threading;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem
 {
@@ -132,7 +133,7 @@ namespace FreneticScript.CommandSystem
                     Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
                     foreach (KeyValuePair<string, TemplateObject> var in Variables)
                     {
-                        if (!var.Key.StartsWithNullFS())
+                        if (!var.Key.StartsWithNull())
                         {
                             if (varlookup.TryGetValue(var.Key, out int varx))
                             {
@@ -157,13 +158,14 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// Gets a script saved in the command system by name, or creates one from file.
+        /// Gets a script file saved in the command system by name, or creates one from file.
         /// </summary>
         /// <param name="script">The name of the script.</param>
+        /// <param name="status">A status output.</param>
         /// <returns>A script, or null if there's no match.</returns>
-        public CommandScript GetScript(string script)
+        public CommandScript GetScriptFile(string script, out string status)
         {
-            return CommandScript.GetByFileName(script, this);
+            return CommandScript.GetByFileName(script, this, out status);
         }
 
         /// <summary>
@@ -173,7 +175,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>A script, or null if there's no match.</returns>
         public CommandScript GetFunction(string script)
         {
-            if (Functions.TryGetValue(script.ToLowerFastFS(), out CommandScript commandscript))
+            if (Functions.TryGetValue(script.ToLowerFast(), out CommandScript commandscript))
             {
                 return commandscript;
             }
@@ -193,7 +195,7 @@ namespace FreneticScript.CommandSystem
             try
             {
                 script = script.Replace("\r", "").Replace("\0", "\\0");
-                string[] dat = script.SplitFastFS('\n');
+                string[] dat = script.SplitFast('\n');
                 bool shouldarun = false;
                 int arun = 0;
                 for (int i = 0; i < dat.Length; i++)
@@ -205,8 +207,8 @@ namespace FreneticScript.CommandSystem
                     }
                     if (trimmed.StartsWith("///"))
                     {
-                        string[] args = trimmed.Substring(3).SplitFastFS('=');
-                        string mode = args[0].Trim().ToLowerFastFS();
+                        string[] args = trimmed.Substring(3).SplitFast('=');
+                        string mode = args[0].Trim().ToLowerFast();
                         if (mode == "autorun")
                         {
                             shouldarun = true;
@@ -295,7 +297,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
-            command.Name = command.Name.ToLowerFastFS(); // Just a quick backup in case somebody messed up.
+            command.Name = command.Name.ToLowerFast(); // Just a quick backup in case somebody messed up.
             command.CommandSystem = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
@@ -313,7 +315,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="name">The name of the command to remove.</param>
         public void UnregisterCommand(string name)
         {
-            string namelow = name.ToLowerFastFS();
+            string namelow = name.ToLowerFast();
             if (RegisteredCommands.TryGetValue(namelow, out AbstractCommand cmd))
             {
                 RegisteredCommands.Remove(namelow);

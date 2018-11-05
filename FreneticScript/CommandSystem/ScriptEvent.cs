@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem
 {
@@ -163,7 +164,7 @@ namespace FreneticScript.CommandSystem
         public ScriptEvent(Commands _system, string _name, bool cancellable)
         {
             System = _system;
-            Name = _name.ToLowerFastFS();
+            Name = _name.ToLowerFast();
             Cancellable = cancellable;
         }
 

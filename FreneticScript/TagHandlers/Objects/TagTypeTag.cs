@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -57,7 +58,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A TagTypeTag.</returns>
         public static TagTypeTag For(TagData data, string input)
         {
-            if (data.TagSystem.Types.TryGetValue(input.ToLowerFastFS(), out TagType type))
+            if (data.TagSystem.Types.TryGetValue(input.ToLowerFast(), out TagType type))
             {
                 return new TagTypeTag(type); // TODO: No re-alloc, just have a pre-made tag object?
             }

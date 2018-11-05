@@ -1,28 +1,44 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreneticScript", "FreneticScript\FreneticScript.csproj", "{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreneticScriptConsoleTester", "FreneticScriptConsoleTester\FreneticScriptConsoleTester.csproj", "{5D81F801-B493-4AE8-A862-4D479829BC41}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreneticUtilities", "FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj", "{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		ReleaseNet461|Any CPU = ReleaseNet461|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}.ReleaseNet461|Any CPU.ActiveCfg = Release|Any CPU
+		{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}.ReleaseNet461|Any CPU.Build.0 = Release|Any CPU
 		{5D81F801-B493-4AE8-A862-4D479829BC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D81F801-B493-4AE8-A862-4D479829BC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D81F801-B493-4AE8-A862-4D479829BC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D81F801-B493-4AE8-A862-4D479829BC41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D81F801-B493-4AE8-A862-4D479829BC41}.ReleaseNet461|Any CPU.ActiveCfg = Release|Any CPU
+		{5D81F801-B493-4AE8-A862-4D479829BC41}.ReleaseNet461|Any CPU.Build.0 = Release|Any CPU
+		{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}.Release|Any CPU.ActiveCfg = ReleaseNet461|Any CPU
+		{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}.Release|Any CPU.Build.0 = ReleaseNet461|Any CPU
+		{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}.ReleaseNet461|Any CPU.ActiveCfg = ReleaseNet461|Any CPU
+		{CD58EDA9-4D2F-4E27-B88B-F7B96B3410A4}.ReleaseNet461|Any CPU.Build.0 = ReleaseNet461|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A2DF0B9-71A8-40F5-B5E4-48335057468D}
 	EndGlobalSection
 EndGlobal

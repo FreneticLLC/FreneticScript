@@ -16,6 +16,7 @@ using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -108,7 +109,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "start" || inp == "stop" || inp == "next")
             {
                 return new TextTag(inp);

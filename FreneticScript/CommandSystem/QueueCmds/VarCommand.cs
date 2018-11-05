@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -53,7 +54,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            string larg = cent.Arguments[0].ToString().ToLowerFastFS();
+            string larg = cent.Arguments[0].ToString().ToLowerFast();
             if (values.LocalVariableLocation(larg) >= 0)
             {
                 throw new ErrorInducedException("Duplicate local variable: " + larg + "!");
@@ -88,11 +89,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             TagType type = null;
             if (cent.Arguments.Count > 4)
             {
-                string type_name = cent.Arguments[4].ToString().ToLowerFastFS();
+                string type_name = cent.Arguments[4].ToString().ToLowerFast();
                 type = cent.System.TagSystem.Types[type_name];
                 isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
             }
-            string lvarname = cent.Arguments[0].ToString().ToLowerFastFS();
+            string lvarname = cent.Arguments[0].ToString().ToLowerFast();
             int lvarloc = cent.VarLoc(lvarname);
             // This method:
             // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
@@ -161,7 +162,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify2(TemplateObject input)
         {
-            if (input.ToString().ToLowerFastFS() == "as")
+            if (input.ToString().ToLowerFast() == "as")
             {
                 return new TextTag("as");
             }

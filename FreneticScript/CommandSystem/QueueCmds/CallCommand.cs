@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -91,7 +92,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
-            fname = fname.ToLowerFastFS();
+            fname = fname.ToLowerFast();
             CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {
@@ -108,7 +109,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
                 foreach (string var in entry.NamedArguments.Keys)
                 {
-                    if (!var.StartsWithNullFS())
+                    if (!var.StartsWithNull())
                     {
                         if (varlookup.TryGetValue(var, out int varx))
                         {

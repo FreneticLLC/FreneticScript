@@ -13,6 +13,7 @@ using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
@@ -57,7 +58,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             }
             else
             {
-                string target = entry.GetArgument(queue, 0).ToLowerFastFS();
+                string target = entry.GetArgument(queue, 0).ToLowerFast();
                 List<CVar> cvars = new List<CVar>();
                 for (int i = 0; i < queue.CommandSystem.Context.CVarSys.CVars.Count; i++)
                 {

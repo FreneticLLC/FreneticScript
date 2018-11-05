@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -54,7 +55,7 @@ namespace FreneticScript.TagHandlers.Common
         /// <param name="data">The data to be handled.</param>
         public TemplateObject HandleOneObjective(TagData data)
         {
-            if (Colors.TryGetValue(data.GetModifierCurrent().ToLowerFastFS(), out Func<string> getter))
+            if (Colors.TryGetValue(data.GetModifierCurrent().ToLowerFast(), out Func<string> getter))
             {
                 return new TextTag(getter());
             }

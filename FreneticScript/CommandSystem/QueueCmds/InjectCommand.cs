@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -70,7 +71,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0);
-            fname = fname.ToLowerFastFS();
+            fname = fname.ToLowerFast();
             CommandScript script = queue.CommandSystem.GetFunction(fname);
             if (script == null)
             {

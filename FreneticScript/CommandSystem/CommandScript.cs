@@ -20,6 +20,7 @@ using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers.Common;
 using FreneticScript.ScriptSystems;
 using System.Threading;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem
 {
@@ -33,16 +34,27 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="filename">The name of the file to execute.</param>
         /// <param name="system">The command system to get the script for.</param>
+        /// <param name="status">A status output.</param>
         /// <returns>A command script, or null of the file does not exist.</returns>
-        public static CommandScript GetByFileName(string filename, Commands system)
+        public static CommandScript GetByFileName(string filename, Commands system, out string status)
         {
             try
             {
                 string fname = filename + ".cfg";
-                return ScriptParser.SeparateCommands(filename, system.Context.ReadTextFile(fname), system);
+                CommandScript script = ScriptParser.SeparateCommands(filename, system.Context.ReadTextFile(fname), system);
+                if (script == null)
+                {
+                    status = "Failed To Parse";
+                }
+                else
+                {
+                    status = "Valid";
+                }
+                return script;
             }
             catch (System.IO.FileNotFoundException)
             {
+                status = "File Not Found";
                 return null;
             }
             catch (Exception ex)
@@ -52,6 +64,7 @@ namespace FreneticScript.CommandSystem
                     throw;
                 }
                 system.Context.BadOutput("Generating script for file '" + filename + "': " + ex.ToString());
+                status = "Internal Exception";
                 return null;
             }
         }
@@ -86,7 +99,7 @@ namespace FreneticScript.CommandSystem
         public CommandScript(string _name, List<CommandEntry> _commands, int adj = 0, DebugMode mode = DebugMode.FULL)
         {
             Debug = mode;
-            Name = _name.ToLowerFastFS();
+            Name = _name.ToLowerFast();
             CommandArray = _commands.ToArray();
             for (int i = 0; i < CommandArray.Length; i++)
             {

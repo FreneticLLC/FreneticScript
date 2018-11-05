@@ -13,6 +13,7 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -77,7 +78,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.Good(queue, "While stopping.");
                 }
             }
-            else if (count.ToLowerFastFS() == "stop")
+            else if (count.ToLowerFast() == "stop")
             {
                 CommandStackEntry cse = queue.CurrentEntry;
                 for (int i = 0; i < cse.Entries.Length; i++)
@@ -94,7 +95,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 queue.HandleError(entry, "Cannot stop while: not in one!");
             }
-            else if (count.ToLowerFastFS() == "next")
+            else if (count.ToLowerFast() == "next")
             {
                 CommandStackEntry cse = queue.CurrentEntry;
                 for (int i = cse.Index - 1; i > 0; i--)

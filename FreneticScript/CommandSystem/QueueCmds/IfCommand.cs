@@ -15,6 +15,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -160,7 +161,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return !GetBool(error, str.Substring(1));
             }
-            string low = str.ToLowerFastFS();
+            string low = str.ToLowerFast();
             if (low == "true")
             {
                 return true;

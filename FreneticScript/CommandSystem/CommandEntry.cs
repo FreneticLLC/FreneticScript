@@ -12,6 +12,7 @@ using System.Text;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem
 {
@@ -213,7 +214,7 @@ namespace FreneticScript.CommandSystem
         {
             if (NamedArguments.TryGetValue(id, out Argument arg))
             {
-                return arg.ToString().ToLowerFastFS();
+                return arg.ToString().ToLowerFast();
             }
             return defaultval;
         }

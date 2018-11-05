@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -42,7 +43,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "all")
             {
                 return new TextTag(inp);
@@ -57,7 +58,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0).ToLowerFastFS() == "all")
+            if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0).ToLowerFast() == "all")
             {
                 int qCount = queue.CommandSystem.Queues.Count;
                 if (!queue.CommandSystem.Queues.Contains(queue))

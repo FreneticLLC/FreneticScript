@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -35,9 +36,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // TODO: Type verification?
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
-            string vn = cent.Arguments[0].ToString().ToLowerFastFS();
+            string vn = cent.Arguments[0].ToString().ToLowerFast();
             // TODO: Index "after" check instead of splitty weirdness?
-            string[] dat = vn.SplitFastFS('.');
+            string[] dat = vn.SplitFast('.');
             StringBuilder res = new StringBuilder(vn.Length);
             for (int i = 1; i < dat.Length; i++)
             {
@@ -134,7 +135,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -147,7 +148,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void AddImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void SubtractImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void MultiplyImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void DivideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? EMPTY : sdat.SplitFastFS('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -217,8 +218,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public TemplateObject PreLowerBaseVar(TemplateObject inp)
         {
             string ins = inp.ToString();
-            string[] dat = ins.SplitFastFS('.');
-            dat[0] = dat[0].ToLowerFastFS();
+            string[] dat = ins.SplitFast('.');
+            dat[0] = dat[0].ToLowerFast();
             StringBuilder sb = new StringBuilder(ins.Length);
             for (int i = 0; i < dat.Length; i++)
             {

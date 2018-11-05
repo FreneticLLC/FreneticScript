@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers
 {
@@ -65,7 +66,7 @@ namespace FreneticScript.TagHandlers
             {
                 return Key;
             }
-            else if (Key.StartsWithNullFS())
+            else if (Key.StartsWithNull())
             {
                 return "[" + OVar.ToString() + "]";
             }

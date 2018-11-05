@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -162,7 +163,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_To_Lower(TextTag obj, TagData data)
         {
-            return new TextTag(obj.Internal.ToLowerFastFS());
+            return new TextTag(obj.Internal.ToLowerFast());
         }
 
         [TagMeta(TagType = TYPE, Name = "to_list_of_characters", Group = "Text Modification", ReturnType = ListTag.TYPE, 
@@ -282,7 +283,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Equals_Ignore_Case(TextTag obj, TextTag modifier)
         {
-            return BooleanTag.ForBool(obj.Internal.ToLowerFastFS() == modifier.Internal.ToLowerFastFS());
+            return BooleanTag.ForBool(obj.Internal.ToLowerFast() == modifier.Internal.ToLowerFast());
         }
 
         [TagMeta(TagType = TYPE, Name = "does_not_equal_ignore_case", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -291,7 +292,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Does_Not_Equal_Ignore_Case(TextTag obj, TextTag modifier)
         {
-            return BooleanTag.ForBool(obj.Internal.ToLowerFastFS() != modifier.Internal.ToLowerFastFS());
+            return BooleanTag.ForBool(obj.Internal.ToLowerFast() != modifier.Internal.ToLowerFast());
         }
 
         [TagMeta(TagType = TYPE, Name = "contains", Group = "Text Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
@@ -309,7 +310,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains_Ignore_Case(TextTag obj, TextTag modifier)
         {
-            return BooleanTag.ForBool(obj.Internal.ToLowerFastFS().Contains(modifier.Internal.ToLowerFastFS()));
+            return BooleanTag.ForBool(obj.Internal.ToLowerFast().Contains(modifier.Internal.ToLowerFast()));
         }
 
         [TagMeta(TagType = TYPE, Name = "to_utf8_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE,

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FreneticScriptConsoleTester</RootNamespace>
     <AssemblyName>FreneticScriptConsoleTester</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -55,6 +55,10 @@
     <ProjectReference Include="..\FreneticScript\FreneticScript.csproj">
       <Project>{0672dd5f-6f33-4853-bd6e-8716d3abc7ad}</Project>
       <Name>FreneticScript</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj">
+      <Project>{cd58eda9-4d2f-4e27-b88b-f7b96b3410a4}</Project>
+      <Name>FreneticUtilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

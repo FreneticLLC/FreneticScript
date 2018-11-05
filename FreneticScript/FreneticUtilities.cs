@@ -13,6 +13,7 @@ using System.Text;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript
 {
@@ -104,7 +105,7 @@ namespace FreneticScript
             Values = Enum.GetValues(typeof(T)) as T[];
             ValueSet = new HashSet<T>(Values);
             NameValueMap = Names.ToDictionaryWithNoDup(Values);
-            LoweredNameValueMap = Names.Select(StringExtensions.ToLowerFastFS).ToList().ToDictionaryWith(Values);
+            LoweredNameValueMap = Names.Select(StringExtensions.ToLowerFast).ToList().ToDictionaryWith(Values);
             ValueNameMap = Values.ToDictionaryWith(Names);
             UnderlyingType = Enum.GetUnderlyingType(typeof(T));
             IsFlags = typeof(T).GetCustomAttributes(typeof(FlagsAttribute), true).Length != 0;
@@ -154,7 +155,7 @@ namespace FreneticScript
         /// <returns>Success state.</returns>
         public static bool TryParseIgnoreCase(string name, out T val)
         {
-            return LoweredNameValueMap.TryGetValue(name.ToLowerFastFS(), out val);
+            return LoweredNameValueMap.TryGetValue(name.ToLowerFast(), out val);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace FreneticScript
         /// <returns>The enum value.</returns>
         public static T ParseIgnoreCase(string name)
         {
-            return LoweredNameValueMap[name.ToLowerFastFS()];
+            return LoweredNameValueMap[name.ToLowerFast()];
         }
 
         /// <summary>
@@ -198,7 +199,7 @@ namespace FreneticScript
         /// <returns>Whether it's defined.</returns>
         public static bool IsNameDefinedIgnoreCase(string name)
         {
-            return LoweredNameSet.Contains(name.ToLowerFastFS());
+            return LoweredNameSet.Contains(name.ToLowerFast());
         }
 
         /// <summary>
@@ -311,74 +312,6 @@ namespace FreneticScript
     }
 
     /// <summary>
-    /// Adds some extensions to strings.
-    /// </summary>
-    public static class StringExtensions
-    {
-        /// <summary>
-        /// Rapidly converts a string to a lowercase representation.
-        /// </summary>
-        /// <param name="input">The original string.</param>
-        /// <returns>A lowercase version.</returns>
-        public static string ToLowerFastFS(this string input)
-        {
-            char[] dt = input.ToCharArray();
-            for (int i = 0; i < dt.Length; i++)
-            {
-                if (dt[i] >= 'A' && dt[i] <= 'Z')
-                {
-                    dt[i] = (char)(dt[i] - ('A' - 'a'));
-                }
-            }
-            return new string(dt);
-        }
-
-        /// <summary>
-        /// Returns whether the string starts with a null character.
-        /// </summary>
-        /// <param name="input">The input string.</param>
-        /// <returns>A boolean.</returns>
-        public static bool StartsWithNullFS(this string input)
-        {
-            return input.Length > 0 && input[0] == '\0';
-        }
-
-        /// <summary>
-        /// Quickly split a string.
-        /// </summary>
-        /// <param name="input">The original string.</param>
-        /// <param name="splitter">What to split it by.</param>
-        /// <param name="count">The maximum number of times to split it.</param>
-        /// <returns>The split string pieces.</returns>
-        public static string[] SplitFastFS(this string input, char splitter, int count = int.MaxValue)
-        {
-            int len = input.Length;
-            int c = 0;
-            for (int i = 0; i < len; i++)
-            {
-                if (input[i] == splitter)
-                {
-                    c++;
-                }
-            }
-            c = ((c > count) ? count : c);
-            string[] res = new string[c + 1];
-            int start = 0;
-            int x = 0;
-            for (int i = 0; i < len && x < c; i++)
-            {
-                if (input[i] == splitter)
-                {
-                    res[x++] = input.Substring(start, i - start);
-                    start = i + 1;
-                }
-            }
-            res[x] = input.Substring(start);
-            return res;
-        }
-    }
-
-    /// <summary>
     /// Utilities for FreneticScript.
     /// </summary>
     public class FreneticScriptUtilities
@@ -455,12 +388,12 @@ namespace FreneticScript
         /// <returns>The date-time.</returns>
         public static DateTimeOffset? StringToDateTime(string input)
         {
-            string[] bdat = input.SplitFastFS(' ');
+            string[] bdat = input.SplitFast(' ');
             if (bdat.Length != 3)
             {
                 return null;
             }
-            string[] ymd = bdat[0].SplitFastFS('/');
+            string[] ymd = bdat[0].SplitFast('/');
             if (ymd.Length != 3)
             {
                 return null;
@@ -468,7 +401,7 @@ namespace FreneticScript
             int year = StringToInt(ymd[0]);
             int month = StringToInt(ymd[1]);
             int day = StringToInt(ymd[2]);
-            string[] hmsm = bdat[1].SplitFastFS(':');
+            string[] hmsm = bdat[1].SplitFast(':');
             if (hmsm.Length != 3 && hmsm.Length != 4)
             {
                 return null;
@@ -481,8 +414,8 @@ namespace FreneticScript
             int offM = 0;
             if (bdat[2].Contains('-'))
             {
-                string[] offsetinfo = bdat[2].SplitFastFS('-');
-                string[] subinf = offsetinfo[1].SplitFastFS(':');
+                string[] offsetinfo = bdat[2].SplitFast('-');
+                string[] subinf = offsetinfo[1].SplitFast(':');
                 if (subinf.Length != 2)
                 {
                     return null;
@@ -492,12 +425,12 @@ namespace FreneticScript
             }
             else
             {
-                string[] offsetinfo = bdat[2].SplitFastFS('+');
+                string[] offsetinfo = bdat[2].SplitFast('+');
                 if (offsetinfo.Length != 2)
                 {
                     return null;
                 }
-                string[] subinf = offsetinfo[1].SplitFastFS(':');
+                string[] subinf = offsetinfo[1].SplitFast(':');
                 if (subinf.Length != 2)
                 {
                     return null;

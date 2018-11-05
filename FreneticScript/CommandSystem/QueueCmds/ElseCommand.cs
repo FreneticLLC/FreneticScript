@@ -15,6 +15,7 @@ using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -76,7 +77,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            if (inp.ToLowerFastFS() == "if")
+            if (inp.ToLowerFast() == "if")
             {
                 return new TextTag("if");
             }

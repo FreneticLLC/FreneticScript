@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -76,13 +77,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            return new TextTag(val.ToLowerFastFS());
+            return new TextTag(val.ToLowerFast());
         }
 
         TemplateObject TestValidity(TemplateObject input)
         {
             string val = input.ToString();
-            string low = val.ToLowerFastFS();
+            string low = val.ToLowerFast();
             if (low == "error" || low == "warning" || low == "quiet")
             {
                 return new TextTag(low);
@@ -101,7 +102,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return;
             }
-            string id = entry.GetArgument(queue, 0).ToLowerFastFS();
+            string id = entry.GetArgument(queue, 0).ToLowerFast();
             if (queue.CommandSystem.OnceBlocks.Add(id))
             {
                 if (entry.ShouldShowGood(queue))
@@ -110,7 +111,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            string errorMode = entry.Arguments.Count > 1 ? entry.GetArgument(queue, 1).ToLowerFastFS() : "error";
+            string errorMode = entry.Arguments.Count > 1 ? entry.GetArgument(queue, 1).ToLowerFast() : "error";
             if (errorMode == "quiet")
             {
                 if (entry.ShouldShowGood(queue))

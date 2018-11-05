@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -61,7 +62,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "on" || inp == "off")
             {
                 return new TextTag(inp);

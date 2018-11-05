@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -83,7 +84,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return input;
             }
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "add" || inp == "remove" || inp == "clear")
             {
                 return new TextTag(inp);
@@ -93,7 +94,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify2(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "quiet_fail")
             {
                 return new TextTag(inp);
@@ -112,8 +113,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 return;
             }
-            string type = entry.GetArgument(queue, 0).ToLowerFastFS();
-            string eventname = entry.GetArgument(queue, 1).ToLowerFastFS();
+            string type = entry.GetArgument(queue, 0).ToLowerFast();
+            string eventname = entry.GetArgument(queue, 1).ToLowerFast();
             if (type == "clear" && eventname == "all")
             {
                 foreach (KeyValuePair<string, ScriptEvent> evt in queue.CommandSystem.Events)
@@ -147,7 +148,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(queue, entry);
                     return;
                 }
-                string name = entry.GetArgument(queue, 2).ToLowerFastFS();
+                string name = entry.GetArgument(queue, 2).ToLowerFast();
                 bool success = theEvent.RemoveEventHandler("eventhandler_" + theEvent.Name + "_" + name);
                 if (success)
                 {
@@ -158,7 +159,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    if (entry.Arguments.Count > 3 && entry.GetArgument(queue, 3).ToLowerFastFS() == "quiet_fail")
+                    if (entry.Arguments.Count > 3 && entry.GetArgument(queue, 3).ToLowerFast() == "quiet_fail")
                     {
                         if (entry.ShouldShowGood(queue))
                         {
@@ -178,7 +179,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     ShowUsage(queue, entry);
                     return;
                 }
-                string name = entry.GetArgument(queue, 2).ToLowerFastFS();
+                string name = entry.GetArgument(queue, 2).ToLowerFast();
                 if (entry.InnerCommandBlock == null)
                 {
                     queue.HandleError(entry, "Event command invalid: No block follows!");
@@ -204,7 +205,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (success)
                 {
-                    if (entry.Arguments.Count > 4 && entry.GetArgument(queue, 4).ToLowerFastFS() == "quiet_fail")
+                    if (entry.Arguments.Count > 4 && entry.GetArgument(queue, 4).ToLowerFast() == "quiet_fail")
                     {
                         if (entry.ShouldShowGood(queue))
                         {

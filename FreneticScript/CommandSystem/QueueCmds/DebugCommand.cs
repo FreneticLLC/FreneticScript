@@ -14,6 +14,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -66,7 +67,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "full" || inp == "minimal" || inp == "none" || inp == "default")
             {
                 return new TextTag(inp);
@@ -82,7 +83,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            string larg = cent.Arguments[0].ToString().ToLowerFastFS();
+            string larg = cent.Arguments[0].ToString().ToLowerFast();
             switch (larg)
             {
                 case "full":

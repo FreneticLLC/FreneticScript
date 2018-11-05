@@ -8,6 +8,7 @@
 
 using System;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript
 {
@@ -193,7 +194,7 @@ namespace FreneticScript
             ValueI = (int)ValueL;
             ValueD = FreneticScriptUtilities.StringToDouble(newvalue);
             ValueF = (float)ValueD;
-            ValueB = newvalue.ToLowerFastFS() == "true" || ValueF > 0f;
+            ValueB = newvalue.ToLowerFast() == "true" || ValueF > 0f;
             if (!force)
             {
                 system.Modified = true;

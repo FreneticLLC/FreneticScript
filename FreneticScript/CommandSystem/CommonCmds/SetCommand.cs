@@ -13,6 +13,7 @@ using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
@@ -44,7 +45,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            string inp = input.ToString().ToLowerFastFS();
+            string inp = input.ToString().ToLowerFast();
             if (inp == "force" || inp == "remove" || inp == "do_not_save")
             {
                 return new TextTag(inp);
@@ -61,7 +62,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         {
             string target = entry.GetArgument(queue, 0);
             string newvalue = entry.GetArgument(queue, 1);
-            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(queue, 2).ToLowerFastFS() : "";
+            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(queue, 2).ToLowerFast() : "";
             bool force = a2 == "force";
             bool remove = a2 == "remove";
             bool do_not_save = a2 == "do_not_save";
