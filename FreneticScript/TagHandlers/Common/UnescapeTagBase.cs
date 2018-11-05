@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Common
 {
@@ -27,25 +28,41 @@ namespace FreneticScript.TagHandlers.Common
         // -->
 
         /// <summary>
+        /// All standard unescape codes.
+        /// </summary>
+        public static readonly Dictionary<string, char> Unescapes = EscapeTagBase.Escapes.SwapKeyValue();
+
+        /// <summary>
         /// Unescapes a string.
         /// </summary>
         /// <param name="input">The escaped string.</param>
         /// <returns>The unescaped string.</returns>
         public static string Unescape(string input)
         {
-            return input.Replace("&sq", "\'")
-                .Replace("&car", "^")
-                .Replace("&quot", "\"")
-                .Replace("&gt", ">")
-                .Replace("&lt", "<")
-                .Replace("&rb", "]")
-                .Replace("&lb", "[")
-                .Replace("&dot", ".")
-                .Replace("&sp", " ")
-                .Replace("&colon", ":")
-                .Replace("&semi", ";")
-                .Replace("&pipe", "|")
-                .Replace("&amp", "&"); // TODO: More efficient method
+            StringBuilder unescaped = new StringBuilder(input.Length);
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == '&')
+                {
+                    int x;
+                    for (x = i; x < input.Length; x++)
+                    {
+                        if (input[x] == ',')
+                        {
+                            break;
+                        }
+                    }
+                    string key = input.Substring(i + 1, x - i - 1);
+                    if (Unescapes.TryGetValue(key, out char code))
+                    {
+                        unescaped.Append(code);
+                        i = x;
+                        continue;
+                    }
+                }
+                unescaped.Append(input[i]);
+            }
+            return unescaped.ToString();
         }
 
         /// <summary>

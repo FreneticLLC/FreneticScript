@@ -29,25 +29,54 @@ namespace FreneticScript.TagHandlers.Common
         // TODO: Full explanation!
 
         /// <summary>
+        /// All standard escape codes.
+        /// </summary>
+        public static readonly Dictionary<char, string> Escapes = new Dictionary<char, string>()
+        {
+            { '&', "amp" },
+            { '|', "pipe" },
+            { ';', "semi" },
+            { ':', "colon" },
+            { ' ', "sp" },
+            { '.', "dot" },
+            { '[', "lb" },
+            { ']', "rb" },
+            { '<', "lt" },
+            { '>', "gt" },
+            { '^', "caret" },
+            { '\'', "sq" },
+            { '\"', "quot" },
+            { '\r', "carriage" },
+            { '\n', "newline" }
+        };
+
+        /// <summary>
         /// Escapes a string.
         /// </summary>
         /// <param name="input">The unescaped string.</param>
         /// <returns>The escaped string.</returns>
         public static string Escape(string input)
         {
-            return input.Replace("&", "&amp")
-                .Replace("|", "&pipe")
-                .Replace(";", "&semi")
-                .Replace(":", "&colon")
-                .Replace(" ", "&sp")
-                .Replace(".", "&dot")
-                .Replace("[", "&lb")
-                .Replace("]", "&rb")
-                .Replace("<", "&lt")
-                .Replace(">", "&gt")
-                .Replace("\"", "&quot")
-                .Replace("^", "&car")
-                .Replace("\'", "&sq"); // TODO: More efficient method
+            StringBuilder escaped = new StringBuilder(input.Length);
+            for (int i = 0; i < input.Length; i++)
+            {
+                if ((input[i] >= 'a' && input[i] <= 'z')
+                    || (input[i] >= 'A' && input[i] <= 'Z')
+                    || (input[i] >= '0' && input[i] <= '9')
+                    || (input[i] > 127)) // ignore non-ASCII entirely
+                {
+                    escaped.Append(input[i]);
+                }
+                else if (Escapes.TryGetValue(input[i], out string replace))
+                {
+                    escaped.Append('&').Append(replace).Append(',');
+                }
+                else
+                {
+                    escaped.Append(input[i]);
+                }
+            }
+            return escaped.ToString();
         }
 
         /// <summary>
