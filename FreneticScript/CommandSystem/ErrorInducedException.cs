@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace FreneticScript.CommandSystem
@@ -59,7 +60,7 @@ namespace FreneticScript.CommandSystem
         public TagErrorInducedException()
         {
         }
-
+        
         /// <summary>
         /// Constructs a tag error induced exception with a message and inner exception.
         /// </summary>
@@ -77,6 +78,17 @@ namespace FreneticScript.CommandSystem
         public TagErrorInducedException(string message) :
             base(message)
         {
+        }
+
+        /// <summary>
+        /// Serializable system.
+        /// </summary>
+        /// <param name="info">Serialization information.</param>
+        /// <param name="context">Serialization streaming context.</param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SubTagIndex), SubTagIndex);
+            base.GetObjectData(info, context);
         }
 
         /// <summary>
