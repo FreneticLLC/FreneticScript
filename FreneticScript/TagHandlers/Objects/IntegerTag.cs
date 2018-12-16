@@ -32,6 +32,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Return the type of this tag.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType GetTagType(TagTypes tagTypeSet)
+        {
+            return tagTypeSet.Type_Integer;
+        }
+
+        /// <summary>
         /// The integer this IntegerTag represents.
         /// </summary>
         public long Internal;

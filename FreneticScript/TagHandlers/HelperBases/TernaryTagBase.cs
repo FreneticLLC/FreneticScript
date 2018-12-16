@@ -72,6 +72,15 @@ namespace FreneticScript.TagHandlers.HelperBases
             }
 
             /// <summary>
+            /// Return the type of this tag.
+            /// </summary>
+            /// <returns>The tag type.</returns>
+            public override TagType GetTagType(TagTypes tagTypeSet)
+            {
+                return tagTypeSet.Type_TernayPass;
+            }
+
+            /// <summary>
             /// The TernaryPassTag type.
             /// </summary>
             public const string TYPE = "ternarypasstagbase";

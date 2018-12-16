@@ -20,6 +20,20 @@ namespace FreneticScript.TagHandlers
         public Dictionary<string, TagType> RegisteredTypes = new Dictionary<string, TagType>();
 
         /// <summary>
+        /// Gets the type for a type name. Returns null if not found.
+        /// </summary>
+        /// <param name="name">The name of the type.</param>
+        /// <returns>The type, or null.</returns>
+        public TagType TypeForName(string name)
+        {
+            if (RegisteredTypes.TryGetValue(name, out TagType found))
+            {
+                return found;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Helpers to load tags for any given type, input by name.
         /// </summary>
         public Dictionary<string, Func<string, TagData, TemplateObject>> SaveCreators = new Dictionary<string, Func<string, TagData, TemplateObject>>();

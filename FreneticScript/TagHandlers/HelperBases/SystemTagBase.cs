@@ -60,7 +60,16 @@ namespace FreneticScript.TagHandlers.HelperBases
             {
                 return TYPE;
             }
-            
+
+            /// <summary>
+            /// Return the type of this tag.
+            /// </summary>
+            /// <returns>The tag type.</returns>
+            public override TagType GetTagType(TagTypes tagTypeSet)
+            {
+                return tagTypeSet.Type_System;
+            }
+
             /// <summary>
             /// Gets a system tag. Shouldn't be used.
             /// </summary>

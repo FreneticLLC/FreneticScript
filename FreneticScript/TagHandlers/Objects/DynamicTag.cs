@@ -35,6 +35,15 @@ namespace FreneticScript.TagHandlers.Objects
             return TYPE;
         }
 
+        /// <summary>
+        /// Return the type of this tag.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType GetTagType(TagTypes tagTypeSet)
+        {
+            return tagTypeSet.Type_Dynamic;
+        }
+
         // TODO: Explanation of dynamics!
 
         /// <summary>
@@ -48,12 +57,17 @@ namespace FreneticScript.TagHandlers.Objects
         public static readonly FieldInfo Field_DynamicTag_Internal = typeof(DynamicTag).GetField(nameof(Internal));
 
         /// <summary>
+        /// The method <see cref="TagHelper_DynamicAnyProcessor(DynamicTag, TagData)"/>.
+        /// </summary>
+        public static readonly MethodInfo Method_DynamicTag_AnyProcessor = typeof(DynamicTag).GetMethod(nameof(TagHelper_DynamicAnyProcessor));
+
+        /// <summary>
         /// Constructs a new DynamicTag.
         /// </summary>
-        /// <param name="type">The TemplateObject to base this DynamicTag off of.</param>
-        public DynamicTag(TemplateObject type)
+        /// <param name="obj">The TemplateObject to base this DynamicTag off of.</param>
+        public DynamicTag(TemplateObject obj)
         {
-            Internal = type;
+            Internal = obj;
         }
 
         /// <summary>
@@ -100,6 +114,13 @@ namespace FreneticScript.TagHandlers.Objects
             return new TagTypeTag(data.TagSystem.Types.Type_Dynamic);
         }
 
+        [TagMeta(TagType = TYPE, Name = "held_type", Group = "Dynamics", ReturnType = TagTypeTag.TYPE, Returns = "The type of the held object.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TagTypeTag Tag_Held_Type(DynamicTag obj, TagData data)
+        {
+            return new TagTypeTag(obj.Internal.GetTagType(data.TagSystem.Types));
+        }
+
         [TagMeta(TagType = TYPE, Name = "as", SpecialCompiler = true, SpecialTypeHelperName = nameof(TypeHelper_Tag_As)
             , Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -108,9 +129,42 @@ namespace FreneticScript.TagHandlers.Objects
             ilgen.Emit(OpCodes.Ldfld, Field_DynamicTag_Internal); // Load field "Internal" on the input DynamicTag instance.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
             string type_name = tab.Bits[bit].Variable.ToString();
-            prevType = tab.CommandSystem.TagSystem.Types.RegisteredTypes[type_name.ToLowerFast()];
-            ilgen.Emit(OpCodes.Call, prevType.CreatorMethod); // Run the creator method for the type on the input tag.
-            return prevType;
+            TagType varType = tab.CommandSystem.TagSystem.Types.RegisteredTypes[type_name.ToLowerFast()];
+            ilgen.Emit(OpCodes.Call, varType.CreatorMethod); // Run the creator method for the type on the input tag.
+            return varType;
+        }
+
+        [TagMeta(TagType = TYPE, Name = "_", SpecialCompiler = true, Group = "Dynamics", ReturnType = TYPE,
+            Returns = "The result of whatever tag is given, based on the runtime type of the object, as a DynamicTag.")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TagType Compiler_Tag_DynamicAny(CILAdaptationValues.ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
+        {
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+            ilgen.Emit(OpCodes.Call, Method_DynamicTag_AnyProcessor); // Call AnyProcessor(obj, data) and push the return to the stack
+            return tab.TagSystem.Types.Type_Dynamic;
+        }
+
+        public static DynamicTag TagHelper_DynamicAnyProcessor(DynamicTag inputObject, TagData data)
+        {
+            string tagName = data.Bits[data.cInd].Key;
+            TemplateObject tagObject = inputObject.Internal;
+            TagType originalType = tagObject.GetTagType(data.TagSystem.Types);
+            TagType objectType = originalType;
+            TagHelpInfo tagHelper;
+            while (!objectType.TagHelpers.TryGetValue(tagName, out tagHelper))
+            {
+                if (objectType.SubType == null)
+                {
+                    throw data.Error("Invalid sub-tag '"
+                        + TextStyle.Color_Separate + tagName + TextStyle.Color_Base + "' at sub-tag index "
+                        + TextStyle.Color_Separate + data.cInd + TextStyle.Color_Base + " for type '"
+                        + TextStyle.Color_Separate + originalType.TypeName + TextStyle.Color_Base
+                        + (tagName.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"));
+                }
+                tagObject = objectType.GetNextTypeDown(tagObject);
+                objectType = objectType.SubType;
+            }
+            return new DynamicTag(tagHelper.RunTagLive(tagObject, data));
         }
         
         public static TagType TypeHelper_Tag_As(TagArgumentBit tab, int bit)
@@ -142,6 +196,70 @@ namespace FreneticScript.TagHandlers.Objects
         public override string ToString()
         {
             return Internal.ToString();
+        }
+
+        /// <summary>
+        /// Sets a value on the integer object, fast.
+        /// </summary>
+        /// <param name="val">The value to set it to.</param>
+        public override void SetFast(TemplateObject val)
+        {
+            Internal.SetFast(val);
+        }
+
+        /// <summary>
+        /// Sets a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to set it to.</param>
+        /// <param name="src">Source data.</param>
+        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
+        {
+            Internal.Set(names, val, src);
+        }
+
+        /// <summary>
+        /// Adds a value to a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to add.</param>
+        /// <param name="src">Source data.</param>
+        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
+        {
+            Internal.Add(names, val, src);
+        }
+
+        /// <summary>
+        /// Subtracts a value from a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to subtract.</param>
+        /// <param name="src">Source data.</param>
+        public override void Subtract(string[] names, TemplateObject val, ObjectEditSource src)
+        {
+            Internal.Subtract(names, val, src);
+        }
+
+        /// <summary>
+        /// Multiplies a value by a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to multiply.</param>
+        /// <param name="src">Source data.</param>
+        public override void Multiply(string[] names, TemplateObject val, ObjectEditSource src)
+        {
+            Internal.Multiply(names, val, src);
+        }
+
+        /// <summary>
+        /// Divides a value from a value on the object.
+        /// </summary>
+        /// <param name="names">The name of the value.</param>
+        /// <param name="val">The value to divide.</param>
+        /// <param name="src">Source data.</param>
+        public override void Divide(string[] names, TemplateObject val, ObjectEditSource src)
+        {
+            Internal.Divide(names, val, src);
         }
     }
 }

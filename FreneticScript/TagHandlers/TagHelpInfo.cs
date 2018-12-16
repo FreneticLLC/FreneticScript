@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime;
 using System.Reflection;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers
 {
@@ -30,6 +31,11 @@ namespace FreneticScript.TagHandlers
         /// The relevant method.
         /// </summary>
         public MethodInfo Method;
+
+        /// <summary>
+        /// A helper function to directly run the tag from basic input.
+        /// </summary>
+        public Func<TemplateObject, TagData, TemplateObject> RunTagLive;
         
         /// <summary>
         /// Constructs the TagHelpInfo.

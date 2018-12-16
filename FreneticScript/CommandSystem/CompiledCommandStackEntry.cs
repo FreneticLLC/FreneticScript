@@ -111,7 +111,7 @@ namespace FreneticScript.CommandSystem
                         }
                         else
                         {
-                            queue.HandleError(Entries[c.Internal], "Internal exception: " + ex.ToString());
+                            queue.HandleError(Entries[c.Internal], "Internal exception:\n------\n" + ex.ToString() + "\n------");
                         }
                     }
                     catch (Exception ex2)

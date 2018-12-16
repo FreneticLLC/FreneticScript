@@ -37,6 +37,15 @@ namespace FreneticScript.TagHandlers
         public abstract string GetTagTypeName();
 
         /// <summary>
+        /// Return the type of this tag.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public virtual TagType GetTagType(TagTypes tagTypeSet)
+        {
+            return tagTypeSet.TypeForName(GetTagTypeName());
+        }
+
+        /// <summary>
         /// The symbol that connects a type to it's savable data.
         /// </summary>
         public const string SAVE_MARK = "@";

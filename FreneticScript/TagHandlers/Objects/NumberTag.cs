@@ -32,6 +32,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Return the type of this tag.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType GetTagType(TagTypes tagTypeSet)
+        {
+            return tagTypeSet.Type_Number;
+        }
+
+        /// <summary>
         /// The number this NumberTag represents.
         /// </summary>
         public double Internal;

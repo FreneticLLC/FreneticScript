@@ -302,6 +302,11 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
+        /// Reference to <see cref="GetModifierObjectCurrent"/>.
+        /// </summary>
+        public static MethodInfo Method_GetModifierObjectCurrent = typeof(TagData).GetMethod("GetModifierObjectCurrent");
+
+        /// <summary>
         /// Gets the modifier at the current position, handling any tags within.
         /// </summary>
         /// <returns>The tag-parsed modifier.</returns>

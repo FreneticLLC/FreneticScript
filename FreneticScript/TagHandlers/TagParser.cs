@@ -15,6 +15,7 @@ using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.ScriptSystems;
 using System.Reflection;
 using System.Reflection.Emit;
 using FreneticUtilities.FreneticExtensions;
@@ -198,6 +199,13 @@ namespace FreneticScript.TagHandlers
                     {
                         CommandSystem.Context.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
                     }
+                }
+            }
+            foreach (TagType type in Types.RegisteredTypes.Values)
+            {
+                foreach (TagHelpInfo helper in type.TagHelpers.Values)
+                {
+                    helper.RunTagLive = ScriptCompiler.GenerateTagMethodCallable(helper.Method, helper.Meta);
                 }
             }
         }

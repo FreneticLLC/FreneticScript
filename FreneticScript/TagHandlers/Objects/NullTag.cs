@@ -41,6 +41,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Return the type of this tag.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType GetTagType(TagTypes tagTypeSet)
+        {
+            return tagTypeSet.Type_Null;
+        }
+
+        /// <summary>
         /// Constructs a null tag.
         /// Don't use this. Use <see cref="NULL_VALUE"/>.
         /// </summary>

@@ -36,6 +36,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Return the type of this tag.
+        /// </summary>
+        /// <returns>The tag type.</returns>
+        public override TagType GetTagType(TagTypes tagTypeSet)
+        {
+            return tagTypeSet.Type_List;
+        }
+
+        /// <summary>
         /// The list this ListTag represents.
         /// </summary>
         public List<TemplateObject> Internal;
