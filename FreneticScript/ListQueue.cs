@@ -17,6 +17,8 @@ namespace FreneticScript
     /// </summary>
     public class ListQueue<T>
     {
+        // TODO: Move this class elsewhere (FrenUtil?) or delete
+
         /// <summary>
         /// The internal array.
         /// NOTE: INTERNAL USE ONLY.

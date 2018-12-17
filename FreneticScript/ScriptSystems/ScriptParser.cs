@@ -32,8 +32,9 @@ namespace FreneticScript.ScriptSystems
         /// <param name="commands">The command string to parse.</param>
         /// <param name="system">The command system to create the script within.</param>
         /// <param name="currentLine">The current line, if reparsing middle-of-a-file script text.</param>
+        /// <param name="mode">The default debug mode, if any.</param>
         /// <returns>A list of command strings.</returns>
-        public static CommandScript SeparateCommands(string name, string commands, Commands system, int currentLine = 0)
+        public static CommandScript SeparateCommands(string name, string commands, Commands system, int currentLine = 0, DebugMode mode = DebugMode.FULL)
         {
             try
             {
@@ -191,7 +192,7 @@ namespace FreneticScript.ScriptSystems
                     Lines.Add(line);
                     CommandList.Add(commandConstruct.ToString().Trim());
                 }
-                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), 0);
+                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), 0, mode);
             }
             catch (Exception ex)
             {

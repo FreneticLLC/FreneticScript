@@ -9,6 +9,7 @@
 using System;
 using FreneticScript.TagHandlers.Objects;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript
 {

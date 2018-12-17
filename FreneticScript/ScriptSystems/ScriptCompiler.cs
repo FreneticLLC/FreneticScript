@@ -21,6 +21,7 @@ using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.TagHandlers.Objects;
 using System.Runtime.CompilerServices;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.ScriptSystems
 {

@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.CommandSystem.QueueCmds;
 
 namespace FreneticScript
 {
@@ -20,7 +19,7 @@ namespace FreneticScript
     /// Fires in priority order.
     /// </summary>
     /// <typeparam name="T">The event arguments type to use.</typeparam>
-    public class FreneticScriptEventHandler<T> where T : FreneticEventArgs
+    public class FreneticScriptEventHandler<T> where T : FreneticScriptEventArgs
     {
         /// <summary>
         /// All handlers in the event.
@@ -144,7 +143,7 @@ namespace FreneticScript
         /// <returns>The relative priority.</returns>
         public int CompareTo(FreneticScriptEventEntry<T> other)
         {
-            if (ReferenceEquals(other, null))
+            if (other is null)
             {
                 return -1;
             }
@@ -158,7 +157,7 @@ namespace FreneticScript
         /// <returns>Whether they are equal.</returns>
         public bool Equals(FreneticScriptEventEntry<T> other)
         {
-            if (ReferenceEquals(other, null))
+            if (other is null)
             {
                 return false;
             }
@@ -192,9 +191,9 @@ namespace FreneticScript
         /// <returns>Whether they are equal.</returns>
         public static bool operator ==(FreneticScriptEventEntry<T> x, FreneticScriptEventEntry<T> y)
         {
-            if (ReferenceEquals(x, null))
+            if (x is null)
             {
-                return ReferenceEquals(y, null);
+                return (y is null);
             }
             return x.Equals(y);
         }
@@ -207,18 +206,18 @@ namespace FreneticScript
         /// <returns>Whether they are NOT equal.</returns>
         public static bool operator !=(FreneticScriptEventEntry<T> x, FreneticScriptEventEntry<T> y)
         {
-            if (ReferenceEquals(x, null))
+            if (x is null)
             {
-                return !ReferenceEquals(y, null);
+                return !(y is null);
             }
             return !x.Equals(y);
         }
     }
 
     /// <summary>
-    /// Represents the arguments to a Frenetic event.
+    /// Represents the arguments to a FreneticScript event.
     /// </summary>
-    public class FreneticEventArgs : EventArgs
+    public class FreneticScriptEventArgs : EventArgs
     {
         /// <summary>
         /// The priority this event fired with.

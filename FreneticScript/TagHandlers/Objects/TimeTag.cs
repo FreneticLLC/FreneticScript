@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.TagHandlers.Objects
 {
