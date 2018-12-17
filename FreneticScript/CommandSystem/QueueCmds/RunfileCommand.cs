@@ -19,7 +19,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// A command to allow running scripts from the script folder.
     /// </summary>
-    public class RunCommand : AbstractCommand
+    public class RunfileCommand : AbstractCommand
     {
         // TODO: Meta!
         // @Waitable
@@ -27,9 +27,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Constructs the run command.
         /// </summary>
-        public RunCommand()
+        public RunfileCommand()
         {
-            Name = "run";
+            Name = "runfile";
             Arguments = "<script to run>";
             Description = "Runs a script file.";
             // TODO: DEFINITION ARGS
@@ -81,7 +81,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             string fname = entry.GetArgument(queue, 0).ToLowerFast();
             ScriptRanPreEventArgs args = new ScriptRanPreEventArgs() { ScriptName = fname };
-            RunCommand rcmd = entry.Command as RunCommand;
+            RunfileCommand rcmd = entry.Command as RunfileCommand;
             if (rcmd.OnScriptRanPreEvent != null)
             {
                 rcmd.OnScriptRanPreEvent.Fire(args);

@@ -32,16 +32,16 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Creates a script by file name.
         /// </summary>
-        /// <param name="filename">The name of the file to execute.</param>
+        /// <param name="scriptName">The name of the script file to execute.</param>
         /// <param name="system">The command system to get the script for.</param>
         /// <param name="status">A status output.</param>
         /// <returns>A command script, or null of the file does not exist.</returns>
-        public static CommandScript GetByFileName(string filename, Commands system, out string status)
+        public static CommandScript GetByFileName(string scriptName, Commands system, out string status)
         {
             try
             {
-                string fname = filename + "." + system.FileExtension;
-                CommandScript script = ScriptParser.SeparateCommands(filename, system.Context.ReadTextFile(fname), system);
+                string fileName = system.ScriptsFolder + "/" + scriptName + "." + system.FileExtension;
+                CommandScript script = ScriptParser.SeparateCommands(scriptName, system.Context.ReadTextFile(fileName), system);
                 if (script == null)
                 {
                     status = "Failed To Parse";
@@ -63,7 +63,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw;
                 }
-                system.Context.BadOutput("Generating script for file '" + filename + "': " + ex.ToString());
+                system.Context.BadOutput("Generating script for file '" + scriptName + "': " + ex.ToString());
                 status = "Internal Exception";
                 return null;
             }

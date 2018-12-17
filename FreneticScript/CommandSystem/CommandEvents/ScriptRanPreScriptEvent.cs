@@ -18,13 +18,13 @@ namespace FreneticScript.CommandSystem.CommandEvents
 {
     // <--[event]
     // @Name ScriptRanPreEvent
-    // @Fired When a script will be ran (usually via the run command).
+    // @Fired When a script will be ran (usually via the runfile command).
     // @Updated 2015/10/28
     // @Authors mcmonkey
     // @Group Command
     // @Cancellable true
     // @Description
-    // This event will fire whenever a script is ran, which by default is when <@link command run> is used.
+    // This event will fire whenever a script is ran, which by default is when <@link command runfile> is used.
     // This event can be used to control other scripts running on the system.
     // @Var script_name TextTag returns the name of the script about to be ran.
     // -->
@@ -48,9 +48,9 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// <param name="prio">The priority.</param>
         public override void RegisterPriority(int prio)
         {
-            if (!System.TheRunCommand.OnScriptRanPreEvent.Contains(Run, prio))
+            if (!System.TheRunFileCommand.OnScriptRanPreEvent.Contains(Run, prio))
             {
-                System.TheRunCommand.OnScriptRanPreEvent.Add(Run, prio);
+                System.TheRunFileCommand.OnScriptRanPreEvent.Add(Run, prio);
             }
         }
 
@@ -60,9 +60,9 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// <param name="prio">The priority.</param>
         public override void DeregisterPriority(int prio)
         {
-            if (System.TheRunCommand.OnScriptRanPreEvent.Contains(Run, prio))
+            if (System.TheRunFileCommand.OnScriptRanPreEvent.Contains(Run, prio))
             {
-                System.TheRunCommand.OnScriptRanPreEvent.Remove(Run, prio);
+                System.TheRunFileCommand.OnScriptRanPreEvent.Remove(Run, prio);
             }
         }
 

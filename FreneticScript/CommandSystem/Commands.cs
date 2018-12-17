@@ -420,7 +420,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new ParsingCommand());
             RegisterCommand(new RepeatCommand());
             RegisterCommand(new RequireCommand());
-            RegisterCommand(TheRunCommand = new RunCommand());
+            RegisterCommand(TheRunFileCommand = new RunfileCommand());
             RegisterCommand(new StopCommand());
             RegisterCommand(new TryCommand());
             RegisterCommand(new VarCommand());
@@ -457,9 +457,9 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
-        /// The registered RunCommand instance.
+        /// The registered <see cref="RunfileCommand"/> instance.
         /// </summary>
-        public RunCommand TheRunCommand;
+        public RunfileCommand TheRunFileCommand;
 
         /// <summary>
         /// Advances any running command queues.
