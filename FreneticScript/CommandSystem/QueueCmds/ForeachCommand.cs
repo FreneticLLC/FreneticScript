@@ -241,7 +241,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
             ForeachCommandData dat = cse.EntryData[entry_ind] as ForeachCommandData;
             if (++dat.Index < dat.List.Count)
             {
@@ -259,7 +259,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="ri">Repeat Index location.</param>
         public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
             ForeachCommandData dat = cse.EntryData[entry.BlockStart - 1] as ForeachCommandData;
             if (++dat.Index < dat.List.Count)
             {
@@ -295,7 +295,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
-            CompiledCommandStackEntry ccse = queue.CurrentEntry;
+            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
             ccse.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
             if (entry.ShouldShowGood(queue))
             {

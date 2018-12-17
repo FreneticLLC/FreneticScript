@@ -105,9 +105,9 @@ namespace FreneticScript.CommandSystem
         /// <returns>The correct debug mode (whatever gives least output).</returns>
         public DebugMode CorrectDBMode(CommandQueue queue)
         {
-            if (queue.CurrentEntry.Debug > DBMode)
+            if (queue.CurrentStackEntry.Debug.ShowsLessThan(DBMode))
             {
-                return queue.CurrentEntry.Debug;
+                return queue.CurrentStackEntry.Debug;
             }
             return DBMode;
         }
@@ -240,7 +240,7 @@ namespace FreneticScript.CommandSystem
         {
             if (NamedArguments.TryGetValue(name, out Argument arg))
             {
-                return arg.Parse(queue.Error, queue.CurrentEntry);
+                return arg.Parse(queue.Error, queue.CurrentStackEntry);
             }
             return null;
         }
@@ -253,7 +253,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument.</returns>
         public TemplateObject GetArgumentObject(CommandQueue queue, int place)
         {
-            return Arguments[place].Parse(queue.Error, queue.CurrentEntry);
+            return Arguments[place].Parse(queue.Error, queue.CurrentStackEntry);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument as a string.</returns>
         public string GetArgument(CommandQueue queue, int place)
         {
-            return Arguments[place].Parse(queue.Error, queue.CurrentEntry).ToString();
+            return Arguments[place].Parse(queue.Error, queue.CurrentStackEntry).ToString();
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output.</param>
         public void GoodOutput(CommandQueue queue, string text)
         {
-            if (CorrectDBMode(queue) == DebugMode.FULL)
+            if (CorrectDBMode(queue).ShouldShow(DebugMode.FULL))
             {
                 text = OutputPrefix(queue) + TextStyle.Outgood + text;
                 queue.CommandSystem.Context.GoodOutput(text);
@@ -379,7 +379,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The entry data.</returns>
         public void SetData(CommandQueue queue, AbstractCommandEntryData x)
         {
-            queue.CurrentEntry.EntryData[OwnIndex] = x;
+            queue.CurrentStackEntry.EntryData[OwnIndex] = x;
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The entry data.</returns>
         public AbstractCommandEntryData GetData(CommandQueue queue)
         {
-            return queue.CurrentEntry.EntryData[OwnIndex];
+            return queue.CurrentStackEntry.EntryData[OwnIndex];
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether commands should output 'good' results.</returns>
         public bool ShouldShowGood(CommandQueue queue)
         {
-            return CorrectDBMode(queue) == DebugMode.FULL;
+            return CorrectDBMode(queue).ShouldShow(DebugMode.FULL);
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output.</param>
         public void BadOutput(CommandQueue queue, string text)
         {
-            if (CorrectDBMode(queue) <= DebugMode.MINIMAL)
+            if (CorrectDBMode(queue).ShouldShow(DebugMode.MINIMAL))
             {
                 text = OutputPrefix(queue) + TextStyle.Outbad + "WARNING in script '" + TextStyle.Separate + ScriptName
                     + TextStyle.Outbad + "' on line " + TextStyle.Separate + (ScriptLine + 1) + TextStyle.Outbad + ": " + text;

@@ -134,7 +134,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.Good(queue, "Noticing variable track for " + vname + ".");
                 }
-                CompiledCommandStackEntry ccse = queue.CurrentEntry;
+                CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
                 int x = -1;
                 if (!entry.VarLookup.TryGetValue(vname, out x))
                 {

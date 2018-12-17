@@ -61,7 +61,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string count = entry.GetArgument(queue, 0);
             if (count == "\0CALLBACK")
             {
-                CommandStackEntry cse = queue.CurrentEntry;
+                CommandStackEntry cse = queue.CurrentStackEntry;
                 WhileCommandData dat = (WhileCommandData)cse.Entries[entry.BlockStart - 1].GetData(queue);
                 dat.Index++;
                 if (IfCommand.TryIf(queue, entry, new List<Argument>(dat.ComparisonArgs)))
@@ -80,7 +80,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (count.ToLowerFast() == "stop")
             {
-                CommandStackEntry cse = queue.CurrentEntry;
+                CommandStackEntry cse = queue.CurrentStackEntry;
                 for (int i = 0; i < cse.Entries.Length; i++)
                 {
                     if (queue.GetCommand(i).Command is WhileCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
@@ -97,7 +97,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (count.ToLowerFast() == "next")
             {
-                CommandStackEntry cse = queue.CurrentEntry;
+                CommandStackEntry cse = queue.CurrentStackEntry;
                 for (int i = cse.Index - 1; i > 0; i--)
                 {
                     if (queue.GetCommand(i).Command is WhileCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
@@ -121,7 +121,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         entry.Good(queue, "Not looping.");
                     }
-                    CommandStackEntry cse = queue.CurrentEntry;
+                    CommandStackEntry cse = queue.CurrentStackEntry;
                     cse.Index = entry.BlockEnd + 2;
                     return;
                 }

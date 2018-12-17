@@ -121,7 +121,7 @@ namespace FreneticScript.CommandSystem
                 if (queue.CommandStack.Count > 0)
                 {
                     cse = queue.CommandStack.Peek();
-                    queue.CurrentEntry = cse;
+                    queue.CurrentStackEntry = cse;
                     if (cse.Index <= cse.Entries.Length)
                     {
                         stacktrace.Append("    in script '" + cse.Entries[cse.Index - 1].ScriptName + "' at line " + (cse.Entries[cse.Index - 1].ScriptLine + 1)

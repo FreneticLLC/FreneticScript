@@ -106,7 +106,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             try
             {
-                queue.CurrentEntry.LocalVariables[loc].Internal.SetFast(entry.GetArgumentObject(queue, 2));
+                queue.CurrentStackEntry.LocalVariables[loc].Internal.SetFast(entry.GetArgumentObject(queue, 2));
             }
             catch (ErrorInducedException ex)
             {
@@ -135,7 +135,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentStackEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void AddImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentStackEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void SubtractImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentStackEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void MultiplyImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentStackEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void DivideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
         {
             // TODO: Pre-split!
-            queue.CurrentEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
+            queue.CurrentStackEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>

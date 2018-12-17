@@ -30,9 +30,9 @@ namespace FreneticScript.CommandSystem
         public Stack<CompiledCommandStackEntry> CommandStack = new Stack<CompiledCommandStackEntry>();
 
         /// <summary>
-        /// Represents the <see cref="CommandQueue.CurrentEntry"/> field.
+        /// Represents the <see cref="CommandQueue.CurrentStackEntry"/> field.
         /// </summary>
-        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CommandQueue.CurrentEntry));
+        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CommandQueue.CurrentStackEntry));
 
         /// <summary>
         /// Represents the <see cref="GetTagData"/> method.
@@ -42,7 +42,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The current stack entry being used.
         /// </summary>
-        public CompiledCommandStackEntry CurrentEntry;
+        public CompiledCommandStackEntry CurrentStackEntry;
         
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
@@ -97,8 +97,8 @@ namespace FreneticScript.CommandSystem
                 BasicTagData.TagSystem = CommandSystem.TagSystem;
                 BasicTagData.ErrorHandler = Error;
             }
-            BasicTagData.CSE = CurrentEntry;
-            BasicTagData.DBMode = CurrentEntry == null ? DebugMode.FULL : CurrentEntry.Debug;
+            BasicTagData.CSE = CurrentStackEntry;
+            BasicTagData.DBMode = CurrentStackEntry == null ? DebugMode.FULL : CurrentStackEntry.Debug;
             return BasicTagData;
         }
 
@@ -134,18 +134,18 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether it should output.</returns>
         public bool ShouldOutputLast(out CommandEntry entry)
         {
-            if (CurrentEntry == null)
+            if (CurrentStackEntry == null)
             {
                 entry = null;
                 return false;
             }
-            if (CurrentEntry.Index > CurrentEntry.Entries.Length)
+            if (CurrentStackEntry.Index > CurrentStackEntry.Entries.Length)
             {
-                entry = CurrentEntry.At(CurrentEntry.Entries.Length - 1);
+                entry = CurrentStackEntry.At(CurrentStackEntry.Entries.Length - 1);
             }
             else
             {
-                entry = CurrentEntry.At(CurrentEntry.Index - 1);
+                entry = CurrentStackEntry.At(CurrentStackEntry.Index - 1);
             }
             return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
         }
@@ -157,7 +157,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether it should output.</returns>
         public bool ShouldOutputCurrent(out CommandEntry entry)
         {
-            entry = CurrentEntry?.CurrentCommandEntry;
+            entry = CurrentStackEntry?.CurrentCommandEntry;
             return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
         }
         
@@ -172,7 +172,7 @@ namespace FreneticScript.CommandSystem
             }
             Running = true;
             ID = Interlocked.Increment(ref HighestID);
-            CurrentEntry = CommandStack.Peek();
+            CurrentStackEntry = CommandStack.Peek();
             if (ShouldOutputCurrent(out CommandEntry first))
             {
                 first.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " started.");
@@ -218,8 +218,8 @@ namespace FreneticScript.CommandSystem
             }
             while (CommandStack.Count > 0)
             {
-                CurrentEntry = CommandStack.Peek();
-                CommandStackRetVal ret = CurrentEntry.Run(this);
+                CurrentStackEntry = CommandStack.Peek();
+                CommandStackRetVal ret = CurrentStackEntry.Run(this);
                 if (ret == CommandStackRetVal.BREAK)
                 {
                     if (ShouldOutputLast(out CommandEntry current))
@@ -253,7 +253,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(string message)
         {
-            HandleError(CurrentEntry.Entries[CurrentEntry.Index], message);
+            HandleError(CurrentStackEntry.Entries[CurrentStackEntry.Index], message);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
         {
-            CurrentEntry.HandleError(this, entry, message);
+            CurrentStackEntry.HandleError(this, entry, message);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The object result.</returns>
         public TemplateObject ParseArgument(Argument arg)
         {
-            return arg.Parse(Error, CurrentEntry);
+            return arg.Parse(Error, CurrentStackEntry);
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The specified command.</returns>
         public CommandEntry GetCommand(int index)
         {
-            return CurrentEntry.Entries[index];
+            return CurrentStackEntry.Entries[index];
         }
         
         /// <summary>
@@ -292,7 +292,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether commands should output 'good' results.</returns>
         public bool ShouldShowGood()
         {
-            return CurrentEntry.Debug == DebugMode.FULL;
+            return CurrentStackEntry.Debug == DebugMode.FULL;
         }
         
         /// <summary>
@@ -301,7 +301,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output.</param>
         public void GoodOutput(string text)
         {
-            if (CurrentEntry.Debug == DebugMode.FULL)
+            if (CurrentStackEntry.Debug == DebugMode.FULL)
             {
                 CommandSystem.Context.GoodOutput(text);
                 if (Outputsystem != null)
@@ -316,7 +316,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Stop()
         {
-            CurrentEntry.Index = CurrentEntry.Entries.Length + 1;
+            CurrentStackEntry.Index = CurrentStackEntry.Entries.Length + 1;
             CommandStack.Clear();
         }
         
@@ -327,7 +327,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The new value.</param>
         public void SetLocalVar(int c, TemplateObject value)
         {
-            CurrentEntry.LocalVariables[c].Internal = value;
+            CurrentStackEntry.LocalVariables[c].Internal = value;
         }
     }
 
@@ -363,17 +363,30 @@ namespace FreneticScript.CommandSystem
     }
 
     /// <summary>
-    /// What mode of parsing a Queue uses.
+    /// Extension methods for DebugMode.
     /// </summary>
-    public enum TagParseMode
+    public static class DebugModeExtensions
     {
         /// <summary>
-        /// Parsing entirely disabled.
+        /// Whether this mode should show output of the specified mode.
         /// </summary>
-        OFF = 0,
+        /// <param name="mode">This mode.</param>
+        /// <param name="testShowMode">The specified mode to compare with.</param>
+        /// <returns>Whether it should show.</returns>
+        public static bool ShouldShow(this DebugMode mode, DebugMode testShowMode)
+        {
+            return mode <= testShowMode;
+        }
+
         /// <summary>
-        /// Parsing enabled in standard tag-syntax mode.
+        /// Whether this mode should show less output than the specified mode.
         /// </summary>
-        ON = 1
+        /// <param name="mode">This mode.</param>
+        /// <param name="testShowMode">The specified mode to compare with.</param>
+        /// <returns>Whether it should show less output.</returns>
+        public static bool ShowsLessThan(this DebugMode mode, DebugMode testShowMode)
+        {
+            return mode > testShowMode;
+        }
     }
 }

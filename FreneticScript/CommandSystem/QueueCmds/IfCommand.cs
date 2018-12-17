@@ -191,7 +191,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                TemplateObject theto = arguments[0].Parse(queue.Error, queue.CurrentEntry);
+                TemplateObject theto = arguments[0].Parse(queue.Error, queue.CurrentStackEntry);
                 if (theto is BooleanTag)
                 {
                     return (theto as BooleanTag).Internal;
@@ -248,7 +248,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (arguments.Count == 1)
             {
-                TemplateObject theto = arguments[0].Parse(queue.Error, queue.CurrentEntry);
+                TemplateObject theto = arguments[0].Parse(queue.Error, queue.CurrentStackEntry);
                 if (theto is BooleanTag)
                 {
                     return (theto as BooleanTag).Internal;
@@ -300,9 +300,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "Invalid IF: Two-argument input unclear in intent!");
                 return false;
             }
-            TemplateObject to = arguments[0].Parse(queue.Error, queue.CurrentEntry);
+            TemplateObject to = arguments[0].Parse(queue.Error, queue.CurrentStackEntry);
             NumberTag n1 = NumberTag.TryFor(to);
-            to = arguments[2].Parse(queue.Error, queue.CurrentEntry);
+            to = arguments[2].Parse(queue.Error, queue.CurrentStackEntry);
             NumberTag n2 = NumberTag.TryFor(to);
             string comp = arguments[1].ToString();
             if (comp == "==")

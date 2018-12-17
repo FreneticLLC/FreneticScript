@@ -82,7 +82,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.Good(queue, "Injecting '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
             }
-            CompiledCommandStackEntry cse = queue.CurrentEntry;
+            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
             CompiledCommandStackEntry tcse = script.Compiled.Duplicate();
             tcse.Debug = cse.Debug; // TODO: Should debug editing be valid?
             queue.CommandStack.Push(tcse);

@@ -168,7 +168,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             type = type.ToLowerFast();
             if (type == "stop")
             {
-                CommandStackEntry cse = queue.CurrentEntry;
+                CommandStackEntry cse = queue.CurrentStackEntry;
                 for (int i = 0; i < cse.Entries.Length; i++)
                 {
                     if (queue.GetCommand(i).Command is FunctionCommand && queue.GetCommand(i).Arguments[0].ToString() == "\0CALLBACK")
@@ -249,7 +249,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         entry.Good(queue, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' defined.");
                     }
                 }
-                queue.CurrentEntry.Index = entry.BlockEnd + 2;
+                queue.CurrentStackEntry.Index = entry.BlockEnd + 2;
             }
             else
             {
