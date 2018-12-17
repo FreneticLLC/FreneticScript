@@ -69,12 +69,7 @@ namespace FreneticScript.CommandSystem
         /// The script that was used to build this queue.
         /// </summary>
         public CommandScript Script;
-
-        /// <summary>
-        /// Whether commands in the queue will parse tags.
-        /// </summary>
-        public TagParseMode ParseTags = TagParseMode.ON;
-
+        
         /// <summary>
         /// What function to invoke when output is generated.
         /// </summary>

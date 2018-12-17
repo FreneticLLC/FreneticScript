@@ -411,7 +411,6 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new InjectCommand());
             RegisterCommand(new MarkCommand());
             RegisterCommand(new OnceCommand());
-            RegisterCommand(new ParsingCommand());
             RegisterCommand(new RepeatCommand());
             RegisterCommand(new RequireCommand());
             RegisterCommand(TheRunFileCommand = new RunfileCommand());

@@ -253,14 +253,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument.</returns>
         public TemplateObject GetArgumentObject(CommandQueue queue, int place)
         {
-            if (queue.ParseTags != TagParseMode.OFF) // TODO: Compile parse tags option?!
-            {
-                return Arguments[place].Parse(queue.Error, queue.CurrentEntry);
-            }
-            else
-            {
-                return new TextTag(Arguments[place].ToString());
-            }
+            return Arguments[place].Parse(queue.Error, queue.CurrentEntry);
         }
 
         /// <summary>
@@ -271,14 +264,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument as a string.</returns>
         public string GetArgument(CommandQueue queue, int place)
         {
-            if (queue.ParseTags != TagParseMode.OFF)
-            {
-                return Arguments[place].Parse(queue.Error, queue.CurrentEntry).ToString();
-            }
-            else
-            {
-                return Arguments[place].ToString();
-            }
+            return Arguments[place].Parse(queue.Error, queue.CurrentEntry).ToString();
         }
 
         /// <summary>
