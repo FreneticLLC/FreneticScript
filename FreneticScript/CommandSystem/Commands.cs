@@ -25,6 +25,11 @@ namespace FreneticScript.CommandSystem
     /// </summary>
     public class Commands
     {
+        /// <summary>
+        /// The default file extension for script files. Set to "frs", indicating filenames of the format "myscript.frs".
+        /// </summary>
+        public const string DEFAULT_FILE_EXTENSION = "frs";
+
         // <--[definition]
         // @Word argument
         // @Group commands
@@ -46,6 +51,11 @@ namespace FreneticScript.CommandSystem
         /// A full dictionary of all registered commands.
         /// </summary>
         public Dictionary<string, AbstractCommand> RegisteredCommands;
+
+        /// <summary>
+        /// The current file extension for script files, by default set to the value of <see cref="DEFAULT_FILE_EXTENSION"/>.
+        /// </summary>
+        public string FileExtension = DEFAULT_FILE_EXTENSION;
 
         /// <summary>
         /// A full list of all registered commands.

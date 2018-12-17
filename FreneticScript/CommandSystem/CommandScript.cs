@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem
         {
             try
             {
-                string fname = filename + ".cfg";
+                string fname = filename + "." + system.FileExtension;
                 CommandScript script = ScriptParser.SeparateCommands(filename, system.Context.ReadTextFile(fname), system);
                 if (script == null)
                 {

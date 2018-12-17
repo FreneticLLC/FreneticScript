@@ -51,7 +51,7 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Used to read a text file, generally a script.
-        /// File format is along the lines of "mymap/myscript.cfg".
+        /// File format is along the lines of "mymap/myscript.frs".
         /// Throw a System.IO.FileNotFoundException if file does not exist.
         /// </summary>
         /// <param name="name">The filename to read.</param>
@@ -60,7 +60,7 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Used to read a text file, generally generic data for a script.
-        /// File format is along the lines of "mymap/mydata.yml".
+        /// File format is along the lines of "mymap/mydata.fds".
         /// Throw a System.IO.FileNotFoundException if file does not exist.
         /// </summary>
         /// <param name="name">The filename to read.</param>
@@ -69,7 +69,7 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>
         /// Used to write a text file, generally generic data for a script.
-        /// File format is along the lines of "mymap/mydata.yml".
+        /// File format is along the lines of "mymap/mydata.fds".
         /// </summary>
         /// <param name="name">The filename to write.</param>
         /// <param name="data">The data to write to file.</param>
