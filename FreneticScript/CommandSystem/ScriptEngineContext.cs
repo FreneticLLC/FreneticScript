@@ -28,31 +28,41 @@ namespace FreneticScript.CommandSystem
         /// Used to output a failure message.
         /// </summary>
         /// <param name="text">The text to output.</param>
-        public abstract void BadOutput(string text);
+        public virtual void BadOutput(string text)
+        {
+            WriteLine(TextStyle.Outbad + "[Bad] " + text);
+        }
 
         /// <summary>
         /// Used to output a success message.
         /// </summary>
         /// <param name="text">The text to output.</param>
-        public abstract void GoodOutput(string text);
+        public virtual void GoodOutput(string text)
+        {
+            WriteLine(TextStyle.Outgood + "[Good] " + text);
+        }
 
         /// <summary>
-        /// Used to properly handle an unknown command.
+        /// Called to properly handle an unknown command.
+        /// Only used if <see cref="ShouldErrorOnInvalidCommand"/> returns true.
         /// </summary>
         /// <param name="queue">The queue firing this unknown command.</param>
         /// <param name="basecommand">The command that wasn't recognized.</param>
         /// <param name="arguments">The commands arguments.</param>
-        public abstract void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments);
+        public virtual void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments)
+        {
+            throw new NotImplementedException("Unknown command: " + basecommand);
+        }
 
         /// <summary>
-        /// The CVar System used by this command engine.
+        /// The CVar System used by this context.
         /// </summary>
         public CVarSystem CVarSys;
 
         /// <summary>
         /// Used to read a text file, generally a script.
         /// File format is along the lines of "mymap/myscript.frs".
-        /// Throw a System.IO.FileNotFoundException if file does not exist.
+        /// Throw a <see cref="System.IO.FileNotFoundException"/> if file does not exist.
         /// </summary>
         /// <param name="name">The filename to read.</param>
         /// <returns>The read text file.</returns>
@@ -61,7 +71,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Used to read a text file, generally generic data for a script.
         /// File format is along the lines of "mymap/mydata.fds".
-        /// Throw a System.IO.FileNotFoundException if file does not exist.
+        /// Throw a <see cref="System.IO.FileNotFoundException"/> if file does not exist.
         /// </summary>
         /// <param name="name">The filename to read.</param>
         /// <returns>The read data file.</returns>
@@ -76,9 +86,28 @@ namespace FreneticScript.CommandSystem
         public abstract void WriteDataFile(string name, byte[] data);
 
         /// <summary>
-        /// Used when the system is reloaded, to delete any temporary script-related data.
+        /// Called to produce a list of valid files starting at a given folder path, with an optional extension rule.
+        /// The extension may be null (in which case, assume all file types are valid to be listed).
+        /// <para>An example call may be of the form: <code>ListFiles("scripts", "frs", true)</code>.
+        /// That call would be expected to return all script files in the scripts folder, and in sub-folders of the scripts folder.</para>
+        /// </summary>
+        /// <param name="path">The initial folder path.</param>
+        /// <param name="extension">A file extension requirement, or null if none.</param>
+        /// <param name="deep">Whether to read within subfolders as well.</param>
+        /// <returns>A list of file names.</returns>
+        public abstract string[] ListFiles(string path, string extension, bool deep);
+
+        /// <summary>
+        /// Called when the system is reloaded, to delete any temporary script-related data.
         /// </summary>
         public abstract void Reload();
+
+        /// <summary>
+        /// Called when the system has finished reloading.
+        /// </summary>
+        public virtual void PostReload()
+        {
+        }
 
         /// <summary>
         /// Whether the game is still setting up currently. (Used by the InitOnly CVar system).
@@ -88,6 +117,9 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Whether the system should error when an invalid command is detected.
         /// </summary>
-        public abstract bool ShouldErrorOnInvalidCommand();
+        public virtual bool ShouldErrorOnInvalidCommand()
+        {
+            return true;
+        }
     }
 }

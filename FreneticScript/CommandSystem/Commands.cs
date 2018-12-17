@@ -17,6 +17,7 @@ using FreneticScript.CommandSystem.CommandEvents;
 using FreneticScript.ScriptSystems;
 using System.Threading;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -29,6 +30,11 @@ namespace FreneticScript.CommandSystem
         /// The default file extension for script files. Set to "frs", indicating filenames of the format "myscript.frs".
         /// </summary>
         public const string DEFAULT_FILE_EXTENSION = "frs";
+
+        /// <summary>
+        /// The default folder name for script files, relative to the program working directory. Set to "scripts", indicating file paths of the format "(WorkingDirectory)/scripts/myscript.frs".
+        /// </summary>
+        public const string DEFAULT_SCRIPTS_FOLDER = "scripts";
 
         // <--[definition]
         // @Word argument
@@ -56,6 +62,11 @@ namespace FreneticScript.CommandSystem
         /// The current file extension for script files, by default set to the value of <see cref="DEFAULT_FILE_EXTENSION"/>.
         /// </summary>
         public string FileExtension = DEFAULT_FILE_EXTENSION;
+
+        /// <summary>
+        /// The current folder name for scripts files, relative to the program working directory. By default set to the value of <see cref="DEFAULT_SCRIPTS_FOLDER"/>.
+        /// </summary>
+        public string ScriptsFolder = DEFAULT_SCRIPTS_FOLDER;
 
         /// <summary>
         /// A full list of all registered commands.
@@ -122,6 +133,8 @@ namespace FreneticScript.CommandSystem
                 }
             }
             Context.Reload();
+            LoadScriptsFolder();
+            Context.PostReload();
         }
 
         /// <summary>
@@ -196,54 +209,85 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Loads all scripts from the scripts folder.
+        /// </summary>
+        public void LoadScriptsFolder()
+        {
+            foreach (string scriptFileName in Context.ListFiles(ScriptsFolder, FileExtension, true))
+            {
+                string scriptFileText;
+                try
+                {
+                    scriptFileText = Context.ReadTextFile(scriptFileName);
+                }
+                catch (Exception ex)
+                {
+                    if (ex is ThreadAbortException)
+                    {
+                        throw;
+                    }
+                    Context.BadOutput("Failed to read script file '" + scriptFileName + "' (was listed in scripts folder): " + ex.ToString());
+                    continue;
+                }
+                PrecalcScript(scriptFileName, scriptFileText);
+            }
+            RunPrecalculated();
+        }
+
+        /// <summary>
+        /// The prefix string for script preprocessor labels. Set to "///".
+        /// </summary>
+        public const string PREPROCESSOR_PREFIX = "///";
+
+        /// <summary>
         /// Precalculates a script file to potentially be run.
         /// </summary>
         /// <param name="name">The name of the script.</param>
-        /// <param name="script">The script to run.</param>
-        public void PrecalcScript(string name, string script)
+        /// <param name="scriptText">The script to run.</param>
+        public void PrecalcScript(string name, string scriptText)
         {
             try
             {
-                script = script.Replace("\r", "").Replace("\0", "\\0");
-                string[] dat = script.SplitFast('\n');
-                bool shouldarun = false;
-                int arun = 0;
-                for (int i = 0; i < dat.Length; i++)
+                scriptText = scriptText.Replace("\r", "").Replace("\0", "\\0");
+                string[] scriptLines = scriptText.SplitFast('\n');
+                bool shouldAutoRun = false;
+                int autoRunPriority = 0;
+                for (int i = 0; i < scriptLines.Length; i++)
                 {
-                    string trimmed = dat[i].Trim();
+                    string trimmed = scriptLines[i].Trim();
                     if (trimmed.Length == 0)
                     {
                         continue;
                     }
-                    if (trimmed.StartsWith("///"))
+                    if (trimmed.StartsWith(PREPROCESSOR_PREFIX))
                     {
-                        string[] args = trimmed.Substring(3).SplitFast('=');
+                        string[] args = trimmed.Substring(PREPROCESSOR_PREFIX.Length).SplitFast('=');
                         string mode = args[0].Trim().ToLowerFast();
                         if (mode == "autorun")
                         {
-                            shouldarun = true;
-                            arun = StringConversionHelper.StringToInt(args[1]);
+                            shouldAutoRun = true;
+                            autoRunPriority = args.Length > 0 ? 0 : StringConversionHelper.StringToInt(args[1]);
                         }
                         continue;
                     }
                     break;
                 }
-                if (shouldarun)
+                if (shouldAutoRun)
                 {
-                    CommandScript cscript = ScriptParser.SeparateCommands(name, script, this);
-                    if (cscript == null)
+                    CommandScript builtScript = ScriptParser.SeparateCommands(name, scriptText, this, mode: DebugMode.MINIMAL);
+                    if (builtScript == null)
                     {
                         return;
                     }
-                    for (int i = 0; i < scriptsToRun.Count; i++)
+                    for (int i = 0; i < ScriptsToRun.Count; i++)
                     {
-                        if (scriptsToRun[i].Key == arun)
+                        if (ScriptsToRun[i].Key == autoRunPriority)
                         {
-                            scriptsToRun[i].Value.Add(cscript);
+                            ScriptsToRun[i].Value.Add(builtScript);
                             return;
                         }
                     }
-                    scriptsToRun.Add(new KeyValuePair<int, List<CommandScript>>(arun, new List<CommandScript>() { cscript }));
+                    ScriptsToRun.Add(new KeyValuePair<int, List<CommandScript>>(autoRunPriority, new List<CommandScript>() { builtScript }));
                     return;
                 }
             }
@@ -262,20 +306,21 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void RunPrecalculated()
         {
-            scriptsToRun.Sort((one, two) => (one.Key.CompareTo(two.Key)));
-            for (int i = 0; i < scriptsToRun.Count; i++)
+            ScriptsToRun.Sort((one, two) => (one.Key.CompareTo(two.Key)));
+            foreach (KeyValuePair<int, List<CommandScript>> samePriorityScripts in ScriptsToRun)
             {
-                for (int x = 0; x < scriptsToRun[i].Value.Count; x++)
+                foreach (CommandScript script in samePriorityScripts.Value)
                 {
-                    CommandQueue queue = scriptsToRun[i].Value[x].ToQueue(this);
-                    queue.CommandStack.Peek().Debug = DebugMode.MINIMAL;
-                    queue.Execute();
+                    script.ToQueue(this).Execute();
                 }
             }
-            scriptsToRun.Clear();
+            ScriptsToRun.Clear();
         }
 
-        List<KeyValuePair<int, List<CommandScript>>> scriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
+        /// <summary>
+        /// Scripts loaded in for precalculation that will be ran by <see cref="RunPrecalculated"/> when next called.
+        /// </summary>
+        List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
 
         /// <summary>
         /// A function to invoke when output is generated.
@@ -408,6 +453,7 @@ namespace FreneticScript.CommandSystem
         public void PostInit()
         {
             TagSystem.PostInit();
+            LoadScriptsFolder();
         }
 
         /// <summary>

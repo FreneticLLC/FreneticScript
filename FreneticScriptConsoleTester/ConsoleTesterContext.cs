@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using FreneticScript;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
+using System.IO;
 
 namespace FreneticScriptConsoleTester
 {
@@ -36,28 +37,18 @@ namespace FreneticScriptConsoleTester
 
         string Clean(string inp)
         {
-            return Environment.CurrentDirectory + "/data/" + inp.Replace("..", "/").Replace('\\', '/');
+            return inp.Replace("..", "/").Replace('\\', '/');
         }
 
         public override string ReadTextFile(string name)
         {
-            return System.IO.File.ReadAllText(Clean(name));
+            return File.ReadAllText(Clean(name));
         }
 
         public override void Reload()
         {
         }
-
-        public override bool ShouldErrorOnInvalidCommand()
-        {
-            return true;
-        }
-
-        public override void UnknownCommand(CommandQueue queue, string basecommand, string[] arguments)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public override void WriteDataFile(string name, byte[] data)
         {
             throw new NotImplementedException();
@@ -66,6 +57,21 @@ namespace FreneticScriptConsoleTester
         public override void WriteLine(string text)
         {
             SysConsole.Output(OutputType.INFO, TagParser.Unescape(text));
+        }
+
+        public override string[] ListFiles(string path, string extension, bool deep)
+        {
+            path = Clean(path);
+            if (!Directory.Exists(path))
+            {
+                return new string[0];
+            }
+            string[] results = Directory.GetFiles(path, extension == null ? "*.*" : "*." + extension , deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            for (int i = 0; i < results.Length; i++)
+            {
+                results[i] = results[i].Replace('\\', '/').Replace(Environment.CurrentDirectory.Replace('\\', '/'), "");
+            }
+            return results;
         }
     }
 }
