@@ -57,6 +57,7 @@ namespace FreneticScript.CommandSystem
             {
                 ccse.LocalVariables[i] = new ObjectHolder() { Internal = ccse.LocalVariables[i]?.Internal };
             }
+            ccse.IndexHelper = new IntHolder();
             return ccse;
         }
 
@@ -67,11 +68,11 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether to continue looping.</returns>
         public CommandStackRetVal Run(CommandQueue queue)
         {
-            IntHolder c = new IntHolder() { Internal = 0 };
+            CurrentQueue = queue;
             try
             {
-                MainCompiledRunnable.Run(queue, c, Entries, Index);
-                Index = c.Internal + 1;
+                MainCompiledRunnable.Run(queue, IndexHelper, Entries, Index);
+                Index = IndexHelper.Internal + 1;
                 if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
                 {
                     return CommandStackRetVal.BREAK;
@@ -105,13 +106,14 @@ namespace FreneticScript.CommandSystem
                 {
                     try
                     {
+                        Index = IndexHelper.Internal;
                         if (ex is ErrorInducedException)
                         {
-                            queue.HandleError(Entries[c.Internal], ex.Message);
+                            queue.HandleError(Entries[Index], ex.Message);
                         }
                         else
                         {
-                            queue.HandleError(Entries[c.Internal], "Internal exception:\n------\n" + ex.ToString() + "\n------");
+                            queue.HandleError(Entries[Index], "Internal exception:\n------\n" + ex.ToString() + "\n------");
                         }
                     }
                     catch (Exception ex2)
@@ -145,6 +147,10 @@ namespace FreneticScript.CommandSystem
                     return CommandStackRetVal.CONTINUE;
                 }
                 return CommandStackRetVal.STOP;
+            }
+            finally
+            {
+                CurrentQueue = null;
             }
         }
     }

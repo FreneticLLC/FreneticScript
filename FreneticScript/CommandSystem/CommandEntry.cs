@@ -13,6 +13,7 @@ using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -344,6 +345,29 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// A helpful matcher to output short simple names.
+        /// </summary>
+        public static AsciiMatcher OutputableNameMatcher = new AsciiMatcher(
+            (c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
+
+        /// <summary>
+        /// Generates the output prefix for debug output.
+        /// </summary>
+        /// <param name="queue">The queue.</param>
+        /// <returns>A proper output prefix.</returns>
+        public string OutputPrefix(CommandQueue queue)
+        {
+            string outputableScriptName = OutputableNameMatcher.TrimToMatches(ScriptName);
+            if (outputableScriptName.Length > 6)
+            {
+                outputableScriptName = outputableScriptName.Substring(0, 6);
+            }
+            return TextStyle.Minor + "[Q:" + TextStyle.Separate + queue.ID
+                + TextStyle.Minor + ",S:" + TextStyle.Separate + outputableScriptName
+                + TextStyle.Minor + ",L:" + TextStyle.Separate + ScriptLine + TextStyle.Minor + "] ";
+        }
+
+        /// <summary>
         /// Used to output a success message.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
@@ -352,6 +376,7 @@ namespace FreneticScript.CommandSystem
         {
             if (CorrectDBMode(queue) == DebugMode.FULL)
             {
+                text = OutputPrefix(queue) + TextStyle.Outgood + text;
                 queue.CommandSystem.Context.GoodOutput(text);
                 if (queue.Outputsystem != null)
                 {
@@ -400,7 +425,8 @@ namespace FreneticScript.CommandSystem
         {
             if (CorrectDBMode(queue) <= DebugMode.MINIMAL)
             {
-                text = "WARNING in script '" + ScriptName + "' on line " + (ScriptLine + 1) + ": " + text;
+                text = OutputPrefix(queue) + TextStyle.Outbad + "WARNING in script '" + TextStyle.Separate + ScriptName
+                    + TextStyle.Outbad + "' on line " + TextStyle.Separate + (ScriptLine + 1) + TextStyle.Outbad + ": " + text;
                 queue.CommandSystem.Context.BadOutput(text);
                 if (queue.Outputsystem != null)
                 {

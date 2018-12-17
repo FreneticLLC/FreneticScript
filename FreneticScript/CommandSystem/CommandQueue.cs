@@ -218,7 +218,7 @@ namespace FreneticScript.CommandSystem
                 DidWaitLast = false;
                 if (ShouldOutputCurrent(out CommandEntry current))
                 {
-                    current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " processing.");
+                    current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " resuming processing.");
                 }
             }
             while (CommandStack.Count > 0)

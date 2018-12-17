@@ -34,6 +34,8 @@ namespace FreneticScript
         public static string Opaque = "^o";
         /// <summary>White color: ^7</summary>
         public static string White = "^7";
+        /// <summary>Minor style, default (SysConsole) value: ^r^)</summary>
+        public static string Minor = "^r^)";
         /// <summary>Simple style, default (SysConsole) value: ^r^7</summary>
         public static string Simple = "^r^7";
         /// <summary>Standout style, default (SysConsole) value: ^r^0^h^5</summary>

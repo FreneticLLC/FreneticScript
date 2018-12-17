@@ -415,18 +415,27 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Helper for debugging compiled tags.
         /// </summary>
-        /// <param name="res">The returned object.</param>
+        /// <param name="resultObject">The returned object.</param>
         /// <param name="data">The tag data.</param>
         /// <returns>Res, unmodified.</returns>
-        public static TemplateObject DebugTagHelper(TemplateObject res, TagData data)
+        public static TemplateObject DebugTagHelper(TemplateObject resultObject, TagData data)
         {
             if (data.DBMode <= DebugMode.FULL)
             {
-                data.TagSystem.CommandSystem.Context.GoodOutput("Filled tag " + TextStyle.Separate +
-                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + res.ToString()
-                    + TextStyle.Outgood + "\".");
+                string outputText = "Filled tag " + TextStyle.Separate +
+                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + resultObject.ToString()
+                    + TextStyle.Outgood + "\".";
+                if (data.CSE != null)
+                {
+                    if (data.CSE.CurrentCommandEntry != null && data.CSE.CurrentQueue != null)
+                    {
+                        data.CSE.CurrentCommandEntry.GoodOutput(data.CSE.CurrentQueue, outputText);
+                        return resultObject;
+                    }
+                }
+                data.TagSystem.CommandSystem.Context.GoodOutput(outputText);
             }
-            return res;
+            return resultObject;
         }
     }
 }

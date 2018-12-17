@@ -13,6 +13,7 @@ using System.Text;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem
 {
@@ -25,7 +26,17 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The index of the currently running command.
         /// </summary>
-        public int Index;
+        public int Index
+        {
+            get
+            {
+                return IndexHelper.Internal;
+            }
+            set
+            {
+                IndexHelper.Internal = value;
+            }
+        }
 
         /// <summary>
         /// All available commands.
@@ -66,6 +77,16 @@ namespace FreneticScript.CommandSystem
                 return At(Index);
             }
         }
+
+        /// <summary>
+        /// Special helper object for index values.
+        /// </summary>
+        public IntHolder IndexHelper = new IntHolder();
+
+        /// <summary>
+        /// The current queue, or null.
+        /// </summary>
+        public CommandQueue CurrentQueue = null;
         
         /// <summary>
         /// Handles an error as appropriate to the situation, in the current queue, from the current command.
