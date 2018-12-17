@@ -98,10 +98,7 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
-                if (ex is ThreadAbortException)
-                {
-                    throw;
-                }
+                FreneticScriptUtilities.CheckException(ex);
                 if (!(ex is ErrorInducedException eie && string.IsNullOrEmpty(eie.Message)))
                 {
                     try

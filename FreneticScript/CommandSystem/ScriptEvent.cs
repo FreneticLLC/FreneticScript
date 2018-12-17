@@ -220,10 +220,7 @@ namespace FreneticScript.CommandSystem
                     }
                     catch (Exception ex)
                     {
-                        if (ex is ThreadAbortException)
-                        {
-                            throw;
-                        }
+                        FreneticScriptUtilities.CheckException(ex);
                         System.Context.BadOutput("Exception running script event: " + ex.ToString());
                     }
                 }

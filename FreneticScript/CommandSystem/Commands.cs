@@ -222,10 +222,7 @@ namespace FreneticScript.CommandSystem
                 }
                 catch (Exception ex)
                 {
-                    if (ex is ThreadAbortException)
-                    {
-                        throw;
-                    }
+                    FreneticScriptUtilities.CheckException(ex);
                     Context.BadOutput("Failed to read script file '" + scriptFileName + "' (was listed in scripts folder): " + ex.ToString());
                     continue;
                 }
@@ -293,10 +290,7 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
-                if (ex is ThreadAbortException)
-                {
-                    throw;
-                }
+                FreneticScriptUtilities.CheckException(ex);
                 Context.BadOutput("Found exception while precalculating script '" + name + "'...: " + ex.ToString());
             }
         }

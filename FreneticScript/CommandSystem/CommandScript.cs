@@ -59,10 +59,7 @@ namespace FreneticScript.CommandSystem
             }
             catch (Exception ex)
             {
-                if (ex is ThreadAbortException)
-                {
-                    throw;
-                }
+                FreneticScriptUtilities.CheckException(ex);
                 system.Context.BadOutput("Generating script for file '" + scriptName + "': " + ex.ToString());
                 status = "Internal Exception";
                 return null;

@@ -60,10 +60,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             catch (Exception ex)
             {
-                if (ex is ThreadAbortException)
-                {
-                    throw;
-                }
+                FreneticScriptUtilities.CheckException(ex);
                 dat.Error("Invalid binary data: '" + TagParser.Escape(input) + "'!");
                 return null;
             }

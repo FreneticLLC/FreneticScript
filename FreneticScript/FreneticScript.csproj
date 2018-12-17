@@ -105,6 +105,7 @@
     <Compile Include="CVar.cs" />
     <Compile Include="CVarSystem.cs" />
     <Compile Include="FreneticScriptEventHandler.cs" />
+    <Compile Include="FreneticScriptUtilities.cs" />
     <Compile Include="ListQueue.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
