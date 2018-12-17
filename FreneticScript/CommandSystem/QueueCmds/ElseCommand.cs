@@ -144,7 +144,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Else is reached, executing block...");
+                    entry.GoodOutput(queue, "Else is reached, executing block...");
                 }
                 ((IfCommandData)entry.GetData(queue)).Result = 1;
                 return true;
@@ -156,7 +156,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Else-If is true, executing...");
+                    entry.GoodOutput(queue, "Else-If is true, executing...");
                 }
                 ((IfCommandData)entry.GetData(queue)).Result = 1;
             }
@@ -164,7 +164,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Else-If is false, doing nothing!");
+                    entry.GoodOutput(queue, "Else-If is false, doing nothing!");
                 }
             }
             return success;

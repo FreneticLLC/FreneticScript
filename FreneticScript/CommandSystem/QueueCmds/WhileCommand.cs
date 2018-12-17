@@ -68,14 +68,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "While looping...: " + dat.Index);
+                        entry.GoodOutput(queue, "While looping...: " + dat.Index);
                     }
                     cse.Index = entry.BlockStart;
                     return;
                 }
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "While stopping.");
+                    entry.GoodOutput(queue, "While stopping.");
                 }
             }
             else if (count.ToLowerFast() == "stop")
@@ -87,7 +87,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Stopping a while loop.");
+                            entry.GoodOutput(queue, "Stopping a while loop.");
                         }
                         cse.Index = i + 2;
                         return;
@@ -104,7 +104,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Jumping forward in a while loop.");
+                            entry.GoodOutput(queue, "Jumping forward in a while loop.");
                         }
                         cse.Index = i + 1;
                         return;
@@ -119,7 +119,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Not looping.");
+                        entry.GoodOutput(queue, "Not looping.");
                     }
                     CommandStackEntry cse = queue.CurrentStackEntry;
                     cse.Index = entry.BlockEnd + 2;

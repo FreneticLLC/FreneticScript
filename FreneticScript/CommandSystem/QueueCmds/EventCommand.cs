@@ -123,13 +123,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Cleared all events.");
+                    entry.GoodOutput(queue, "Cleared all events.");
                 }
                 return;
             }
             if (!queue.CommandSystem.Events.TryGetValue(eventname, out ScriptEvent theEvent))
             {
-                queue.HandleError(entry, "Unknown event '<{text_color[emphasis]}>" + TagParser.Escape(eventname) + "<{text_color[base]}>'.");
+                queue.HandleError(entry, "Unknown event '" + TextStyle.Separate + eventname + TextStyle.Base + "'.");
                 return;
             }
             if (type == "clear")
@@ -138,7 +138,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 theEvent.Handlers.Clear();
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Cleared <{text_color[emphasis]}>" + count + "<{text_color[base]}> event handler" + (count == 1 ? "." : "s."));
+                    entry.GoodOutput(queue, "Cleared " + TextStyle.Separate + count + TextStyle.Base + " event handler" + (count == 1 ? "." : "s."));
                 }
             }
             else if (type == "remove")
@@ -154,7 +154,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Removed event handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>'.");
+                        entry.GoodOutput(queue, "Removed event handler '" + TextStyle.Separate + name + TextStyle.Base + "'.");
                     }
                 }
                 else
@@ -163,12 +163,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Unknown event handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>'.");
+                            entry.GoodOutput(queue, "Unknown event handler '" + TextStyle.Separate + name + TextStyle.Base + "'.");
                         }
                     }
                     else
                     {
-                        queue.HandleError(entry, "Unknown event handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>'.");
+                        queue.HandleError(entry, "Unknown event handler '" + TextStyle.Separate + name + TextStyle.Base + "'.");
                     }
                 }
             }
@@ -209,19 +209,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' already exists!");
+                            entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name + TextStyle.Base + "' already exists!");
                         }
                     }
                     else
                     {
-                        queue.HandleError(entry, "Handler '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' already exists!");
+                        queue.HandleError(entry, "Handler '" + TextStyle.Separate + name + TextStyle.Base + "' already exists!");
                     }
                 }
                 else
                 {
                     theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, entry.InnerCommandBlock, entry.BlockStart, DebugMode.MINIMAL));
-                    entry.Good(queue, "Handler '<{text_color[emphasis]}>" + TagParser.Escape(name) +
-                        "<{text_color[base]}>' defined for event '<{text_color[emphasis]}>" + TagParser.Escape(theEvent.Name) + "<{text_color[base]}>'.");
+                    entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name +
+                        "" + TextStyle.Base + "' defined for event '" + TextStyle.Separate + theEvent.Name + TextStyle.Base + "'.");
                 }
             }
             else

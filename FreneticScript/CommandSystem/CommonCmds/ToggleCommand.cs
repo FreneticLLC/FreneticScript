@@ -51,27 +51,27 @@ namespace FreneticScript.CommandSystem.CommonCmds
             CVar cvar = queue.CommandSystem.Context.CVarSys.Get(target);
             if (cvar == null)
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' does not exist!");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' does not exist!");
                 return;
             }
             if (cvar.Flags.HasFlagsFS(CVarFlag.ServerControl))
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is server controlled!");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified, it is server controlled!");
             }
             if (cvar.Flags.HasFlagsFS(CVarFlag.ReadOnly))
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is a read-only system variable!");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified, it is a read-only system variable!");
             }
             else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Context.Initializing)
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified after game initialization.");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified after game initialization.");
             }
             else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Context.Initializing)
             {
                 cvar.Set(cvar.ValueB ? "false" : "true");
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "<{text_color[info]}>CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[info]}>' is delayed, and its value will be calculated after the game is reloaded.");
+                    entry.GoodOutput(queue, TextStyle.Importantinfo + "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Importantinfo + "' is delayed, and its value will be calculated after the game is reloaded.");
                 }
             }
             else
@@ -79,8 +79,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 cvar.Set(cvar.ValueB ? "false" : "true");
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "<{text_color[info]}>CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) +
-                        "<{text_color[info]}>' set to '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Value) + "<{text_color[info]}>'.");
+                    entry.GoodOutput(queue, TextStyle.Importantinfo + "CVar '" + TextStyle.Separate + cvar.Name +
+                        TextStyle.Importantinfo + "' set to '" + TextStyle.Separate + cvar.Value + TextStyle.Importantinfo + "'.");
                 }
             }
         }

@@ -125,7 +125,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "If is true, executing...");
+                    entry.GoodOutput(queue, "If is true, executing...");
                 }
                 ((IfCommandData)entry.GetData(queue)).Result = 1;
             }
@@ -133,7 +133,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "If is false, doing nothing!");
+                    entry.GoodOutput(queue, "If is false, doing nothing!");
                 }
             }
             return success;

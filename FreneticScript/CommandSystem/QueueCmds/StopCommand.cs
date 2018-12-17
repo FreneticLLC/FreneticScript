@@ -67,7 +67,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Stopping <{text_color[emphasis]}>" + qCount + "<{text_color[base]}> queue" + (qCount == 1 ? "." : "s."));
+                    entry.GoodOutput(queue, "Stopping " + TextStyle.Separate + qCount + TextStyle.Base + " queue" + (qCount == 1 ? "." : "s."));
                 }
                 foreach (CommandQueue tqueue in queue.CommandSystem.Queues)
                 {
@@ -79,7 +79,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Stopping current queue.");
+                    entry.GoodOutput(queue, "Stopping current queue.");
                 }
                 queue.Stop();
             }

@@ -238,7 +238,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new DynamicTag(outp);
             }
-            data.Error("Unknown map entry: '" + TagParser.Escape(modif) + "'!");
+            data.Error("Unknown map entry: '" + modif + "'!");
             return null;
         }
 

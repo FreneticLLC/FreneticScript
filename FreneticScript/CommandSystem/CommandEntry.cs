@@ -420,18 +420,6 @@ namespace FreneticScript.CommandSystem
                 }
             }
         }
-
-#warning Remove this 'Good' old version
-        
-        /// <summary>
-        /// TODO: Remove this!
-        /// </summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="text">The text to output, with tags included.</param>
-        public void Good(CommandQueue queue, string text)
-        {
-            GoodOutput(queue, text);
-        }
         
         /// <summary>
         /// Perfectly duplicates the command entry.

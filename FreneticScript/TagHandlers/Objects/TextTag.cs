@@ -338,14 +338,14 @@ namespace FreneticScript.TagHandlers.Objects
                 byte[] bits = Convert.FromBase64String(text);
                 if (bits == null)
                 {
-                    data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "'!");
+                    data.Error("Invalid base64 input: '" + text + "'!");
                     return null;
                 }
                 return new BinaryTag(bits);
             }
             catch (FormatException ex)
             {
-                data.Error("Invalid base64 input: '" + TagParser.Escape(text) + "', with internal message: '" + TagParser.Escape(ex.Message) + "'!");
+                data.Error("Invalid base64 input: '" + text + "', with internal message: '" + ex.Message + "'!");
                 return null;
             }
         }

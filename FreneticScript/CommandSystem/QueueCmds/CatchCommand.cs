@@ -73,14 +73,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Completed catch successfully.");
+                    entry.GoodOutput(queue, "Completed catch successfully.");
                 }
                 return;
             }
             queue.CurrentStackEntry.Index = entry.BlockEnd + 2;
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Passing catch without executing.");
+                entry.GoodOutput(queue, "Passing catch without executing.");
             }
         }
     }

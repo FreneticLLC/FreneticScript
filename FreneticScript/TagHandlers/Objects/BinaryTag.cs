@@ -61,7 +61,7 @@ namespace FreneticScript.TagHandlers.Objects
             catch (Exception ex)
             {
                 FreneticScriptUtilities.CheckException(ex);
-                dat.Error("Invalid binary data: '" + TagParser.Escape(input) + "'!");
+                dat.Error("Invalid binary data: '" + input + "'!");
                 return null;
             }
         }
@@ -172,7 +172,7 @@ namespace FreneticScript.TagHandlers.Objects
             string[] split = modif.SplitFast(',');
             if (split.Length != 2)
             {
-                data.Error("Invalid comma-separated-twin-number input: '" + TagParser.Escape(modif) + "'!");
+                data.Error("Invalid comma-separated-twin-number input: '" + modif + "'!");
                 return null;
             }
             IntegerTag num1 = IntegerTag.For(data, split[0]);
@@ -184,7 +184,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             if (num1 == null || num2 == null)
             {
-                data.Error("Invalid integer input: '" + TagParser.Escape(modif) + "'!");
+                data.Error("Invalid integer input: '" + modif + "'!");
                 return null;
             }
             int number = (int)num1.Internal - 1;

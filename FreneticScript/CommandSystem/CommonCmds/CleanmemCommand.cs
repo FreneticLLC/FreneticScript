@@ -42,7 +42,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             GC.Collect();
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Memory cleaned.");
+                entry.GoodOutput(queue, "Memory cleaned.");
             }
         }
     }

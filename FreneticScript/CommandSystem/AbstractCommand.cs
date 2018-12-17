@@ -121,11 +121,11 @@ namespace FreneticScript.CommandSystem
         {
             if (entry.Arguments.Count < MinimumArguments)
             {
-                return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + TagParser.Escape(Arguments) + ", found only: " + TagParser.Escape(entry.AllOriginalArguments());
+                return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + Arguments + ", found only: " + entry.AllOriginalArguments();
             }
             if (MaximumArguments != -1 && entry.Arguments.Count > MaximumArguments)
             {
-                return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + TagParser.Escape(Arguments) + ", found: " + TagParser.Escape(entry.AllOriginalArguments());
+                return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + Arguments + ", found: " + entry.AllOriginalArguments();
             }
             if (ObjectTypes != null)
             {
@@ -138,8 +138,8 @@ namespace FreneticScript.CommandSystem
                         TemplateObject obj = ObjectTypes[i].Invoke(((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue);
                         if (obj == null)
                         {
-                            return "Invalid argument '" + TagParser.Escape(entry.Arguments[i].ToString())
-                                + "', translates to internal NULL for this command's input expectation (Command is " + TagParser.Escape(entry.Command.Name) + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
+                            return "Invalid argument '" + entry.Arguments[i].ToString()
+                                + "', translates to internal NULL for this command's input expectation (Command is " + entry.Command.Name + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
                         }
                         ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = obj;
                     }

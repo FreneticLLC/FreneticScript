@@ -71,7 +71,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Passing mark.");
+                entry.GoodOutput(queue, "Passing mark.");
             }
         }
     }

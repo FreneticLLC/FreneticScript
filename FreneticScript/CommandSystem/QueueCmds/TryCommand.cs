@@ -50,14 +50,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Block completed successfully!");
+                    entry.GoodOutput(queue, "Block completed successfully!");
                 }
             }
             else
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Trying block...");
+                    entry.GoodOutput(queue, "Trying block...");
                 }
             }
         }

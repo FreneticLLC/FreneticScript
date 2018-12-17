@@ -134,7 +134,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Debug mode set to " + TextStyle.Separate + entry.DBMode + TextStyle.Outgood + ".");
+                entry.GoodOutput(queue, "Debug mode set to " + TextStyle.Separate + entry.DBMode + TextStyle.Outgood + ".");
             }
         }
 

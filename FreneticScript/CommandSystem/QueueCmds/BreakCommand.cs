@@ -121,7 +121,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 completed:
                 continue;
             }
-            entry.Good(queue, "Broke free successfully.");
+            entry.GoodOutput(queue, "Broke free successfully.");
         }
     }
 }

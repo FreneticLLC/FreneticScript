@@ -71,10 +71,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             BooleanTag bt = BooleanTag.TryFor(arg1);
             if (bt == null || !bt.Internal)
             {
-                queue.HandleError(entry, "Assertion failed: " + TagParser.Escape(entry.GetArgument(queue, 1)));
+                queue.HandleError(entry, "Assertion failed: " + entry.GetArgument(queue, 1));
                 return;
             }
-            entry.Good(queue, "Assert command passed, assertion valid!");
+            entry.GoodOutput(queue, "Assert command passed, assertion valid!");
         }
     }
 }

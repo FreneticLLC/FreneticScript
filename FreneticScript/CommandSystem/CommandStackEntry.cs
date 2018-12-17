@@ -110,7 +110,7 @@ namespace FreneticScript.CommandSystem
                     if (entr.Command is TryCommand &&
                         entr.Arguments[0].ToString() == "\0CALLBACK")
                     {
-                        entry.Good(queue, "Force-exiting try block.");
+                        entry.GoodOutput(queue, "Force-exiting try block.");
                         // TODO: queue.SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
                         cse.Index = i + 2;
                         throw new ErrorInducedException();

@@ -101,7 +101,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandScript script = function.Internal;
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Calling '" + TextStyle.Separate + script.Name + TextStyle.Base + "'...");
+                entry.GoodOutput(queue, "Calling '" + TextStyle.Separate + script.Name + TextStyle.Base + "'...");
             }
             CompiledCommandStackEntry cse = script.Compiled.Duplicate();
             if (cse.Entries.Length > 0)
@@ -132,7 +132,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 string vname = entry.NamedArguments[CommandEntry.SAVE_NAME_ARG_ID].ToString();
                 if (sgood)
                 {
-                    entry.Good(queue, "Noticing variable track for " + vname + ".");
+                    entry.GoodOutput(queue, "Noticing variable track for " + vname + ".");
                 }
                 CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
                 int x = -1;
@@ -165,7 +165,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     if (sgood)
                     {
-                        entry.Good(queue, "Call complete.");
+                        entry.GoodOutput(queue, "Call complete.");
                     }
                 };
             }

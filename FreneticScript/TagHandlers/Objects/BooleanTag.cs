@@ -84,7 +84,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return FALSE;
             }
-            dat.Error("Invalid boolean: '" + TagParser.Escape(input) + "'!");
+            dat.Error("Invalid boolean: '" + input + "'!");
             return null;
         }
 

@@ -45,12 +45,12 @@ namespace FreneticScript.CommandSystem.CommonCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Reloading...");
+                entry.GoodOutput(queue, "Reloading...");
             }
             queue.CommandSystem.Reload();
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Reloaded!");
+                entry.GoodOutput(queue, "Reloaded!");
             }
         }
     }

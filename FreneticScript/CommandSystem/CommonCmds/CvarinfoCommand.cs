@@ -51,11 +51,11 @@ namespace FreneticScript.CommandSystem.CommonCmds
             /*
             if (entry.Arguments.Count < 1)
             {
-                entry.Info(queue, "Listing <{text_color[emphasis]}>" + queue.CommandSystem.Context.CVarSys.CVars.Count + "<{text_color[base]}> CVars...");
+                entry.Info(queue, "Listing " + TextStyle.Separate + queue.CommandSystem.Context.CVarSys.CVars.Count + TextStyle.Base + " CVars...");
                 for (int i = 0; i < queue.CommandSystem.Context.CVarSys.CVars.Count; i++)
                 {
                     CVar cvar = queue.CommandSystem.Context.CVarSys.CVarList[i];
-                    entry.Info(queue, "<{text_color[emphasis]}>" + (i + 1).ToString() + "<{text_color[simple]}>)<{text_color[emphasis]}> " + TagParser.Escape(cvar.Info()));
+                    entry.Info(queue, "" + TextStyle.Separate + (i + 1).ToString() + "<{text_color[simple]}>)" + TextStyle.Separate + " " + TagParser.Escape(cvar.Info()));
                 }
             }
             else
@@ -71,15 +71,15 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 }
                 if (cvars.Count == 0)
                 {
-                    queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(target) + "<{text_color[base]}>' does not exist!");
+                    queue.HandleError(entry, "CVar '" + TextStyle.Separate + target + TextStyle.Base + "' does not exist!");
                 }
                 else
                 {
-                    entry.Info(queue, "Listing <{text_color[emphasis]}>" + cvars.Count + "<{text_color[base]}> CVars...");
+                    entry.Info(queue, "Listing " + TextStyle.Separate + cvars.Count + TextStyle.Base + " CVars...");
                     for (int i = 0; i < cvars.Count; i++)
                     {
                         CVar cvar = cvars[i];
-                        entry.Info(queue, "<{text_color[emphasis]}>" + (i + 1).ToString() + "<{text_color[simple]}>)<{text_color[emphasis]}> " + TagParser.Escape(cvar.Info()));
+                        entry.Info(queue, "" + TextStyle.Separate + (i + 1).ToString() + "<{text_color[simple]}>)" + TextStyle.Separate + " " + TagParser.Escape(cvar.Info()));
                     }
                 }
             }

@@ -108,14 +108,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Re-running delay command...");
+                    entry.GoodOutput(queue, "Re-running delay command...");
                 }
             }
             else
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "compiling and running delay command...");
+                    entry.GoodOutput(queue, "compiling and running delay command...");
                 }
                 entry.BlockScript = new CommandScript("__delay__command__", entry.InnerCommandBlock, entry.BlockStart);
             }

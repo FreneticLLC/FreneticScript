@@ -124,7 +124,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 script = args2.Script;
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Running '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>'...");
+                    entry.GoodOutput(queue, "Running '" + TextStyle.Separate + fname + TextStyle.Base + "'...");
                 }
                 Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
                 queue.CommandSystem.ExecuteScript(script, ref vars, out CommandQueue nqueue);
@@ -149,7 +149,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                queue.HandleError(entry, "Cannot run script '<{text_color[emphasis]}>" + TagParser.Escape(fname) + "<{text_color[base]}>': " + status + "!");
+                queue.HandleError(entry, "Cannot run script '" + TextStyle.Separate + fname + TextStyle.Base + "': " + status + "!");
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 { 
                     queue.WaitingOn = null;

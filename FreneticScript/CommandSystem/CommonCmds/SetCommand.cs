@@ -73,12 +73,12 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 {
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(target) + "<{text_color[base]}>' cannot be removed, it doesn't exist!");
+                        entry.GoodOutput(queue, "CVar '" + TextStyle.Separate + target + TextStyle.Base + "' cannot be removed, it doesn't exist!");
                     }
                 }
                 else if (!Cvar.Flags.HasFlagsFS(CVarFlag.UserMade))
                 {
-                    queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(Cvar.Name) + "<{text_color[base]}>' cannot be removed, it wasn't user made!");
+                    queue.HandleError(entry, "CVar '" + TextStyle.Separate + Cvar.Name + TextStyle.Base + "' cannot be removed, it wasn't user made!");
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
                     queue.CommandSystem.Context.CVarSys.CVarList.Remove(Cvar);
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "<{text_color[info]}>CVar '<{text_color[emphasis]}>" + TagParser.Escape(Cvar.Name) + "<{text_color[info]}>' removed.");
+                        entry.GoodOutput(queue, TextStyle.Importantinfo + "CVar '" + TextStyle.Separate + Cvar.Name + TextStyle.Importantinfo + "' removed.");
                     }
                 }
                 return;
@@ -95,26 +95,26 @@ namespace FreneticScript.CommandSystem.CommonCmds
             CVar cvar = queue.CommandSystem.Context.CVarSys.AbsoluteSet(target, newvalue, force, do_not_save ? CVarFlag.DoNotSave : CVarFlag.None);
             if (cvar.Flags.HasFlagsFS(CVarFlag.ServerControl) && !force)
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is server controlled!");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified, it is server controlled!");
                 return;
             }
             if (cvar.Flags.HasFlagsFS(CVarFlag.ReadOnly))
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified, it is a read-only system variable!");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified, it is a read-only system variable!");
             }
             else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Context.Initializing)
             {
-                queue.HandleError(entry, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' cannot be modified after game initialization.");
+                queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified after game initialization.");
             }
             else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Context.Initializing)
             {
-                entry.Good(queue, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' is delayed, and its value will be calculated after the game is reloaded.");
+                entry.GoodOutput(queue, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' is delayed, and its value will be calculated after the game is reloaded.");
             }
             else
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "CVar '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Name) + "<{text_color[base]}>' set to '<{text_color[emphasis]}>" + TagParser.Escape(cvar.Value) + "<{text_color[base]}>'.");
+                    entry.GoodOutput(queue, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' set to '" + TextStyle.Separate + cvar.Value + TextStyle.Base + "'.");
                 }
             }
         }

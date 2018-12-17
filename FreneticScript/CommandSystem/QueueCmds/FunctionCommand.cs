@@ -161,7 +161,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 // TODO: Shut up if we're just defining something?
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Completed function call.");
+                    entry.GoodOutput(queue, "Completed function call.");
                 }
                 return;
             }
@@ -175,7 +175,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Stopping a function call.");
+                            entry.GoodOutput(queue, "Stopping a function call.");
                         }
                         cse.Index = i + 2;
                         return;
@@ -197,12 +197,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' doesn't exist!");
+                            entry.GoodOutput(queue, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' doesn't exist!");
                         }
                     }
                     else
                     {
-                        queue.HandleError(entry, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' doesn't exist!");
+                        queue.HandleError(entry, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' doesn't exist!");
                     }
                 }
                 else
@@ -210,7 +210,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     queue.CommandSystem.Functions.Remove(name);
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' undefined.");
+                        entry.GoodOutput(queue, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' undefined.");
                     }
                 }
             }
@@ -233,12 +233,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         if (entry.ShouldShowGood(queue))
                         {
-                            entry.Good(queue, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' already exists!");
+                            entry.GoodOutput(queue, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' already exists!");
                         }
                     }
                     else
                     {
-                        queue.HandleError(entry, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' already exists!");
+                        queue.HandleError(entry, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' already exists!");
                     }
                 }
                 else
@@ -246,7 +246,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     queue.CommandSystem.Functions.Add(name, new CommandScript("function_" + name, entry.InnerCommandBlock, entry.BlockStart, DebugMode.MINIMAL));
                     if (entry.ShouldShowGood(queue))
                     {
-                        entry.Good(queue, "Function '<{text_color[emphasis]}>" + TagParser.Escape(name) + "<{text_color[base]}>' defined.");
+                        entry.GoodOutput(queue, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' defined.");
                     }
                 }
                 queue.CurrentStackEntry.Index = entry.BlockEnd + 2;
