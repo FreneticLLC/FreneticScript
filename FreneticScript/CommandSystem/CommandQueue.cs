@@ -180,7 +180,7 @@ namespace FreneticScript.CommandSystem
             CurrentEntry = CommandStack.Peek();
             if (ShouldOutputCurrent(out CommandEntry first))
             {
-                first.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " started.");
+                first.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " started.");
             }
             Tick(0f);
             if (Running)
@@ -218,7 +218,7 @@ namespace FreneticScript.CommandSystem
                 DidWaitLast = false;
                 if (ShouldOutputCurrent(out CommandEntry current))
                 {
-                    current.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " processing.");
+                    current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " processing.");
                 }
             }
             while (CommandStack.Count > 0)
@@ -229,7 +229,7 @@ namespace FreneticScript.CommandSystem
                 {
                     if (ShouldOutputLast(out CommandEntry current))
                     {
-                        current.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " waiting.");
+                        current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " waiting.");
                     }
                     DidWaitLast = true;
                     return;
@@ -243,7 +243,7 @@ namespace FreneticScript.CommandSystem
             Running = false;
             if (ShouldOutputLast(out CommandEntry last))
             {
-                last.GoodOutput(this, "Queue " + TextStyle.Color_Separate + ID + TextStyle.Color_Outgood + " completed.");
+                last.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " completed.");
             }
         }
 

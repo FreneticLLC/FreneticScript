@@ -268,11 +268,11 @@ namespace FreneticScript
         /// <returns>The information.</returns>
         public string Info()
         {
-            return TextStyle.Color_Simple + "Name: '" + TextStyle.Color_Separate + Name + TextStyle.Color_Simple + "', value: '" +
-                TextStyle.Color_Separate + Value + TextStyle.Color_Simple + "', numeric value: " + TextStyle.Color_Separate +
-                ValueD + TextStyle.Color_Simple + ", boolean value: " + TextStyle.Color_Separate + (ValueB ? "true" : "false") +
-                TextStyle.Color_Simple + ", flags: " + TextStyle.Color_Separate + FlagInfo() + TextStyle.Color_Simple
-                + ", description: '" + TextStyle.Color_Separate + Description + TextStyle.Color_Simple + "'";
+            return TextStyle.Simple + "Name: '" + TextStyle.Separate + Name + TextStyle.Simple + "', value: '" +
+                TextStyle.Separate + Value + TextStyle.Simple + "', numeric value: " + TextStyle.Separate +
+                ValueD + TextStyle.Simple + ", boolean value: " + TextStyle.Separate + (ValueB ? "true" : "false") +
+                TextStyle.Simple + ", flags: " + TextStyle.Separate + FlagInfo() + TextStyle.Simple
+                + ", description: '" + TextStyle.Separate + Description + TextStyle.Simple + "'";
         }
     }
 }

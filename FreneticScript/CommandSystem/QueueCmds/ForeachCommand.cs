@@ -266,7 +266,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 (cse.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.GoodOutput(queue, "Looping...: " + TextStyle.Color_Separate + dat.Index + TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.List.Count);
+                    entry.GoodOutput(queue, "Looping...: " + TextStyle.Separate + dat.Index + TextStyle.Base + "/" + TextStyle.Separate + dat.List.Count);
                 }
                 return true;
             }
@@ -299,7 +299,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ccse.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Looping " + TextStyle.Color_Separate + list.Internal.Count + TextStyle.Color_Base + " times...");
+                entry.GoodOutput(queue, "Looping " + TextStyle.Separate + list.Internal.Count + TextStyle.Base + " times...");
             }
             return true;
         }

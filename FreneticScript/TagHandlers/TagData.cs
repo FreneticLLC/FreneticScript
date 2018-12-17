@@ -190,13 +190,13 @@ namespace FreneticScript.TagHandlers
                 return;
             }
             ErrorHandler(message + "\n    while handling tag "
-                + TextStyle.Color_Separate + "<" + HighlightString(cInd, TextStyle.Color_Warning)
-                + TextStyle.Color_Separate + ">" + TextStyle.Color_Base + " under sub-tag '"
-                + TextStyle.Color_Separate + Bits[cInd].ToString() + TextStyle.Color_Base
+                + TextStyle.Separate + "<" + HighlightString(cInd, TextStyle.Warning)
+                + TextStyle.Separate + ">" + TextStyle.Base + " under sub-tag '"
+                + TextStyle.Separate + Bits[cInd].ToString() + TextStyle.Base
                 + (Bits[cInd].TagHandler == null ? "" : "' for type '"
-                + TextStyle.Color_Separate + Bits[cInd].TagHandler.Meta.ActualType.TypeName + TextStyle.Color_Base)
-                + "' at index " + TextStyle.Color_Separate + cInd + TextStyle.Color_Base + " in command argument "
-                + TextStyle.Color_Separate + (SourceArgumentID + 1) + TextStyle.Color_Base);
+                + TextStyle.Separate + Bits[cInd].TagHandler.Meta.ActualType.TypeName + TextStyle.Base)
+                + "' at index " + TextStyle.Separate + cInd + TextStyle.Base + " in command argument "
+                + TextStyle.Separate + (SourceArgumentID + 1) + TextStyle.Base);
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace FreneticScript.TagHandlers
         public TagData(TagParser _system, Argument[] _vars, TagBit[] _bits, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
         {
             TagSystem = _system;
-            BaseColor = _basecolor ?? TextStyle.Color_Simple;
+            BaseColor = _basecolor ?? TextStyle.Simple;
             DBMode = _mode;
             ErrorHandler = _error;
             Fallback = fallback;

@@ -147,7 +147,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Color_Separate + varName + TextStyle.Color_Outgood + "' with value: " + TextStyle.Color_Separate + res);
+                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' with value: " + TextStyle.Separate + res);
             }
         }
 

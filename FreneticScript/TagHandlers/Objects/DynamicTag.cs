@@ -156,9 +156,9 @@ namespace FreneticScript.TagHandlers.Objects
                 if (objectType.SubType == null)
                 {
                     throw data.Error("Invalid sub-tag '"
-                        + TextStyle.Color_Separate + tagName + TextStyle.Color_Base + "' at sub-tag index "
-                        + TextStyle.Color_Separate + data.cInd + TextStyle.Color_Base + " for type '"
-                        + TextStyle.Color_Separate + originalType.TypeName + TextStyle.Color_Base
+                        + TextStyle.Separate + tagName + TextStyle.Base + "' at sub-tag index "
+                        + TextStyle.Separate + data.cInd + TextStyle.Base + " for type '"
+                        + TextStyle.Separate + originalType.TypeName + TextStyle.Base
                         + (tagName.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"));
                 }
                 tagObject = objectType.GetNextTypeDown(tagObject);

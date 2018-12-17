@@ -264,8 +264,8 @@ namespace FreneticScript.CommandSystem
             }
             if (entry.ShouldShowGood(queue))
             {
-                entry.InfoOutput(queue, TextStyle.Color_Separate + cmd.Name + TextStyle.Color_Base + ": " + cmd.Description);
-                entry.InfoOutput(queue, TextStyle.Color_Commandhelp + "Usage: /" + cmd.Name + " " + cmd.Arguments);
+                entry.InfoOutput(queue, TextStyle.Separate + cmd.Name + TextStyle.Base + ": " + cmd.Description);
+                entry.InfoOutput(queue, TextStyle.Commandhelp + "Usage: /" + cmd.Name + " " + cmd.Arguments);
                 if (cmd.IsDebug)
                 {
                     entry.InfoOutput(queue, "Note: This command is intended for debugging purposes.");

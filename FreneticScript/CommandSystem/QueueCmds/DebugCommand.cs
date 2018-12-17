@@ -99,7 +99,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     values.DBMode = values.Entry.Debug;
                     break;
                 default:
-                    throw new ErrorInducedException("Unknown debug mode: " + TextStyle.Color_Separate + larg + TextStyle.Color_Error + "!");
+                    throw new ErrorInducedException("Unknown debug mode: " + TextStyle.Separate + larg + TextStyle.Error + "!");
             }
         }
 
@@ -134,7 +134,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Debug mode set to " + TextStyle.Color_Separate + entry.DBMode + TextStyle.Color_Outgood + ".");
+                entry.Good(queue, "Debug mode set to " + TextStyle.Separate + entry.DBMode + TextStyle.Outgood + ".");
             }
         }
 

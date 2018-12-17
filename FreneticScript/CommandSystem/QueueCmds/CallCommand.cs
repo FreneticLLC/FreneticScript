@@ -95,13 +95,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             FunctionTag function = FunctionTag.CreateFor(obj, queue.GetTagData());
             if (function == null)
             {
-                queue.HandleError(entry, "Cannot call function '" + TextStyle.Color_Separate + obj.ToString() + TextStyle.Color_Base + "': it does not exist!");
+                queue.HandleError(entry, "Cannot call function '" + TextStyle.Separate + obj.ToString() + TextStyle.Base + "': it does not exist!");
                 return;
             }
             CommandScript script = function.Internal;
             if (entry.ShouldShowGood(queue))
             {
-                entry.Good(queue, "Calling '" + TextStyle.Color_Separate + script.Name + TextStyle.Color_Base + "'...");
+                entry.Good(queue, "Calling '" + TextStyle.Separate + script.Name + TextStyle.Base + "'...");
             }
             CompiledCommandStackEntry cse = script.Compiled.Duplicate();
             if (cse.Entries.Length > 0)

@@ -422,9 +422,9 @@ namespace FreneticScript.TagHandlers
         {
             if (data.DBMode <= DebugMode.FULL)
             {
-                data.TagSystem.CommandSystem.Context.GoodOutput("Filled tag " + TextStyle.Color_Separate +
-                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Color_Outgood + " with \"" + TextStyle.Color_Separate + res.ToString()
-                    + TextStyle.Color_Outgood + "\".");
+                data.TagSystem.CommandSystem.Context.GoodOutput("Filled tag " + TextStyle.Separate +
+                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + res.ToString()
+                    + TextStyle.Outgood + "\".");
             }
             return res;
         }

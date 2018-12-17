@@ -80,7 +80,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new NumberTag(tval);
             }
-            err("Invalid number: '" + TextStyle.Color_Separate + input + TextStyle.Color_Base + "'!");
+            err("Invalid number: '" + TextStyle.Separate + input + TextStyle.Base + "'!");
             throw new Exception("Error didn't cause exception.");
         }
 
@@ -109,7 +109,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new NumberTag(tval);
             }
-            throw dat.Error("Invalid number: '" + TextStyle.Color_Separate + input + TextStyle.Color_Base + "'!");
+            throw dat.Error("Invalid number: '" + TextStyle.Separate + input + TextStyle.Base + "'!");
         }
 
         /// <summary>

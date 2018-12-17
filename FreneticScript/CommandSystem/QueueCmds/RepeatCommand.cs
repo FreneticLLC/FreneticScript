@@ -263,7 +263,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.GoodOutput(queue, "Repeating...: " + TextStyle.Color_Separate + dat.Index +  TextStyle.Color_Base + "/" + TextStyle.Color_Separate + dat.Total);
+                    entry.GoodOutput(queue, "Repeating...: " + TextStyle.Separate + dat.Index +  TextStyle.Base + "/" + TextStyle.Separate + dat.Total);
                 }
                 return true;
             }
@@ -296,7 +296,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             ccse.LocalVariables[ri].Internal = new IntegerTag(1);
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Repeating " + TextStyle.Color_Separate + target + TextStyle.Color_Base + " times...");
+                entry.GoodOutput(queue, "Repeating " + TextStyle.Separate + target + TextStyle.Base + " times...");
             }
             return true;
         }

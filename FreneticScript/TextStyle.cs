@@ -58,32 +58,5 @@ namespace FreneticScript
         public static string Importantinfo = "^r^3";
         /// <summary>Base coloring style, default (SysConsole) value: ^B</summary>
         public static string Base = "^B";
-
-        // TODO: Old below, discard them
-
-        /// <summary>Simple style: ^r^7</summary>
-        public static string Color_Simple = Simple;
-        /// <summary>Standout style: ^r^0^h^5</summary>
-        public static string Color_Standout = Standout;
-        /// <summary>Readable style: ^r^7^e^0^b</summary>
-        public static string Color_Readable = Readable;
-        /// <summary>Chat style: ^r^2^d</summary>
-        public static string Color_Chat = Chat;
-        /// <summary>Error style: ^r^0^h^3</summary>
-        public static string Color_Error = Error;
-        /// <summary>Warning style: ^r^0^h^1</summary>
-        public static string Color_Warning = Warning;
-        /// <summary>Commandhelp style: ^r^0^h^1</summary>
-        public static string Color_Commandhelp = Commandhelp;
-        /// <summary>Separate style: ^r^5</summary>
-        public static string Color_Separate = Separate;
-        /// <summary>Good output style: ^r^2</summary>
-        public static string Color_Outgood = Outgood;
-        /// <summary>Bad output style: ^r^1</summary>
-        public static string Color_Outbad = Outbad;
-        /// <summary>Important information style: ^r^3</summary>
-        public static string Color_Importantinfo = Importantinfo;
-        /// <summary>Base coloring style: ^B</summary>
-        public static string Color_Base = Base;
     }
 }

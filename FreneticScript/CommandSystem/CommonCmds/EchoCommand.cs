@@ -47,7 +47,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string args = entry.GetArgument(queue, 0);
-            entry.Info(queue, TextStyle.Color_Simple + TagParser.Escape(args));
+            entry.Info(queue, TextStyle.Simple + TagParser.Escape(args));
         }
     }
 }

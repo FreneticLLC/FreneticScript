@@ -101,11 +101,11 @@ namespace FreneticScript.ScriptSystems
                                 }
                                 catch (TagErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "argument " + TextStyle.Color_Separate + a + TextStyle.Color_Base, tab, ex.SubTagIndex, ex);
+                                    TagException(ccse.Entries[i], "argument " + TextStyle.Separate + a + TextStyle.Base, tab, ex.SubTagIndex, ex);
                                 }
                                 catch (ErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "argument " + TextStyle.Color_Separate + a + TextStyle.Color_Base, tab, 0, ex);
+                                    TagException(ccse.Entries[i], "argument " + TextStyle.Separate + a + TextStyle.Base, tab, 0, ex);
                                 }
                             }
                         }
@@ -123,11 +123,11 @@ namespace FreneticScript.ScriptSystems
                                 }
                                 catch (TagErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Color_Separate + argPair.Key + TextStyle.Color_Base + "'", tab, ex.SubTagIndex, ex);
+                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, ex.SubTagIndex, ex);
                                 }
                                 catch (ErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Color_Separate + argPair.Key + TextStyle.Color_Base + "'", tab, 0, ex);
+                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, 0, ex);
                                 }
                             }
                         }
@@ -247,12 +247,12 @@ namespace FreneticScript.ScriptSystems
         /// <param name="ex">Source exception.</param>
         public static void TagException(CommandEntry entry, string argumentNote, TagArgumentBit tab, int tagIndex, ErrorInducedException ex)
         {
-            throw new ErrorInducedException("On script line " + TextStyle.Color_Separate + entry.ScriptLine
-                + TextStyle.Color_Base + " (" + TextStyle.Color_Separate + entry.CommandLine
-                + TextStyle.Color_Base + "), in " + argumentNote
-                + " while compiling tag " + TextStyle.Color_Separate +
-                "<" + tab.HighlightString(tagIndex, TextStyle.Color_Warning) + TextStyle.Color_Separate + ">"
-                + TextStyle.Color_Base + ", error occured: " + ex.Message);
+            throw new ErrorInducedException("On script line " + TextStyle.Separate + entry.ScriptLine
+                + TextStyle.Base + " (" + TextStyle.Separate + entry.CommandLine
+                + TextStyle.Base + "), in " + argumentNote
+                + " while compiling tag " + TextStyle.Separate +
+                "<" + tab.HighlightString(tagIndex, TextStyle.Warning) + TextStyle.Separate + ">"
+                + TextStyle.Base + ", error occured: " + ex.Message);
         }
 
         /// <summary>
@@ -309,8 +309,8 @@ namespace FreneticScript.ScriptSystems
             if (returnable == null)
             {
                 throw new TagErrorInducedException("Invalid tag top-handler '"
-                    + TextStyle.Color_Separate + tab.Start.Name
-                    + TextStyle.Color_Base + "' (failed to identify return type)!", 0);
+                    + TextStyle.Separate + tab.Start.Name
+                    + TextStyle.Base + "' (failed to identify return type)!", 0);
             }
             TagType prevType = returnable;
             for (int x = 1; x < tab.Bits.Length; x++)
@@ -333,9 +333,9 @@ namespace FreneticScript.ScriptSystems
                         }
                     }
                     throw new TagErrorInducedException("Invalid sub-tag '"
-                        + TextStyle.Color_Separate + key + TextStyle.Color_Base + "' at sub-tag index "
-                        + TextStyle.Color_Separate + x + TextStyle.Color_Base + " for type '"
-                        + TextStyle.Color_Separate + basicType.TypeName + TextStyle.Color_Base
+                        + TextStyle.Separate + key + TextStyle.Base + "' at sub-tag index "
+                        + TextStyle.Separate + x + TextStyle.Base + " for type '"
+                        + TextStyle.Separate + basicType.TypeName + TextStyle.Base
                         + (key.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"), x);
                 }
                 ready:
@@ -349,9 +349,9 @@ namespace FreneticScript.ScriptSystems
                     }
                     else
                     {
-                        throw new TagErrorInducedException("Invalid tag ReturnType '" + TextStyle.Color_Separate + tsh.Meta.ReturnType
-                            + TextStyle.Color_Base + " for tag '" + TextStyle.Color_Separate + tsh.Meta.ActualType.TypeName + "."
-                            + TextStyle.Color_Separate + tsh.Meta.Name + TextStyle.Color_Base + "', cannot process properly!", x);
+                        throw new TagErrorInducedException("Invalid tag ReturnType '" + TextStyle.Separate + tsh.Meta.ReturnType
+                            + TextStyle.Base + " for tag '" + TextStyle.Separate + tsh.Meta.ActualType.TypeName + "."
+                            + TextStyle.Separate + tsh.Meta.Name + TextStyle.Base + "', cannot process properly!", x);
                     }
                 }
                 else
@@ -368,7 +368,7 @@ namespace FreneticScript.ScriptSystems
             CommandEntry relevantEntry = ccse.Entries[entryIndex];
             tab.Data = new TagData()
             {
-                BaseColor = TextStyle.Color_Simple,
+                BaseColor = TextStyle.Simple,
                 cInd = 0,
                 CSE = ccse,
                 ErrorHandler = null,

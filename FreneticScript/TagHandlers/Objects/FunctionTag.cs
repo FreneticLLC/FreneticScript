@@ -77,7 +77,7 @@ namespace FreneticScript.TagHandlers.Objects
                 CommandScript script = data.CommandSystem.GetFunction(scriptName);
                 if (script == null)
                 {
-                    throw data.Error("Unknown script name '" + TextStyle.Color_Separate + scriptName + TextStyle.Color_Base + "'.");
+                    throw data.Error("Unknown script name '" + TextStyle.Separate + scriptName + TextStyle.Base + "'.");
                 }
                 return new FunctionTag(script);
             }
@@ -102,11 +102,11 @@ namespace FreneticScript.TagHandlers.Objects
                 CommandScript script = data.CommandSystem.GetFunction(scriptName);
                 if (script == null)
                 {
-                    throw data.Error("Unknown script name '" + TextStyle.Color_Separate + scriptName + TextStyle.Color_Base + "'.");
+                    throw data.Error("Unknown script name '" + TextStyle.Separate + scriptName + TextStyle.Base + "'.");
                 }
                 return new FunctionTag(script);
             }
-            throw data.Error("Unknown Function type '" + TextStyle.Color_Separate + type + TextStyle.Color_Base + "'.");
+            throw data.Error("Unknown Function type '" + TextStyle.Separate + type + TextStyle.Base + "'.");
         }
         
         /// <summary>

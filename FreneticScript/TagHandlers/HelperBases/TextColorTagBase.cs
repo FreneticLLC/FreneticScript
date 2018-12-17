@@ -35,13 +35,13 @@ namespace FreneticScript.TagHandlers.HelperBases
         {
             Name = "text_color";
             ResultTypeString = TextTag.TYPE;
-            Colors.Add("emphasis", () => TextStyle.Color_Separate);
-            Colors.Add("cmdhelp", () => TextStyle.Color_Commandhelp);
-            Colors.Add("simple", () => TextStyle.Color_Simple);
-            Colors.Add("info", () => TextStyle.Color_Importantinfo);
-            Colors.Add("standout", () => TextStyle.Color_Standout);
-            Colors.Add("warning", () => TextStyle.Color_Warning);
-            Colors.Add("base", () => TextStyle.Color_Base);
+            Colors.Add("emphasis", () => TextStyle.Separate);
+            Colors.Add("cmdhelp", () => TextStyle.Commandhelp);
+            Colors.Add("simple", () => TextStyle.Simple);
+            Colors.Add("info", () => TextStyle.Importantinfo);
+            Colors.Add("standout", () => TextStyle.Standout);
+            Colors.Add("warning", () => TextStyle.Warning);
+            Colors.Add("base", () => TextStyle.Base);
         }
 
         /// <summary>
