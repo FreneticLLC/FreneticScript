@@ -88,7 +88,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (args.Cancelled)
             {
-                entry.Bad(queue, "Script running cancelled via the ScriptRanPreEvent.");
+                entry.BadOutput(queue, "Script running cancelled via the ScriptRanPreEvent.");
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 {
                     queue.WaitingOn = null;
@@ -105,7 +105,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (args2.Cancelled)
                 {
-                    entry.Bad(queue, "Script running cancelled via the ScriptRanEvent.");
+                    entry.BadOutput(queue, "Script running cancelled via the ScriptRanEvent.");
                     if (entry.WaitFor && queue.WaitingOn == entry)
                     {
                         queue.WaitingOn = null;
@@ -114,7 +114,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (script == null)
                 {
-                    entry.Bad(queue, "Script running nullified via the ScriptRanEvent.");
+                    entry.BadOutput(queue, "Script running nullified via the ScriptRanEvent.");
                     if (entry.WaitFor && queue.WaitingOn == entry)
                     {
                         queue.WaitingOn = null;

@@ -107,7 +107,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Once block has not yet ran, continuing.");
+                    entry.GoodOutput(queue, "Once block has not yet ran, continuing.");
                 }
                 return;
             }
@@ -116,13 +116,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.Good(queue, "Once block repeated, ignoring: " + TagParser.Escape(id));
+                    entry.GoodOutput(queue, "Once block repeated, ignoring: " + TextStyle.Separate + id);
                 }
                 queue.CurrentStackEntry.Index = entry.BlockEnd + 1;
             }
             else if (errorMode == "warning")
             {
-                entry.Bad(queue, "Once block repeated: " + TagParser.Escape(id));
+                entry.BadOutput(queue, "Once block repeated: " + TextStyle.Separate + id);
                 queue.CurrentStackEntry.Index = entry.BlockEnd + 1;
             }
             else

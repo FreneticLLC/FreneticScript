@@ -47,6 +47,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
+            // TODO: Remove/replace CVar system (FDS handler)
+            /*
             if (entry.Arguments.Count < 1)
             {
                 entry.Info(queue, "Listing <{text_color[emphasis]}>" + queue.CommandSystem.Context.CVarSys.CVars.Count + "<{text_color[base]}> CVars...");
@@ -81,6 +83,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
                     }
                 }
             }
+            */
         }
     }
 }
