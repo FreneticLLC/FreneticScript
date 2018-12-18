@@ -475,6 +475,20 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public override string GetDebugString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < Internal.Count; i++)
+            {
+                sb.Append(TextStyle.Separate).Append(Internal[i].GetDebugString()).Append(TextStyle.Minor).Append(" | ");
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Renders the list as a comma-separated string (no escaping).
         /// </summary>
         public string ToCSString()

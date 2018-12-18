@@ -60,6 +60,15 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public virtual string GetDebugString()
+        {
+            return ToString();
+        }
+
+        /// <summary>
         /// A generic edit source, where errors are treated as exceptions.
         /// </summary>
         public static readonly ObjectEditSource GENERIC_EDIT_SOURCE = new ObjectEditSource() { Error = (s) => throw new ErrorInducedException("Error in edit operation: " + s) };

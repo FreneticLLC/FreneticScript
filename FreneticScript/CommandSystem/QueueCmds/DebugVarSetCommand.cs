@@ -32,10 +32,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            // TODO: Debug this!
-            // TODO: Type verification?
+            // TODO: Type verification? (Can this type be modified in the way being attempted?)
             values.MarkCommand(entry);
             CommandEntry cent = values.Entry.Entries[entry];
+            bool debug = cent.DBMode.ShouldShow(DebugMode.FULL);
             string vn = cent.Arguments[0].ToString().ToLowerFast();
             // TODO: Index "after" check instead of splitty weirdness?
             string[] dat = vn.SplitFast('.');
@@ -85,16 +85,71 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 default:
                     throw new NotSupportedException("That setter mode (" + mode + ") is not available!");
             }
+            if (debug) // If in debug mode...
+            {
+                values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
+                values.ILGen.Emit(OpCodes.Ldstr, vn);
+                values.LoadQueue();
+                values.LoadEntry(entry);
+                values.ILGen.Emit(OpCodes.Call, Method_DebugHelper);
+            }
         }
 
-        static MethodInfo Method_SetImmediateFast = typeof(DebugVarSetCommand).GetMethod("SetImmediateFast");
-        static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
-        static MethodInfo Method_AddImmediate = typeof(DebugVarSetCommand).GetMethod("AddImmediate");
-        static MethodInfo Method_SubtractImmediate = typeof(DebugVarSetCommand).GetMethod("SubtractImmediate");
-        static MethodInfo Method_MultiplyImmediate = typeof(DebugVarSetCommand).GetMethod("MultiplyImmediate");
-        static MethodInfo Method_DivideImmediate = typeof(DebugVarSetCommand).GetMethod("DivideImmediate");
+        /// <summary>
+        /// References <see cref="DebugHelper(int, string, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod(nameof(DebugHelper));
 
-        static string[] EMPTY = new string[0];
+        /// <summary>
+        /// Helps debug output for the var-set command.
+        /// </summary>
+        /// <param name="varloc">The var location.</param>
+        /// <param name="varName">The variable name.</param>
+        /// <param name="queue">The queue.</param>
+        /// <param name="entry">The entry.</param>
+        public static void DebugHelper(int varloc, string varName, CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.ShouldShowGood(queue))
+            {
+                TemplateObject resultObject = queue.CurrentStackEntry.LocalVariables[varloc].Internal;
+                entry.GoodOutput(queue, "Updated variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' to value: " + TextStyle.Separate + resultObject.GetDebugString());
+            }
+        }
+
+        /// <summary>
+        /// References <see cref="SetImmediateFast(int, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_SetImmediateFast = typeof(DebugVarSetCommand).GetMethod("SetImmediateFast");
+
+        /// <summary>
+        /// References <see cref="SetImmediate(int, string, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
+
+        /// <summary>
+        /// References <see cref="AddImmediate(int, string, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_AddImmediate = typeof(DebugVarSetCommand).GetMethod("AddImmediate");
+
+        /// <summary>
+        /// References <see cref="SubtractImmediate(int, string, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_SubtractImmediate = typeof(DebugVarSetCommand).GetMethod("SubtractImmediate");
+
+        /// <summary>
+        /// References <see cref="MultiplyImmediate(int, string, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_MultiplyImmediate = typeof(DebugVarSetCommand).GetMethod("MultiplyImmediate");
+
+        /// <summary>
+        /// References <see cref="DivideImmediate(int, string, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_DivideImmediate = typeof(DebugVarSetCommand).GetMethod("DivideImmediate");
+
+        /// <summary>
+        /// Empty string array.
+        /// </summary>
+        private static readonly string[] EMPTY = new string[0];
 
         /// <summary>
         /// Immediately sets a var, for compiler reasons.

@@ -199,6 +199,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public override string GetDebugString()
+        {
+            return Internal.GetDebugString();
+        }
+
+        /// <summary>
         /// Sets a value on the integer object, fast.
         /// </summary>
         /// <param name="val">The value to set it to.</param>

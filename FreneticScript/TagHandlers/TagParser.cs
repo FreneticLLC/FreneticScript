@@ -423,7 +423,7 @@ namespace FreneticScript.TagHandlers
             if (data.DBMode <= DebugMode.FULL)
             {
                 string outputText = "Filled tag " + TextStyle.Separate +
-                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + resultObject.ToString()
+                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + resultObject.GetDebugString()
                     + TextStyle.Outgood + "\".";
                 if (data.CSE != null)
                 {

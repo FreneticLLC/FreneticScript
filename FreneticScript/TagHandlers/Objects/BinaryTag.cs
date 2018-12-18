@@ -308,5 +308,21 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return new string(res);
         }
+
+        /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public override string GetDebugString()
+        {
+            if (Internal.Length < 64)
+            {
+                return TextStyle.Minor + "Binary data, length: " + TextStyle.Separate + Internal.Length + TextStyle.Minor + ", hex data: " + TextStyle.Separate + ToString();
+            }
+            else
+            {
+                return TextStyle.Minor + "Binary data, length: " + TextStyle.Separate + Internal.Length;
+            }
+        }
     }
 }

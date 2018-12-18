@@ -279,6 +279,26 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public override string GetDebugString()
+        {
+            if (Internal.Count == 0)
+            {
+                return "";
+            }
+            StringBuilder toret = new StringBuilder(Internal.Count * 100);
+            foreach (KeyValuePair<string, TemplateObject> entry in Internal)
+            {
+                toret.Append(TextStyle.Separate).Append(entry.Key)
+                    .Append(TextStyle.Minor).Append(": ").Append(TextStyle.Separate)
+                    .Append(entry.Value.GetDebugString()).Append(TextStyle.Minor).Append(" | ");
+            }
+            return toret.ToString().Substring(0, toret.Length - 3);
+        }
+
+        /// <summary>
         /// Recursive sub-call of Set.
         /// </summary>
         /// <param name="names">The name of the value.</param>

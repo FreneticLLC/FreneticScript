@@ -83,7 +83,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.CommandAt(entry);
-            bool debug = cent.DBMode <= DebugMode.FULL;
+            bool debug = cent.DBMode.ShouldShow(DebugMode.FULL);
             values.MarkCommand(entry);
             bool isCorrect = true;
             TagType type = null;
@@ -147,7 +147,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' with value: " + TextStyle.Separate + res);
+                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' with value: " + TextStyle.Separate + res.GetDebugString());
             }
         }
 

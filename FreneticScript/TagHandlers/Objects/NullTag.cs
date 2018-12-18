@@ -99,5 +99,14 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return "&{NULL}";
         }
+
+        /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public override string GetDebugString()
+        {
+            return TextStyle.Warning + "&{NULL}";
+        }
     }
 }

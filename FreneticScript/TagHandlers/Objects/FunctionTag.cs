@@ -182,5 +182,21 @@ namespace FreneticScript.TagHandlers.Objects
                 return "named|" + EscapeTagBase.Escape(Internal.Name);
             }
         }
+
+        /// <summary>
+        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
+        /// </summary>
+        /// <returns>The debug-friendly string.</returns>
+        public override string GetDebugString()
+        {
+            if (Internal.IsAnonymous)
+            {
+                return TextStyle.Minor + "anon|" + TextStyle.Separate + Internal.Name;
+            }
+            else
+            {
+                return TextStyle.Minor + "named|" + TextStyle.Separate + Internal.Name;
+            }
+        }
     }
 }
