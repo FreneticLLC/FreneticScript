@@ -406,6 +406,12 @@ namespace FreneticScript.ScriptSystems
                     {
                         Argument varname = args[0];
                         args.RemoveRange(0, 2);
+                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit("\0" + varname.ToString().ToLowerFast(), true, true) } };
+                    }
+                    else if (args.Count >= 4 && args[0].ToString() == "var" && args[2].ToString() == "^=")
+                    {
+                        Argument varname = args[1];
+                        args.RemoveRange(0, 3);
                         nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFast(), true, true) } };
                     }
                 }
