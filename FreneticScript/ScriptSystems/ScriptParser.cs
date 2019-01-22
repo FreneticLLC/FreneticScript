@@ -198,11 +198,11 @@ namespace FreneticScript.ScriptSystems
             {
                 if (ex is ErrorInducedException)
                 {
-                    system.Context.BadOutput("Error parsing script: " + ex.Message);
+                    system.Context.BadOutput("Error parsing script '" + name + "': " + ex.Message);
                 }
                 else
                 {
-                    system.Context.BadOutput("Exception parsing script: " + ex.ToString());
+                    system.Context.BadOutput("Exception parsing script '" + name + "': " + ex.ToString());
                 }
                 return null;
             }
@@ -331,6 +331,7 @@ namespace FreneticScript.ScriptSystems
 
         /// <summary>
         /// Creates a CommandEntry from the given input and queue information.
+        /// May return null.
         /// </summary>
         /// <param name="command">The command line text itself.</param>
         /// <param name="system">The command system to work from.</param>
@@ -342,6 +343,10 @@ namespace FreneticScript.ScriptSystems
         {
             try
             {
+                if (command.Trim().Length == 0)
+                {
+                    return null;
+                }
                 if (command.StartsWith("/"))
                 {
                     command = command.Substring(1);
