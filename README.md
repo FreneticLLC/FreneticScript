@@ -5,7 +5,7 @@ The Frenetic Scripting Engine (dll)
 
 ### Status
 
-This project was stable for a time, but is now under a rewrite. The rewrite is far from complete and current builds are not usable!
+This project was stable for a time, but is now under a rewrite. The rewrite is going well but is not yet complete and current builds are not stable!
 
 ### Licensing pre-note:
 
