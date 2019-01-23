@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Frenetic LLC")]
 [assembly: AssemblyProduct("FreneticScriptConsoleTester")]
-[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2016-2017")]
+[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2016-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
