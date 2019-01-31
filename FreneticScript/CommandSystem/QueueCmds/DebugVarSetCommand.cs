@@ -96,7 +96,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// References <see cref="DebugHelper(int, string, CommandQueue, CommandEntry)"/>.
         /// </summary>
-        public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod(nameof(DebugHelper));
+        public static MethodInfo Method_DebugHelper = typeof(DebugVarSetCommand).GetMethod(nameof(DebugHelper));
 
         /// <summary>
         /// Helps debug output for the var-set command.
