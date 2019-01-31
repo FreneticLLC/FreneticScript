@@ -298,10 +298,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 queue.HandleError(entry, "Invalid IF: Two-argument input unclear in intent!");
                 return false;
             }
-            TemplateObject to = arguments[0].Parse(queue.Error, queue.CurrentStackEntry);
-            NumberTag n1 = NumberTag.TryFor(to);
-            to = arguments[2].Parse(queue.Error, queue.CurrentStackEntry);
-            NumberTag n2 = NumberTag.TryFor(to);
+            TemplateObject arg1 = arguments[0].Parse(queue.Error, queue.CurrentStackEntry);
+            NumberTag n1 = NumberTag.TryFor(arg1);
+            TemplateObject arg2 = arguments[2].Parse(queue.Error, queue.CurrentStackEntry);
+            NumberTag n2 = NumberTag.TryFor(arg2);
             string comp = arguments[1].ToString();
             if (comp == "==")
             {
@@ -309,7 +309,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     return n1.Internal == n2.Internal;
                 }
-                return arguments[0] == arguments[2];
+                return arg1.ToString() == arg2.ToString();
             }
             else if (comp == "!=")
             {
@@ -317,7 +317,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     return n1.Internal != n2.Internal;
                 }
-                return arguments[0] != arguments[2];
+                return arg1.ToString() != arg2.ToString();
             }
             if (comp == ">=")
             {
