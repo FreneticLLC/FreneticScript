@@ -89,7 +89,7 @@ namespace FreneticScript.TagHandlers.Objects
                 string name = list.Internal[1].ToString();
                 int startLine = (int)IntegerTag.For(list.Internal[2], data).Internal;
                 string commands = list.Internal[3].ToString();
-                CommandScript script = ScriptParser.SeparateCommands(name, commands, data.CommandSystem, startLine);
+                CommandScript script = ScriptParser.SeparateCommands(name, commands, data.CommandSystem, startLine, data.DBMode);
                 script.IsAnonymous = true;
                 script.AnonymousString = input.Substring("anon|".Length);
                 return new FunctionTag(script);
