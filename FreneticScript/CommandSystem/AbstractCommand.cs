@@ -914,27 +914,4 @@ namespace FreneticScript.CommandSystem
             ILGen.Emit(OpCodes.Call, cmd.ExecuteMethod);
         }
     }
-
-    /// <summary>
-    /// Enumeration of modes describing the way a command saves.
-    /// </summary>
-    public enum CommandSaveMode
-    {
-        /// <summary>
-        /// The command does not save.
-        /// </summary>
-        NO_SAVE = 0,
-        /// <summary>
-        /// The command can only save when a name is given.
-        /// </summary>
-        WHEN_NAME_SPECIFIED = 1,
-        /// <summary>
-        /// The command has a default save name value.
-        /// </summary>
-        DEFAULT_NAME = 2,
-        /// <summary>
-        /// The command must have a specified save name.
-        /// </summary>
-        MUST_SPECIFY = 3
-    }
 }

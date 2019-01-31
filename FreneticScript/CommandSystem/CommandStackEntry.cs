@@ -149,23 +149,4 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public DebugMode Debug;
     }
-
-    /// <summary>
-    /// Represents the return value from a command stack run call.
-    /// </summary>
-    public enum CommandStackRetVal : byte
-    {
-        /// <summary>
-        /// Tells the queue to continue.
-        /// </summary>
-        CONTINUE = 1,
-        /// <summary>
-        /// Tells the queue to wait a while.
-        /// </summary>
-        BREAK = 2,
-        /// <summary>
-        /// Tells the queue to stop entirely.
-        /// </summary>
-        STOP = 3
-    }
 }
