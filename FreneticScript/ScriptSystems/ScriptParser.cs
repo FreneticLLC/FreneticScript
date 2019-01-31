@@ -32,7 +32,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="currentLine">The current line, if reparsing middle-of-a-file script text.</param>
         /// <param name="mode">The default debug mode, if any.</param>
         /// <returns>A list of command strings.</returns>
-        public static CommandScript SeparateCommands(string name, string commands, Commands system, int currentLine = 0, DebugMode mode = DebugMode.FULL)
+        public static CommandScript SeparateCommands(string name, string commands, Commands system, int currentLine = 1, DebugMode mode = DebugMode.FULL)
         {
             try
             {
@@ -57,6 +57,8 @@ namespace FreneticScript.ScriptSystems
                         if (x < commands.Length)
                         {
                             commands = commands.Substring(0, i) + commands.Substring(x);
+                            i--;
+                            continue;
                         }
                         else
                         {
@@ -169,6 +171,10 @@ namespace FreneticScript.ScriptSystems
                             {
                                 i -= 1;
                                 break;
+                            }
+                            if (commands[i] == '\n')
+                            {
+                                line++;
                             }
                         }
                         if (!isContinued)
