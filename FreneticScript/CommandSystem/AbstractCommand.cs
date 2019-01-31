@@ -187,7 +187,7 @@ namespace FreneticScript.CommandSystem
                 {
                     throw new ErrorInducedException("Command '" + Name + "' specifies a non-existent save tag type '" + SaveType + "'.");
                 }
-                PreAdaptSaveMode(values, entry, true, saveTagType, SaveMode == CommandSaveMode.REQUIRED_NAME, DefaultSaveName);
+                PreAdaptSaveMode(values, entry, true, saveTagType, SaveMode != CommandSaveMode.WHEN_NAME_SPECIFIED, DefaultSaveName);
             }
         }
 
@@ -206,6 +206,10 @@ namespace FreneticScript.CommandSystem
             string saveName = cent.GetSaveNameNoParse(defaultName);
             if (saveName == null)
             {
+                if (!required)
+                {
+                    return;
+                }
                 throw new ErrorInducedException("Command '" + Name + "' requires a save name, but none was given.");
             }
             int preVarLoc = values.LocalVariableLocation(saveName, out TagType preVarType);
@@ -920,10 +924,14 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The command can only save when a name is given.
         /// </summary>
-        REQUIRED_NAME = 1,
+        WHEN_NAME_SPECIFIED = 1,
         /// <summary>
         /// The command has a default save name value.
         /// </summary>
-        DEFAULT_NAME = 2
+        DEFAULT_NAME = 2,
+        /// <summary>
+        /// The command must have a specified save name.
+        /// </summary>
+        MUST_SPECIFY = 3
     }
 }

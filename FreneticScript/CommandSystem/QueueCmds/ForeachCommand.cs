@@ -93,7 +93,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 1;
             MaximumArguments = 2;
             IsBreakable = true;
-            SaveMode = CommandSaveMode.REQUIRED_NAME;
+            SaveMode = CommandSaveMode.MUST_SPECIFY;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
             {
                 Verify,
