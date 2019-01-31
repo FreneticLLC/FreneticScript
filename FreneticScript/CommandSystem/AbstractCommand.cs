@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Diagnostics;
 using FreneticScript.ScriptSystems;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem
 {
@@ -63,6 +64,11 @@ namespace FreneticScript.CommandSystem
         /// In what way the command saves. Also set <see cref="DefaultSaveName"/> if relevant.
         /// </summary>
         public CommandSaveMode SaveMode = CommandSaveMode.NO_SAVE;
+
+        /// <summary>
+        /// The name of the tag type to save as. By default is set to <see cref="DynamicTag.TYPE"/>.
+        /// </summary>
+        public string SaveType = DynamicTag.TYPE;
 
         /// <summary>
         /// The default save name, if <see cref="SaveMode"/> is set to <see cref="CommandSaveMode.DEFAULT_NAME"/>.
@@ -173,19 +179,15 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The relevant entry ID.</param>
         public virtual void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
-            CommandEntry cent = values.CommandAt(entry);
-            if (SaveMode == CommandSaveMode.DEFAULT_NAME && DefaultSaveName != null)
-            {
-                PreAdaptSaveMode(values, entry, true, cent.System.TagSystem.Types.Type_Dynamic, DefaultSaveName);
-            }
             if (SaveMode != CommandSaveMode.NO_SAVE)
             {
-                string saveName = cent.GetSaveNameNoParse(DefaultSaveName);
-                if (saveName != null)
+                CommandEntry cent = values.CommandAt(entry);
+                TagType saveTagType = cent.System.TagTypes.TypeForName(SaveType);
+                if (saveTagType == null)
                 {
-                    int varLoc = values.LocalVariableLocation(saveName, out TagType preVarType);
-                    cent.SaveLoc = varLoc;
+                    throw new ErrorInducedException("Command '" + Name + "' specifies a non-existent save tag type '" + SaveType + "'.");
                 }
+                PreAdaptSaveMode(values, entry, true, saveTagType, SaveMode == CommandSaveMode.REQUIRED_NAME, DefaultSaveName);
             }
         }
 
@@ -196,14 +198,15 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The relevant entry ID.</param>
         /// <param name="canPreExist">Whether the variable is allowed to already exist.</param>
         /// <param name="tagType">The required type.</param>
+        /// <param name="required">Whether a save name *must* be specified by the user.</param>
         /// <param name="defaultName">The default name (or null if none).</param>
-        public void PreAdaptSaveMode(CILAdaptationValues values, int entry, bool canPreExist, TagType tagType, string defaultName = null)
+        public void PreAdaptSaveMode(CILAdaptationValues values, int entry, bool canPreExist, TagType tagType, bool required, string defaultName = null)
         {
             CommandEntry cent = values.CommandAt(entry);
             string saveName = cent.GetSaveNameNoParse(defaultName);
             if (saveName == null)
             {
-                throw new ErrorInducedException("Command requires a save name, but none was given.");
+                throw new ErrorInducedException("Command '" + Name + "' requires a save name, but none was given.");
             }
             int preVarLoc = values.LocalVariableLocation(saveName, out TagType preVarType);
             if (preVarLoc >= 0)
@@ -220,11 +223,12 @@ namespace FreneticScript.CommandSystem
             else
             {
                 values.AddVariable(saveName, tagType);
+                cent.SaveLoc = preVarLoc;
             }
         }
 
         /// <summary>
-        /// Gets the save variable location (used in Adapt, after using <see cref="PreAdaptSaveMode(CILAdaptationValues, int, bool, TagType, string)"/> in PreAdapt).
+        /// Gets the save variable location (used in Adapt, after using <see cref="PreAdaptSaveMode(CILAdaptationValues, int, bool, TagType, bool, string)"/> in PreAdapt).
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
@@ -301,7 +305,7 @@ namespace FreneticScript.CommandSystem
         /// The compiling script.
         /// </summary>
         public CommandScript Script;
-
+        
         /// <summary>
         /// The debug mode currently in use.
         /// </summary>

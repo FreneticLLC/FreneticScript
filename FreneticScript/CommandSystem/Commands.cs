@@ -82,6 +82,17 @@ namespace FreneticScript.CommandSystem
         public TagParser TagSystem;
 
         /// <summary>
+        /// The available tag types on the connected <see cref="TagSystem"/>.
+        /// </summary>
+        public TagTypes TagTypes
+        {
+            get
+            {
+                return TagSystem.Types;
+            }
+        }
+
+        /// <summary>
         /// The script engine context.
         /// </summary>
         public ScriptEngineContext Context;
