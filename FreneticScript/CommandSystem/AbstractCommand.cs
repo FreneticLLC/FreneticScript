@@ -223,11 +223,11 @@ namespace FreneticScript.CommandSystem
                 {
                     throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "', with type '" + preVarType.TypeName + "') of wrong type (expected '" + tagType.TypeName + "').");
                 }
+                cent.SaveLoc = preVarLoc;
             }
             else
             {
-                values.AddVariable(saveName, tagType);
-                cent.SaveLoc = preVarLoc;
+                cent.SaveLoc = values.AddVariable(saveName, tagType);
             }
         }
 
@@ -825,9 +825,12 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="var">The variable name.</param>
         /// <param name="type">The variable value.</param>
-        public void AddVariable(string var, TagType type)
+        /// <returns>The added variable's location.</returns>
+        public int AddVariable(string var, TagType type)
         {
-            CLVariables[LVarIDs.Peek()].LVariables.Add(new Tuple<int, string, TagType>(CLVarID++, var, type));
+            int id = CLVarID++;
+            CLVariables[LVarIDs.Peek()].LVariables.Add(new Tuple<int, string, TagType>(id, var, type));
+            return id;
         }
 
         /// <summary>

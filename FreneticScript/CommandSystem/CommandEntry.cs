@@ -201,7 +201,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The save variable location, if any.
         /// </summary>
-        public int SaveLoc;
+        public int SaveLoc = -1;
 
         /// <summary>
         /// Gets the save name for this entry, without parsing it.
@@ -219,12 +219,28 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Returns whether the entry is able to save a result.
+        /// </summary>
+        public bool CanSave
+        {
+            get
+            {
+                return SaveLoc >= 0;
+            }
+        }
+
+        /// <summary>
         /// Saves the result of this command, if <see cref="AbstractCommand.SaveMode"/> is set.
+        /// <para>Check <see cref="CanSave"/> to determine if a save is expected.</para>
         /// </summary>
         /// <param name="queue">The relevant queue.</param>
         /// <param name="resultObj">The result object.</param>
         public void SaveResult(CommandQueue queue, TemplateObject resultObj)
         {
+            if (!CanSave)
+            {
+                return;
+            }
             queue.SetLocalVar(SaveLoc, resultObj);
         }
         
