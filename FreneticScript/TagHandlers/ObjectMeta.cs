@@ -50,7 +50,7 @@ namespace FreneticScript.TagHandlers
         /// Prepares the object meta.
         /// </summary>
         /// <param name="tags">The tag parser.</param>
-        public void Ready(TagParser tags)
+        public void Ready(TagHandler tags)
         {
             if (Name == null || !tags.Types.RegisteredTypes.TryGetValue(Name, out ActualType))
             {

@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The relevant tag system.
         /// </summary>
-        public TagParser TagSystem
+        public TagHandler TagSystem
         {
             get
             {

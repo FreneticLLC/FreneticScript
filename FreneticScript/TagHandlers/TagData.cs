@@ -112,7 +112,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// The tag system this tag data is used for.
         /// </summary>
-        public TagParser TagSystem;
+        public TagHandler TagSystem;
 
         /// <summary>
         /// Gets the command system this tag data is used for (gathered from <see cref="TagSystem"/>).
@@ -241,7 +241,7 @@ namespace FreneticScript.TagHandlers
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
         /// <param name="_cse">The relevant command stack entry, if any.</param>
-        public TagData(TagParser _system, Argument[] _vars, TagBit[] _bits, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
+        public TagData(TagHandler _system, Argument[] _vars, TagBit[] _bits, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Simple;

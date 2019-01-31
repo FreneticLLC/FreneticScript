@@ -87,7 +87,7 @@ namespace FreneticScript.TagHandlers
         /// Prepares the tag meta.
         /// </summary>
         /// <param name="tags">The tag parser.</param>
-        public void Ready(TagParser tags)
+        public void Ready(TagHandler tags)
         {
             ActualType = TagType == null ? null : tags.Types.RegisteredTypes[TagType];
             if (ReturnType == null || !tags.Types.RegisteredTypes.TryGetValue(ReturnType, out ReturnTypeResult))

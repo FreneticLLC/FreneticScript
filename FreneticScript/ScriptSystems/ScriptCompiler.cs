@@ -448,7 +448,7 @@ namespace FreneticScript.ScriptSystems
             if (relevantEntry.DBMode <= DebugMode.FULL) // If debug mode is on...
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                ilgen.Emit(OpCodes.Call, TagParser.Method_DebugTagHelper); // Debug the tag as a final step. Will give back the object to the stack.
+                ilgen.Emit(OpCodes.Call, TagHandler.Method_DebugTagHelper); // Debug the tag as a final step. Will give back the object to the stack.
             }
             ilgen.Emit(OpCodes.Ret); // Return.
 #if NET_4_5

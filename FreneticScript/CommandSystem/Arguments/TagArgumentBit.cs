@@ -34,9 +34,9 @@ namespace FreneticScript.CommandSystem.Arguments
         public static FieldInfo TagArgumentBit_Data = typeof(TagArgumentBit).GetField(nameof(Data));
 
         /// <summary>
-        /// Gets the <see cref="TagParser"/> for this TagArgumentBit.
+        /// Gets the <see cref="TagHandler"/> for this TagArgumentBit.
         /// </summary>
-        public TagParser TagSystem
+        public TagHandler TagSystem
         {
             get
             {

@@ -79,7 +79,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The tag handling system.
         /// </summary>
-        public TagParser TagSystem;
+        public TagHandler TagSystem;
 
         /// <summary>
         /// The available tag types on the connected <see cref="TagSystem"/>.
@@ -400,7 +400,7 @@ namespace FreneticScript.CommandSystem
             Functions = new Dictionary<string, CommandScript>(30);
             Events = new Dictionary<string, ScriptEvent>(30);
             Queues = new List<CommandQueue>(20);
-            TagSystem = new TagParser();
+            TagSystem = new TagHandler();
             TagSystem.Init(this);
 
             // Queue-related Commands

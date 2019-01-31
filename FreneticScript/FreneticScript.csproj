@@ -108,6 +108,7 @@
     <Compile Include="FreneticScriptUtilities.cs" />
     <Compile Include="ListQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptSystems\ArgumentParser.cs" />
     <Compile Include="ScriptSystems\ScriptCompiler.cs" />
     <Compile Include="ScriptSystems\ScriptMetaAttribute.cs" />
     <Compile Include="ScriptSystems\ScriptParser.cs" />
@@ -153,7 +154,7 @@
     <Compile Include="TagHandlers\TagHelpInfo.cs" />
     <Compile Include="TagHandlers\ObjectMeta.cs" />
     <Compile Include="TagHandlers\TagMeta.cs" />
-    <Compile Include="TagHandlers\TagParser.cs" />
+    <Compile Include="TagHandlers\TagHandler.cs" />
     <Compile Include="TagHandlers\TagSubHandler.cs" />
     <Compile Include="TagHandlers\TagType.cs" />
     <Compile Include="TagHandlers\TagTypes.cs" />

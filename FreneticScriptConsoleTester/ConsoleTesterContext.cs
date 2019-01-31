@@ -20,12 +20,12 @@ namespace FreneticScriptConsoleTester
     {
         public override void BadOutput(string text)
         {
-            SysConsole.Output(OutputType.WARNING, TagParser.Unescape(text));
+            SysConsole.Output(OutputType.WARNING, TagHandler.Unescape(text));
         }
 
         public override void GoodOutput(string text)
         {
-            SysConsole.Output(OutputType.GOOD, TagParser.Unescape(text));
+            SysConsole.Output(OutputType.GOOD, TagHandler.Unescape(text));
         }
 
         public override byte[] ReadDataFile(string name)
@@ -54,7 +54,7 @@ namespace FreneticScriptConsoleTester
 
         public override void WriteLine(string text)
         {
-            SysConsole.Output(OutputType.INFO, TagParser.Unescape(text));
+            SysConsole.Output(OutputType.INFO, TagHandler.Unescape(text));
         }
 
         public override string[] ListFiles(string path, string extension, bool deep)

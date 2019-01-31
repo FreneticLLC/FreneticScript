@@ -384,7 +384,7 @@ namespace FreneticScript.ScriptSystems
                         if (i - start > 0)
                         {
                             string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
-                            args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
+                            args.Add(ArgumentParser.SplitToArgument(system, arg, thisArgQuoted));
                             start = i + 1;
                             thisArgQuoted = false;
                         }
@@ -397,7 +397,7 @@ namespace FreneticScript.ScriptSystems
                 if (command.Length - start > 0)
                 {
                     string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
-                    args.Add(system.TagSystem.SplitToArgument(arg, thisArgQuoted));
+                    args.Add(ArgumentParser.SplitToArgument(system, arg, thisArgQuoted));
                 }
                 if (args.Count == 0)
                 {
@@ -499,7 +499,7 @@ namespace FreneticScript.ScriptSystems
             {
                 throw new ErrorInducedException("Unknown command '" + name + "'!");
             }
-            _arguments.Insert(0, system.TagSystem.SplitToArgument(name, false));
+            _arguments.Insert(0, ArgumentParser.SplitToArgument(system, name, false));
             return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs, nameds, sys) { WaitFor = waitfor };
 
         }
