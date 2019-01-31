@@ -34,7 +34,8 @@ namespace FreneticScript.ScriptSystems
             {
                 return new Argument() { Bits = new ArgumentBit[0] };
             }
-            if (input.IndexOf("<") < 0)
+            int firstOpen = input.IndexOf('<');
+            if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
             {
                 Argument a = new Argument() { WasQuoted = wasquoted };
                 a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted) { CommandSystem = system } };

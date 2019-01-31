@@ -319,7 +319,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return arg1.ToString() != arg2.ToString();
             }
-            if (comp == ">=")
+            else if (comp == ">=")
             {
                 return n1.Internal >= n2.Internal;
             }
