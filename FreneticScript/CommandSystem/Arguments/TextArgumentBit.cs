@@ -70,52 +70,60 @@ namespace FreneticScript.CommandSystem.Arguments
             {
                 InputValue = new TextTag(_text);
                 ResType = TextTag.TYPE;
+                return;
             }
             else if (_text == "true")
             {
                 InputValue = BooleanTag.TRUE;
                 ResType = BooleanTag.TYPE;
+                return;
             }
             else if (_text == "false")
             {
                 InputValue = BooleanTag.FALSE;
                 ResType = BooleanTag.TYPE;
+                return;
             }
             else if (_text == "&{NULL}")
             {
                 InputValue = NullTag.NULL_VALUE;
                 ResType = NullTag.TYPE;
+                return;
             }
             else if (long.TryParse(_text, out long ti) && ti.ToString() == _text)
             {
                 InputValue = new IntegerTag(ti);
                 ResType = IntegerTag.TYPE;
+                return;
             }
             else if (double.TryParse(_text, out double tn) && (!perfect || tn.ToString() == _text))
             {
                 InputValue = new NumberTag(tn);
                 ResType = NumberTag.TYPE;
+                return;
             }
             else if (_text.Contains('|'))
             {
-                // TODO: Maps stuff?!
+                if (_text.Contains(':'))
+                {
+                    MapTag map = MapTag.For(_text);
+                    if (map.ToString() == _text)
+                    {
+                        InputValue = map;
+                        ResType = MapTag.TYPE;
+                        return;
+                    }
+                }
                 ListTag list = ListTag.For(_text);
                 if (list.ToString() == _text)
                 {
                     InputValue = list;
                     ResType = ListTag.TYPE;
-                }
-                else
-                {
-                    InputValue = new TextTag(_text);
-                    ResType = TextTag.TYPE;
+                    return;
                 }
             }
-            else
-            {
-                InputValue = new TextTag(_text);
-                ResType = TextTag.TYPE;
-            }
+            InputValue = new TextTag(_text);
+            ResType = TextTag.TYPE;
         }
 
         /// <summary>

@@ -193,7 +193,7 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = ListTag.TYPE,
                 SubTypeName = TextTag.TYPE,
-                TypeGetter = ListTag.For,
+                TypeGetter = ListTag.CreateFor,
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(ListTag)
@@ -202,7 +202,7 @@ namespace FreneticScript.TagHandlers
             {
                 TypeName = MapTag.TYPE,
                 SubTypeName = TextTag.TYPE,
-                TypeGetter = MapTag.For,
+                TypeGetter = MapTag.CreateFor,
                 GetNextTypeDown = TextTag.For,
                 SubHandlers = null,
                 RawType = typeof(MapTag)

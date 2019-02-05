@@ -9,28 +9,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
     /// <summary>
-    /// The form of an integer tag.
+    /// The form of an <see cref="IntegerTag"/>.
     /// </summary>
     public interface IntegerTagForm
     {
         /// <summary>
-        /// The integer value of this IntegerTag-like object.
+        /// The integer value of this <see cref="IntegerTag"/>-like object.
         /// </summary>
         long IntegerForm { get; }
     }
 
     /// <summary>
-    /// The form of a number tag.
+    /// The form of a <see cref="NumberTag"/>.
     /// </summary>
     public interface NumberTagForm
     {
         /// <summary>
-        /// The number value of this NumberTag-like object.
+        /// The number value of this <see cref="NumberTag"/>-like object.
         /// </summary>
         double NumberForm { get; }
+    }
+
+    /// <summary>
+    /// The form of a <see cref="ListTag"/>.
+    /// </summary>
+    public interface ListTagForm
+    {
+        /// <summary>
+        /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.
+        /// </summary>
+        ListTag ListForm { get; }
     }
 }

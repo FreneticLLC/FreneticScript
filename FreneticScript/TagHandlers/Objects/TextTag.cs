@@ -206,7 +206,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TextTag Tag_Substring(TextTag obj, TagData data)
         {
             string text = obj.Internal;
-            ListTag inputs = ListTag.For(data.GetModifierObjectCurrent(), data);
+            ListTag inputs = ListTag.CreateFor(data.GetModifierObjectCurrent(), data);
             if (inputs.Internal.Count < 2)
             {
                 data.Error("Invalid substring tag! Not two entries in the list!");

@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// Represents a list as a usable tag.
     /// </summary>
     [ObjectMeta(Name = ListTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a list of objects.")]
-    public class ListTag: TemplateObject
+    public class ListTag: TemplateObject, ListTagForm
     {
 
         /// <summary>
@@ -40,6 +40,17 @@ namespace FreneticScript.TagHandlers.Objects
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_List;
+        }
+
+        /// <summary>
+        /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.
+        /// </summary>
+        public ListTag ListForm
+        {
+            get
+            {
+                return this;
+            }
         }
 
         /// <summary>
@@ -62,6 +73,15 @@ namespace FreneticScript.TagHandlers.Objects
         public ListTag(List<TemplateObject> entries)
         {
             Internal = new List<TemplateObject>(entries);
+        }
+
+        /// <summary>
+        /// Constructs a list tag from a list of entries.
+        /// </summary>
+        /// <param name="capacity">The number of expected entries.</param>
+        public ListTag(int capacity)
+        {
+            Internal = new List<TemplateObject>(capacity);
         }
 
         /// <summary>
@@ -120,18 +140,6 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return tlist;
         }
-
-
-        /// <summary>
-        /// Constructs a list tag from text input.
-        /// </summary>
-        /// <param name="data">The relevant tag data, if any.</param>
-        /// <param name="input">The list input.</param>
-        /// <returns>A valid list.</returns>
-        public static ListTag For(TemplateObject input, TagData data)
-        {
-            return input as ListTag ?? (input is TextTag ? For(input.ToString()) : new ListTag(new List<TemplateObject>() { input }));
-        }
         
         /// <summary>
         /// Creates a ListTag for the given input data.
@@ -145,6 +153,8 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 case ListTag ltag:
                     return ltag;
+                case ListTagForm lform:
+                    return lform.ListForm;
                 case DynamicTag dtag:
                     return CreateFor(dtag.Internal);
                 case TextTag ttag:

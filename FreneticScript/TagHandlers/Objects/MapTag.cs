@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// Represents a relationship between textual names and object data.
     /// </summary>
     [ObjectMeta(Name = MapTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a relationship between textual names and object data.")]
-    public class MapTag : TemplateObject
+    public class MapTag : TemplateObject, ListTagForm
     {
 
         /// <summary>
@@ -40,6 +40,22 @@ namespace FreneticScript.TagHandlers.Objects
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Map;
+        }
+
+        /// <summary>
+        /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.
+        /// </summary>
+        public ListTag ListForm
+        {
+            get
+            {
+                ListTag list = new ListTag(Internal.Count);
+                foreach (KeyValuePair<string, TemplateObject> pair in Internal)
+                {
+                    list.Internal.Add(new TextTag(pair.Key + ":" + pair.Value));
+                }
+                return list;
+            }
         }
 
         /// <summary>
@@ -66,6 +82,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Constructs a MapTag without existing data.
+        /// </summary>
+        /// <param name="capacity">The number of expected entries.</param>
+        public MapTag(int capacity)
+        {
+            Internal = new Dictionary<string, TemplateObject>(capacity);
+        }
+
+        /// <summary>
         /// Converts text to a map tag.
         /// Never null. Will ignore invalid entries.
         /// </summary>
@@ -74,7 +99,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static MapTag For(string input)
         {
             string[] dat = input.SplitFast('|');
-            MapTag map = new MapTag();
+            MapTag map = new MapTag(dat.Length);
             for (int i = 0; i < dat.Length; i++)
             {
                 string[] kvp = dat[i].SplitFast(':');
@@ -83,7 +108,8 @@ namespace FreneticScript.TagHandlers.Objects
                     // TODO: Error?
                     continue;
                 }
-                map.Internal[kvp[0].ToLowerFast()] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false, true).InputValue;
+                string key = UnescapeTagBase.Unescape(kvp[0]).ToLowerFast();
+                map.Internal[key] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false, true).InputValue;
             }
             return map;
         }
@@ -120,19 +146,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The map represented by the input object.</returns>
         public static MapTag For(TemplateObject input)
         {
-            return input as MapTag ?? For(input.ToString());
-        }
-
-        /// <summary>
-        /// Converts a generic object to a map tag.
-        /// Never null. Will ignore invalid entries.
-        /// </summary>
-        /// <param name="dat">The relevant tag data, if any.</param>
-        /// <param name="input">The input object.</param>
-        /// <returns>The map represented by the input object.</returns>
-        public static MapTag For(TemplateObject input, TagData dat)
-        {
-            return input as MapTag ?? For(input.ToString());
+            switch (input)
+            {
+                case MapTag itag:
+                    return itag;
+                case DynamicTag dtag:
+                    return For(dtag.Internal);
+                default:
+                    return For(input.ToString());
+            }
         }
 
         /// <summary>
@@ -143,15 +165,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid map tag.</returns>
         public static MapTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
-            {
-                case MapTag itag:
-                    return itag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(input.ToString());
-            }
+            return For(input);
         }
 
         /// <summary>
