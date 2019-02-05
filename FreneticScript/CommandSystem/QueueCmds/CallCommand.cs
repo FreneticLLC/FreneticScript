@@ -61,7 +61,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Name = "call";
             Arguments = "<function to call> [--<variable> <value> ...]";
             Description = "Runs a function.";
-            IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;

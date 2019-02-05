@@ -70,11 +70,18 @@ namespace FreneticScript.CommandSystem
         /// The end of this command's braced block.
         /// </summary>
         public int BlockEnd;
-        
+
         /// <summary>
         /// Whether the &amp;waitable command entry should be waited for.
+        /// <para>Simple property, equivalent to checking if <see cref="Prefix"/> is equal to <see cref="CommandPrefix.WAIT"/>.</para>
         /// </summary>
-        public bool WaitFor = false;
+        public bool WaitFor
+        {
+            get
+            {
+                return Prefix == CommandPrefix.WAIT;
+            }
+        }
 
         /// <summary>
         /// The name of the creating script.
@@ -114,8 +121,8 @@ namespace FreneticScript.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
-            string _name, int _marker, string _script, int _line, string fairtabs, Commands sys)
-            : this(_commandline, bstart, bend, _command, _arguments, _name, _marker, _script, _line, fairtabs, new Dictionary<string, Argument>(), sys)
+            string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, Commands sys)
+            : this(_commandline, bstart, bend, _command, _arguments, _name, _prefix, _script, _line, fairtabs, new Dictionary<string, Argument>(), sys)
         {
         }
 
@@ -123,7 +130,7 @@ namespace FreneticScript.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
-            string _name, int _marker, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds, Commands sys)
+            string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds, Commands sys)
         {
             BlockStart = bstart;
             BlockEnd = bend;
@@ -131,7 +138,7 @@ namespace FreneticScript.CommandSystem
             Command = _command;
             Arguments = _arguments;
             Name = _name;
-            Marker = _marker;
+            Prefix = _prefix;
             ScriptName = _script;
             ScriptLine = _line;
             FairTabulation = fairtabs;
@@ -192,11 +199,11 @@ namespace FreneticScript.CommandSystem
         /// The arguments input by the user.
         /// </summary>
         public List<Argument> Arguments;
-        
+
         /// <summary>
-        /// What marker was used. 0 = none, 1 = +, 2 = -, 3 = !
+        /// What command prefix was used for this command, if any.
         /// </summary>
-        public int Marker = 0;
+        public CommandPrefix Prefix;
 
         /// <summary>
         /// The save variable location, if any.

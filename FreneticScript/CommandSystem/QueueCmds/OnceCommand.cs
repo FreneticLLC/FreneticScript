@@ -58,7 +58,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Name = "once";
             Arguments = "<identifer> ['error'/'warning'/'quiet']";
             Description = "Runs a block precisely once per reload.";
-            IsFlow = true;
             MinimumArguments = 1;
             MaximumArguments = 2;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()

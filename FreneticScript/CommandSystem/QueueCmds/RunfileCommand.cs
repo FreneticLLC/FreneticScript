@@ -31,7 +31,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Arguments = "<script to run>";
             Description = "Runs a script file.";
             // TODO: DEFINITION ARGS
-            IsFlow = true;
             Waitable = true;
             Asyncable = true;
             MinimumArguments = 1;

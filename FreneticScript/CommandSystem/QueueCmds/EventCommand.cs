@@ -62,7 +62,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Name = "event";
             Arguments = "'add'/'remove'/'clear' <name of event>/'all' <name of event handler> [priority] ['quiet_fail']";
             Description = "Creates a new function of the following command block, and adds it to the specified event's handler.";
-            IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 5;

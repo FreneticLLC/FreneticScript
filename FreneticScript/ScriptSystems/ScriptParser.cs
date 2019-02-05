@@ -424,28 +424,15 @@ namespace FreneticScript.ScriptSystems
                         nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFast(), true, true) } };
                     }
                 }
-                int marker = 0;
                 string BaseCommand = args[0].ToString();
-                if (BaseCommand.StartsWith("+") && BaseCommand.Length > 1)
+                CommandPrefix prefix = CommandPrefix.NONE;
+                if (BaseCommand.Length > 1)
                 {
-                    marker = 1;
-                    BaseCommand = BaseCommand.Substring(1);
-                }
-                else if (BaseCommand.StartsWith("-") && BaseCommand.Length > 1)
-                {
-                    marker = 2;
-                    BaseCommand = BaseCommand.Substring(1);
-                }
-                else if (BaseCommand.StartsWith("!") && BaseCommand.Length > 1)
-                {
-                    marker = 3;
-                    BaseCommand = BaseCommand.Substring(1);
-                }
-                bool waitfor = false;
-                if (BaseCommand.StartsWith("&") && BaseCommand.Length > 1)
-                {
-                    waitfor = true;
-                    BaseCommand = BaseCommand.Substring(1);
+                    prefix = CommandPrefixHelpers.ForCharacter(BaseCommand[0]);
+                    if (prefix != CommandPrefix.NONE)
+                    {
+                        BaseCommand = BaseCommand.Substring(1);
+                    }
                 }
                 string BaseCommandLow = BaseCommand.ToLowerFast();
                 args.RemoveAt(0);
@@ -459,13 +446,17 @@ namespace FreneticScript.ScriptSystems
                     }
                 }
                 CommandEntry entry;
-                if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out AbstractCommand cmd))
+                if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out AbstractCommand foundCommandObject))
                 {
-                    entry = new CommandEntry(command, 0, 0, cmd, args, BaseCommand, marker, script, line, tabs, nameds, system) { WaitFor = waitfor };
+                    if (prefix == CommandPrefix.WAIT && !foundCommandObject.Waitable)
+                    {
+                        throw new ErrorInducedException("Cannot wait ('&') on command '" + foundCommandObject.Name + "'.");
+                    }
+                    entry = new CommandEntry(command, 0, 0, foundCommandObject, args, BaseCommand, prefix, script, line, tabs, nameds, system);
                 }
                 else
                 {
-                    entry = CreateInvalidOutputEntry(BaseCommand, args, system, command, marker, waitfor, script, line, tabs, nameds, system);
+                    entry = CreateInvalidOutputEntry(BaseCommand, args, system, command, prefix, script, line, tabs, nameds, system);
                 }
                 return entry;
             }
@@ -493,14 +484,14 @@ namespace FreneticScript.ScriptSystems
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutputEntry(string name, List<Argument> _arguments,
-            Commands system, string line, int marker, bool waitfor, string script, int linen, string tabs, Dictionary<string, Argument> nameds, Commands sys)
+            Commands system, string line, CommandPrefix prefix, string script, int linen, string tabs, Dictionary<string, Argument> nameds, Commands sys)
         {
             if (sys.Context.ShouldErrorOnInvalidCommand())
             {
                 throw new ErrorInducedException("Unknown command '" + name + "'!");
             }
             _arguments.Insert(0, ArgumentParser.SplitToArgument(system, name, false));
-            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, marker, script, linen, tabs, nameds, sys) { WaitFor = waitfor };
+            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, prefix, script, linen, tabs, nameds, sys);
 
         }
     }

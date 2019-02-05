@@ -80,7 +80,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Name = "function";
             Arguments = "'stop'/'define'/'undefine' [name of function] ['quiet_fail']";
             Description = "Creates a new function of the following command block, and adds it to the script cache.";
-            IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 3;

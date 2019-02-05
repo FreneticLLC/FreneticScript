@@ -124,4 +124,75 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         INFO = 3
     }
+
+    /// <summary>
+    /// Represents the types of command prefixing symbol.
+    /// </summary>
+    public enum CommandPrefix
+    {
+        /// <summary>
+        /// No prefix.
+        /// </summary>
+        NONE = 0,
+        /// <summary>
+        /// Add to a command value, or temporarily enable.
+        /// </summary>
+        ADD = 1,
+        /// <summary>
+        /// Subtract from a command value, or end a temporary enable.
+        /// </summary>
+        SUBTRACT = 2,
+        /// <summary>
+        /// Flip a command value.
+        /// </summary>
+        FLIP = 3,
+        /// <summary>
+        /// Wait for the command to finish.
+        /// </summary>
+        WAIT = 4
+    }
+
+    /// <summary>
+    /// Helpers for command prefixes.
+    /// </summary>
+    public static class CommandPrefixHelpers
+    {
+        /// <summary>
+        /// Standard prefix characters, starting at ID 1.
+        /// </summary>
+        public const string PREFIXES = "+-!&";
+
+        /// <summary>
+        /// An array mapping ASCII characters to prefix values.
+        /// </summary>
+        public static readonly CommandPrefix[] BY_CHAR = new CommandPrefix[128];
+
+        static CommandPrefixHelpers()
+        {
+            BY_CHAR['+'] = CommandPrefix.ADD;
+            BY_CHAR['-'] = CommandPrefix.SUBTRACT;
+            BY_CHAR['!'] = CommandPrefix.FLIP;
+            BY_CHAR['&'] = CommandPrefix.WAIT;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="CommandPrefix"/> for a character. Returns <see cref="CommandPrefix.NONE"/> if the character is not a prefix character.
+        /// </summary>
+        /// <param name="character">The character.</param>
+        /// <returns>The prefix.</returns>
+        public static CommandPrefix ForCharacter(char character)
+        {
+            return character < 128 ? BY_CHAR[character] : CommandPrefix.NONE;
+        }
+
+        /// <summary>
+        /// Returns the character for the prefix.
+        /// </summary>
+        /// <param name="prefix">The prefix.</param>
+        /// <returns>The character.</returns>
+        public static char Character(this CommandPrefix prefix)
+        {
+            return PREFIXES[(int)prefix - 1];
+        }
+    }
 }

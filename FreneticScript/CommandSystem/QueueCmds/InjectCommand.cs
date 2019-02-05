@@ -49,7 +49,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Name = "inject";
             Arguments = "<function to call>";
             Description = "Runs a function.";
-            IsFlow = true;
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
