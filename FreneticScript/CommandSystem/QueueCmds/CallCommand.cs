@@ -98,7 +98,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandScript script = function.Internal;
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Calling '" + TextStyle.Separate + script.Name + TextStyle.Base + "'...");
+                entry.GoodOutput(queue, "Calling '" + function.GetDebugString() + TextStyle.Base + "'...");
             }
             CompiledCommandStackEntry cse = script.Compiled.Duplicate();
             if (cse.Entries.Length > 0)

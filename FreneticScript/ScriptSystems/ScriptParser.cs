@@ -196,7 +196,7 @@ namespace FreneticScript.ScriptSystems
                     Lines.Add(line);
                     CommandList.Add(commandConstruct.ToString().Trim());
                 }
-                return new CommandScript(name, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), 0, mode);
+                return new CommandScript(name, CommandScript.TYPE_NAME_FILE, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), 0, mode);
             }
             catch (Exception ex)
             {

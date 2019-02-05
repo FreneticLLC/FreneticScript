@@ -90,6 +90,7 @@ namespace FreneticScript.TagHandlers.Objects
                 int startLine = (int)IntegerTag.For(list.Internal[2], data).Internal;
                 string commands = list.Internal[3].ToString();
                 CommandScript script = ScriptParser.SeparateCommands(name, commands, data.CommandSystem, startLine, data.DBMode);
+                script.TypeName = CommandScript.TYPE_NAME_ANONYMOUS;
                 script.IsAnonymous = true;
                 script.AnonymousString = input.Substring("anon|".Length);
                 return new FunctionTag(script);
@@ -187,14 +188,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {
-            if (Internal.IsAnonymous)
-            {
-                return TextStyle.Minor + "anon|" + TextStyle.Separate + Internal.Name;
-            }
-            else
-            {
-                return TextStyle.Minor + "named|" + TextStyle.Separate + Internal.Name;
-            }
+            return TextStyle.Minor + Internal.TypeName + "|" + TextStyle.Separate + Internal.Name;
         }
     }
 }

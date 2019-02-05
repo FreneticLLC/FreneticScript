@@ -324,13 +324,15 @@ namespace FreneticScript.CommandSystem
         public delegate void OutputFunction(string message, MessageType type);
 
         /// <summary>
-        /// Executes an arbitrary list of command inputs (separated by newlines, semicolons, ...)
+        /// Executes an arbitrary list of command inputs (separated by newlines, semicolons, ...).
+        /// Useful for command line input.
         /// </summary>
         /// <param name="commands">The command string to parse.</param>
         /// <param name="outputter">The output function to call, or null if none.</param>
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
             CommandScript cs = ScriptParser.SeparateCommands("command_line", commands, this);
+            cs.TypeName = "CommandLine";
             if (cs == null)
             {
                 outputter?.Invoke("Invalid commands specified, error outputted to logs.", MessageType.BAD);
