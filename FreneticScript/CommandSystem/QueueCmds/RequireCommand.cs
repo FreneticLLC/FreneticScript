@@ -99,9 +99,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the method "OutputSuccess" in the class RequireCommand.
+        /// Represents the method <see cref="OutputSuccess(CommandQueue)"/> in the class RequireCommand.
         /// </summary>
-        public static MethodInfo REQUIRECOMMAND_OUTPUTSUCCESS = typeof(RequireCommand).GetMethod("OutputSuccess");
+        public static MethodInfo REQUIRECOMMAND_OUTPUTSUCCESS = typeof(RequireCommand).GetMethod(nameof(OutputSuccess));
 
         /// <summary>
         /// Outputs success at the end of a require command execution.
@@ -116,9 +116,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the method "CheckForValidity" in the class RequireCommand.
+        /// Represents the method <see cref="CheckForValidity(CommandQueue, CommandEntry, ObjectHolder, string)"/> in the class RequireCommand.
         /// </summary>
-        public static MethodInfo REQUIRECOMMAND_CHECKFORVALIDITY = typeof(RequireCommand).GetMethod("CheckForValidity");
+        public static MethodInfo REQUIRECOMMAND_CHECKFORVALIDITY = typeof(RequireCommand).GetMethod(nameof(CheckForValidity));
 
         /// <summary>
         /// Checks an object holder's validity (non-null and contains non-null data), for CIL usage.
@@ -129,7 +129,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="varn">Variable the object holder was gotten from.</param>
         public static void CheckForValidity(CommandQueue queue, CommandEntry entry, ObjectHolder objh, string varn)
         {
-            if (objh == null || objh.Internal == null)
+            if (objh.Internal == null)
             {
                 queue.HandleError(entry, "A variable was required but not found: " + varn + "!");
             }

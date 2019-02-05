@@ -170,14 +170,7 @@ namespace FreneticScript.CommandSystem
                             if (varlookup.TryGetValue(var.Key, out int varx))
                             {
                                 // TODO: Type verification!
-                                if (cse.LocalVariables[varx] != null)
-                                {
-                                    cse.LocalVariables[varx].Internal = var.Value;
-                                }
-                                else
-                                {
-                                    cse.LocalVariables[varx] = new ObjectHolder() { Internal = var.Value };
-                                }
+                                cse.LocalVariables[varx].Internal = var.Value;
                             }
                         }
                     }

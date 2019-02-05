@@ -111,14 +111,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         if (varlookup.TryGetValue(var, out int varx))
                         {
                             // TODO: Type verification!
-                            if (cse.LocalVariables[varx] != null)
-                            {
-                                cse.LocalVariables[varx].Internal = entry.GetNamedArgumentObject(queue, var);
-                            }
-                            else
-                            {
-                                cse.LocalVariables[varx] = new ObjectHolder() { Internal = entry.GetNamedArgumentObject(queue, var) };
-                            }
+                            cse.LocalVariables[varx].Internal = entry.GetNamedArgumentObject(queue, var);
                         }
                     }
                 }
@@ -146,19 +139,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
                         foreach (KeyValuePair<string, int> vara in varlookup)
                         {
-                            if (cse.LocalVariables[vara.Value]?.Internal != null)
+                            if (cse.LocalVariables[vara.Value].Internal != null)
                             {
                                 mt.Internal.Add(vara.Key, cse.LocalVariables[vara.Value].Internal);
                             }
                         }
-                        if (ccse.LocalVariables[x] != null)
-                        {
-                            ccse.LocalVariables[x].Internal = mt;
-                        }
-                        else
-                        {
-                            ccse.LocalVariables[x] = new ObjectHolder() { Internal = mt };
-                        }
+                        ccse.LocalVariables[x].Internal = mt;
                     }
                     if (sgood)
                     {

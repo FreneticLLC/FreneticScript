@@ -53,7 +53,7 @@ namespace FreneticScript.CommandSystem
             ccse.LocalVariables = new ObjectHolder[LocalVariables.Length];
             for (int i = 0; i < ccse.LocalVariables.Length; i++)
             {
-                ccse.LocalVariables[i] = new ObjectHolder() { Internal = ccse.LocalVariables[i]?.Internal };
+                ccse.LocalVariables[i] = new ObjectHolder() { Internal = LocalVariables[i].Internal };
             }
             ccse.IndexHelper = new IntHolder();
             return ccse;
@@ -148,5 +148,16 @@ namespace FreneticScript.CommandSystem
                 CurrentQueue = null;
             }
         }
+    }
+
+    /// <summary>
+    /// Holds a <see cref="TemplateObject"/>.
+    /// </summary>
+    public class ObjectHolder
+    {
+        /// <summary>
+        /// The held object.
+        /// </summary>
+        public TemplateObject Internal;
     }
 }

@@ -46,22 +46,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// The internal dictionary that this MapTag represents.
         /// </summary>
         public Dictionary<string, TemplateObject> Internal;
-
-        /// <summary>
-        /// Constructs a MapTag from existing data.
-        /// NOTE: This expects all keys to be lowercase!
-        /// </summary>
-        /// <param name="toUse">The data to use.</param>
-        public MapTag(Dictionary<string, ObjectHolder> toUse)
-        {
-            Dictionary<string, TemplateObject> temp = new Dictionary<string, TemplateObject>();
-            foreach (KeyValuePair<string, ObjectHolder> obj in toUse)
-            {
-                temp[obj.Key] = obj.Value.Internal;
-            }
-            Internal = temp;
-        }
-
+        
         /// <summary>
         /// Constructs a MapTag from existing data.
         /// NOTE: This expects all keys to be lowercase!

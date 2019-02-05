@@ -30,7 +30,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Represents the <see cref="CommandQueue.CurrentStackEntry"/> field.
         /// </summary>
-        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CommandQueue.CurrentStackEntry));
+        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CurrentStackEntry));
 
         /// <summary>
         /// Represents the <see cref="GetTagData"/> method.
@@ -327,16 +327,5 @@ namespace FreneticScript.CommandSystem
         {
             CurrentStackEntry.LocalVariables[c].Internal = value;
         }
-    }
-
-    /// <summary>
-    /// Holds an object.
-    /// </summary>
-    public class ObjectHolder
-    {
-        /// <summary>
-        /// The held object.
-        /// </summary>
-        public TemplateObject Internal;
     }
 }
