@@ -136,10 +136,10 @@ namespace FreneticScript.CommandSystem
                 for (int i = 0; i < entry.Arguments.Count; i++)
                 {
                     if (entry.Arguments[i].Bits.Length == 1
-                        && entry.Arguments[i].Bits[0] is TextArgumentBit
+                        && entry.Arguments[i].Bits[0] is TextArgumentBit tab
                         && i < ObjectTypes.Count)
                     {
-                        TemplateObject obj = ObjectTypes[i].Invoke(((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue);
+                        TemplateObject obj = ObjectTypes[i].Invoke(tab.InputValue);
                         if (obj == null)
                         {
                             return "Invalid argument '" + entry.Arguments[i].ToString()

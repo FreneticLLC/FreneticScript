@@ -116,7 +116,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 foreach (KeyValuePair<string, ScriptEvent> evt in queue.CommandSystem.Events)
                 {
-                    evt.Value.Handlers.Clear();
+                    evt.Value.Clear();
                 }
                 if (entry.ShouldShowGood(queue))
                 {
@@ -131,11 +131,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (type == "clear")
             {
-                int count = theEvent.Handlers.Count;
-                theEvent.Handlers.Clear();
+                theEvent.Clear();
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.GoodOutput(queue, "Cleared " + TextStyle.Separate + count + TextStyle.Base + " event handler" + (count == 1 ? "." : "s."));
+                    entry.GoodOutput(queue, "Cleared event '" + TextStyle.Separate + eventname + TextStyle.Base + "' of all handlers.");
                 }
             }
             else if (type == "remove")
@@ -146,7 +145,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     return;
                 }
                 string name = entry.GetArgument(queue, 2).ToLowerFast();
-                bool success = theEvent.RemoveEventHandler("eventhandler_" + theEvent.Name + "_" + name);
+                bool success = theEvent.RemoveEventHandler(name);
                 if (success)
                 {
                     if (entry.ShouldShowGood(queue))
@@ -182,25 +181,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     queue.HandleError(entry, "Event command invalid: No block follows!");
                     return;
                 }
-                bool success = false;
-                for (int i = 0; i < theEvent.Handlers.Count; i++)
-                {
-                    if (theEvent.Handlers[i].Value.Name == "eventhandler_" + theEvent.Name + "_" + name)
-                    {
-                        success = true;
-                        break;
-                    }
-                }
-                int priority = 0;
-                if (entry.Arguments.Count > 3)
-                {
-                    IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(queue, 3));
-                    if (inter != null)
-                    {
-                        priority = (int)inter.Internal;
-                    }
-                }
-                if (success)
+                if (theEvent.HasHandler(name))
                 {
                     if (entry.Arguments.Count > 4 && entry.GetArgument(queue, 4).ToLowerFast() == "quiet_fail")
                     {
@@ -214,12 +195,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         queue.HandleError(entry, "Handler '" + TextStyle.Separate + name + TextStyle.Base + "' already exists!");
                     }
                 }
-                else
+                int priority = 0;
+                if (entry.Arguments.Count > 3)
                 {
-                    theEvent.RegisterEventHandler(priority, new CommandScript("eventhandler_" + theEvent.Name + "_" + name, entry.InnerCommandBlock, entry.BlockStart, DebugMode.MINIMAL));
-                    entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name +
-                        "" + TextStyle.Base + "' defined for event '" + TextStyle.Separate + theEvent.Name + TextStyle.Base + "'.");
+                    IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(queue, 3));
+                    if (inter != null)
+                    {
+                        priority = (int)inter.Internal;
+                    }
                 }
+                List<CommandEntry> entries = new List<CommandEntry>(entry.InnerCommandBlock.Count + 2);
+                MapTag expectedContext = new MapTag();
+                expectedContext.Internal.Add("context", entry.System.TagTypes.Type_Map.TagForm);
+                entries.Add(entry.System.TheRequireCommand.GenerateEntry(expectedContext, entry.ScriptName, entry.ScriptLine));
+                entries.AddRange(entry.InnerCommandBlock);
+                CommandScript script = new CommandScript(theEvent.Name + "__handler__" + name,
+                    CommandScript.TYPE_NAME_EVENT, entries, entry.BlockStart, DebugMode.MINIMAL);
+                theEvent.RegisterEventHandler(priority, script, name);
+                entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name + "" + TextStyle.Base
+                    + "' defined for event '" + TextStyle.Separate + theEvent.Name + TextStyle.Base + "'.");
             }
             else
             {

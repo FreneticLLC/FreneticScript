@@ -77,6 +77,11 @@ namespace FreneticScript.CommandSystem
         public List<CommandQueue> Queues;
 
         /// <summary>
+        /// A simple tag data instance.
+        /// </summary>
+        public TagData SimpleTagData;
+
+        /// <summary>
         /// The tag handling system.
         /// </summary>
         public TagHandler TagSystem;
@@ -128,6 +133,15 @@ namespace FreneticScript.CommandSystem
         public Random random = new Random();
 
         /// <summary>
+        /// Constructs a <see cref="Commands"/>.
+        /// </summary>
+        public Commands()
+        {
+            SimpleTagData = TagData.GenerateSimpleErrorTagData();
+            SimpleTagData.TagSystem = TagSystem;
+        }
+
+        /// <summary>
         /// Reloads the entire command system.
         /// </summary>
         public void Reload()
@@ -136,10 +150,7 @@ namespace FreneticScript.CommandSystem
             Functions.Clear();
             foreach (ScriptEvent evt in Events.Values)
             {
-                foreach (KeyValuePair<int, CommandScript> handl in new List<KeyValuePair<int, CommandScript>>(evt.Handlers))
-                {
-                    evt.RemoveEventHandler(handl.Value.Name);
-                }
+                evt.Clear();
             }
             Context.Reload();
             LoadScriptsFolder();
@@ -416,7 +427,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new MarkCommand());
             RegisterCommand(new OnceCommand());
             RegisterCommand(new RepeatCommand());
-            RegisterCommand(new RequireCommand());
+            RegisterCommand(TheRequireCommand = new RequireCommand());
             RegisterCommand(TheRunFileCommand = new RunfileCommand());
             RegisterCommand(new StopCommand());
             RegisterCommand(new TryCommand());
@@ -457,6 +468,11 @@ namespace FreneticScript.CommandSystem
         /// The registered <see cref="RunfileCommand"/> instance.
         /// </summary>
         public RunfileCommand TheRunFileCommand;
+
+        /// <summary>
+        /// The registered <see cref="RequireCommand"/> instance.
+        /// </summary>
+        public RequireCommand TheRequireCommand;
 
         /// <summary>
         /// Advances any running command queues.

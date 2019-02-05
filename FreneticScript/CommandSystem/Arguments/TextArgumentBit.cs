@@ -20,6 +20,16 @@ namespace FreneticScript.CommandSystem.Arguments
     public class TextArgumentBit : ArgumentBit
     {
         /// <summary>
+        /// Constructs the argument with an input object.
+        /// </summary>
+        /// <param name="_object">The input object.</param>
+        public TextArgumentBit(TemplateObject _object)
+        {
+            InputValue = _object;
+            ResType = _object.GetTagTypeName();
+        }
+
+        /// <summary>
         /// Constructs the argument with an input boolean.
         /// </summary>
         /// <param name="_text">The input boolean.</param>

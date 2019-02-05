@@ -10,6 +10,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -39,6 +40,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
+        /// Generates a basic Require command entry.
+        /// </summary>
+        /// <param name="expectedMap">The expected variables maps.</param>
+        /// <param name="scriptName">The script name.</param>
+        /// <param name="line">The script line.</param>
+        public CommandEntry GenerateEntry(MapTag expectedMap, string scriptName, int line)
+        {
+            string mapText = expectedMap.ToString();
+            return new CommandEntry("require \"" + mapText + "\" \0AUTOGENNED", 0, 0, this,
+                new List<Argument>() { new Argument(new TextArgumentBit(expectedMap)) }, Name, CommandPrefix.NONE, scriptName, line, "", CommandSystem);
+        }
+
+        /// <summary>
         /// Prepares to adapt a command entry to CIL.
         /// </summary>
         /// <param name="values">The adaptation-relevant values.</param>
@@ -53,12 +67,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             foreach (KeyValuePair<string, TemplateObject> pair in mt.Internal)
             {
-                string tname = pair.Value.ToString();
-                if (!cent.System.TagSystem.Types.RegisteredTypes.TryGetValue(tname, out TagType t))
+                TagType tagType;
+                if (pair.Value is TagTypeTag tag)
                 {
-                    throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + tname + "!");
+                    tagType = tag.Internal;
                 }
-                values.AddVariable(pair.Key, t);
+                else if (!cent.System.TagSystem.Types.RegisteredTypes.TryGetValue(pair.Value.ToString(), out tagType))
+                {
+                    throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + pair.Value.ToString() + "!");
+                }
+                values.AddVariable(pair.Key, tagType);
             }
         }
 

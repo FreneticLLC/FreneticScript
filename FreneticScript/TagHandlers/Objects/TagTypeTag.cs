@@ -62,7 +62,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             if (data.TagSystem.Types.RegisteredTypes.TryGetValue(input.ToLowerFast(), out TagType type))
             {
-                return new TagTypeTag(type); // TODO: No re-alloc, just have a pre-made tag object?
+                return type.TagForm;
             }
             data.Error("Unrecognized TagType '" + input + "'");
             return new TagTypeTag(data.TagSystem.Types.Type_Null);

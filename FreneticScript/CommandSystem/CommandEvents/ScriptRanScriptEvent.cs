@@ -14,18 +14,6 @@ using FreneticScript.CommandSystem.QueueCmds;
 
 namespace FreneticScript.CommandSystem.CommandEvents
 {
-    // <--[event]
-    // @Name ScriptRanEvent
-    // @Fired When a script is soon to be ran (usually via the runfile command).
-    // @Updated 2015/10/28
-    // @Authors mcmonkey
-    // @Group Command
-    // @Cancellable true
-    // @Description
-    // This event will fire whenever a script is ran, which by default is when <@link command runfile> is used.
-    // This event can be used to control other scripts running on the system.
-    // @Var script_name TextTag returns the name of the script about to be ran. // TODO: SCRIPT OBJECT!
-    // -->
     /// <summary>
     /// ScriptRanPreEvent, called by the run command.
     /// </summary>
@@ -72,14 +60,14 @@ namespace FreneticScript.CommandSystem.CommandEvents
         public void Run(ScriptRanEventArgs oevt)
         {
             ScriptRanScriptEvent evt = (ScriptRanScriptEvent)Duplicate();
-            evt.ScriptName = new TextTag(oevt.Script.Name);
-            evt.Call(oevt.Priority);
+            evt.ScriptRan = oevt.Script;
+            evt.CallByPriority(oevt.Priority);
         }
 
         /// <summary>
-        /// The name of the script being ran.
+        /// The script being ran.
         /// </summary>
-        public TextTag ScriptName;
+        public CommandScript ScriptRan;
 
         /// <summary>
         /// Get all variables according the script event's current values.
@@ -87,7 +75,7 @@ namespace FreneticScript.CommandSystem.CommandEvents
         public override Dictionary<string, TemplateObject> GetVariables()
         {
             Dictionary<string, TemplateObject> vars = base.GetVariables();
-            vars.Add("script_name", ScriptName);
+            vars.Add("script", new FunctionTag(ScriptRan));
             return vars;
         }
     }

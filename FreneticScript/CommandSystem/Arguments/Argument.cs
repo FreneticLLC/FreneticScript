@@ -22,6 +22,22 @@ namespace FreneticScript.CommandSystem.Arguments
     public class Argument
     {
         /// <summary>
+        /// Construct an <see cref="Argument"/>.
+        /// </summary>
+        public Argument()
+        {
+        }
+
+        /// <summary>
+        /// Construct an <see cref="Argument"/> with a specified bit array.
+        /// </summary>
+        /// <param name="_bits">The bits array input.</param>
+        public Argument(params ArgumentBit[] _bits)
+        {
+            Bits = _bits;
+        }
+
+        /// <summary>
         /// Empty argument bit array.
         /// </summary>
         public static readonly ArgumentBit[] EMPTY_BITS = new ArgumentBit[0];

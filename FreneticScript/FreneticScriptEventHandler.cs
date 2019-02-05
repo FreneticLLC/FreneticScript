@@ -19,6 +19,8 @@ namespace FreneticScript
     /// <typeparam name="T">The event arguments type to use.</typeparam>
     public class FreneticScriptEventHandler<T> where T : FreneticScriptEventArgs
     {
+        // TODO: Replace with FGE event handler (move into FrenUtil)
+
         /// <summary>
         /// All handlers in the event.
         /// TODO: Type choice - is this the most efficient option - for both reading and adding?

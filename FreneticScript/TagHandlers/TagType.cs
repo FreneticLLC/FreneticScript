@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
@@ -64,5 +65,18 @@ namespace FreneticScript.TagHandlers
         /// TODO: Replace with direct method referencing (to avoid casting trouble).
         /// </summary>
         public Func<TemplateObject, TemplateObject> GetNextTypeDown;
+
+        /// <summary>
+        /// The tag form of this TagType.
+        /// </summary>
+        public TagTypeTag TagForm;
+
+        /// <summary>
+        /// Constructs the <see cref="TagType"/>.
+        /// </summary>
+        public TagType()
+        {
+            TagForm = new TagTypeTag(this);
+        }
     }
 }

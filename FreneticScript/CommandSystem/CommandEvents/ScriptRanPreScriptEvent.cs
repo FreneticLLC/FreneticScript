@@ -73,7 +73,7 @@ namespace FreneticScript.CommandSystem.CommandEvents
         {
             ScriptRanPreScriptEvent evt = (ScriptRanPreScriptEvent)Duplicate();
             evt.ScriptName = new TextTag(oevt.ScriptName);
-            evt.Call(oevt.Priority);
+            evt.CallByPriority(oevt.Priority);
         }
 
         /// <summary>

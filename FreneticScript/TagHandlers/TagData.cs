@@ -36,7 +36,7 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public static TagData GenerateSimpleErrorTagData()
         {
-            return new TagData(null, new Argument[0], new TagBit[0], null, DebugMode.FULL, (s) => throw new Exception("Script error occured: " + s), null, null);
+            return new TagData(null, new Argument[0], new TagBit[0], null, DebugMode.FULL, (s) => throw new ErrorInducedException("Script error occured: " + s), null, null);
         }
 
         /// <summary>
