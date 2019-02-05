@@ -28,7 +28,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The system controlling this CommandEntry.
         /// </summary>
-        public Commands System;
+        public ScriptEngine System;
 
         /// <summary>
         /// The relevant tag system.
@@ -121,7 +121,7 @@ namespace FreneticScript.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
-            string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, Commands sys)
+            string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, ScriptEngine sys)
             : this(_commandline, bstart, bend, _command, _arguments, _name, _prefix, _script, _line, fairtabs, new Dictionary<string, Argument>(), sys)
         {
         }
@@ -130,7 +130,7 @@ namespace FreneticScript.CommandSystem
         /// Full constructor, recommended.
         /// </summary>
         public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
-            string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds, Commands sys)
+            string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds, ScriptEngine sys)
         {
             BlockStart = bstart;
             BlockEnd = bend;
@@ -344,7 +344,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output.</param>
         public void InfoOutput(CommandQueue queue, string text)
         {
-            queue.CommandSystem.Context.WriteLine(text);
+            queue.Engine.Context.WriteLine(text);
             if (queue.Outputsystem != null)
             {
                 queue.Outputsystem.Invoke(text, MessageType.INFO);
@@ -384,7 +384,7 @@ namespace FreneticScript.CommandSystem
             if (CorrectDBMode(queue).ShouldShow(DebugMode.FULL))
             {
                 text = OutputPrefix(queue) + TextStyle.Outgood + text;
-                queue.CommandSystem.Context.GoodOutput(text);
+                queue.Engine.Context.GoodOutput(text);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(text, MessageType.GOOD);
@@ -434,7 +434,7 @@ namespace FreneticScript.CommandSystem
             {
                 text = OutputPrefix(queue) + TextStyle.Outbad + "WARNING in script '" + TextStyle.Separate + ScriptName
                     + TextStyle.Outbad + "' on line " + TextStyle.Separate + (ScriptLine + 1) + TextStyle.Outbad + ": " + text;
-                queue.CommandSystem.Context.BadOutput(text);
+                queue.Engine.Context.BadOutput(text);
                 if (queue.Outputsystem != null)
                 {
                     queue.Outputsystem.Invoke(text, MessageType.BAD);

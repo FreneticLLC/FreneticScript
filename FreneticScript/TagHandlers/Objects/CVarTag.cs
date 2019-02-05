@@ -46,7 +46,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The object.</returns>
         public static CVarTag For(TagData data, string input)
         {
-            CVar tcv = data.TagSystem.CommandSystem.Context.CVarSys.Get(input);
+            CVar tcv = data.TagSystem.Engine.Context.CVarSys.Get(input);
             if (tcv == null)
             {
                 data.Error("Invalid CVar specified!");

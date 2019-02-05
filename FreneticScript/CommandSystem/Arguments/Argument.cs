@@ -89,7 +89,7 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             else
             {
-                return Bits[0].CommandSystem.TagSystem.Types.Type_Text;
+                return Bits[0].Engine.TagSystem.Types.Type_Text;
             }
         }
 

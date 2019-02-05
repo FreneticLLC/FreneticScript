@@ -117,11 +117,11 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Gets the command system this tag data is used for (gathered from <see cref="TagSystem"/>).
         /// </summary>
-        public Commands CommandSystem
+        public ScriptEngine Engine
         {
             get
             {
-                return TagSystem.CommandSystem;
+                return TagSystem.Engine;
             }
         }
 

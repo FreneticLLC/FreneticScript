@@ -48,7 +48,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The system that owns this command.
         /// </summary>
-        public Commands CommandSystem;
+        public ScriptEngine Engine;
 
         /// <summary>
         /// A short explanation of the arguments of the command.

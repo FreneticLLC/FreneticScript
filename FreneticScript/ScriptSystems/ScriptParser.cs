@@ -32,7 +32,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="currentLine">The current line, if reparsing middle-of-a-file script text.</param>
         /// <param name="mode">The default debug mode, if any.</param>
         /// <returns>A list of command strings.</returns>
-        public static CommandScript SeparateCommands(string name, string commands, Commands system, int currentLine = 1, DebugMode mode = DebugMode.FULL)
+        public static CommandScript SeparateCommands(string name, string commands, ScriptEngine system, int currentLine = 1, DebugMode mode = DebugMode.FULL)
         {
             try
             {
@@ -224,7 +224,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="had_error">Whether there was a compile error.</param>
         /// <param name="istart">The starting index.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, Commands system, string tabs, int istart, out bool had_error)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, ScriptEngine system, string tabs, int istart, out bool had_error)
         {
             List<CommandEntry> toret = new List<CommandEntry>();
             List<string> Temp = null;
@@ -343,7 +343,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="line">The line in the creating script.</param>
         /// <param name="tabs">How much tabulation tihs command had.</param>
         /// <returns>The command system.</returns>
-        public static CommandEntry EntryFromInput(string command, Commands system, string script, int line, string tabs)
+        public static CommandEntry EntryFromInput(string command, ScriptEngine system, string script, int line, string tabs)
         {
             try
             {
@@ -473,7 +473,7 @@ namespace FreneticScript.ScriptSystems
         /// <summary>
         /// Create an entry that represents an error message.
         /// </summary>
-        public static CommandEntry CreateErrorOutputEntry(string message, Commands system, string script, string tabs)
+        public static CommandEntry CreateErrorOutputEntry(string message, ScriptEngine system, string script, string tabs)
         {
             return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
                 new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", 0, script, 0, tabs, system);
@@ -484,7 +484,7 @@ namespace FreneticScript.ScriptSystems
         /// Create an entry that represents invalid output.
         /// </summary>
         public static CommandEntry CreateInvalidOutputEntry(string name, List<Argument> _arguments,
-            Commands system, string line, CommandPrefix prefix, string script, int linen, string tabs, Dictionary<string, Argument> nameds, Commands sys)
+            ScriptEngine system, string line, CommandPrefix prefix, string script, int linen, string tabs, Dictionary<string, Argument> nameds, ScriptEngine sys)
         {
             if (sys.Context.ShouldErrorOnInvalidCommand())
             {

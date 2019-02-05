@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 args.Add(entry.Arguments[i].ToString());
             }
-            queue.CommandSystem.Context.UnknownCommand(queue, name, args.ToArray());
+            queue.Engine.Context.UnknownCommand(queue, name, args.ToArray());
         }
     }
 }

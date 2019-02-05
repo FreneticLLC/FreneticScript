@@ -237,7 +237,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The command system in use.
         /// </summary>
-        public Commands System;
+        public ScriptEngine Engine;
 
         /// <summary>
         /// Whether the script event has been cancelled.
@@ -251,9 +251,9 @@ namespace FreneticScript.CommandSystem
         /// <param name="_system">The command system this event exists within.</param>
         /// <param name="_name">The name of the event.</param>
         /// <param name="cancellable">Whether the event can be cancelled.</param>
-        public ScriptEvent(Commands _system, string _name, bool cancellable)
+        public ScriptEvent(ScriptEngine _system, string _name, bool cancellable)
         {
-            System = _system;
+            Engine = _system;
             Name = _name.ToLowerFast();
             Cancellable = cancellable;
         }
@@ -289,7 +289,7 @@ namespace FreneticScript.CommandSystem
                         {
                             {  "context", new MapTag(GetVariables()) }
                         };
-                    System.ExecuteScript(set.Scripts[i].Value, ref Variables, out CommandQueue queue, DebugMode.MINIMAL);
+                    Engine.ExecuteScript(set.Scripts[i].Value, ref Variables, out CommandQueue queue, DebugMode.MINIMAL);
                     // TODO: Dedicated ContextTag type, with special handling of set/get, but can parse down to a MapTag.
                     if (Variables != null && Variables.ContainsKey("context"))
                     {
@@ -297,13 +297,13 @@ namespace FreneticScript.CommandSystem
                     }
                     else
                     {
-                        System.Context.BadOutput("Context undefined for script event '" + Name + "'?");
+                        Engine.Context.BadOutput("Context undefined for script event '" + Name + "'?");
                     }
                 }
                 catch (Exception ex)
                 {
                     FreneticScriptUtilities.CheckException(ex);
-                    System.Context.BadOutput("Exception running script event: " + ex.ToString());
+                    Engine.Context.BadOutput("Exception running script event: " + ex.ToString());
                 }
                 if (ProcessingPatch != null)
                 {

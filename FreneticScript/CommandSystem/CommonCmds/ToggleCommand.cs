@@ -46,7 +46,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string target = entry.GetArgument(queue, 0);
-            CVar cvar = queue.CommandSystem.Context.CVarSys.Get(target);
+            CVar cvar = queue.Engine.Context.CVarSys.Get(target);
             if (cvar == null)
             {
                 queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' does not exist!");
@@ -60,11 +60,11 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified, it is a read-only system variable!");
             }
-            else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.CommandSystem.Context.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.InitOnly) && !queue.Engine.Context.Initializing)
             {
                 queue.HandleError(entry, "CVar '" + TextStyle.Separate + cvar.Name + TextStyle.Base + "' cannot be modified after game initialization.");
             }
-            else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.CommandSystem.Context.Initializing)
+            else if (cvar.Flags.HasFlagsFS(CVarFlag.Delayed) && !queue.Engine.Context.Initializing)
             {
                 cvar.Set(cvar.ValueB ? "false" : "true");
                 if (entry.ShouldShowGood(queue))

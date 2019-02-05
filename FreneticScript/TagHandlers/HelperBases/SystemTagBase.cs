@@ -75,7 +75,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <param name="input">The input.</param>
             public static SystemTag For(TagData data, string input)
             {
-                CVar tcv = data.TagSystem.CommandSystem.Context.CVarSys.Get(input);
+                CVar tcv = data.TagSystem.Engine.Context.CVarSys.Get(input);
                 if (tcv == null)
                 {
                     data.Error("Invalid CVar specified!");
@@ -221,7 +221,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static NumberTag Tag_Random_Decimal(SystemTag obj, TagData data)
             {
-                return new NumberTag(data.TagSystem.CommandSystem.random.NextDouble());
+                return new NumberTag(data.TagSystem.Engine.random.NextDouble());
             }
 
 #pragma warning restore 1591

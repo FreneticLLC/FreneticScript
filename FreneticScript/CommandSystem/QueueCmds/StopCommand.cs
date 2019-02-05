@@ -58,8 +58,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0).ToLowerFast() == "all")
             {
-                int qCount = queue.CommandSystem.Queues.Count;
-                if (!queue.CommandSystem.Queues.Contains(queue))
+                int qCount = queue.Engine.Queues.Count;
+                if (!queue.Engine.Queues.Contains(queue))
                 {
                     qCount++;
                 }
@@ -67,7 +67,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.GoodOutput(queue, "Stopping " + TextStyle.Separate + qCount + TextStyle.Base + " queue" + (qCount == 1 ? "." : "s."));
                 }
-                foreach (CommandQueue tqueue in queue.CommandSystem.Queues)
+                foreach (CommandQueue tqueue in queue.Engine.Queues)
                 {
                     tqueue.Stop();
                 }

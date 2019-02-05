@@ -17,18 +17,18 @@ namespace FreneticScriptConsoleTester
 {
     class Program
     {
-        public static Commands CommandSystem;
+        public static ScriptEngine Engine;
 
         public static Object Locker = new Object();
 
         static void Main(string[] args)
         {
             SysConsole.Init();
-            CommandSystem = new Commands() { Context = new ConsoleTesterContext() };
-            CommandSystem.Init();
+            Engine = new ScriptEngine() { Context = new ConsoleTesterContext() };
+            Engine.Init();
             // Register things here!
-            CommandSystem.PostInit();
-            CVarSystem cs = new CVarSystem(CommandSystem.Context);
+            Engine.PostInit();
+            CVarSystem cs = new CVarSystem(Engine.Context);
             Task.Factory.StartNew(() =>
             {
                 while (true)
@@ -36,7 +36,7 @@ namespace FreneticScriptConsoleTester
                     Thread.Sleep(50);
                     lock (Locker)
                     {
-                        CommandSystem.Tick(0.05);
+                        Engine.Tick(0.05);
                     }
                 }
             });
@@ -50,7 +50,7 @@ namespace FreneticScriptConsoleTester
                 }
                 lock (Locker)
                 {
-                    CommandSystem.ExecuteCommands(cmd, null);
+                    Engine.ExecuteCommands(cmd, null);
                 }
             }
         }

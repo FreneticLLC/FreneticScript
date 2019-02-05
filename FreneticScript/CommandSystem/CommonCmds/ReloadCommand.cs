@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             {
                 entry.GoodOutput(queue, "Reloading...");
             }
-            queue.CommandSystem.Reload();
+            queue.Engine.Reload();
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Reloaded!");

@@ -18,7 +18,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <summary>
         /// The relevant command system.
         /// </summary>
-        public Commands CommandSystem;
+        public ScriptEngine Engine;
 
         /// <summary>
         /// Gets the resultant type of this argument bit.

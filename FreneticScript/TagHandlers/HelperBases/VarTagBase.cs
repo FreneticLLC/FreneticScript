@@ -72,7 +72,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                 {
                     if (entry.CILVars[n].LVariables[x].Item2 == vn)
                     {
-                        tab.Start = ccse.Entries[i].Command.CommandSystem.TagSystem.LVar;
+                        tab.Start = ccse.Entries[i].Command.Engine.TagSystem.LVar;
                         tab.Bits[0].Key = "\0lvar";
                         tab.Bits[0].Handler = null;
                         tab.Bits[0].OVar = tab.Bits[0].Variable;

@@ -44,7 +44,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string cmd = entry.GetArgument(queue, 0);
-            if (!entry.Command.CommandSystem.RegisteredCommands.TryGetValue(cmd, out AbstractCommand acmd))
+            if (!entry.Command.Engine.RegisteredCommands.TryGetValue(cmd, out AbstractCommand acmd))
             {
                 queue.HandleError(entry, "Unrecognized command name!");
                 return;

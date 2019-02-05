@@ -28,7 +28,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="input">The original text.</param>
         /// <param name="wasquoted">Whether the argument was input with "quotes".</param>
         /// <returns>The parsed Argument.</returns>
-        public static Argument SplitToArgument(Commands system, string input, bool wasquoted)
+        public static Argument SplitToArgument(ScriptEngine system, string input, bool wasquoted)
         {
             if (input.Length == 0)
             {
@@ -38,7 +38,7 @@ namespace FreneticScript.ScriptSystems
             if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
             {
                 Argument a = new Argument() { WasQuoted = wasquoted };
-                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted) { CommandSystem = system } };
+                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted) { Engine = system } };
                 return a;
             }
             Argument arg = new Argument() { WasQuoted = wasquoted };
@@ -65,7 +65,7 @@ namespace FreneticScript.ScriptSystems
                     {
                         if (tbuilder.Length > 0)
                         {
-                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { CommandSystem = system });
+                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { Engine = system });
                             tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
@@ -175,7 +175,7 @@ namespace FreneticScript.ScriptSystems
             }
             if (tbuilder.Length > 0)
             {
-                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { CommandSystem = system });
+                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { Engine = system });
             }
             arg.Bits = bitos.ToArray();
             return arg;

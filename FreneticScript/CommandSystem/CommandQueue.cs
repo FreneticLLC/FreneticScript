@@ -61,7 +61,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The command system running this queue.
         /// </summary>
-        public Commands CommandSystem;
+        public ScriptEngine Engine;
 
         /// <summary>
         /// The script that was used to build this queue.
@@ -71,7 +71,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// What function to invoke when output is generated.
         /// </summary>
-        public Commands.OutputFunction Outputsystem = null;
+        public ScriptEngine.OutputFunction Outputsystem = null;
 
         /// <summary>
         /// A basic tag data object for this queue. Not necessarily generated, use <see cref="GetTagData"/>.
@@ -92,7 +92,7 @@ namespace FreneticScript.CommandSystem
             if (BasicTagData == null)
             {
                 BasicTagData = TagData.GenerateSimpleErrorTagData();
-                BasicTagData.TagSystem = CommandSystem.TagSystem;
+                BasicTagData.TagSystem = Engine.TagSystem;
                 BasicTagData.ErrorHandler = Error;
             }
             BasicTagData.CSE = CurrentStackEntry;
@@ -103,10 +103,10 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Constructs a new CommandQueue - generally kept to the FreneticScript internals.
         /// </summary>
-        public CommandQueue(CommandScript _script, Commands _system)
+        public CommandQueue(CommandScript _script, ScriptEngine _system)
         {
             Script = _script;
-            CommandSystem = _system;
+            Engine = _system;
             Error = HandleError;
         }
         
@@ -178,7 +178,7 @@ namespace FreneticScript.CommandSystem
             Tick(0f);
             if (Running)
             {
-                CommandSystem.Queues.Add(this);
+                Engine.Queues.Add(this);
             }
         }
 
@@ -301,7 +301,7 @@ namespace FreneticScript.CommandSystem
         {
             if (CurrentStackEntry.Debug == DebugMode.FULL)
             {
-                CommandSystem.Context.GoodOutput(text);
+                Engine.Context.GoodOutput(text);
                 if (Outputsystem != null)
                 {
                     Outputsystem.Invoke(text, MessageType.GOOD);

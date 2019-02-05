@@ -23,7 +23,7 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// Constructs the ScriptRan script event.
         /// </summary>
         /// <param name="system">The relevant command system.</param>
-        public ScriptRanScriptEvent(Commands system)
+        public ScriptRanScriptEvent(ScriptEngine system)
             : base(system, "scriptranevent", true)
         {
         }
@@ -34,9 +34,9 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// <param name="prio">The priority.</param>
         public override void RegisterPriority(int prio)
         {
-            if (!System.TheRunFileCommand.OnScriptRanEvent.Contains(Run, prio))
+            if (!Engine.TheRunFileCommand.OnScriptRanEvent.Contains(Run, prio))
             {
-                System.TheRunFileCommand.OnScriptRanEvent.Add(Run, prio);
+                Engine.TheRunFileCommand.OnScriptRanEvent.Add(Run, prio);
             }
         }
 
@@ -46,9 +46,9 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// <param name="prio">The priority.</param>
         public override void DeregisterPriority(int prio)
         {
-            if (System.TheRunFileCommand.OnScriptRanEvent.Contains(Run, prio))
+            if (Engine.TheRunFileCommand.OnScriptRanEvent.Contains(Run, prio))
             {
-                System.TheRunFileCommand.OnScriptRanEvent.Remove(Run, prio);
+                Engine.TheRunFileCommand.OnScriptRanEvent.Remove(Run, prio);
             }
         }
 

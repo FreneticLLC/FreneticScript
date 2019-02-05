@@ -284,7 +284,7 @@ namespace FreneticScript.TagHandlers.Objects
                 data.Error("Read 'random' tag on empty list!");
                 return null;
             }
-            return new DynamicTag(Internal[data.TagSystem.CommandSystem.random.Next(Internal.Count)]);
+            return new DynamicTag(Internal[data.TagSystem.Engine.random.Next(Internal.Count)]);
         }
 
         [TagMeta(TagType = TYPE, Name = "last", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A last entry in the list.",

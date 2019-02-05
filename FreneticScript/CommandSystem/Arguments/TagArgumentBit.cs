@@ -40,7 +40,7 @@ namespace FreneticScript.CommandSystem.Arguments
         {
             get
             {
-                return CommandSystem.TagSystem;
+                return Engine.TagSystem;
             }
         }
 
@@ -59,9 +59,9 @@ namespace FreneticScript.CommandSystem.Arguments
         /// </summary>
         /// <param name="system">The relevant command system.</param>
         /// <param name="bits">The tag bits.</param>
-        public TagArgumentBit(Commands system, TagBit[] bits)
+        public TagArgumentBit(ScriptEngine system, TagBit[] bits)
         {
-            CommandSystem = system;
+            Engine = system;
             Bits = bits;
         }
 

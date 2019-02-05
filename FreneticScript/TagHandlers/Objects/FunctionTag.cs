@@ -72,7 +72,7 @@ namespace FreneticScript.TagHandlers.Objects
             if (list.Internal.Count == 1)
             {
                 string scriptName = list.Internal[0].ToString();
-                CommandScript script = data.CommandSystem.GetFunction(scriptName);
+                CommandScript script = data.Engine.GetFunction(scriptName);
                 if (script == null)
                 {
                     throw data.Error("Unknown script name '" + TextStyle.Separate + scriptName + TextStyle.Base + "'.");
@@ -89,7 +89,7 @@ namespace FreneticScript.TagHandlers.Objects
                 string name = list.Internal[1].ToString();
                 int startLine = (int)IntegerTag.For(list.Internal[2], data).Internal;
                 string commands = list.Internal[3].ToString();
-                CommandScript script = ScriptParser.SeparateCommands(name, commands, data.CommandSystem, startLine, data.DBMode);
+                CommandScript script = ScriptParser.SeparateCommands(name, commands, data.Engine, startLine, data.DBMode);
                 script.TypeName = CommandScript.TYPE_NAME_ANONYMOUS;
                 script.IsAnonymous = true;
                 script.AnonymousString = input.Substring("anon|".Length);
@@ -98,7 +98,7 @@ namespace FreneticScript.TagHandlers.Objects
             else if (type == "named")
             {
                 string scriptName = list.Internal[1].ToString();
-                CommandScript script = data.CommandSystem.GetFunction(scriptName);
+                CommandScript script = data.Engine.GetFunction(scriptName);
                 if (script == null)
                 {
                     throw data.Error("Unknown script name '" + TextStyle.Separate + scriptName + TextStyle.Base + "'.");

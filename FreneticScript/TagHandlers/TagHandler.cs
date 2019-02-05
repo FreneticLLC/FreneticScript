@@ -35,9 +35,9 @@ namespace FreneticScript.TagHandlers
         // -->
 
         /// <summary>
-        /// The command system that made this tag system.
+        /// The command engine that holds this tag handler.
         /// </summary>
-        public Commands CommandSystem;
+        public ScriptEngine Engine;
 
         /// <summary>
         /// Escapes any tags inside a string.
@@ -94,9 +94,9 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Prepares the tag system.
         /// </summary>
-        public void Init(Commands _system)
+        public void Init(ScriptEngine _system)
         {
-            CommandSystem = _system;
+            Engine = _system;
             // Common Object Bases
             Register(new BinaryTagBase());
             Register(new BooleanTagBase());
@@ -135,7 +135,7 @@ namespace FreneticScript.TagHandlers
                 {
                     if (!Types.RegisteredTypes.TryGetValue(tagbase.ResultTypeString, out tagbase.ResultType))
                     {
-                        CommandSystem.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid result type '" + tagbase.ResultTypeString + "'.");
+                        Engine.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid result type '" + tagbase.ResultTypeString + "'.");
                     }
                 }
             }
@@ -152,7 +152,7 @@ namespace FreneticScript.TagHandlers
                 type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
                 if (type.RawType == null)
                 {
-                    CommandSystem.Context.BadOutput("Possible bad tag declaration (no RawType): " + type.TypeName);
+                    Engine.Context.BadOutput("Possible bad tag declaration (no RawType): " + type.TypeName);
                 }
                 else
                 {
@@ -170,7 +170,7 @@ namespace FreneticScript.TagHandlers
                             }
                             else if (thi.Meta.ReturnTypeResult == null)
                             {
-                                CommandSystem.Context.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                Engine.Context.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
                             }
                             if (thi.Meta.SpecialTypeHelperName != null)
                             {
@@ -195,7 +195,7 @@ namespace FreneticScript.TagHandlers
                     type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
                     if (type.CreatorMethod == null)
                     {
-                        CommandSystem.Context.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
+                        Engine.Context.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
                     }
                 }
             }
@@ -263,7 +263,7 @@ namespace FreneticScript.TagHandlers
             if (data.DBMode <= DebugMode.FULL)
             {
                 string outputText = "Filled tag " + TextStyle.Separate +
-                    new TagArgumentBit(data.TagSystem.CommandSystem, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + resultObject.GetDebugString()
+                    new TagArgumentBit(data.TagSystem.Engine, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + resultObject.GetDebugString()
                     + TextStyle.Outgood + "\".";
                 if (data.CSE != null)
                 {
@@ -273,7 +273,7 @@ namespace FreneticScript.TagHandlers
                         return resultObject;
                     }
                 }
-                data.TagSystem.CommandSystem.Context.GoodOutput(outputText);
+                data.TagSystem.Engine.Context.GoodOutput(outputText);
             }
             return resultObject;
         }

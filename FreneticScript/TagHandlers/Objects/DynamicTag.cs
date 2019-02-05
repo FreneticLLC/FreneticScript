@@ -127,7 +127,7 @@ namespace FreneticScript.TagHandlers.Objects
             ilgen.Emit(OpCodes.Ldfld, Field_DynamicTag_Internal); // Load field "Internal" on the input DynamicTag instance.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
             string type_name = tab.Bits[bit].Variable.ToString();
-            TagType varType = tab.CommandSystem.TagSystem.Types.RegisteredTypes[type_name.ToLowerFast()];
+            TagType varType = tab.Engine.TagSystem.Types.RegisteredTypes[type_name.ToLowerFast()];
             ilgen.Emit(OpCodes.Call, varType.CreatorMethod); // Run the creator method for the type on the input tag.
             return varType;
         }
@@ -168,7 +168,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static TagType TypeHelper_Tag_As(TagArgumentBit tab, int bit)
         {
             string type_name = tab.Bits[bit].Variable.ToString().ToLowerFast();
-            if (tab.CommandSystem.TagSystem.Types.RegisteredTypes.TryGetValue(type_name, out TagType type))
+            if (tab.Engine.TagSystem.Types.RegisteredTypes.TryGetValue(type_name, out TagType type))
             {
                 return type;
             }

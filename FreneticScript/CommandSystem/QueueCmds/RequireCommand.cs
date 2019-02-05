@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             string mapText = expectedMap.ToString();
             return new CommandEntry("require \"" + mapText + "\" \0AUTOGENNED", 0, 0, this,
-                new List<Argument>() { new Argument(new TextArgumentBit(expectedMap)) }, Name, CommandPrefix.NONE, scriptName, line, "", CommandSystem);
+                new List<Argument>() { new Argument(new TextArgumentBit(expectedMap)) }, Name, CommandPrefix.NONE, scriptName, line, "", Engine);
         }
 
         /// <summary>

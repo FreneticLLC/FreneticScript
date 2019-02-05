@@ -69,7 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             string fname = entry.GetArgument(queue, 0);
             fname = fname.ToLowerFast();
-            CommandScript script = queue.CommandSystem.GetFunction(fname);
+            CommandScript script = queue.Engine.GetFunction(fname);
             if (script == null)
             {
                 queue.HandleError(entry, "Cannot inject function '" + TextStyle.Separate + fname + TextStyle.Base + "': it does not exist!");

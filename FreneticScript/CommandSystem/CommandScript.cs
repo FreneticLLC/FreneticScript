@@ -34,7 +34,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="system">The command system to get the script for.</param>
         /// <param name="status">A status output.</param>
         /// <returns>A command script, or null of the file does not exist.</returns>
-        public static CommandScript GetByFileName(string scriptName, Commands system, out string status)
+        public static CommandScript GetByFileName(string scriptName, ScriptEngine system, out string status)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         /// <param name="system">The command system to make the queue in.</param>
         /// <returns>The created queue.</returns>
-        public CommandQueue ToQueue(Commands system)
+        public CommandQueue ToQueue(ScriptEngine system)
         {
             CommandQueue queue = new CommandQueue(this, system);
             queue.CommandStack.Push(Compiled.Duplicate());

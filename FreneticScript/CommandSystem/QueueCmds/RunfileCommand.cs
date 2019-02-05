@@ -92,7 +92,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            CommandScript script = queue.CommandSystem.GetScriptFile(args.ScriptName, out string status);
+            CommandScript script = queue.Engine.GetScriptFile(args.ScriptName, out string status);
             if (script != null)
             {
                 ScriptRanEventArgs args2 = new ScriptRanEventArgs() { Script = script };
@@ -124,7 +124,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.GoodOutput(queue, "Running '" + TextStyle.Separate + fname + TextStyle.Base + "'...");
                 }
                 Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
-                queue.CommandSystem.ExecuteScript(script, ref vars, out CommandQueue nqueue);
+                queue.Engine.ExecuteScript(script, ref vars, out CommandQueue nqueue);
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 {
                     if (!nqueue.Running)

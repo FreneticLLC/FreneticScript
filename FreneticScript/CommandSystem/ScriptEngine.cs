@@ -20,9 +20,9 @@ using FreneticUtilities.FreneticToolkit;
 namespace FreneticScript.CommandSystem
 {
     /// <summary>
-    /// Handles all FreneticScript command systems. The entry point to FreneticScript.
+    /// Handles all FreneticScript systems. The entry point to FreneticScript.
     /// </summary>
-    public class Commands
+    public class ScriptEngine
     {
         /// <summary>
         /// The default file extension for script files. Set to "frs", indicating filenames of the format "myscript.frs".
@@ -133,9 +133,9 @@ namespace FreneticScript.CommandSystem
         public Random random = new Random();
 
         /// <summary>
-        /// Constructs a <see cref="Commands"/>.
+        /// Constructs a <see cref="ScriptEngine"/>.
         /// </summary>
-        public Commands()
+        public ScriptEngine()
         {
             SimpleTagData = TagData.GenerateSimpleErrorTagData();
             SimpleTagData.TagSystem = TagSystem;
@@ -362,7 +362,7 @@ namespace FreneticScript.CommandSystem
         public void RegisterCommand(AbstractCommand command)
         {
             command.Name = command.Name.ToLowerFast(); // Just a quick backup in case somebody messed up.
-            command.CommandSystem = this;
+            command.Engine = this;
             if (RegisteredCommands.ContainsKey(command.Name))
             {
                 Context.BadOutput("Multiply registered command: " + command.Name + "!");

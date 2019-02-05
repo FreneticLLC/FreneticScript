@@ -188,7 +188,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     return;
                 }
                 string name = entry.GetArgument(queue, 1).ToLowerFast();
-                if (!queue.CommandSystem.Functions.ContainsKey(name))
+                if (!queue.Engine.Functions.ContainsKey(name))
                 {
                     if (entry.Arguments.Count > 2 && entry.GetArgument(queue, 2).ToLowerFast() == "quiet_fail")
                     {
@@ -204,7 +204,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    queue.CommandSystem.Functions.Remove(name);
+                    queue.Engine.Functions.Remove(name);
                     if (entry.ShouldShowGood(queue))
                     {
                         entry.GoodOutput(queue, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' undefined.");
@@ -224,7 +224,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     queue.HandleError(entry, "Function invalid: No block follows!");
                     return;
                 }
-                if (queue.CommandSystem.Functions.ContainsKey(name))
+                if (queue.Engine.Functions.ContainsKey(name))
                 {
                     if (entry.Arguments.Count > 2 && entry.GetArgument(queue, 2).ToLowerFast() == "quiet_fail")
                     {
@@ -240,7 +240,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    queue.CommandSystem.Functions.Add(name, new CommandScript(name, CommandScript.TYPE_NAME_FUNCTION, entry.InnerCommandBlock, entry.BlockStart, entry.DBMode));
+                    queue.Engine.Functions.Add(name, new CommandScript(name, CommandScript.TYPE_NAME_FUNCTION, entry.InnerCommandBlock, entry.BlockStart, entry.DBMode));
                     if (entry.ShouldShowGood(queue))
                     {
                         entry.GoodOutput(queue, "Function '" + TextStyle.Separate + name + TextStyle.Base + "' defined.");

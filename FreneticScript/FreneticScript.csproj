@@ -59,7 +59,7 @@
     <Compile Include="CommandSystem\CommandEvents\ScriptRanScriptEvent.cs" />
     <Compile Include="CommandSystem\CommandQueue.cs" />
     <Compile Include="CommandSystem\CommandQueueEventArgs.cs" />
-    <Compile Include="CommandSystem\Commands.cs" />
+    <Compile Include="CommandSystem\ScriptEngine.cs" />
     <Compile Include="CommandSystem\CommandScript.cs" />
     <Compile Include="CommandSystem\CommandStackEntry.cs" />
     <Compile Include="CommandSystem\CommonCmds\ReloadCommand.cs" />

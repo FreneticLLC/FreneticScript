@@ -100,7 +100,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return;
             }
             string id = entry.GetArgument(queue, 0).ToLowerFast();
-            if (queue.CommandSystem.OnceBlocks.Add(id))
+            if (queue.Engine.OnceBlocks.Add(id))
             {
                 if (entry.ShouldShowGood(queue))
                 {

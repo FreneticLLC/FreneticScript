@@ -54,7 +54,7 @@ namespace FreneticScript.TagHandlers
         {
             if (Name == null || !tags.Types.RegisteredTypes.TryGetValue(Name, out ActualType))
             {
-                 tags.CommandSystem.Context.BadOutput("Cannot register object meta for type " + Name + " because that type does not exist.");
+                 tags.Engine.Context.BadOutput("Cannot register object meta for type " + Name + " because that type does not exist.");
             }
             if (SubTypeName == null || !tags.Types.RegisteredTypes.TryGetValue(SubTypeName, out ActualSubType))
             {

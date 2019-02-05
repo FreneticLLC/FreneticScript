@@ -46,7 +46,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>The tag type.</returns>
         public override TagType ReturnType(CILAdaptationValues values)
         {
-            return CommandSystem.TagSystem.Types.RegisteredTypes[ResType];
+            return Engine.TagSystem.Types.RegisteredTypes[ResType];
         }
 
         /// <summary>

@@ -114,7 +114,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string eventname = entry.GetArgument(queue, 1).ToLowerFast();
             if (type == "clear" && eventname == "all")
             {
-                foreach (KeyValuePair<string, ScriptEvent> evt in queue.CommandSystem.Events)
+                foreach (KeyValuePair<string, ScriptEvent> evt in queue.Engine.Events)
                 {
                     evt.Value.Clear();
                 }
@@ -124,7 +124,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            if (!queue.CommandSystem.Events.TryGetValue(eventname, out ScriptEvent theEvent))
+            if (!queue.Engine.Events.TryGetValue(eventname, out ScriptEvent theEvent))
             {
                 queue.HandleError(entry, "Unknown event '" + TextStyle.Separate + eventname + TextStyle.Base + "'.");
                 return;
