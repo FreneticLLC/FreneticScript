@@ -11,6 +11,7 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -25,7 +26,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Constructs the run command.
         /// </summary>
-        public RunfileCommand()
+        public RunfileCommand(FreneticEventHelper eventHelper)
         {
             Name = "runfile";
             Arguments = "<script to run>";
@@ -39,6 +40,9 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 TextTag.For
             };
+            OnScriptRanPreEvent = new FreneticEvent<ScriptRanPreEventArgs>(eventHelper);
+            OnScriptRanEvent = new FreneticEvent<ScriptRanEventArgs>(eventHelper);
+            OnScriptRanPostEvent = new FreneticEvent<ScriptRanPostEventArgs>(eventHelper);
         }
 
         // TODO: Store these events elsewhere!
@@ -50,7 +54,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
         /// <para/>Third: <see cref="OnScriptRanPostEvent"/>.
         /// </summary>
-        public FreneticScriptEventHandler<ScriptRanPreEventArgs> OnScriptRanPreEvent = new FreneticScriptEventHandler<ScriptRanPreEventArgs>();
+        public FreneticEvent<ScriptRanPreEventArgs> OnScriptRanPreEvent;
 
         /// <summary>
         /// The second event fired in a sequence of three.
@@ -59,7 +63,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
         /// <para/>Third: <see cref="OnScriptRanPostEvent"/>.
         /// </summary>
-        public FreneticScriptEventHandler<ScriptRanEventArgs> OnScriptRanEvent = new FreneticScriptEventHandler<ScriptRanEventArgs>();
+        public FreneticEvent<ScriptRanEventArgs> OnScriptRanEvent;
 
         /// <summary>
         /// The third event fired in a sequence of three.
@@ -67,7 +71,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <para/>First: <see cref="OnScriptRanPreEvent"/>.
         /// <para/>Second: <see cref="OnScriptRanEvent"/>.
         /// </summary>
-        public FreneticScriptEventHandler<ScriptRanPostEventArgs> OnScriptRanPostEvent = new FreneticScriptEventHandler<ScriptRanPostEventArgs>();
+        public FreneticEvent<ScriptRanPostEventArgs> OnScriptRanPostEvent ;
 
         /// <summary>
         /// Executes the run command.
@@ -186,7 +190,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// Fires when a a script is going to be ran, cancellable.
     /// </summary>
-    public class ScriptRanPreEventArgs: FreneticScriptEventArgs
+    public class ScriptRanPreEventArgs: FreneticEventArgs
     {
         /// <summary>
         /// The name of the script requested to be run.
@@ -202,7 +206,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// Fires when a a script is about to be ran, cancellable.
     /// </summary>
-    public class ScriptRanEventArgs : FreneticScriptEventArgs
+    public class ScriptRanEventArgs : FreneticEventArgs
     {
         /// <summary>
         /// The script that will be ran.
@@ -219,7 +223,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
     /// <summary>
     /// Fires when a a script has been ran, monitor-only.
     /// </summary>
-    public class ScriptRanPostEventArgs : FreneticScriptEventArgs
+    public class ScriptRanPostEventArgs : FreneticEventArgs
     {
         /// <summary>
         /// The script that was ran.

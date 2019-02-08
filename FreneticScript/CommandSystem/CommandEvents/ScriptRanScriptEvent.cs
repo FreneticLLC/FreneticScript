@@ -32,11 +32,12 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// Register a specific priority with the underlying event.
         /// </summary>
         /// <param name="prio">The priority.</param>
-        public override void RegisterPriority(int prio)
+        public override void RegisterPriority(double prio)
         {
-            if (!Engine.TheRunFileCommand.OnScriptRanEvent.Contains(Run, prio))
+            PrioritySourceObject source = new PrioritySourceObject(this, prio);
+            if (!Engine.TheRunFileCommand.OnScriptRanEvent.IsHandledBySource(source))
             {
-                Engine.TheRunFileCommand.OnScriptRanEvent.Add(Run, prio);
+                Engine.TheRunFileCommand.OnScriptRanEvent.AddEvent(Run, source, prio);
             }
         }
 
@@ -44,12 +45,9 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// Deregister a specific priority with the underlying event.
         /// </summary>
         /// <param name="prio">The priority.</param>
-        public override void DeregisterPriority(int prio)
+        public override void DeregisterPriority(double prio)
         {
-            if (Engine.TheRunFileCommand.OnScriptRanEvent.Contains(Run, prio))
-            {
-                Engine.TheRunFileCommand.OnScriptRanEvent.Remove(Run, prio);
-            }
+            Engine.TheRunFileCommand.OnScriptRanEvent.RemoveBySource(new PrioritySourceObject(this, prio));
         }
 
         /// <summary>

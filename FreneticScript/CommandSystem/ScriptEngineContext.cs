@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -16,6 +17,12 @@ namespace FreneticScript.CommandSystem
     /// </summary>
     public abstract class ScriptEngineContext
     {
+        /// <summary>
+        /// Get an event helper for this context.
+        /// </summary>
+        /// <returns>The event helper.</returns>
+        public abstract FreneticEventHelper GetEventHelper();
+
         /// <summary>
         /// Writes a line of text to the console or text window. Used for informational output.
         /// </summary>

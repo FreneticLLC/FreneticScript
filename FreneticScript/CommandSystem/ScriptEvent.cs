@@ -12,6 +12,7 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem
 {
@@ -24,7 +25,71 @@ namespace FreneticScript.CommandSystem
         /// Whether this event can be cancelled.
         /// </summary>
         public bool Cancellable = false;
-        
+
+        /// <summary>
+        /// Helper class for being the source of a priority.
+        /// </summary>
+        public class PrioritySourceObject : IEquatable<PrioritySourceObject>
+        {
+            /// <summary>
+            /// The relevant event.
+            /// </summary>
+            public ScriptEvent Event;
+
+            /// <summary>
+            /// The priority level.
+            /// </summary>
+            public double Priority;
+
+            /// <summary>
+            /// Gets a hash code for the source object.
+            /// </summary>
+            /// <returns>The hash code.</returns>
+            public override int GetHashCode()
+            {
+                return Event.Name.GetHashCode() + Priority.GetHashCode();
+            }
+
+            /// <summary>
+            /// Compares whether the source object and another object are equal.
+            /// </summary>
+            /// <param name="obj">The other object.</param>
+            /// <returns>Whether they are equal.</returns>
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                {
+                    return false;
+                }
+                return obj is PrioritySourceObject pso && Equals(pso);
+            }
+
+            /// <summary>
+            /// Compares whether the source object and another are equal.
+            /// </summary>
+            /// <param name="other">The other source object.</param>
+            /// <returns>Whether they are equal.</returns>
+            public bool Equals(PrioritySourceObject other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+                return Event.Name == other.Event.Name && Priority == other.Priority;
+            }
+
+            /// <summary>
+            /// Constructs see <see cref="PrioritySourceObject"/>.
+            /// </summary>
+            /// <param name="_event">The relevant event.</param>
+            /// <param name="_priority">The relevant priority.</param>
+            public PrioritySourceObject(ScriptEvent _event, double _priority)
+            {
+                Event = _event;
+                Priority = _priority;
+            }
+        }
+
         /// <summary>
         /// Set up the script event. For use by the event system itself.
         /// </summary>
@@ -65,7 +130,7 @@ namespace FreneticScript.CommandSystem
             /// <summary>
             /// The script priority.
             /// </summary>
-            public int Priority;
+            public double Priority;
 
             /// <summary>
             /// The index within the handler list.
@@ -92,7 +157,7 @@ namespace FreneticScript.CommandSystem
         /// Register a specific priority with the underlying event.
         /// </summary>
         /// <param name="prio">The priority.</param>
-        public virtual void RegisterPriority(int prio)
+        public virtual void RegisterPriority(double prio)
         {
             // Do Nothing
         }
@@ -101,7 +166,7 @@ namespace FreneticScript.CommandSystem
         /// Deregister a specific priority with the underlying event.
         /// </summary>
         /// <param name="prio">The priority.</param>
-        public virtual void DeregisterPriority(int prio)
+        public virtual void DeregisterPriority(double prio)
         {
             // Do Nothing
         }
@@ -122,7 +187,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="prio">The priority to use.</param>
         /// <param name="script">The script to register to the handler.</param>
         /// <param name="name">The name of the event to register.</param>
-        public void RegisterEventHandler(int prio, CommandScript script, string name)
+        public void RegisterEventHandler(double prio, CommandScript script, string name)
         {
             name = name.ToLowerFast();
             if (HasHandler(name))
@@ -180,6 +245,7 @@ namespace FreneticScript.CommandSystem
             {
                 return false;
             }
+            HandlerNames.Remove(name);
             List<KeyValuePair<ScriptIndex, CommandScript>> scriptsInSet = index.SetObject.Scripts;
             scriptsInSet.RemoveAt(index.SetIndex);
             if (scriptsInSet.Count == 0)
@@ -277,7 +343,6 @@ namespace FreneticScript.CommandSystem
         /// <param name="set">The set.</param>
         public void CallSet(ScriptSet set)
         {
-            int initialIndex = set.Index;
             for (int i = 0; i < set.Scripts.Count; i++)
             {
                 CurrentlyProcessing = set.Scripts[i].Key;
@@ -330,7 +395,7 @@ namespace FreneticScript.CommandSystem
         /// Calls the event.
         /// </summary>
         /// <param name="prio">The priority to call.</param>
-        public void CallByPriority(int prio)
+        public void CallByPriority(double prio)
         {
             for (int i = 0; i < Handlers.Count; i++)
             {

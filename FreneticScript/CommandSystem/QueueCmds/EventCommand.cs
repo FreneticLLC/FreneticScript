@@ -195,14 +195,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         queue.HandleError(entry, "Handler '" + TextStyle.Separate + name + TextStyle.Base + "' already exists!");
                     }
                 }
-                int priority = 0;
+                double priority = 0;
                 if (entry.Arguments.Count > 3)
                 {
-                    IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(queue, 3));
-                    if (inter != null)
-                    {
-                        priority = (int)inter.Internal;
-                    }
+                    priority = NumberTag.For(entry.GetArgumentObject(queue, 3), queue.Error).Internal;
                 }
                 List<CommandEntry> entries = new List<CommandEntry>(entry.InnerCommandBlock.Count + 2);
                 MapTag expectedContext = new MapTag();

@@ -395,7 +395,7 @@ namespace FreneticScript.CommandSystem
         {
             Events.Add(newevent.Name, newevent);
         }
-        
+
         /// <summary>
         /// Prepares the command system, registering all base commands.
         /// </summary>
@@ -428,7 +428,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new OnceCommand());
             RegisterCommand(new RepeatCommand());
             RegisterCommand(TheRequireCommand = new RequireCommand());
-            RegisterCommand(TheRunFileCommand = new RunfileCommand());
+            RegisterCommand(TheRunFileCommand = new RunfileCommand(Context.GetEventHelper()));
             RegisterCommand(new StopCommand());
             RegisterCommand(new TryCommand());
             RegisterCommand(new VarCommand());
