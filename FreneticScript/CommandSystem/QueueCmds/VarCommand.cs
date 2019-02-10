@@ -85,11 +85,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.MarkCommand(entry);
             bool isCorrect = true;
             TagType type = null;
+            TagType returnType = cent.Arguments[2].ReturnType(values);
             if (cent.Arguments.Count > 4)
             {
                 string type_name = cent.Arguments[4].ToString().ToLowerFast();
                 type = cent.System.TagSystem.Types.RegisteredTypes[type_name];
-                isCorrect = cent.Arguments[2].ReturnType(values).TypeName == type.TypeName;
+                isCorrect = returnType.TypeName == type.TypeName;
+                returnType = type;
             }
             string lvarname = cent.Arguments[0].ToString().ToLowerFast();
             int lvarloc = cent.VarLoc(lvarname);
@@ -123,6 +125,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 values.ILGen.Emit(OpCodes.Ldloc, localInd); // Load variable 'o'.
                 values.ILGen.Emit(OpCodes.Ldstr, lvarname); // Load the variable name as a string.
+                values.ILGen.Emit(OpCodes.Ldstr, returnType.TypeName); // Load the variable type name as a string.
                 values.LoadQueue(); // Load the queue
                 values.LoadEntry(entry); // Load the entry
                 values.ILGen.Emit(OpCodes.Call, Method_DebugHelper); // Call the debug method
@@ -130,7 +133,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// References <see cref="DebugHelper(TemplateObject, string, CommandQueue, CommandEntry)"/>.
+        /// References <see cref="DebugHelper(TemplateObject, string, string, CommandQueue, CommandEntry)"/>.
         /// </summary>
         public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod(nameof(DebugHelper));
 
@@ -139,13 +142,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="res">The object saved as a var.</param>
         /// <param name="varName">The variable name stored into.</param>
+        /// <param name="typeName">The variable type name.</param>
         /// <param name="queue">The queue.</param>
         /// <param name="entry">The entry.</param>
-        public static void DebugHelper(TemplateObject res, string varName, CommandQueue queue, CommandEntry entry)
+        public static void DebugHelper(TemplateObject res, string varName, string typeName, CommandQueue queue, CommandEntry entry)
         {
             if (entry.ShouldShowGood(queue))
             {
-                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' with value: " + TextStyle.Separate + res.GetDebugString());
+                entry.GoodOutput(queue, "Stored variable '" + TextStyle.Separate + varName
+                    + TextStyle.Base + "' with value: '" + TextStyle.Separate + res.GetDebugString()
+                    + TextStyle.Base + "' as type: '" + TextStyle.Separate + typeName + TextStyle.Base + "'.");
             }
         }
 

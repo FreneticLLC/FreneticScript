@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace FreneticScriptConsoleTester
         public static ScriptEngine Engine;
 
         public static Object Locker = new Object();
+
+        public static ConcurrentQueue<Action> SyncTasks = new ConcurrentQueue<Action>();
 
         static void Main(string[] args)
         {
@@ -37,6 +40,10 @@ namespace FreneticScriptConsoleTester
                     lock (Locker)
                     {
                         Engine.Tick(0.05);
+                        while (SyncTasks.TryDequeue(out Action a))
+                        {
+                            a();
+                        }
                     }
                 }
             });

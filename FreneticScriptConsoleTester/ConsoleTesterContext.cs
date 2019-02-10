@@ -13,11 +13,46 @@ using FreneticScript;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using System.IO;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScriptConsoleTester
 {
     public class ConsoleTesterContext : ScriptEngineContext
     {
+        public class ConsoleTesterEventHelper : FreneticEventHelper
+        {
+            public override void ScheduleSync(Action act)
+            {
+                Program.SyncTasks.Enqueue(act);
+            }
+
+            public override void ScheduleSync(Action act, double delay)
+            {
+                if (delay <= 0)
+                {
+                    ScheduleSync(act);
+                    return;
+                }
+                Task.Factory.StartNew(() =>
+                {
+                    Task.Delay((int)(delay * 1000)).Wait();
+                    ScheduleSync(act);
+                });
+            }
+
+            public override void StartAsync(Action act)
+            {
+                Task.Factory.StartNew(act);
+            }
+        }
+
+        public ConsoleTesterEventHelper Helper = new ConsoleTesterEventHelper();
+
+        public override FreneticEventHelper GetEventHelper()
+        {
+            return Helper;
+        }
+
         public override void BadOutput(string text)
         {
             SysConsole.Output(OutputType.WARNING, TagHandler.Unescape(text));
