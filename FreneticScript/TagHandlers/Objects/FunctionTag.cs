@@ -90,6 +90,10 @@ namespace FreneticScript.TagHandlers.Objects
                 int startLine = (int)IntegerTag.For(list.Internal[2], data).Internal;
                 string commands = list.Internal[3].ToString();
                 CommandScript script = ScriptParser.SeparateCommands(name, commands, data.Engine, startLine, data.DBMode);
+                if (script == null)
+                {
+                    throw data.Error("Anonymous function failed to generate.");
+                }
                 script.TypeName = CommandScript.TYPE_NAME_ANONYMOUS;
                 script.IsAnonymous = true;
                 script.AnonymousString = input.Substring("anon|".Length);

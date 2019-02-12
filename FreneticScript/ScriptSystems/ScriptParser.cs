@@ -202,7 +202,7 @@ namespace FreneticScript.ScriptSystems
             {
                 if (ex is ErrorInducedException)
                 {
-                    system.Context.BadOutput("Error parsing script '" + name + "': " + ex.Message);
+                    system.Context.BadOutput("Error parsing script '" + TextStyle.Separate + name + TextStyle.Base + "': " + ex.Message);
                 }
                 else
                 {
@@ -464,9 +464,9 @@ namespace FreneticScript.ScriptSystems
             {
                 if (ex is ErrorInducedException)
                 {
-                    throw new ErrorInducedException("Error on script line: " + line + "(" + command + "): " + ex.Message);
+                    throw new ErrorInducedException("Error on script line: " + TextStyle.Separate + line + TextStyle.Base + " (" + TextStyle.Separate + command + TextStyle.Base + "): " + ex.Message);
                 }
-                throw new ErrorInducedException("Internal exception occured on script line: " + line + "(" + command + "): " + ex.ToString());
+                throw new ErrorInducedException("Internal exception occured on script line: " + line + " (" + command + "): " + ex.ToString());
             }
         }
 

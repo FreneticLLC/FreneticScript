@@ -121,6 +121,25 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The relevant entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+        {
+            CommandEntry cent = values.Entry.Entries[entry];
+            if (cent.Arguments.Count == 1 && cent.Arguments[0].ToString() == "\0CALLBACK" && cent.BlockStart > 0)
+            {
+                CommandEntry start = values.Entry.Entries[cent.BlockStart - 1];
+                if (start.Command is FunctionCommand && start.Arguments.Count > 0 && start.Arguments[0].ToString() == "define")
+                {
+                    return;
+                }
+            }
+            base.AdaptToCIL(values, entry);
+        }
+
         TemplateObject Verify1(TemplateObject input)
         {
             if (input.ToString() == "\0CALLBACK")
@@ -155,7 +174,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             string type = entry.GetArgument(queue, 0);
             if (type == "\0CALLBACK")
             {
-                // TODO: Shut up if we're just defining something?
                 if (entry.ShouldShowGood(queue))
                 {
                     entry.GoodOutput(queue, "Completed function call.");

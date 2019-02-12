@@ -194,7 +194,7 @@ namespace FreneticScript.TagHandlers
                 + (Bits[cInd].TagHandler == null ? "" : "' for type '"
                 + TextStyle.Separate + Bits[cInd].TagHandler.Meta.ActualType.TypeName + TextStyle.Base)
                 + "' at index " + TextStyle.Separate + cInd + TextStyle.Base + " in command argument "
-                + TextStyle.Separate + (SourceArgumentID + 1) + TextStyle.Base);
+                + TextStyle.Separate + SourceArgumentID + TextStyle.Base);
         }
 
         /// <summary>

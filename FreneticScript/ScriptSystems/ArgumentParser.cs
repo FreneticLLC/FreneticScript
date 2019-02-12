@@ -128,7 +128,7 @@ namespace FreneticScript.ScriptSystems
                         {
                             if (!system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
                             {
-                                throw new ErrorInducedException("Invalid tag base '" + tab.Bits[0].Key.ToLowerFast() + "'!");
+                                throw new ErrorInducedException("Invalid tag base '" + TextStyle.Separate + tab.Bits[0].Key.ToLowerFast() + TextStyle.Base + "'!");
                             }
                             tab.Start = start;
                         }

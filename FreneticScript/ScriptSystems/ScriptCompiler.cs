@@ -96,7 +96,7 @@ namespace FreneticScript.ScriptSystems
                                 tagID++;
                                 try
                                 {
-                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, a.ToString(), curEnt));
+                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt));
                                 }
                                 catch (TagErrorInducedException ex)
                                 {

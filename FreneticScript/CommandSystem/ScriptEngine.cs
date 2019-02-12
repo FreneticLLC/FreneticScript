@@ -343,6 +343,10 @@ namespace FreneticScript.CommandSystem
         public void ExecuteCommands(string commands, OutputFunction outputter)
         {
             CommandScript cs = ScriptParser.SeparateCommands("command_line", commands, this);
+            if (cs == null)
+            {
+                return;
+            }
             cs.TypeName = "CommandLine";
             if (cs == null)
             {
