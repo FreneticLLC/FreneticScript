@@ -76,13 +76,9 @@ namespace FreneticScript.ScriptSystems
                 List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
-                    ccse.Entries[i].DBMode = values.DBMode;
                     CommandEntry curEnt = ccse.Entries[i];
-                    int tcounter = 0;
-                    foreach (int tv in values.LVarIDs)
-                    {
-                        tcounter++;
-                    }
+                    curEnt.DBMode = values.DBMode;
+                    curEnt.VarLookup = values.CreateVarLookup();
                     for (int a = 0; a < curEnt.Arguments.Count; a++)
                     {
                         Argument arg = curEnt.Arguments[a];
@@ -97,11 +93,11 @@ namespace FreneticScript.ScriptSystems
                                 }
                                 catch (TagErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "argument " + TextStyle.Separate + a + TextStyle.Base, tab, ex.SubTagIndex, ex);
+                                    TagException(curEnt, "argument " + TextStyle.Separate + a + TextStyle.Base, tab, ex.SubTagIndex, ex);
                                 }
                                 catch (ErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "argument " + TextStyle.Separate + a + TextStyle.Base, tab, 0, ex);
+                                    TagException(curEnt, "argument " + TextStyle.Separate + a + TextStyle.Base, tab, 0, ex);
                                 }
                             }
                         }
@@ -119,11 +115,11 @@ namespace FreneticScript.ScriptSystems
                                 }
                                 catch (TagErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, ex.SubTagIndex, ex);
+                                    TagException(curEnt, "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, ex.SubTagIndex, ex);
                                 }
                                 catch (ErrorInducedException ex)
                                 {
-                                    TagException(ccse.Entries[i], "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, 0, ex);
+                                    TagException(curEnt, "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, 0, ex);
                                 }
                             }
                         }
@@ -139,35 +135,27 @@ namespace FreneticScript.ScriptSystems
                         {
                             throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
                         }
+                        curEnt.VarLookup = values.CreateVarLookup();
                     }
-                    Dictionary<string, SingleCILVariable> varlookup = new Dictionary<string, SingleCILVariable>(values.LVarIDs.Count * 3);
-                    foreach (int tv in values.LVarIDs)
-                    {
-                        foreach (SingleCILVariable tvt in values.CLVariables[tv])
-                        {
-                            varlookup.Add(tvt.Name, tvt);
-                        }
-                    }
-                    curEnt.VarLookup = varlookup;
                     if (curEnt.NamedArguments.TryGetValue(CommandEntry.SAVE_NAME_ARG_ID, out Argument avarname))
                     {
-                        if (!varlookup.ContainsKey(avarname.ToString()))
+                        if (!curEnt.VarLookup.ContainsKey(avarname.ToString()))
                         {
-                            throw new ErrorInducedException("Error in command line " + ccse.Entries[i].ScriptLine + ": (" + ccse.Entries[i].CommandLine + "): Invalid variable save name: " + avarname.ToString());
+                            throw new ErrorInducedException("Error in command line " + curEnt.ScriptLine + ": (" + curEnt.CommandLine + "): Invalid variable save name: " + avarname.ToString());
                         }
                     }
                     if (isCallback)
                     {
                         try
                         {
-                            ccse.Entries[i].Command.PreAdaptToCIL(values, i);
+                            curEnt.Command.PreAdaptToCIL(values, i);
                         }
                         catch (ErrorInducedException ex)
                         {
                             throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
                         }
                     }
-                    ccse.Entries[i].DBMode = values.DBMode;
+                    curEnt.DBMode = values.DBMode;
                 }
                 ccse.LocalVariables = new ObjectHolder[values.CLVarID];
                 for (int n = 0; n < values.CLVariables.Count; n++)

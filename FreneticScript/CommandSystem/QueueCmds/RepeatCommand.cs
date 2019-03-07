@@ -231,7 +231,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new ErrorInducedException("Already have a repeat_index var (labeled '" + sn + "')?!");
             }
-            TagType type = cent.System.TagSystem.Types.Type_Integer;
+            TagType type = cent.TagSystem.Types.Type_Integer;
             values.AddVariable(sn, type);
         }
 

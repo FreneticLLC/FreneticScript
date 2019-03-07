@@ -528,7 +528,8 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>
-        /// Returns the location of a local variable's name.
+        /// Returns the location of a local variable, by name.
+        /// Returns -1 if not found.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>The location.</returns>
@@ -538,7 +539,8 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>
-        /// Returns the location of a local variable's name.
+        /// Returns the location of a local variable, by name.
+        /// Returns -1 if not found.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="type">The type of the local variable.</param>
@@ -575,6 +577,23 @@ namespace FreneticScript.ScriptSystems
         public void PopVarSet()
         {
             LVarIDs.Pop();
+        }
+
+        /// <summary>
+        /// Creates a var-lookup dictionary for the current stack location.
+        /// </summary>
+        /// <returns>The var-lookup dictionary.</returns>
+        public Dictionary<string, SingleCILVariable> CreateVarLookup()
+        {
+            Dictionary<string, SingleCILVariable> varlookup = new Dictionary<string, SingleCILVariable>(LVarIDs.Count * 3);
+            foreach (int tv in LVarIDs)
+            {
+                foreach (SingleCILVariable tvt in CLVariables[tv])
+                {
+                    varlookup.Add(tvt.Name, tvt);
+                }
+            }
+            return varlookup;
         }
 
         /// <summary>
