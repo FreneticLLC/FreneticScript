@@ -165,7 +165,7 @@
     <Compile Include="TextStyle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj">
+    <ProjectReference Include="$(SolutionDir)FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj">
       <Project>{cd58eda9-4d2f-4e27-b88b-f7b96b3410a4}</Project>
       <Name>FreneticUtilities</Name>
     </ProjectReference>
