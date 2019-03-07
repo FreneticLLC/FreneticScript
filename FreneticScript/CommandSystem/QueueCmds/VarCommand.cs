@@ -35,14 +35,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             MinimumArguments = 3;
             MaximumArguments = 5;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
-            {
-                TextTag.For,
-                Verify1,
-                TemplateObject.Basic_For,
-                Verify2,
-                TemplateObject.Basic_For // TODO: TagTypeTag?
-            };
         }
 
         /// <summary>
@@ -58,9 +50,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new ErrorInducedException("Duplicate local variable: " + larg + "!");
             }
+            if (cent.Arguments[1].ToString().ToLowerFast() != "=")
+            {
+                throw new ErrorInducedException("Invalid input to var command: second argument must be '='.");
+            }
             TagType t = null;
             if (cent.Arguments.Count >= 5)
             {
+                if (cent.Arguments[3].ToString().ToLowerFast() != "as")
+                {
+                    throw new ErrorInducedException("Invalid input to var command: fourth argument must be 'as'.");
+                }
                 string tname = cent.Arguments[4].ToString();
                 if (!cent.System.TagSystem.Types.RegisteredTypes.TryGetValue(tname, out t))
                 {
@@ -154,24 +154,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     + TextStyle.Base + "' with value: '" + TextStyle.Separate + res.GetDebugString()
                     + TextStyle.Base + "' as type: '" + TextStyle.Separate + typeName + TextStyle.Base + "'.");
             }
-        }
-
-        TemplateObject Verify1(TemplateObject input)
-        {
-            if (input.ToString() == "=")
-            {
-                return new TextTag("=");
-            }
-            return null;
-        }
-
-        TemplateObject Verify2(TemplateObject input)
-        {
-            if (input.ToString().ToLowerFast() == "as")
-            {
-                return new TextTag("as");
-            }
-            return null;
         }
 
         /// <summary>

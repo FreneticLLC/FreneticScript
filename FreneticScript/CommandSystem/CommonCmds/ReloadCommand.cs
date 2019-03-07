@@ -31,7 +31,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Description = "Reloads the command engine.";
             MinimumArguments = 0;
             MaximumArguments = 0;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
+            ObjectTypes = new List<Action<ArgumentValidation>>();
         }
 
         /// <summary>

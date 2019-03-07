@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -79,6 +80,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Helper validator to validate an argument as an integer tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            validator.ObjectValue = For(validator.ObjectValue, (s) => validator.ErrorResult = s);
+        }
+
+        /// <summary>
         /// Get an integer tag relevant to the specified input, erroring on the command system if invalid input is given (Returns 0 in that case).
         /// Never null!
         /// </summary>
@@ -104,7 +114,17 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The integer tag.</returns>
         public static IntegerTag For(TemplateObject input, Action<string> err)
         {
-            return input as IntegerTag ?? For(err, input.ToString());
+            switch (input)
+            {
+                case IntegerTag itag:
+                    return itag;
+                case IntegerTagForm itf:
+                    return new IntegerTag(itf.IntegerForm);
+                case DynamicTag dtag:
+                    return For(dtag.Internal, err);
+                default:
+                    return For(err, input.ToString());
+            }
         }
 
         /// <summary>

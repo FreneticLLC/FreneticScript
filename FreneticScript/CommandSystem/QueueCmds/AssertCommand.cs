@@ -51,10 +51,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             MinimumArguments = 2;
             MaximumArguments = 2;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
-                BooleanTag.TryFor,
-                TextTag.For
+                BooleanTag.Validator,
+                TextTag.Validator
             };
         }
 

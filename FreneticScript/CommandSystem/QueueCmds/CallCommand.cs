@@ -65,10 +65,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
-            {
-                TemplateObject.Basic_For
-            };
+            ObjectTypes = new List<Action<ArgumentValidation>>();
         }
 
         /// <summary>

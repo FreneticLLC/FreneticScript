@@ -60,41 +60,33 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public EventCommand()
         {
             Name = "event";
-            Arguments = "'add'/'remove'/'clear' <name of event>/'all' <name of event handler> [priority] ['quiet_fail']";
+            Arguments = "'add'/'remove'/'clear' <name of event>/'all' <name of event handler> [priority]";
             Description = "Creates a new function of the following command block, and adds it to the specified event's handler.";
             Asyncable = true;
             MinimumArguments = 1;
-            MaximumArguments = 5;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            MaximumArguments = 4;
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
                 Verify1,
-                TextTag.For,
-                TextTag.For,
-                IntegerTag.TryFor,
-                Verify2
+                TextTag.Validator,
+                TextTag.Validator,
+                IntegerTag.Validator
             };
         }
 
         // TODO: Compile
 
-        TemplateObject Verify1(TemplateObject input)
+        void Verify1(ArgumentValidation validation)
         {
-            string inp = input.ToString().ToLowerFast();
+            string inp = validation.ObjectValue.ToString().ToLowerFast();
             if (inp == "add" || inp == "remove" || inp == "clear")
             {
-                return new TextTag(inp);
+                validation.ObjectValue = new TextTag(inp);
             }
-            return null;
-        }
-
-        TemplateObject Verify2(TemplateObject input)
-        {
-            string inp = input.ToString().ToLowerFast();
-            if (inp == "quiet_fail")
+            else
             {
-                return new TextTag(inp);
+                validation.ErrorResult = "Input to first argument must be 'add', 'remove', or 'clear'.";
             }
-            return null;
         }
 
         /// <summary>
@@ -153,7 +145,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else
                 {
-                    if (entry.Arguments.Count > 3 && entry.GetArgument(queue, 3).ToLowerFast() == "quiet_fail")
+                    if (BooleanTag.TryFor(entry.GetNamedArgumentObject(queue, "quiet_fail"))?.Internal ?? false)
                     {
                         if (entry.ShouldShowGood(queue))
                         {
@@ -181,7 +173,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 if (theEvent.HasHandler(name))
                 {
-                    if (entry.Arguments.Count > 4 && entry.GetArgument(queue, 4).ToLowerFast() == "quiet_fail")
+                    if (BooleanTag.TryFor(entry.GetNamedArgumentObject(queue, "quiet_fail"))?.Internal ?? false)
                     {
                         if (entry.ShouldShowGood(queue))
                         {

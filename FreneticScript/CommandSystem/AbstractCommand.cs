@@ -106,9 +106,9 @@ namespace FreneticScript.CommandSystem
         public int MaximumArguments = 100;
 
         /// <summary>
-        /// The expected object type getters for a command.
+        /// The expected object type getters for a command, for validation reasons.
         /// </summary>
-        public List<Func<TemplateObject, TemplateObject>> ObjectTypes = null;
+        public List<Action<ArgumentValidation>> ObjectTypes = null;
         
         /// <summary>
         /// Tests if the CommandEntry is valid for this command at pre-process time.
@@ -127,19 +127,33 @@ namespace FreneticScript.CommandSystem
             }
             if (ObjectTypes != null)
             {
+                ArgumentValidation validator = new ArgumentValidation()
+                {
+                    Entry = entry
+                };
                 for (int i = 0; i < entry.Arguments.Count; i++)
                 {
                     if (entry.Arguments[i].Bits.Length == 1
                         && entry.Arguments[i].Bits[0] is TextArgumentBit tab
                         && i < ObjectTypes.Count)
                     {
-                        TemplateObject obj = ObjectTypes[i].Invoke(tab.InputValue);
-                        if (obj == null)
+                        if (ObjectTypes[i] == null)
+                        {
+                            continue;
+                        }
+                        validator.ObjectValue = tab.InputValue;
+                        ObjectTypes[i].Invoke(validator);
+                        if (validator.ErrorResult != null)
+                        {
+                            return "Invalid argument '" + entry.Arguments[i].ToString()
+                                + "' for command '" + entry.Command.Name + "': " + validator.ErrorResult;
+                        }
+                        if (validator.ObjectValue == null)
                         {
                             return "Invalid argument '" + entry.Arguments[i].ToString()
                                 + "', translates to internal NULL for this command's input expectation (Command is " + entry.Command.Name + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
                         }
-                        ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = obj;
+                        ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = validator.ObjectValue;
                     }
                 }
             }
@@ -152,8 +166,8 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The entry.</param>
         public CommandEntry GetFollower(CommandEntry entry)
         {
-            return new CommandEntry(entry.Name + " \0CALLBACK", entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new ArgumentBit[] {
-                new TextArgumentBit("\0CALLBACK", false, true) } } }, entry.Name, 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
+            return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new ArgumentBit[] {} } },
+                entry.Name, CommandPrefix.CALLBACK, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
         /// <summary>
@@ -276,5 +290,26 @@ namespace FreneticScript.CommandSystem
                 queue.HandleError(entry, "Invalid arguments or not enough arguments!");
             }
         }
+    }
+
+    /// <summary>
+    /// Helper class for argument validation.
+    /// </summary>
+    public class ArgumentValidation
+    {
+        /// <summary>
+        /// The argument value to validate or replace.
+        /// </summary>
+        public TemplateObject ObjectValue;
+        
+        /// <summary>
+        /// The command entry being validated.
+        /// </summary>
+        public CommandEntry Entry;
+
+        /// <summary>
+        /// An error result, if any.
+        /// </summary>
+        public string ErrorResult = null;
     }
 }

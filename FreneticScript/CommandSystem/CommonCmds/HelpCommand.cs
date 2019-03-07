@@ -30,9 +30,9 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Arguments = "<command name>";
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
-                TextTag.For
+                TextTag.Validator
             };
         }
 

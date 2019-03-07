@@ -34,7 +34,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = 0;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
         
         /// <summary>

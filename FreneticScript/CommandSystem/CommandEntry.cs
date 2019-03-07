@@ -266,6 +266,7 @@ namespace FreneticScript.CommandSystem
         
         /// <summary>
         /// Gets a named argument with a specified name, handling any tags.
+        /// If the argument isn't present, returns null.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="name">The argument name.</param>

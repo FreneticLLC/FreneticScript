@@ -257,33 +257,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 3;
             MaximumArguments = 3;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
-            {
-                PreLowerBaseVar,
-                TextTag.For,
-                TemplateObject.Basic_For
-            };
-        }
-
-        /// <summary>
-        /// Pre-lowers the base variable.
-        /// </summary>
-        /// <param name="inp">The input variable block.</param>
-        public TemplateObject PreLowerBaseVar(TemplateObject inp)
-        {
-            string ins = inp.ToString();
-            string[] dat = ins.SplitFast('.');
-            dat[0] = dat[0].ToLowerFast();
-            StringBuilder sb = new StringBuilder(ins.Length);
-            for (int i = 0; i < dat.Length; i++)
-            {
-                sb.Append(dat[i]);
-                if (i + 1 < dat.Length)
-                {
-                    sb.Append('.');
-                }
-            }
-            return new TextTag(sb.ToString());
         }
         
         /// <summary>

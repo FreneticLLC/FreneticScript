@@ -32,9 +32,9 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Description = "Shows information on a specified CVar, or all of them if one isn't specified.";
             MinimumArguments = 0;
             MaximumArguments = 1;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
-                TextTag.For
+                TextTag.Validator
             };
         }
 

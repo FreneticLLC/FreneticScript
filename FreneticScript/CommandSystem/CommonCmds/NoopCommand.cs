@@ -32,7 +32,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = -1;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
+            ObjectTypes = new List<Action<ArgumentValidation>>();
         }
 
         /// <summary>

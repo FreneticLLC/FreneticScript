@@ -58,20 +58,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
                 Verify
             };
         }
-
-        TemplateObject Verify(TemplateObject input)
+        
+        void Verify(ArgumentValidation validator)
         {
-            string inp = input.ToString().ToLowerFast();
-            if (inp == "full" || inp == "minimal" || inp == "none" || inp == "default")
+            string low = validator.ObjectValue.ToString().ToLowerFast();
+            if (low == "full" || low == "minimal" || low == "none" || low == "default")
             {
-                return new TextTag(inp);
+                validator.ObjectValue = new TextTag(low);
             }
-            return null;
+            else
+            {
+                validator.ErrorResult = "Input to first argument must be 'full', 'minimal', 'none', or 'default'.";
+            }
         }
 
         /// <summary>

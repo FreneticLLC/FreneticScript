@@ -67,6 +67,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Helper validator to validate an argument as a list tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            validator.ObjectValue = CreateFor(validator.ObjectValue);
+        }
+
+        /// <summary>
         /// Constructs a list tag from a list of entries.
         /// </summary>
         /// <param name="entries">The entries.</param>

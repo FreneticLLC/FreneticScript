@@ -33,22 +33,25 @@ namespace FreneticScript.CommandSystem.CommonCmds
             // TODO: make asyncable? Probably with a CVar system lock?
             MinimumArguments = 2;
             MaximumArguments = 3;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
-                TextTag.For,
-                TextTag.For,
+                TextTag.Validator,
+                TextTag.Validator,
                 Verify
             };
         }
 
-        TemplateObject Verify(TemplateObject input)
+        void Verify(ArgumentValidation validator)
         {
-            string inp = input.ToString().ToLowerFast();
-            if (inp == "force" || inp == "remove" || inp == "do_not_save")
+            string low = validator.ObjectValue.ToString().ToLowerFast();
+            if (low == "force" || low == "remove" || low == "do_not_save")
             {
-                return new TextTag(inp);
+                validator.ObjectValue = new TextTag(low);
             }
-            return null;
+            else
+            {
+                validator.ErrorResult = "Input to third argument must be 'force', 'remove', or 'do_not_save' (or nothing).";
+            }
         }
 
         /// <summary>

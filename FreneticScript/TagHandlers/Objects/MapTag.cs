@@ -91,6 +91,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Helper validator to validate an argument as a map tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            validator.ObjectValue = For(validator.ObjectValue);
+        }
+
+        /// <summary>
         /// Converts text to a map tag.
         /// Never null. Will ignore invalid entries.
         /// </summary>

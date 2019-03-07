@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
 using FreneticUtilities.FreneticExtensions;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -65,6 +66,57 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Helper validator to validate an argument as a boolean tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            validator.ObjectValue = For(validator.ObjectValue, (s) => validator.ErrorResult = s);
+        }
+
+        /// <summary>
+        /// Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
+        /// Never null!
+        /// </summary>
+        /// <param name="err">Error call if something goes wrong.</param>
+        /// <param name="input">The input text to create a boolean from.</param>
+        /// <returns>The boolean tag.</returns>
+        public static BooleanTag For(Action<string> err, string input)
+        {
+            string low = input.ToLowerFast();
+            if (low == "true")
+            {
+                return TRUE;
+            }
+            if (low == "false")
+            {
+                return FALSE;
+            }
+            err("Invalid boolean: '" + input + "'!");
+            return null;
+        }
+
+        /// <summary>
+        /// Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
+        /// Never null!
+        /// </summary>
+        /// <param name="err">Error call if something goes wrong.</param>
+        /// <param name="input">The input to create or get a boolean from.</param>
+        /// <returns>The boolean tag.</returns>
+        public static BooleanTag For(TemplateObject input, Action<string> err)
+        {
+            switch (input)
+            {
+                case BooleanTag itag:
+                    return itag;
+                case DynamicTag dtag:
+                    return For(dtag.Internal, err);
+                default:
+                    return For(err, input.ToString());
+            }
+        }
+
+        /// <summary>
         /// Get a boolean tag relevant to the specified input, erroring on the command system if invalid input is given (Returns false in that case).
         /// Never null!
         /// </summary>
@@ -95,7 +147,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The boolean tag.</returns>
         public static BooleanTag For(TemplateObject input, TagData dat)
         {
-            return input as BooleanTag ?? For(dat, input.ToString());
+            return CreateFor(input, dat);
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticScript.CommandSystem;
 using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
@@ -50,6 +51,24 @@ namespace FreneticScript.TagHandlers.Objects
         public TagTypeTag(TagType type)
         {
             Internal = type;
+        }
+
+
+        /// <summary>
+        /// Helper validator to validate an argument as a tag-type tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            string tagName = validator.ObjectValue.ToString().ToLowerFast();
+            if (validator.Entry.TagSystem.Types.RegisteredTypes.TryGetValue(tagName, out TagType type))
+            {
+                validator.ObjectValue = type.TagForm;
+            }
+            else
+            {
+                validator.ErrorResult = "Unrecognized TagType '" + tagName + "'";
+            }
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticScript.CommandSystem;
 using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
@@ -60,6 +61,15 @@ namespace FreneticScript.TagHandlers.Objects
         public TextTag RequiredDuplicate()
         {
             return new TextTag(Internal);
+        }
+
+        /// <summary>
+        /// Helper validator to validate an argument as a text tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            validator.ObjectValue = new TextTag(validator.ObjectValue.ToString());
         }
 
         /// <summary>

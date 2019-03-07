@@ -95,21 +95,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 2;
             IsBreakable = true;
             SaveMode = CommandSaveMode.MUST_SPECIFY;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
-            {
-                Verify,
-                ListTag.CreateFor
-            };
-        }
-
-        TemplateObject Verify(TemplateObject input)
-        {
-            string inp = input.ToString().ToLowerFast();
-            if (inp == "start" || inp == "stop" || inp == "next")
-            {
-                return new TextTag(inp);
-            }
-            return null;
         }
 
         /// <summary>

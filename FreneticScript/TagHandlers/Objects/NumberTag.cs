@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -66,6 +67,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
+        /// Helper validator to validate an argument as a number tag.
+        /// </summary>
+        /// <param name="validator">The validation helper.</param>
+        public static void Validator(ArgumentValidation validator)
+        {
+            validator.ObjectValue = For(validator.ObjectValue, (s) => validator.ErrorResult = s);
+        }
+
+        /// <summary>
         /// Get a number tag relevant to the specified input, erroring on the command system if invalid input is given.
         /// Never null!
         /// </summary>
@@ -89,9 +99,23 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="err">Error call if something goes wrong.</param>
         /// <param name="input">The input text to create a number from.</param>
         /// <returns>The number tag.</returns>
-        public static NumberTag For(TemplateObject input, Action<string> err) // TODO: Remove this method signature (in favor of TagData variant and TryFor variant).
+        public static NumberTag For(TemplateObject input, Action<string> err)
         {
-            return input as NumberTag ?? For(err, input.ToString());
+            switch (input)
+            {
+                case NumberTag ntag:
+                    return ntag;
+                case IntegerTag itag:
+                    return new NumberTag(itag.Internal);
+                case IntegerTagForm itf:
+                    return new NumberTag(itf.IntegerForm);
+                case NumberTagForm ntf:
+                    return new NumberTag(ntf.NumberForm);
+                case DynamicTag dtag:
+                    return For(dtag.Internal, err);
+                default:
+                    return For(err, input.ToString());
+            }
         }
 
         /// <summary>

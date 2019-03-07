@@ -60,27 +60,29 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Runs a block precisely once per reload.";
             MinimumArguments = 1;
             MaximumArguments = 2;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
+            ObjectTypes = new List<Action<ArgumentValidation>>()
             {
                 Lower,
                 TestValidity
             };
         }
 
-        TemplateObject Lower(TemplateObject input)
+        void Lower(ArgumentValidation validation)
         {
-            return new TextTag(input.ToString().ToLowerFast());
+            validation.ObjectValue = new TextTag(validation.ObjectValue.ToString().ToLowerFast());
         }
 
-        TemplateObject TestValidity(TemplateObject input)
+        void TestValidity(ArgumentValidation validation)
         {
-            string val = input.ToString();
-            string low = val.ToLowerFast();
+            string low = validation.ObjectValue.ToString().ToLowerFast();
             if (low == "error" || low == "warning" || low == "quiet")
             {
-                return new TextTag(low);
+                validation.ObjectValue = new TextTag(low);
             }
-            return null;
+            else
+            {
+                validation.ErrorResult = "Input to second argument must be 'error', 'warning', or 'quiet'.";
+            }
         }
 
         /// <summary>
