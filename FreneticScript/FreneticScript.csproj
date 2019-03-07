@@ -102,10 +102,10 @@
     <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />
     <Compile Include="CommandSystem\ScriptEvent.cs" />
     <Compile Include="CommandSystem\Arguments\TextArgumentBit.cs" />
-    <Compile Include="CVar.cs" />
-    <Compile Include="CVarSystem.cs" />
-    <Compile Include="FreneticScriptUtilities.cs" />
-    <Compile Include="ListQueue.cs" />
+    <Compile Include="UtilitySystems\CVar.cs" />
+    <Compile Include="UtilitySystems\CVarSystem.cs" />
+    <Compile Include="UtilitySystems\FreneticScriptUtilities.cs" />
+    <Compile Include="UtilitySystems\ListQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptSystems\ArgumentCompiler.cs" />
     <Compile Include="ScriptSystems\ArgumentParser.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="TagHandlers\TemplateObject.cs" />
     <Compile Include="TagHandlers\TemplateTagBase.cs" />
     <Compile Include="TagHandlers\Variable.cs" />
-    <Compile Include="TextStyle.cs" />
+    <Compile Include="UtilitySystems\TextStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj">
