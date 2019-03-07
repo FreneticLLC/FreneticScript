@@ -36,30 +36,18 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandEntry cent = values.Entry.Entries[entry];
             bool debug = cent.DBMode.ShouldShow(DebugMode.FULL);
             string vn = cent.Arguments[0].ToString().ToLowerFast();
-            // TODO: Index "after" check instead of splitty weirdness?
-            string[] dat = vn.SplitFast('.');
-            StringBuilder res = new StringBuilder(vn.Length);
-            for (int i = 1; i < dat.Length; i++)
+            string mainVar = vn.BeforeAndAfter('.', out string subVar);
+            if (!cent.VarLookup.TryGetValue(mainVar, out SingleCILVariable locVar))
             {
-                res.Append(dat[i]);
-                if (i + 1 < dat.Length)
-                {
-                    res.Append('.');
-                }
-            }
-            vn = dat[0];
-            int lvarloc = cent.VarLoc(vn);
-            if (lvarloc < 0)
-            {
-                throw new ErrorInducedException("Unknown variable name '" + vn + "' - cannot set its value.");
+                throw new ErrorInducedException("Unknown variable name '" + mainVar + "' - cannot set its value.");
             }
             string mode = cent.Arguments[1].ToString();
-            bool fasto = mode == "=" && res.ToString().Length == 0;
-            values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
+            bool fasto = mode == "=" && subVar.Length == 0;
+            values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
             if (!fasto)
             {
                 // TODO: generate a field somewhere to store a pre-split value, rather than requiring it be split by the called methods!
-                values.ILGen.Emit(OpCodes.Ldstr, res.ToString());
+                values.ILGen.Emit(OpCodes.Ldstr, subVar);
             }
             values.LoadQueue();
             values.LoadEntry(entry);
@@ -67,7 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             switch (mode)
             {
                 case "=":
-                    values.ILGen.Emit(OpCodes.Call, fasto ? Method_SetImmediateFast : Method_SetImmediate);
+                    values.ILGen.Emit(OpCodes.Call, fasto ? (locVar.Type.DefinesSetMethod ? Method_SetImmediateFast : Method_RawSetImmediateFast) : Method_SetImmediate);
                     break;
                 case "+=":
                     values.ILGen.Emit(OpCodes.Call, Method_AddImmediate);
@@ -86,7 +74,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             if (debug) // If in debug mode...
             {
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc);
+                values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
                 values.ILGen.Emit(OpCodes.Ldstr, vn);
                 values.LoadQueue();
                 values.LoadEntry(entry);
@@ -121,6 +109,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static MethodInfo Method_SetImmediateFast = typeof(DebugVarSetCommand).GetMethod("SetImmediateFast");
 
         /// <summary>
+        /// References <see cref="RawSetImmediateFast(int, CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_RawSetImmediateFast = typeof(DebugVarSetCommand).GetMethod("RawSetImmediateFast");
+
+        /// <summary>
         /// References <see cref="SetImmediate(int, string, CommandQueue, CommandEntry)"/>.
         /// </summary>
         public static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
@@ -149,6 +142,24 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Empty string array.
         /// </summary>
         private static readonly string[] EMPTY = new string[0];
+
+        /// <summary>
+        /// Immediately sets a var that lacks a set method, for compiler reasons.
+        /// </summary>
+        /// <param name="loc">The var location.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="entry">The relevant entry.</param>
+        public static void RawSetImmediateFast(int loc, CommandQueue queue, CommandEntry entry)
+        {
+            try
+            {
+                queue.CurrentStackEntry.LocalVariables[loc].Internal = entry.GetArgumentObject(queue, 2);
+            }
+            catch (ErrorInducedException ex)
+            {
+                queue.HandleError(entry, "Error while setting a variable value: " + ex.Message);
+            }
+        }
 
         /// <summary>
         /// Immediately sets a var, for compiler reasons.

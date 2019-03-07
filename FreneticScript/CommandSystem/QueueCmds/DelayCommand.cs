@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         // <--[command]
         // @Name delay
-        // @Arguments <time in secnds>
+        // @Arguments <time in seconds>
         // @Short Delays the contained blocked of commands for the input amount of time.
         // @Updated 2016/04/27
         // @Authors mcmonkey
@@ -103,7 +103,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.GoodOutput(queue, "compiling and running delay command...");
+                    entry.GoodOutput(queue, "Compiling and running delay command...");
                 }
                 entry.BlockScript = new CommandScript("__delay__command__", "Special", entry.InnerCommandBlock, entry.BlockStart);
             }

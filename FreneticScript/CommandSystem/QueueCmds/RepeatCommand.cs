@@ -362,7 +362,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            queue.HandleError(entry, "Cannot Execute() a repeat, must compile!");
+            queue.HandleError(entry, "Cannot Execute() a repeat command, must compile!");
         }
     }
 }

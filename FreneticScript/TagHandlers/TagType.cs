@@ -72,6 +72,11 @@ namespace FreneticScript.TagHandlers
         public TagTypeTag TagForm;
 
         /// <summary>
+        /// Whether this tag type defines its own custom "Set" method.
+        /// </summary>
+        public bool DefinesSetMethod;
+
+        /// <summary>
         /// Constructs the <see cref="TagType"/>.
         /// </summary>
         public TagType()

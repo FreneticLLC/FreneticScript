@@ -188,6 +188,7 @@ namespace FreneticScript.TagHandlers
                             }
                         }
                     }
+                    type.DefinesSetMethod = type.RawType.GetMethod("Set", BindingFlags.DeclaredOnly, null, SET_METHOD_PARAMETERS, null) != null;
                     TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
                     auto_thi.Meta = auto_thi.Meta.Duplicate();
                     auto_thi.Meta.ReturnTypeResult = Types.RegisteredTypes[auto_thi.Meta.ReturnType];
@@ -207,6 +208,8 @@ namespace FreneticScript.TagHandlers
                 }
             }
         }
+
+        private static readonly Type[] SET_METHOD_PARAMETERS = new Type[] { typeof(string[]), typeof(TemplateObject), typeof(ObjectEditSource) };
 
         /// <summary>
         /// An automatic tag for the 'or_else' system.

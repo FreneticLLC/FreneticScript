@@ -71,6 +71,8 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public static readonly ObjectEditSource GENERIC_EDIT_SOURCE = new ObjectEditSource() { Error = (s) => throw new ErrorInducedException("Error in edit operation: " + s) };
 
+        // TODO: Static all the edit methods, for compiler magic reasons?
+
         /// <summary>
         /// Sets a value on the object, fast. This generally fully overrides the value of an object (as it does not have a sub-key name).
         /// This is expected to operate as a quick brute set. There is no sourcing data and failures may result in system level exceptions. ErrorInducedExceptions should be handled more cleanly.
