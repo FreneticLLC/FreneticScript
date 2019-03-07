@@ -173,15 +173,15 @@ namespace FreneticScript.CommandSystem
             {
                 if (cse.Entries.Length > 0)
                 {
-                    Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
+                    Dictionary<string, SingleCILVariable> varlookup = cse.Entries[0].VarLookup;
                     foreach (KeyValuePair<string, TemplateObject> var in Variables)
                     {
                         if (!var.Key.StartsWithNull())
                         {
-                            if (varlookup.TryGetValue(var.Key, out int varx))
+                            if (varlookup.TryGetValue(var.Key, out SingleCILVariable varx))
                             {
                                 // TODO: Type verification!
-                                cse.LocalVariables[varx].Internal = var.Value;
+                                cse.LocalVariables[varx.Index].Internal = var.Value;
                             }
                         }
                     }

@@ -451,27 +451,23 @@ namespace FreneticScript.CommandSystem
         {
             return (CommandEntry)MemberwiseClone();
         }
-
-        /// <summary>
-        /// A stack of all CIL Variables, for compilation reasons.
-        /// </summary>
-        public CILVariables[] CILVars;
-
+        
         /// <summary>
         /// A lookup table for CIL variables.
         /// </summary>
-        public Dictionary<string, int> VarLookup;
+        public Dictionary<string, SingleCILVariable> VarLookup;
 
         /// <summary>
         /// Gets the location of a variable from its name.
+        /// Returns -1 if not found.
         /// </summary>
         /// <param name="name">The name of the variable.</param>
-        /// <returns>The location of the variable.</returns>
+        /// <returns>The location of the variable, or -1.</returns>
         public int VarLoc(string name)
         {
-            if (VarLookup.TryGetValue(name, out int x))
+            if (VarLookup.TryGetValue(name, out SingleCILVariable locVar))
             {
-                return x;
+                return locVar.Index;
             }
             return -1;
         }

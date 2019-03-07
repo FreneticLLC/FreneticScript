@@ -11,6 +11,7 @@ using System.Text;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
 using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.HelperBases
@@ -66,22 +67,16 @@ namespace FreneticScript.TagHandlers.HelperBases
         {
             string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
             CommandEntry entry = ccse.Entries[i];
-            for (int n = 0; n < entry.CILVars.Length; n++)
+            if (!entry.VarLookup.TryGetValue(vn, out SingleCILVariable locVar))
             {
-                for (int x = 0; x < entry.CILVars[n].LVariables.Count; x++)
-                {
-                    if (entry.CILVars[n].LVariables[x].Item2 == vn)
-                    {
-                        tab.Start = ccse.Entries[i].Command.Engine.TagSystem.LVar;
-                        tab.Bits[0].Key = "\0lvar";
-                        tab.Bits[0].Handler = null;
-                        tab.Bits[0].OVar = tab.Bits[0].Variable;
-                        tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(entry.CILVars[n].LVariables[x].Item1) } };
-                        return entry.CILVars[n].LVariables[x].Item3;
-                    }
-                }
+                throw new ErrorInducedException("Var tag cannot compile: unknown variable name input '" + vn + "' (That variable name cannot be found. Have you declared it in this script section? Consider using the 'require' command.)");
             }
-            throw new ErrorInducedException("Var tag cannot compile: unknown variable name input '" + vn + "' (That variable name cannot be found. Have you declared it in this script section? Consider using the 'require' command.)");
+            tab.Start = ccse.Entries[i].Command.Engine.TagSystem.LVar;
+            tab.Bits[0].Key = "\0lvar";
+            tab.Bits[0].Handler = null;
+            tab.Bits[0].OVar = tab.Bits[0].Variable;
+            tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(locVar.Index) } };
+            return locVar.Type;
         }
     }
 }

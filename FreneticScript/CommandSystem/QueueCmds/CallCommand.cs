@@ -104,15 +104,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CompiledCommandStackEntry cse = script.Compiled.Duplicate();
             if (cse.Entries.Length > 0)
             {
-                Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
+                Dictionary<string, SingleCILVariable> varlookup = cse.Entries[0].VarLookup;
                 foreach (string var in entry.NamedArguments.Keys)
                 {
                     if (!var.StartsWithNull())
                     {
-                        if (varlookup.TryGetValue(var, out int varx))
+                        if (varlookup.TryGetValue(var, out SingleCILVariable varx))
                         {
                             // TODO: Type verification!
-                            cse.LocalVariables[varx].Internal = entry.GetNamedArgumentObject(queue, var);
+                            cse.LocalVariables[varx.Index].Internal = entry.GetNamedArgumentObject(queue, var);
                         }
                     }
                 }
@@ -126,8 +126,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     entry.GoodOutput(queue, "Noticing variable track for " + vname + ".");
                 }
                 CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-                int x = -1;
-                if (!entry.VarLookup.TryGetValue(vname, out x))
+                if (!entry.VarLookup.TryGetValue(vname, out SingleCILVariable locVar))
                 {
                     queue.HandleError(entry, "Invalid save-to variable: " + vname + "!");
                     return;
@@ -137,15 +136,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     if (cse.Entries.Length > 0)
                     {
                         MapTag mt = new MapTag();
-                        Dictionary<string, int> varlookup = cse.Entries[0].VarLookup;
-                        foreach (KeyValuePair<string, int> vara in varlookup)
+                        Dictionary<string, SingleCILVariable> varlookup = cse.Entries[0].VarLookup;
+                        foreach (SingleCILVariable vara in varlookup.Values)
                         {
-                            if (cse.LocalVariables[vara.Value].Internal != null)
+                            if (cse.LocalVariables[vara.Index].Internal != null)
                             {
-                                mt.Internal.Add(vara.Key, cse.LocalVariables[vara.Value].Internal);
+                                mt.Internal.Add(vara.Name, cse.LocalVariables[vara.Index].Internal);
                             }
                         }
-                        ccse.LocalVariables[x].Internal = mt;
+                        ccse.LocalVariables[locVar.Index].Internal = mt;
                     }
                     if (sgood)
                     {

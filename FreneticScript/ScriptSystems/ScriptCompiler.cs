@@ -77,15 +77,12 @@ namespace FreneticScript.ScriptSystems
                 for (int i = 0; i < ccse.Entries.Length; i++)
                 {
                     ccse.Entries[i].DBMode = values.DBMode;
-                    CILVariables[] ttvars = new CILVariables[values.LVarIDs.Count];
                     CommandEntry curEnt = ccse.Entries[i];
                     int tcounter = 0;
                     foreach (int tv in values.LVarIDs)
                     {
-                        ttvars[tcounter] = values.CLVariables[tv];
                         tcounter++;
                     }
-                    curEnt.CILVars = ttvars;
                     for (int a = 0; a < curEnt.Arguments.Count; a++)
                     {
                         Argument arg = curEnt.Arguments[a];
@@ -143,20 +140,12 @@ namespace FreneticScript.ScriptSystems
                             throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
                         }
                     }
-                    CILVariables[] tvars = new CILVariables[values.LVarIDs.Count];
-                    int counter = 0;
+                    Dictionary<string, SingleCILVariable> varlookup = new Dictionary<string, SingleCILVariable>(values.LVarIDs.Count * 3);
                     foreach (int tv in values.LVarIDs)
                     {
-                        tvars[counter] = values.CLVariables[tv];
-                        counter++;
-                    }
-                    curEnt.CILVars = tvars;
-                    Dictionary<string, int> varlookup = new Dictionary<string, int>(tvars.Length);
-                    foreach (CILVariables tv in tvars)
-                    {
-                        foreach (Tuple<int, string, TagType> tvt in tv.LVariables)
+                        foreach (SingleCILVariable tvt in values.CLVariables[tv])
                         {
-                            varlookup.Add(tvt.Item2, tvt.Item1);
+                            varlookup.Add(tvt.Name, tvt);
                         }
                     }
                     curEnt.VarLookup = varlookup;
@@ -183,10 +172,9 @@ namespace FreneticScript.ScriptSystems
                 ccse.LocalVariables = new ObjectHolder[values.CLVarID];
                 for (int n = 0; n < values.CLVariables.Count; n++)
                 {
-                    for (int x = 0; x < values.CLVariables[n].LVariables.Count; x++)
+                    foreach (SingleCILVariable locVar in values.CLVariables[n])
                     {
-                        int ind = values.CLVariables[n].LVariables[x].Item1;
-                        ccse.LocalVariables[ind] = new ObjectHolder();
+                        ccse.LocalVariables[locVar.Index] = new ObjectHolder();
                     }
                 }
                 ilgen.Emit(OpCodes.Ldarg, 4);

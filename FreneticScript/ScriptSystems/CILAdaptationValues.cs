@@ -22,14 +22,37 @@ using FreneticScript.CommandSystem;
 namespace FreneticScript.ScriptSystems
 {
     /// <summary>
-    /// Holder of CIL Variable data.
+    /// Represents one CIL adapter variable.
     /// </summary>
-    public class CILVariables
+    public class SingleCILVariable
     {
         /// <summary>
-        /// A map of local variables to track.
+        /// The index of the local variable.
         /// </summary>
-        public List<Tuple<int, string, TagType>> LVariables = new List<Tuple<int, string, TagType>>();
+        public int Index;
+
+        /// <summary>
+        /// The name of the variable.
+        /// </summary>
+        public string Name;
+
+        /// <summary>
+        /// The type of the variable.
+        /// </summary>
+        public TagType Type;
+
+        /// <summary>
+        /// Constructs a single CIL adapter variable.
+        /// </summary>
+        /// <param name="_index">The variable index.</param>
+        /// <param name="_name">The variable name.</param>
+        /// <param name="_type">The variable type.</param>
+        public SingleCILVariable(int _index, string _name, TagType _type)
+        {
+            Index = _index;
+            Name = _name;
+            Type = _type;
+        }
     }
 
     /// <summary>
@@ -177,14 +200,16 @@ namespace FreneticScript.ScriptSystems
             }
 
             /// <summary>
-            /// When compiled in DEBUG mode, adds a code value to the <see cref="Codes"/> list. Does nothing outside of DEBUG mode.
+            /// When compiled in DEBUG mode, adds a code value to the <see cref="Codes"/> list.
+            /// When compiled with VALIDATE set, validates the new opcode.
             /// </summary>
             /// <param name="code">The OpCode used (or 'nop' for special comments).</param>
             /// <param name="val">The value attached to the opcode, if any.</param>
-            [Conditional("DEBUG")]
             public void AddCode(OpCode code, object val)
             {
+#if DEBUG
                 Codes.Add(new KeyValuePair<OpCode, object>(code, val));
+#endif
                 Validator(code, val);
             }
 
@@ -491,11 +516,11 @@ namespace FreneticScript.ScriptSystems
         {
             for (int n = 0; n < CLVariables.Count; n++)
             {
-                for (int i = 0; i < CLVariables[n].LVariables.Count; i++)
+                foreach (SingleCILVariable locVar in CLVariables[n])
                 {
-                    if (CLVariables[n].LVariables[i].Item1 == varId)
+                    if (locVar.Index == varId)
                     {
-                        return CLVariables[n].LVariables[i].Item3;
+                        return locVar.Type;
                     }
                 }
             }
@@ -522,12 +547,12 @@ namespace FreneticScript.ScriptSystems
         {
             foreach (int i in LVarIDs)
             {
-                for (int x = 0; x < CLVariables[i].LVariables.Count; x++)
+                foreach (SingleCILVariable locVar in CLVariables[i])
                 {
-                    if (CLVariables[i].LVariables[x].Item2 == name)
+                    if (locVar.Name == name)
                     {
-                        type = CLVariables[i].LVariables[x].Item3;
-                        return CLVariables[i].LVariables[x].Item1;
+                        type = locVar.Type;
+                        return locVar.Index;
                     }
                 }
             }
@@ -541,7 +566,7 @@ namespace FreneticScript.ScriptSystems
         public void PushVarSet()
         {
             LVarIDs.Push(CLVariables.Count);
-            CLVariables.Add(new CILVariables());
+            CLVariables.Add(new List<SingleCILVariable>());
         }
 
         /// <summary>
@@ -561,14 +586,14 @@ namespace FreneticScript.ScriptSystems
         public int AddVariable(string var, TagType type)
         {
             int id = CLVarID++;
-            CLVariables[LVarIDs.Peek()].LVariables.Add(new Tuple<int, string, TagType>(id, var, type));
+            CLVariables[LVarIDs.Peek()].Add(new SingleCILVariable(id, var, type));
             return id;
         }
 
         /// <summary>
         /// All known CIL Variable data sets.
         /// </summary>
-        public List<CILVariables> CLVariables = new List<CILVariables>();
+        public List<List<SingleCILVariable>> CLVariables = new List<List<SingleCILVariable>>();
 
         /// <summary>
         /// The current stack of LVarIDs.
