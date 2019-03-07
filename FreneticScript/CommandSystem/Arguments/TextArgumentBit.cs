@@ -11,6 +11,7 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.Arguments
 {

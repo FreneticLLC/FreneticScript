@@ -11,6 +11,7 @@ using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {

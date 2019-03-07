@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using FreneticUtilities.FreneticExtensions;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {

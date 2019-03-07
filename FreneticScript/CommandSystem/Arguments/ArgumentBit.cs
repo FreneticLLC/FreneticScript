@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using FreneticScript.TagHandlers;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.Arguments
 {
