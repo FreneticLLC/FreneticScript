@@ -143,7 +143,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new TextTag(obj.Internal.Value);
         }
 
-        [TagMeta(TagType = TYPE, Name = "Value_Number", Group = "Variables", ReturnType = NumberTag.TYPE,
+        [TagMeta(TagType = TYPE, Name = "value_number", Group = "Variables", ReturnType = NumberTag.TYPE,
             Returns = "The decimal number value of the CVar.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NumberTag Tag_Value_Number(CVarTag obj, TagData data)

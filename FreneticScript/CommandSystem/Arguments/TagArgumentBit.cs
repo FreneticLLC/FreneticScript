@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using FreneticScript.TagHandlers.CommonBases;
 using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.Arguments
 {
@@ -93,7 +94,7 @@ namespace FreneticScript.CommandSystem.Arguments
             ilgen.Emit(OpCodes.Ldfld, TagData.Field_Fallback); // Read 'data'.Fallback field
             ilgen.Emit(load_Error); // Load the error object onto stack
             ilgen.Emit(load_Cse); // Load the CSE object onto stack.
-            ilgen.Emit(OpCodes.Callvirt, Argument.Argument_Parse); // Virtual call the Argument.Parse method, which returns a TemplateObject
+            ilgen.Emit(OpCodes.Callvirt, ArgumentCompiler.Argument_Parse); // Virtual call the Argument.Parse method, which returns a TemplateObject
             ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
             ilgen.EndExceptionBlock(); // }
         }

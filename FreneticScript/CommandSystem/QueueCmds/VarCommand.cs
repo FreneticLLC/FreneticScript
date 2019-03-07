@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.TagHandlers.Objects;
-using FreneticScript.TagHandlers;
 using System.Reflection;
 using System.Reflection.Emit;
+using FreneticScript.TagHandlers.Objects;
+using FreneticScript.TagHandlers;
+using FreneticScript.ScriptSystems;
 using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
@@ -68,7 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                t = cent.Arguments[2].ReturnType(values);
+                t = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
             }
             values.AddVariable(larg, t);
         }
@@ -85,7 +86,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.MarkCommand(entry);
             bool isCorrect = true;
             TagType type = null;
-            TagType returnType = cent.Arguments[2].ReturnType(values);
+            TagType returnType = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
             if (cent.Arguments.Count > 4)
             {
                 string type_name = cent.Arguments[4].ToString().ToLowerFast();

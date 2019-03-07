@@ -324,12 +324,7 @@ namespace FreneticScript.CommandSystem
         {
             return Entry.Entries[index];
         }
-
-        /// <summary>
-        /// Represents the <see cref="CompiledCommandRunnable.CSEntry"/> field.
-        /// </summary>
-        public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(CompiledCommandRunnable.CSEntry));
-
+        
         /// <summary>
         /// Represents the <see cref="CommandStackEntry.Entries"/> field.
         /// </summary>

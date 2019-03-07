@@ -210,7 +210,6 @@ namespace FreneticScript.ScriptSystems
                 Type t_c = typebuild_c.CreateType();
                 Type tP_c2 = typebuild_c2.CreateType();
                 ccse.MainCompiledRunnable = Activator.CreateInstance(t_c) as CompiledCommandRunnable;
-                ccse.MainCompiledRunnable.CSEntry = ccse;
 #if SAVE
                 StringBuilder outp = new StringBuilder();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
@@ -431,7 +430,7 @@ namespace FreneticScript.ScriptSystems
                         ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                         ilgen.Emit(OpCodes.Ldc_I4, x); // Load the correct tag modifier location in exact.
                         ilgen.Emit(OpCodes.Call, TagData.Method_GetModiferObjectKnown); // Call the method to get the tag modifier object at the x location.
-                        TagType atype = tab.Bits[x].Variable.ReturnType(values);
+                        TagType atype = ArgumentCompiler.ReturnType(tab.Bits[x].Variable, values);
                         if (modt != atype) // If the modifier input is of the wrong type...
                         {
                             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
@@ -535,11 +534,6 @@ namespace FreneticScript.ScriptSystems
     /// </summary>
     public abstract class CompiledCommandRunnable
     {
-        /// <summary>
-        /// The command stack entry that forms this runnable.
-        /// </summary>
-        public CommandStackEntry CSEntry;
-
         /// <summary>
         /// This class's "Run(queue)" method.
         /// </summary>
