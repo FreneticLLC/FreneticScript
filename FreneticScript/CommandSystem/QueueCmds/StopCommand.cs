@@ -8,8 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.TagHandlers;
-using FreneticScript.TagHandlers.Objects;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using FreneticScript.ScriptSystems;
 using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
@@ -27,26 +29,49 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public StopCommand()
         {
             Name = "stop";
-            Arguments = "['all']";
-            Description = "Stops the current command queue.";
+            Arguments = "";
+            Description = "Immediately stops the current script.";
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 0;
-            MaximumArguments = 1;
-            ObjectTypes = new List<Func<TemplateObject, TemplateObject>>()
-            {
-                Verify
-            };
+            MaximumArguments = 0;
         }
 
-        TemplateObject Verify(TemplateObject input)
+        /// <summary>
+        /// Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.
+        /// </summary>
+        public static MethodInfo DebugStopMethod = typeof(StopCommand).GetMethod(nameof(DebugStop));
+
+        /// <summary>
+        /// Adapts a command entry to CIL.
+        /// </summary>
+        /// <param name="values">The adaptation-relevant values.</param>
+        /// <param name="entry">The present entry ID.</param>
+        public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
-            string inp = input.ToString().ToLowerFast();
-            if (inp == "all")
+            CommandEntry cent = values.CommandAt(entry);
+            bool db = cent.DBMode <= DebugMode.FULL;
+            if (db)
             {
-                return new TextTag(inp);
+                values.LoadQueue();
+                values.LoadEntry(entry);
+                values.ILGen.Emit(OpCodes.Call, DebugStopMethod);
             }
-            return null;
+            values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.AdaptedILPoints.Length - 1]);
+        }
+
+        /// <summary>
+        /// Shows debug for a stop command.
+        /// </summary>
+        /// <param name="queue">The command queue.</param>
+        /// <param name="entry">The command entry.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void DebugStop(CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.GoodOutput(queue, "Stopping script.");
+            }
         }
 
         /// <summary>
@@ -56,31 +81,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0).ToLowerFast() == "all")
-            {
-                int qCount = queue.Engine.Queues.Count;
-                if (!queue.Engine.Queues.Contains(queue))
-                {
-                    qCount++;
-                }
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Stopping " + TextStyle.Separate + qCount + TextStyle.Base + " queue" + (qCount == 1 ? "." : "s."));
-                }
-                foreach (CommandQueue tqueue in queue.Engine.Queues)
-                {
-                    tqueue.Stop();
-                }
-                queue.Stop();
-            }
-            else
-            {
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Stopping current queue.");
-                }
-                queue.Stop();
-            }
+            queue.HandleError(entry, "Cannot Execute() a stop command, must compile!");
         }
     }
 }
