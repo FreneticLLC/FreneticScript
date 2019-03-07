@@ -124,8 +124,7 @@ namespace FreneticScript.ScriptSystems
                             }
                         }
                     }
-                    bool isCallback = curEnt.Arguments.Count > 0 && curEnt.Arguments[0].ToString() == "\0CALLBACK";
-                    if (!isCallback)
+                    if (!curEnt.IsCallback)
                     {
                         try
                         {
@@ -144,7 +143,7 @@ namespace FreneticScript.ScriptSystems
                             throw new ErrorInducedException("Error in command line " + curEnt.ScriptLine + ": (" + curEnt.CommandLine + "): Invalid variable save name: " + avarname.ToString());
                         }
                     }
-                    if (isCallback)
+                    if (curEnt.IsCallback)
                     {
                         try
                         {

@@ -101,7 +101,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 for (int ind = cse.Index; ind < cse.Entries.Length; ind++)
                 {
                     CommandEntry tentry = cse.Entries[ind];
-                    if (tentry.Command.IsBreakable && tentry.Arguments[0].ToString() == "\0CALLBACK")
+                    if (tentry.Command.IsBreakable && tentry.IsCallback)
                     {
                         cse.Index = ind + 1;
                         goto completed;

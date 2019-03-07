@@ -113,12 +113,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (debug)
             {
                 values.LoadQueue();
+                values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Call, REQUIRECOMMAND_OUTPUTSUCCESS);
             }
         }
 
         /// <summary>
-        /// Represents the method <see cref="OutputSuccess(CommandQueue)"/> in the class RequireCommand.
+        /// Represents the method <see cref="OutputSuccess(CommandQueue, CommandEntry)"/> in the class RequireCommand.
         /// </summary>
         public static MethodInfo REQUIRECOMMAND_OUTPUTSUCCESS = typeof(RequireCommand).GetMethod(nameof(OutputSuccess));
 
@@ -126,11 +127,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Outputs success at the end of a require command execution.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
-        public static void OutputSuccess(CommandQueue queue)
+        /// <param name="entry">The command entry.</param>
+        public static void OutputSuccess(CommandQueue queue, CommandEntry entry)
         {
-            if (queue.ShouldShowGood())
+            if (entry.ShouldShowGood(queue))
             {
-                queue.GoodOutput("Require command passed.");
+                entry.GoodOutput(queue, "Require command passed.");
             }
         }
 

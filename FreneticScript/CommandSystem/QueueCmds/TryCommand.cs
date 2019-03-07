@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             Asyncable = true;
             MinimumArguments = 0;
-            MaximumArguments = 1;
+            MaximumArguments = 0;
             ObjectTypes = new List<Func<TemplateObject, TemplateObject>>();
         }
         
@@ -44,7 +44,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments.Count > 0 && entry.GetArgument(queue, 0) == "\0CALLBACK")
+            if (entry.IsCallback)
             {
                 if (entry.ShouldShowGood(queue))
                 {

@@ -251,7 +251,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(string message)
         {
-            HandleError(CurrentStackEntry.Entries[CurrentStackEntry.Index], message);
+            HandleError(null, message);
         }
 
         /// <summary>
@@ -261,6 +261,10 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
         {
+            if (entry == null)
+            {
+                entry = CurrentStackEntry.Entries[CurrentStackEntry.Index];
+            }
             CurrentStackEntry.HandleError(this, entry, message);
         }
 

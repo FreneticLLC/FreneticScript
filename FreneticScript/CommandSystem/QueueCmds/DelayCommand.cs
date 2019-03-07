@@ -31,7 +31,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             input.Clear();
             base.AdaptBlockFollowers(entry, input, fblock);
             fblock.Insert(0, new CommandEntry("WAIT " + entry.Arguments[0].ToString(), 0, 0, entry.Command.Engine.RegisteredCommands["wait"],
-                entry.Arguments, "wait", 0, entry.ScriptName, entry.ScriptLine, entry.FairTabulation, entry.System));
+                entry.Arguments, "wait", CommandPrefix.NONE, entry.ScriptName, entry.ScriptLine, entry.FairTabulation, entry.System));
         }
 
         // <--[command]
@@ -79,10 +79,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            if (input.ToString() == "\0CALLBACK")
-            {
-                return input;
-            }
             return NumberTag.TryFor(input);
         }
 
@@ -93,10 +89,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments[0].ToString() == "\0CALLBACK")
-            {
-                return;
-            }
             if (entry.InnerCommandBlock == null)
             {
                 queue.HandleError(entry, "No commands follow!");

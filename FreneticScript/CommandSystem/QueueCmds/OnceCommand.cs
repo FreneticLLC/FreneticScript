@@ -69,12 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Lower(TemplateObject input)
         {
-            string val = input.ToString();
-            if (input.ToString() == "\0CALLBACK")
-            {
-                return input;
-            }
-            return new TextTag(val.ToLowerFast());
+            return new TextTag(input.ToString().ToLowerFast());
         }
 
         TemplateObject TestValidity(TemplateObject input)
@@ -95,7 +90,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments[0].ToString() == "\0CALLBACK")
+            if (entry.IsCallback)
             {
                 return;
             }

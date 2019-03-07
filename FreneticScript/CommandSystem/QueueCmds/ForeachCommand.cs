@@ -104,10 +104,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         TemplateObject Verify(TemplateObject input)
         {
-            if (input.ToString() == "\0CALLBACK")
-            {
-                return input;
-            }
             string inp = input.ToString().ToLowerFast();
             if (inp == "start" || inp == "stop" || inp == "next")
             {
@@ -117,19 +113,34 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryForeachCIL(CommandQueue, CommandEntry, int)"/> method.
         /// </summary>
-        public static MethodInfo TryRepeatCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryRepeatCIL));
+        public static MethodInfo TryForeachCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatCILNoDebug(CommandQueue, int, int)"/> method.
+        /// Represents the <see cref="TryForeachCILNoDebug(CommandQueue, int, int)"/> method.
         /// </summary>
-        public static MethodInfo TryRepeatCILMethodNoDebug = typeof(ForeachCommand).GetMethod(nameof(TryRepeatCILNoDebug));
+        public static MethodInfo TryForeachCILMethodNoDebug = typeof(ForeachCommand).GetMethod(nameof(TryForeachCILNoDebug));
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatNumberedCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryForeachNumberedCIL(CommandQueue, CommandEntry, int)"/> method.
         /// </summary>
-        public static MethodInfo TryRepeatNumberedCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryRepeatNumberedCIL));
+        public static MethodInfo TryForeachNumberedCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachNumberedCIL));
+
+        /// <summary>
+        /// Represents the <see cref="TryForeachNumberedCIL_NoDebug(CommandQueue, CommandEntry, int)"/> method.
+        /// </summary>
+        public static MethodInfo TryForeachNumberedCIL_NoDebugMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachNumberedCIL_NoDebug));
+
+        /// <summary>
+        /// Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.
+        /// </summary>
+        public static MethodInfo DebugStopMethod = typeof(ForeachCommand).GetMethod(nameof(DebugStop));
+
+        /// <summary>
+        /// Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.
+        /// </summary>
+        public static MethodInfo DebugNextMethod = typeof(ForeachCommand).GetMethod(nameof(DebugNext));
 
         /// <summary>
         /// Adapts a command entry to CIL.
@@ -139,12 +150,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.CommandAt(entry);
-            string arg = cent.Arguments[0].ToString();
-            if (arg == "\0CALLBACK")
+            bool db = cent.DBMode <= DebugMode.FULL;
+            if (cent.IsCallback)
             {
                 int lvar_ind_loc = GetSaveLoc(values, entry);
                 values.LoadQueue();
-                bool db = cent.DBMode <= DebugMode.FULL;
                 if (db)
                 {
                     values.LoadEntry(entry);
@@ -154,22 +164,29 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     values.ILGen.Emit(OpCodes.Ldc_I4, cent.BlockStart - 1);
                 }
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
-                values.ILGen.Emit(OpCodes.Call, db ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
+                values.ILGen.Emit(OpCodes.Call, db ? TryForeachCILMethod : TryForeachCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
-            else if (arg == "stop")
+            string arg = cent.Arguments[0].ToString();
+            if (arg == "stop")
             {
                 for (int i = entry - 1; i >= 0; i--)
                 {
-                    if (!(values.Entry.Entries[i].Command is ForeachCommand))
+                    CommandEntry nextEntry = values.Entry.Entries[i];
+                    if (!(nextEntry.Command is ForeachCommand) || nextEntry.IsCallback)
                     {
                         continue;
                     }
-                    string a0 = values.Entry.Entries[i].Arguments[0].ToString();
-                    if (a0 == "start" && values.Entry.Entries[i].InnerCommandBlock != null)
+                    string a0 = nextEntry.Arguments[0].ToString();
+                    if (a0 == "start" && nextEntry.InnerCommandBlock != null)
                     {
-                        // TODO: Debug output?
-                        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.Entries[i].BlockEnd + 2]);
+                        if (db)
+                        {
+                            values.LoadQueue();
+                            values.LoadEntry(entry);
+                            values.ILGen.Emit(OpCodes.Call, DebugStopMethod);
+                        }
+                        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[nextEntry.BlockEnd + 2]);
                         return;
                     }
                 }
@@ -179,15 +196,21 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 for (int i = entry - 1; i >= 0; i--)
                 {
-                    if (!(values.Entry.Entries[i].Command is ForeachCommand))
+                    CommandEntry nextEntry = values.Entry.Entries[i];
+                    if (!(nextEntry.Command is ForeachCommand) || nextEntry.IsCallback)
                     {
                         continue;
                     }
-                    string a0 = values.Entry.Entries[i].Arguments[0].ToString();
-                    if (a0 == "start" && values.Entry.Entries[i].InnerCommandBlock != null)
+                    string a0 = nextEntry.Arguments[0].ToString();
+                    if (a0 == "start" && nextEntry.InnerCommandBlock != null)
                     {
-                        // TODO: Debug output?
-                        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.Entries[i].BlockEnd + 1]);
+                        if (db)
+                        {
+                            values.LoadQueue();
+                            values.LoadEntry(entry);
+                            values.ILGen.Emit(OpCodes.Call, DebugNextMethod);
+                        }
+                        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[nextEntry.BlockEnd + 1]);
                         return;
                     }
                 }
@@ -199,7 +222,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadQueue();
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
-                values.ILGen.Emit(OpCodes.Call, TryRepeatNumberedCILMethod);
+                values.ILGen.Emit(OpCodes.Call, db ? TryForeachNumberedCILMethod : TryForeachNumberedCIL_NoDebugMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
             else
@@ -216,12 +239,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            string arg = cent.Arguments[0].ToString();
-            if (arg == "\0CALLBACK")
+            if (cent.IsCallback)
             {
                 values.PopVarSet();
                 return;
             }
+            string arg = cent.Arguments[0].ToString();
             if (arg == "next" || arg == "stop")
             {
                 return;
@@ -232,13 +255,41 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Executes the callback part of the repeat command, without debug output.
+        /// Shows debug for a foreach 'stop' command.
+        /// </summary>
+        /// <param name="queue">The command queue.</param>
+        /// <param name="entry">The command entry.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void DebugStop(CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.GoodOutput(queue, "Foreach loop stopped successfully.");
+            }
+        }
+
+        /// <summary>
+        /// Shows debug for a foreach 'next' command.
+        /// </summary>
+        /// <param name="queue">The command queue.</param>
+        /// <param name="entry">The command entry.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void DebugNext(CommandQueue queue, CommandEntry entry)
+        {
+            if (entry.ShouldShowGood(queue))
+            {
+                entry.GoodOutput(queue, "Foreach loop jumping to next iteration.");
+            }
+        }
+
+        /// <summary>
+        /// Executes the callback part of the foreach command, without debug output.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
+        public static bool TryForeachCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
             CompiledCommandStackEntry cse = queue.CurrentStackEntry;
             ForeachCommandData dat = cse.EntryData[entry_ind] as ForeachCommandData;
@@ -251,12 +302,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Executes the callback part of the repeat command.
+        /// Executes the callback part of the foreach command.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
-        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryForeachCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
             CompiledCommandStackEntry cse = queue.CurrentStackEntry;
             ForeachCommandData dat = cse.EntryData[entry.BlockStart - 1] as ForeachCommandData;
@@ -277,12 +328,31 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Executes the numbered input part of the repeat command.
+        /// Executes the list input part of the foreached command, without debug.
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="ri">Repeat Index location.</param>
-        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryForeachNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry, int ri)
+        {
+            ListTag list = ListTag.CreateFor(entry.GetArgumentObject(queue, 1));
+            if (list.Internal.Count == 0)
+            {
+                return false;
+            }
+            entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
+            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
+            ccse.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
+            return true;
+        }
+
+        /// <summary>
+        /// Executes the list input part of the foreached command.
+        /// </summary>
+        /// <param name="queue">The command queue involved.</param>
+        /// <param name="entry">Entry to be executed.</param>
+        /// <param name="ri">Repeat Index location.</param>
+        public static bool TryForeachNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
             ListTag list = ListTag.CreateFor(entry.GetArgumentObject(queue, 1));
             if (list.Internal.Count == 0)

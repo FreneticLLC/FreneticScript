@@ -421,7 +421,7 @@ namespace FreneticScript.CommandSystem
             RegisterCommand(new DebugCommand());
             RegisterCommand(new DelayCommand());
             RegisterCommand(new ElseCommand());
-            RegisterCommand(new ErrorCommand());
+            RegisterCommand(TheErrorCommand = new ErrorCommand());
             RegisterCommand(new EventCommand());
             RegisterCommand(new ForeachCommand());
             RegisterCommand(new FunctionCommand());
@@ -477,6 +477,11 @@ namespace FreneticScript.CommandSystem
         /// The registered <see cref="RequireCommand"/> instance.
         /// </summary>
         public RequireCommand TheRequireCommand;
+
+        /// <summary>
+        /// The registered <see cref="ErrorCommand"/> instance.
+        /// </summary>
+        public ErrorCommand TheErrorCommand;
 
         /// <summary>
         /// Advances any running command queues.

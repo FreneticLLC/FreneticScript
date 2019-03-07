@@ -149,7 +149,11 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Wait for the command to finish.
         /// </summary>
-        WAIT = 4
+        WAIT = 4,
+        /// <summary>
+        /// Special internal marker: this command is a callback.
+        /// </summary>
+        CALLBACK = 5
     }
 
     /// <summary>

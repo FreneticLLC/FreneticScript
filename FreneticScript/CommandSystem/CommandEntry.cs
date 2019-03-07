@@ -85,6 +85,18 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// Whether this is an internal callback command.
+        /// <para>Simple property, equivalent to checking if <see cref="Prefix"/> is equal to <see cref="CommandPrefix.CALLBACK"/>.</para>
+        /// </summary>
+        public bool IsCallback
+        {
+            get
+            {
+                return Prefix == CommandPrefix.CALLBACK;
+            }
+        }
+
+        /// <summary>
         /// The name of the creating script.
         /// </summary>
         public string ScriptName;
@@ -366,13 +378,19 @@ namespace FreneticScript.CommandSystem
         public string OutputPrefix(CommandQueue queue)
         {
             string outputableScriptName = OutputableNameMatcher.TrimToMatches(ScriptName);
-            if (outputableScriptName.Length > 6)
+            if (outputableScriptName.Length > 8)
             {
-                outputableScriptName = outputableScriptName.Substring(0, 6);
+                outputableScriptName = outputableScriptName.Substring(0, 8);
+            }
+            string outputableCommandName = OutputableNameMatcher.TrimToMatches(Command.Name);
+            if (outputableCommandName.Length > 10)
+            {
+                outputableCommandName = outputableCommandName.Substring(0, 10);
             }
             return TextStyle.Minor + "[Q:" + TextStyle.Separate + queue.ID
                 + TextStyle.Minor + ",S:" + TextStyle.Separate + outputableScriptName
-                + TextStyle.Minor + ",L:" + TextStyle.Separate + ScriptLine + TextStyle.Minor + "] ";
+                + TextStyle.Minor + ",L:" + TextStyle.Separate + ScriptLine
+                + TextStyle.Minor + ";C:" + TextStyle.Separate + outputableCommandName + "] ";
         }
 
         /// <summary>

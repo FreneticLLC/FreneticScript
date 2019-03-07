@@ -409,7 +409,7 @@ namespace FreneticScript.ScriptSystems
                     string a1 = args[1].ToString();
                     if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
                     {
-                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, 0, script, line, tabs, system);
+                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, CommandPrefix.NONE, script, line, tabs, system);
                     }
                     else if (a1 == "^=")
                     {
@@ -475,8 +475,8 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         public static CommandEntry CreateErrorOutputEntry(string message, ScriptEngine system, string script, string tabs)
         {
-            return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.RegisteredCommands["error"],
-                new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", 0, script, 0, tabs, system);
+            return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.TheErrorCommand,
+                new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", CommandPrefix.NONE, script, 0, tabs, system);
 
         }
 

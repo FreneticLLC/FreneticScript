@@ -80,7 +80,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            if (cent.Arguments[0].ToString() == "\0CALLBACK")
+            if (cent.IsCallback)
             {
                 values.MarkCommand(entry);
                 // TODO: Debug?

@@ -75,12 +75,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
+        // TODO: Compile
+
         TemplateObject Verify1(TemplateObject input)
         {
-            if (input.ToString() == "\0CALLBACK")
-            {
-                return input;
-            }
             string inp = input.ToString().ToLowerFast();
             if (inp == "add" || inp == "remove" || inp == "clear")
             {
@@ -106,7 +104,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments[0].ToString() == "\0CALLBACK")
+            if (entry.IsCallback)
             {
                 return;
             }

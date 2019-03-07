@@ -72,10 +72,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         TemplateObject Verify(TemplateObject input)
         {
             string inp = input.ToString();
-            if (inp == "\0CALLBACK")
-            {
-                return input;
-            }
             if (inp.ToLowerFast() == "if")
             {
                 return new TextTag("if");
@@ -96,7 +92,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             CommandEntry cent = values.Entry.Entries[entry];
-            if (cent.Arguments.Count == 1 && cent.Arguments[0].ToString() == "\0CALLBACK")
+            if (cent.IsCallback)
             {
                 values.MarkCommand(entry);
                 // TODO: Debug?
