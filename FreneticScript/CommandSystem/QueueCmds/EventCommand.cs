@@ -65,7 +65,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 4;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 Verify1,
                 TextTag.Validator,
@@ -129,7 +129,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (type == "remove")
             {
-                if (entry.Arguments.Count < 3)
+                if (entry.Arguments.Length < 3)
                 {
                     ShowUsage(queue, entry);
                     return;
@@ -160,7 +160,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (type == "add")
             {
-                if (entry.Arguments.Count < 3)
+                if (entry.Arguments.Length < 3)
                 {
                     ShowUsage(queue, entry);
                     return;
@@ -186,17 +186,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                 }
                 double priority = 0;
-                if (entry.Arguments.Count > 3)
+                if (entry.Arguments.Length > 3)
                 {
                     priority = NumberTag.For(entry.GetArgumentObject(queue, 3), queue.Error).Internal;
                 }
-                List<CommandEntry> entries = new List<CommandEntry>(entry.InnerCommandBlock.Count + 2);
+                List<CommandEntry> entries = new List<CommandEntry>(entry.InnerCommandBlock.Length + 2);
                 MapTag expectedContext = new MapTag();
                 expectedContext.Internal.Add("context", entry.System.TagTypes.Type_Map.TagForm);
                 entries.Add(entry.System.TheRequireCommand.GenerateEntry(expectedContext, entry.ScriptName, entry.ScriptLine));
                 entries.AddRange(entry.InnerCommandBlock);
                 CommandScript script = new CommandScript(theEvent.Name + "__handler__" + name,
-                    CommandScript.TYPE_NAME_EVENT, entries, entry.System, entry.BlockStart, DebugMode.MINIMAL);
+                    CommandScript.TYPE_NAME_EVENT, entries.ToArray(), entry.System, entry.BlockStart, DebugMode.MINIMAL);
                 theEvent.RegisterEventHandler(priority, script, name);
                 entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name + "" + TextStyle.Base
                     + "' defined for event '" + TextStyle.Separate + theEvent.Name + TextStyle.Base + "'.");

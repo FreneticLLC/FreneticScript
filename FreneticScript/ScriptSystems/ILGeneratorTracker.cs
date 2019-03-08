@@ -311,7 +311,7 @@ namespace FreneticScript.ScriptSystems
         public void MarkLabel(Label label)
         {
             Internal.MarkLabel(label);
-            AddCode(OpCodes.Nop, label, "<MarkLabel>");
+            AddCode(OpCodes.Nop, label.GetHashCode(), "<MarkLabel>");
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace FreneticScript.ScriptSystems
         public void Emit(OpCode code, FieldInfo dat)
         {
             Internal.Emit(code, dat);
-            AddCode(code, dat);
+            AddCode(code, dat.Name);
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace FreneticScript.ScriptSystems
         public void Emit(OpCode code, Label dat)
         {
             Internal.Emit(code, dat);
-            AddCode(code, dat);
+            AddCode(code, dat.GetHashCode());
         }
 
         /// <summary>

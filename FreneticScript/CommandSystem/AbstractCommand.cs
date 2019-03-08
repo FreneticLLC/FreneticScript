@@ -108,7 +108,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The expected object type getters for a command, for validation reasons.
         /// </summary>
-        public List<Action<ArgumentValidation>> ObjectTypes = null;
+        public Action<ArgumentValidation>[] ObjectTypes = null;
         
         /// <summary>
         /// Tests if the CommandEntry is valid for this command at pre-process time.
@@ -117,11 +117,11 @@ namespace FreneticScript.CommandSystem
         /// <returns>An error message (with tags), or null for none.</returns>
         public virtual string TestForValidity(CommandEntry entry)
         {
-            if (entry.Arguments.Count < MinimumArguments)
+            if (entry.Arguments.Length < MinimumArguments)
             {
                 return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + Arguments + ", found only: " + entry.AllOriginalArguments();
             }
-            if (MaximumArguments != -1 && entry.Arguments.Count > MaximumArguments)
+            if (MaximumArguments != -1 && entry.Arguments.Length > MaximumArguments)
             {
                 return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + Arguments + ", found: " + entry.AllOriginalArguments();
             }
@@ -131,11 +131,11 @@ namespace FreneticScript.CommandSystem
                 {
                     Entry = entry
                 };
-                for (int i = 0; i < entry.Arguments.Count; i++)
+                for (int i = 0; i < entry.Arguments.Length; i++)
                 {
                     if (entry.Arguments[i].Bits.Length == 1
                         && entry.Arguments[i].Bits[0] is TextArgumentBit tab
-                        && i < ObjectTypes.Count)
+                        && i < ObjectTypes.Length)
                     {
                         if (ObjectTypes[i] == null)
                         {
@@ -166,7 +166,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="entry">The entry.</param>
         public CommandEntry GetFollower(CommandEntry entry)
         {
-            return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, new List<Argument>() { new Argument() { Bits = new ArgumentBit[] {} } },
+            return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, new Argument[] { new Argument() { Bits = new ArgumentBit[] {} } },
                 entry.Name, CommandPrefix.CALLBACK, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 

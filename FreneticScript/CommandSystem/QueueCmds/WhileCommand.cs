@@ -21,7 +21,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     class WhileCommandData : AbstractCommandEntryData
     {
-        public List<Argument> ComparisonArgs;
+        public Argument[] ComparisonArgs;
         public int Index;
     }
 

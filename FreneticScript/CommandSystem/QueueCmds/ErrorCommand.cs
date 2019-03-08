@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 2;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 TextTag.Validator,
                 BooleanTag.Validator
@@ -64,7 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            if (entry.Arguments.Count > 1 && BooleanTag.TryFor(entry.GetArgumentObject(queue, 1)).Internal)
+            if (entry.Arguments.Length > 1 && BooleanTag.TryFor(entry.GetArgumentObject(queue, 1)).Internal)
             {
                 throw new Exception("FreneticScript induced exception: '" + entry.GetArgument(queue, 0) + "'");
             }

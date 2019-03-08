@@ -31,7 +31,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Description = "Echoes any input text back to the console.";
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 TextTag.Validator
             };

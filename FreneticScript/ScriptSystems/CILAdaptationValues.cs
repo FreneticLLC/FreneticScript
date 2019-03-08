@@ -87,12 +87,7 @@ namespace FreneticScript.ScriptSystems
         /// Represents the <see cref="CommandEntry.Command"/> field.
         /// </summary>
         public static readonly FieldInfo Entry_CommandField = typeof(CommandEntry).GetField(nameof(CommandEntry.Command));
-
-        /// <summary>
-        /// Represents the <see cref="CommandEntry.GetArgumentObject(CommandQueue, int)"/> method.
-        /// </summary>
-        public static readonly MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod(nameof(CommandEntry.GetArgumentObject), new Type[] { typeof(CommandQueue), typeof(int) });
-
+        
         /// <summary>
         /// Represents the <see cref="CommandEntry.Arguments"/> field.
         /// </summary>
@@ -122,6 +117,11 @@ namespace FreneticScript.ScriptSystems
         /// The method being constructed.
         /// </summary>
         public MethodBuilder Method;
+
+        /// <summary>
+        /// The type being constructed.
+        /// </summary>
+        public TypeBuilder Type;
 
         /// <summary>
         /// Returns the return-type of a variable by its location ID.
@@ -236,6 +236,11 @@ namespace FreneticScript.ScriptSystems
         public Stack<int> LVarIDs = new Stack<int>();
 
         /// <summary>
+        /// Fields for arguments, if generated.
+        /// </summary>
+        public FieldInfo[][] ArgumentFields;
+
+        /// <summary>
         /// The current CIL Var ID.
         /// </summary>
         public int CLVarID = 0;
@@ -325,10 +330,18 @@ namespace FreneticScript.ScriptSystems
         /// <param name="argument">The argument index.</param>
         public void LoadArgumentObject(int entry, int argument)
         {
-            Argument arg = Entry.Entries[entry].Arguments[argument];
-            LoadEntry(entry);
-            ILGen.Emit(OpCodes.Ldc_I4, argument);
-            ILGen.Emit(OpCodes.Call, Method_GetArgumentAt);
+            CommandEntry curEnt = Entry.Entries[entry];
+            Argument arg = curEnt.Arguments[argument];
+            if (ArgumentFields[entry] == null)
+            {
+                ArgumentFields[entry] = new FieldInfo[curEnt.Arguments.Length];
+            }
+            if (ArgumentFields[entry][argument] == null)
+            {
+                ArgumentFields[entry][argument] = Type.DefineField("_field_entry_" + entry + "_argument_" + argument, typeof(Argument), FieldAttributes.Public | FieldAttributes.InitOnly);
+            }
+            LoadRunnable();
+            ILGen.Emit(OpCodes.Ldfld, ArgumentFields[entry][argument]);
             LoadQueue();
             ILGen.Emit(OpCodes.Ldfld, Queue_Error);
             LoadRunnable();
@@ -374,22 +387,6 @@ namespace FreneticScript.ScriptSystems
         public static TemplateObject GetLocalVariableAt(CompiledCommandRunnable runnable, int loc)
         {
             return runnable.LocalVariables[loc].Internal;
-        }
-
-        /// <summary>
-        /// A reference to the <see cref="GetArgumentAt(CommandEntry, int)"/> method.
-        /// </summary>
-        public static readonly MethodInfo Method_GetArgumentAt = typeof(CILAdaptationValues).GetMethod(nameof(GetArgumentAt));
-
-        /// <summary>
-        /// Helper method to get the argument in a command entry at the specified index.
-        /// </summary>
-        /// <param name="entry">The entry.</param>
-        /// <param name="loc">The index location.</param>
-        /// <returns>The argument.</returns>
-        public static Argument GetArgumentAt(CommandEntry entry, int loc)
-        {
-            return entry.Arguments[loc];
         }
     }
 }

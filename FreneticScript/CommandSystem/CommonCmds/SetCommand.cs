@@ -33,7 +33,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             // TODO: make asyncable? Probably with a CVar system lock?
             MinimumArguments = 2;
             MaximumArguments = 3;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 TextTag.Validator,
                 TextTag.Validator,
@@ -63,7 +63,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         {
             string target = entry.GetArgument(queue, 0);
             string newvalue = entry.GetArgument(queue, 1);
-            string a2 = entry.Arguments.Count > 2 ? entry.GetArgument(queue, 2).ToLowerFast() : "";
+            string a2 = entry.Arguments.Length > 2 ? entry.GetArgument(queue, 2).ToLowerFast() : "";
             bool force = a2 == "force";
             bool remove = a2 == "remove";
             bool do_not_save = a2 == "do_not_save";

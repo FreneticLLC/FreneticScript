@@ -63,7 +63,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = -1;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 Verify
             };
@@ -118,7 +118,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new Exception("Incorrectly defined Else command: no block follows!");
             }
-            if (cent.Arguments.Count > 0 && cent.Arguments[0].ToString() != "if")
+            if (cent.Arguments.Length > 0 && cent.Arguments[0].ToString() != "if")
             {
                 throw new Exception("Incorrectly defined Else command: argument input that isn't 'if'!");
             }
@@ -137,7 +137,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static bool TryIfCIL(CommandQueue queue, CommandEntry entry)
         {
             entry.SetData(queue, new IfCommandData() { Result = 0 });
-            if (entry.Arguments.Count == 0)
+            if (entry.Arguments.Length == 0)
             {
                 if (entry.ShouldShowGood(queue))
                 {

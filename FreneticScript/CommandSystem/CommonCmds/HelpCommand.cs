@@ -30,7 +30,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Arguments = "<command name>";
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 TextTag.Validator
             };

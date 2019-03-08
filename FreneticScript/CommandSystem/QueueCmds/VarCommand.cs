@@ -55,7 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 throw new ErrorInducedException("Invalid input to var command: second argument must be '='.");
             }
             TagType t = null;
-            if (cent.Arguments.Count >= 5)
+            if (cent.Arguments.Length >= 5)
             {
                 if (cent.Arguments[3].ToString().ToLowerFast() != "as")
                 {
@@ -87,7 +87,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             bool isCorrect = true;
             TagType type = null;
             TagType returnType = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
-            if (cent.Arguments.Count > 4)
+            if (cent.Arguments.Length > 4)
             {
                 string type_name = cent.Arguments[4].ToString().ToLowerFast();
                 type = cent.System.TagSystem.Types.RegisteredTypes[type_name];
@@ -107,10 +107,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.LoadQueue(); // Load the queue
             values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
-            values.LoadEntry(entry); // Load the entry
-            values.LoadQueue(); // Load the queue
-            values.ILGen.Emit(OpCodes.Ldc_I4, 2); // Prep a '2'
-            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Entry_GetArgumentObjectMethod); // Get the specified argument
+            values.LoadArgumentObject(entry, 2); // Load the argument object
             if (!isCorrect)
             {
                 values.LoadTagData(); // Load a basic TagData object appropriate to the queue.

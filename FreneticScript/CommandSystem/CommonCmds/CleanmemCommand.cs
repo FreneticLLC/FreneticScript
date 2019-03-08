@@ -27,7 +27,6 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Arguments = "";
             Description = "Forces the system Garbage Collector to run, invoking CPU usage to lower RAM usage.";
             Asyncable = true;
-            ObjectTypes = new List<Action<ArgumentValidation>>();
         }
 
         /// <summary>

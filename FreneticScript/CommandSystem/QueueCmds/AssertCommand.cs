@@ -51,7 +51,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             IsFlow = true;
             MinimumArguments = 2;
             MaximumArguments = 2;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 BooleanTag.Validator,
                 TextTag.Validator

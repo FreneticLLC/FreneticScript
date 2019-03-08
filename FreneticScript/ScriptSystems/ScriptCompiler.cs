@@ -64,7 +64,9 @@ namespace FreneticScript.ScriptSystems
                 ILGen = ilgen,
                 Method = methodbuild_c,
                 DBMode = script.Debug,
-                EntryFields = new FieldInfo[ccse.Entries.Length]
+                EntryFields = new FieldInfo[ccse.Entries.Length],
+                ArgumentFields = new FieldInfo[ccse.Entries.Length][],
+                Type = typebuild_c
             };
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
@@ -84,7 +86,7 @@ namespace FreneticScript.ScriptSystems
                 CommandEntry curEnt = ccse.Entries[i];
                 curEnt.DBMode = values.DBMode;
                 curEnt.VarLookup = values.CreateVarLookup();
-                for (int a = 0; a < curEnt.Arguments.Count; a++)
+                for (int a = 0; a < curEnt.Arguments.Length; a++)
                 {
                     Argument arg = curEnt.Arguments[a];
                     for (int b = 0; b < arg.Bits.Length; b++)
@@ -194,6 +196,23 @@ namespace FreneticScript.ScriptSystems
                 ctorilgen.Emit(OpCodes.Ldc_I4, i); // Load index in the array
                 ctorilgen.Emit(OpCodes.Ldelem_Ref); // Load the value from the array
                 ctorilgen.Emit(OpCodes.Stfld, values.EntryFields[i]); // Store it to the readonly field.
+                FieldInfo[] argFields = values.ArgumentFields[i];
+                if (argFields != null)
+                {
+                    for (int arg = 0; arg < argFields.Length; arg++)
+                    {
+                        if (argFields[arg] != null)
+                        {
+                            ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
+                            ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
+                            ctorilgen.Emit(OpCodes.Ldfld, values.EntryFields[i]); // Load the entry field
+                            ctorilgen.Emit(OpCodes.Ldfld, CILAdaptationValues.Entry_ArgumentsField); // Load the arguments field
+                            ctorilgen.Emit(OpCodes.Ldc_I4, arg); // Load the argument index
+                            ctorilgen.Emit(OpCodes.Ldelem_Ref); // Load the argument value from the array
+                            ctorilgen.Emit(OpCodes.Stfld, argFields[arg]); // Store it to the readonly field.
+                        }
+                    }
+                }
             }
             ctorilgen.Emit(OpCodes.Ret); // return
             Type t_c = typebuild_c.CreateType();
@@ -214,14 +233,14 @@ namespace FreneticScript.ScriptSystems
             StringBuilder outp = new StringBuilder();
             for (int i = 0; i < ilgen.Codes.Count; i++)
             {
-                outp.Append(ilgen.Codes[i].Key.Name + ": " + ilgen.Codes[i].Value + "\n");
+                outp.Append(ilgen.Codes[i].Key + ": " + ilgen.Codes[i].Value + "\n");
             }
             for (int n = 0; n < ILGens.Count; n++)
             {
                 outp.Append("\n\n\n// -----\n\n\n");
                 for (int i = 0; i < ILGens[n].Codes.Count; i++)
                 {
-                    outp.Append(ILGens[n].Codes[i].Key.Name + ": " + ILGens[n].Codes[i].Value + "\n");
+                    outp.Append(ILGens[n].Codes[i].Key + ": " + ILGens[n].Codes[i].Value + "\n");
                 }
             }
             System.IO.File.WriteAllText("script_" + tname + ".il", outp.ToString());

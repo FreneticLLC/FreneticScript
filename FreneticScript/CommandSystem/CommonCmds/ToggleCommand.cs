@@ -32,7 +32,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             // TODO: Make asyncable -> Cvar sys lock?
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 TextTag.Validator
             };

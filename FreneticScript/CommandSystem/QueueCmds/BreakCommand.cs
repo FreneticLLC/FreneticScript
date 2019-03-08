@@ -68,7 +68,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = 1;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 NumberTag.Validator
             };
@@ -83,7 +83,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             int count = 1;
-            if (entry.Arguments.Count > 0)
+            if (entry.Arguments.Length > 0)
             {
                 IntegerTag inter = IntegerTag.TryFor(entry.GetArgumentObject(queue, 0));
                 if (inter != null)

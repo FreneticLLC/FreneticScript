@@ -196,7 +196,7 @@ namespace FreneticScript.ScriptSystems
                     Lines.Add(line);
                     CommandList.Add(commandConstruct.ToString().Trim());
                 }
-                return new CommandScript(name, CommandScript.TYPE_NAME_FILE, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr), system, 0, mode);
+                return new CommandScript(name, CommandScript.TYPE_NAME_FILE, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr).ToArray(), system, 0, mode);
             }
             catch (Exception ex)
             {
@@ -281,7 +281,7 @@ namespace FreneticScript.ScriptSystems
                                 cent.Command.AdaptBlockFollowers(cent, toinj, block);
                             }
                             istart += (toinj.Count - bc);
-                            cent.InnerCommandBlock = block;
+                            cent.InnerCommandBlock = block.ToArray();
                             toret.AddRange(toinj);
                         }
                     }
@@ -409,7 +409,7 @@ namespace FreneticScript.ScriptSystems
                     string a1 = args[1].ToString();
                     if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
                     {
-                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args, system.DebugVarSetCommand.Name, CommandPrefix.NONE, script, line, tabs, system);
+                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args.ToArray(), system.DebugVarSetCommand.Name, CommandPrefix.NONE, script, line, tabs, system);
                     }
                     else if (a1 == "^=")
                     {
@@ -452,7 +452,7 @@ namespace FreneticScript.ScriptSystems
                     {
                         throw new ErrorInducedException("Cannot wait ('&') on command '" + foundCommandObject.Name + "'.");
                     }
-                    entry = new CommandEntry(command, 0, 0, foundCommandObject, args, BaseCommand, prefix, script, line, tabs, nameds, system);
+                    entry = new CommandEntry(command, 0, 0, foundCommandObject, args.ToArray(), BaseCommand, prefix, script, line, tabs, nameds, system);
                 }
                 else
                 {
@@ -476,7 +476,7 @@ namespace FreneticScript.ScriptSystems
         public static CommandEntry CreateErrorOutputEntry(string message, ScriptEngine system, string script, string tabs)
         {
             return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.TheErrorCommand,
-                new List<Argument>() { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", CommandPrefix.NONE, script, 0, tabs, system);
+                new Argument[] { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", CommandPrefix.NONE, script, 0, tabs, system);
 
         }
 
@@ -491,7 +491,7 @@ namespace FreneticScript.ScriptSystems
                 throw new ErrorInducedException("Unknown command '" + name + "'!");
             }
             _arguments.Insert(0, ArgumentParser.SplitToArgument(system, name, false));
-            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments, name, prefix, script, linen, tabs, nameds, sys);
+            return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments.ToArray(), name, prefix, script, linen, tabs, nameds, sys);
 
         }
     }

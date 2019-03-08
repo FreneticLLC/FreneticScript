@@ -55,7 +55,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// A list of all commands that were inside this command originally.
         /// </summary>
-        public List<CommandEntry> InnerCommandBlock = null;
+        public CommandEntry[] InnerCommandBlock = null;
 
         /// <summary>
         /// All 'named' arguments on this command entry.
@@ -133,7 +133,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Full constructor, recommended.
         /// </summary>
-        public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
+        public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, Argument[] _arguments,
             string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, ScriptEngine sys)
             : this(_commandline, bstart, bend, _command, _arguments, _name, _prefix, _script, _line, fairtabs, new Dictionary<string, Argument>(), sys)
         {
@@ -142,7 +142,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Full constructor, recommended.
         /// </summary>
-        public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, List<Argument> _arguments,
+        public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, Argument[] _arguments,
             string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, Dictionary<string, Argument> nameds, ScriptEngine sys)
         {
             BlockStart = bstart;
@@ -211,7 +211,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The arguments input by the user.
         /// </summary>
-        public List<Argument> Arguments;
+        public Argument[] Arguments;
 
         /// <summary>
         /// What command prefix was used for this command, if any.
@@ -321,10 +321,10 @@ namespace FreneticScript.CommandSystem
         public string AllArguments(CommandQueue queue, int index = 0)
         {
             StringBuilder result = new StringBuilder(CommandLine.Length);
-            for (int i = index; i < Arguments.Count; i++)
+            for (int i = index; i < Arguments.Length; i++)
             {
                 result.Append(GetArgument(queue, i));
-                if (i + 1 < Arguments.Count)
+                if (i + 1 < Arguments.Length)
                 {
                     result.Append(" ");
                 }
@@ -340,10 +340,10 @@ namespace FreneticScript.CommandSystem
         public string AllOriginalArguments(int index = 0)
         {
             StringBuilder result = new StringBuilder(CommandLine.Length);
-            for (int i = index; i < Arguments.Count; i++)
+            for (int i = index; i < Arguments.Length; i++)
             {
                 result.Append(Arguments[i]);
-                if (i + 1 < Arguments.Count)
+                if (i + 1 < Arguments.Length)
                 {
                     result.Append(" ");
                 }

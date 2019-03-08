@@ -34,7 +34,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Asyncable = true;
             MinimumArguments = 1;
             MaximumArguments = 1;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 MapTag.Validator
             };
@@ -50,7 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             string mapText = expectedMap.ToString();
             return new CommandEntry("require \"" + mapText + "\" \0AUTOGENNED", 0, 0, this,
-                new List<Argument>() { new Argument(new TextArgumentBit(expectedMap)) }, Name, CommandPrefix.NONE, scriptName, line, "", Engine);
+                new Argument[] { new Argument(new TextArgumentBit(expectedMap)) }, Name, CommandPrefix.NONE, scriptName, line, "", Engine);
         }
 
         /// <summary>

@@ -133,12 +133,12 @@ namespace FreneticScript.CommandSystem
         /// <param name="engine">The backing script engine.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
         /// <param name="mode">What debug mode to use for this script.</param>
-        public CommandScript(string _name, string _typeName, List<CommandEntry> _commands, ScriptEngine engine, int adj = 0, DebugMode mode = DebugMode.FULL)
+        public CommandScript(string _name, string _typeName, CommandEntry[] _commands, ScriptEngine engine, int adj = 0, DebugMode mode = DebugMode.FULL)
         {
             Debug = mode;
             Name = _name.ToLowerFast();
             TypeName = _typeName;
-            CommandArray = _commands.ToArray();
+            CommandArray = new CommandEntry[_commands.Length];
             System = engine;
             for (int i = 0; i < CommandArray.Length; i++)
             {

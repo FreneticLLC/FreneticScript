@@ -207,7 +207,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (arg0 == "undefine")
             {
-                if (cent.Arguments.Count < 2)
+                if (cent.Arguments.Length < 2)
                 {
                     throw new ErrorInducedException("Invalid 'function undefine' command: must label what function to undefine (as an additional argument)!");
                 }
@@ -217,7 +217,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else // "define"
             {
-                if (cent.Arguments.Count < 2)
+                if (cent.Arguments.Length < 2)
                 {
                     throw new ErrorInducedException("Invalid 'function define' command: must name the function to define (as an additional argument)!");
                 }

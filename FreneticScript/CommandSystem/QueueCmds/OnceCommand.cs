@@ -60,7 +60,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Description = "Runs a block precisely once per reload.";
             MinimumArguments = 1;
             MaximumArguments = 2;
-            ObjectTypes = new List<Action<ArgumentValidation>>()
+            ObjectTypes = new Action<ArgumentValidation>[]
             {
                 Lower,
                 TestValidity
@@ -105,7 +105,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 return;
             }
-            string errorMode = entry.Arguments.Count > 1 ? entry.GetArgument(queue, 1).ToLowerFast() : "error";
+            string errorMode = entry.Arguments.Length > 1 ? entry.GetArgument(queue, 1).ToLowerFast() : "error";
             if (errorMode == "quiet")
             {
                 if (entry.ShouldShowGood(queue))
