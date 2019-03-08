@@ -165,8 +165,8 @@ namespace FreneticScript.TagHandlers
                             thi.Meta.Ready(this);
                             if (thi.Meta.SpecialCompiler)
                             {
-                                thi.Meta.SpecialCompileAction = method.CreateDelegate(typeof(Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>))
-                                    as Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>;
+                                thi.Meta.SpecialCompileAction = method.CreateDelegate(typeof(Func<ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>))
+                                    as Func<ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>;
                             }
                             else if (thi.Meta.ReturnTypeResult == null)
                             {

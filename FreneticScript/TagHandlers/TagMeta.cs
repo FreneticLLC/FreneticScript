@@ -70,7 +70,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// The special compiler callable for this tag, if marked with <see cref="SpecialCompiler"/>.
         /// </summary>
-        public Func<CILAdaptationValues.ILGeneratorTracker, TagArgumentBit, int, TagType, TagType> SpecialCompileAction;
+        public Func<ILGeneratorTracker, TagArgumentBit, int, TagType, TagType> SpecialCompileAction;
 
         /// <summary>
         /// The method name of the type helper for this tag, if any.

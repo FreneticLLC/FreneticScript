@@ -103,6 +103,7 @@
     <Compile Include="CommandSystem\ScriptEvent.cs" />
     <Compile Include="CommandSystem\Arguments\TextArgumentBit.cs" />
     <Compile Include="ScriptSystems\CompiledCommandRunnable.cs" />
+    <Compile Include="ScriptSystems\ILGeneratorTracker.cs" />
     <Compile Include="UtilitySystems\CVar.cs" />
     <Compile Include="UtilitySystems\CVarSystem.cs" />
     <Compile Include="UtilitySystems\FreneticScriptUtilities.cs" />

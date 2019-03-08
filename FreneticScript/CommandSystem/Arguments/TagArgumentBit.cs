@@ -74,7 +74,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="load_Error">The OpCode to load the error object.</param>
         /// <param name="load_Runnable">The OpCode to load the runnable object.</param>
         /// <param name="obj_loc">The TemplateObject helper local-variable location.</param>
-        public void GenerateCall(CILAdaptationValues.ILGeneratorTracker ilgen, int tab_loc, OpCode load_Error, OpCode load_Runnable, int obj_loc)
+        public void GenerateCall(ILGeneratorTracker ilgen, int tab_loc, OpCode load_Error, OpCode load_Runnable, int obj_loc)
         {
             ilgen.Emit(OpCodes.Stloc, tab_loc); // Store the TAB to the proper location
             Label exceptionLabel = ilgen.BeginExceptionBlock(); // try {

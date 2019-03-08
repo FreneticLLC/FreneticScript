@@ -124,7 +124,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "as", SpecialCompiler = true, SpecialTypeHelperName = nameof(TypeHelper_Tag_As)
             , Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TagType Compiler_Tag_As(CILAdaptationValues.ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
+        public static TagType Compiler_Tag_As(ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
         {
             ilgen.Emit(OpCodes.Ldfld, Field_DynamicTag_Internal); // Load field "Internal" on the input DynamicTag instance.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
@@ -137,7 +137,7 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "_", SpecialCompiler = true, Group = "Dynamics", ReturnType = TYPE,
             Returns = "The result of whatever tag is given, based on the runtime type of the object, as a DynamicTag.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TagType Compiler_Tag_DynamicAny(CILAdaptationValues.ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
+        public static TagType Compiler_Tag_DynamicAny(ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
         {
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
             ilgen.Emit(OpCodes.Call, Method_DynamicTag_AnyProcessor); // Call AnyProcessor(obj, data) and push the return to the stack

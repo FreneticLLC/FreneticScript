@@ -56,7 +56,7 @@ namespace FreneticScript.ScriptSystems
             ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), RUN_METHOD_PARAMETERS);
-            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
+            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
             CILAdaptationValues values = new CILAdaptationValues()
             {
                 Entry = ccse,
@@ -73,7 +73,7 @@ namespace FreneticScript.ScriptSystems
             int tagID = 0;
             TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
             List<TagArgumentBit> toClean = new List<TagArgumentBit>();
-            List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
+            List<ILGeneratorTracker> ILGens = new List<ILGeneratorTracker>();
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
                 CommandEntry curEnt = ccse.Entries[i];
@@ -254,7 +254,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="toClean">Cleanable tag bits.</param>
         /// <param name="argumentId">Source command argument ID.</param>
         /// <param name="commandEntry">The source command entry.</param>
-        public static CILAdaptationValues.ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
+        public static ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
             ref int tID, CILAdaptationValues values, int entryIndex, List<TagArgumentBit> toClean, string argumentId, CommandEntry commandEntry)
         {
             int id = tID;
@@ -287,7 +287,7 @@ namespace FreneticScript.ScriptSystems
             string methodName = "TagParse_" + id + "_Line_" + commandEntry.ScriptLine + "_Arg_" + NameTrimMatcher.TrimToMatches(argumentId) + "_" +
                 string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
             MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), TYPES_TAGPARSE_PARAMS);
-            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
+            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
             TagType returnable = tab.Start.ResultType;
             if (returnable == null)
             {
@@ -475,7 +475,7 @@ namespace FreneticScript.ScriptSystems
             try
             {
                 DynamicMethod genMethod = new DynamicMethod("tag_parse_for_" + method.DeclaringType.Name + "_" + method.Name, typeof(TemplateObject), new Type[] { typeof(TemplateObject), typeof(TagData) });
-                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = system };
+                ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = system };
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject.
                 ilgen.Emit(OpCodes.Castclass, method.GetParameters()[0].ParameterType); // Convert it to the correct type
                 if (meta.ModifierType != null)

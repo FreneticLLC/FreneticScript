@@ -98,7 +98,7 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="ilgen">The IL generator object.</param>
         /// <param name="tab">The text argument bit.</param>
-        public static void Compile_DuplicateIfNeeded(CILAdaptationValues.ILGeneratorTracker ilgen, TextArgumentBit tab)
+        public static void Compile_DuplicateIfNeeded(ILGeneratorTracker ilgen, TextArgumentBit tab)
         {
             Type tx = tab.InputValue.GetType();
             if (!DuplicatorCalls.TryGetValue(tx, out MethodInfo metinf)) // TODO: Store this early in TagType
@@ -132,7 +132,7 @@ namespace FreneticScript.ScriptSystems
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(Argument));
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) });
-            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
+            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
             if (argument.Bits.Length == 0) // Empty argument
             {
                 ilgen.Emit(OpCodes.Ldstr, ""); // Load an empty string
