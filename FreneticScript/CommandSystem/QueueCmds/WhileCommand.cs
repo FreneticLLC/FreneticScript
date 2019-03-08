@@ -232,9 +232,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryWhileCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
-            WhileCommandData dat = cse.EntryData[entry_ind] as WhileCommandData;
-            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
+            WhileCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as WhileCommandData;
+            (queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
             return IfCommand.TryIf(queue, null, new List<Argument>(dat.ComparisonArgs));
         }
 
@@ -246,9 +245,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="ri">While Index location.</param>
         public static bool TryWhileCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
-            WhileCommandData dat = cse.EntryData[entry.BlockStart - 1] as WhileCommandData;
-                (cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
+            WhileCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as WhileCommandData;
+                (queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
             if (IfCommand.TryIf(queue, entry, new List<Argument>(dat.ComparisonArgs)))
             {
                 if (entry.ShouldShowGood(queue))
@@ -278,8 +276,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments });
-            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-            ccse.LocalVariables[ri].Internal = new IntegerTag(1);
+            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             return true;
         }
 
@@ -301,8 +298,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments });
-            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-            ccse.LocalVariables[ri].Internal = new IntegerTag(1);
+            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "While looping...");

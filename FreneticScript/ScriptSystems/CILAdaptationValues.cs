@@ -88,9 +88,9 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>
-        /// Represents the <see cref="CommandStackEntry.Entries"/> field.
+        /// Represents the <see cref="CompiledCommandStackEntry.Entries"/> field.
         /// </summary>
-        public static readonly FieldInfo EntriesField = typeof(CommandStackEntry).GetField(nameof(CommandStackEntry.Entries));
+        public static readonly FieldInfo EntriesField = typeof(CompiledCommandStackEntry).GetField(nameof(CompiledCommandStackEntry.Entries));
 
         /// <summary>
         /// Represents the <see cref="CommandEntry.Command"/> field.
@@ -694,12 +694,11 @@ namespace FreneticScript.ScriptSystems
         }
         
         /// <summary>
-        /// Loads the linked command stack entry.
+        /// Loads the linked command runnable.
         /// </summary>
-        public void LoadCCSE()
+        public void LoadRunnable()
         {
-            LoadQueue();
-            ILGen.Emit(OpCodes.Ldfld, CommandQueue.COMMANDQUEUE_CURRENTENTRY);
+            ILGen.Emit(OpCodes.Ldarg_0);
         }
 
         /// <summary>
@@ -754,7 +753,7 @@ namespace FreneticScript.ScriptSystems
             ILGen.Emit(OpCodes.Call, Method_GetArgumentAt);
             LoadQueue();
             ILGen.Emit(OpCodes.Ldfld, Queue_Error);
-            LoadCCSE();
+            LoadRunnable();
             ILGen.Emit(OpCodes.Call, arg.CompiledParseMethod);
         }
 
@@ -764,7 +763,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="index">The local variable index.</param>
         public void LoadLocalVariable(int index)
         {
-            LoadCCSE();
+            LoadRunnable();
             ILGen.Emit(OpCodes.Ldc_I4, index);
             ILGen.Emit(OpCodes.Call, Method_GetLocalVariableAt);
         }
@@ -784,19 +783,19 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>
-        /// A reference to the <see cref="GetLocalVariableAt(CompiledCommandStackEntry, int)"/> method.
+        /// A reference to the <see cref="GetLocalVariableAt(CompiledCommandRunnable, int)"/> method.
         /// </summary>
         public static readonly MethodInfo Method_GetLocalVariableAt = typeof(CILAdaptationValues).GetMethod(nameof(GetLocalVariableAt));
 
         /// <summary>
         /// Helper method to get the local variable at the specified index.
         /// </summary>
-        /// <param name="entry">The command stack entry.</param>
+        /// <param name="runnable">The command runnable.</param>
         /// <param name="loc">The variable location.</param>
         /// <returns>The variable's value.</returns>
-        public static TemplateObject GetLocalVariableAt(CompiledCommandStackEntry entry, int loc)
+        public static TemplateObject GetLocalVariableAt(CompiledCommandRunnable runnable, int loc)
         {
-            return entry.LocalVariables[loc].Internal;
+            return runnable.LocalVariables[loc].Internal;
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.ScriptSystems;
 using System.Reflection;
 
 namespace FreneticScript.TagHandlers
@@ -172,9 +173,9 @@ namespace FreneticScript.TagHandlers
         public Action<string> ErrorAction;
 
         /// <summary>
-        /// The relevant command stack entry, if any.
+        /// The relevant command runnable, if any.
         /// </summary>
-        public CompiledCommandStackEntry CSE;
+        public CompiledCommandRunnable Runnable;
 
         /// <summary>
         /// Runs a clean error for this tag.
@@ -240,8 +241,8 @@ namespace FreneticScript.TagHandlers
         /// <param name="_mode">What debug mode to use.</param>
         /// <param name="_error">What to invoke if there is an error.</param>
         /// <param name="fallback">What to fall back to if the tag returns null.</param>
-        /// <param name="_cse">The relevant command stack entry, if any.</param>
-        public TagData(TagHandler _system, Argument[] _vars, TagBit[] _bits, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandStackEntry _cse)
+        /// <param name="_runnable">The relevant command runnable, if any.</param>
+        public TagData(TagHandler _system, Argument[] _vars, TagBit[] _bits, string _basecolor, DebugMode _mode, Action<string> _error, Argument fallback, CompiledCommandRunnable _runnable)
         {
             TagSystem = _system;
             BaseColor = _basecolor ?? TextStyle.Simple;
@@ -250,7 +251,7 @@ namespace FreneticScript.TagHandlers
             Fallback = fallback;
             Variables = _vars;
             Bits = _bits;
-            CSE = _cse;
+            Runnable = _runnable;
             ErrorAction = ErrorNoReturn;
         }
 
@@ -296,7 +297,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObjectKnown(int place)
         {
-            return Variables[place].Parse(ErrorAction, CSE);
+            return Variables[place].Parse(ErrorAction, Runnable);
         }
 
         /// <summary>
@@ -310,7 +311,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObjectCurrent()
         {
-            return Variables[cInd].Parse(ErrorAction, CSE);
+            return Variables[cInd].Parse(ErrorAction, Runnable);
         }
 
         /// <summary>
@@ -320,7 +321,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The tag-parsed modifier.</returns>
         public TemplateObject GetModifierObject(int place)
         {
-            return Variables[place + cInd].Parse(ErrorAction, CSE);
+            return Variables[place + cInd].Parse(ErrorAction, Runnable);
         }
     }
 }

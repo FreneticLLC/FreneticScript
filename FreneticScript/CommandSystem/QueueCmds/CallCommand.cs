@@ -98,10 +98,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 entry.GoodOutput(queue, "Calling '" + function.GetDebugString() + TextStyle.Base + "'...");
             }
-            CompiledCommandStackEntry cse = script.Compiled.Duplicate();
-            if (cse.Entries.Length > 0)
+            CompiledCommandRunnable runnable = script.Compiled.ReferenceCompiledRunnable.Duplicate();
+            if (runnable.Entry.Entries.Length > 0)
             {
-                Dictionary<string, SingleCILVariable> varlookup = cse.Entries[0].VarLookup;
+                Dictionary<string, SingleCILVariable> varlookup = runnable.Entry.Entries[0].VarLookup;
                 foreach (string var in entry.NamedArguments.Keys)
                 {
                     if (!var.StartsWithNull())
@@ -109,7 +109,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         if (varlookup.TryGetValue(var, out SingleCILVariable varx))
                         {
                             // TODO: Type verification!
-                            cse.LocalVariables[varx.Index].Internal = entry.GetNamedArgumentObject(queue, var);
+                            runnable.LocalVariables[varx.Index].Internal = entry.GetNamedArgumentObject(queue, var);
                         }
                     }
                 }
@@ -122,26 +122,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.GoodOutput(queue, "Noticing variable track for " + vname + ".");
                 }
-                CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
+                CompiledCommandRunnable curRunnable = queue.CurrentRunnable;
                 if (!entry.VarLookup.TryGetValue(vname, out SingleCILVariable locVar))
                 {
                     queue.HandleError(entry, "Invalid save-to variable: " + vname + "!");
                     return;
                 }
-                cse.Callback = () =>
+                runnable.Callback = () =>
                 {
-                    if (cse.Entries.Length > 0)
+                    if (runnable.Entry.Entries.Length > 0)
                     {
                         MapTag mt = new MapTag();
-                        Dictionary<string, SingleCILVariable> varlookup = cse.Entries[0].VarLookup;
+                        Dictionary<string, SingleCILVariable> varlookup = runnable.Entry.Entries[0].VarLookup;
                         foreach (SingleCILVariable vara in varlookup.Values)
                         {
-                            if (cse.LocalVariables[vara.Index].Internal != null)
+                            if (runnable.LocalVariables[vara.Index].Internal != null)
                             {
-                                mt.Internal.Add(vara.Name, cse.LocalVariables[vara.Index].Internal);
+                                mt.Internal.Add(vara.Name, runnable.LocalVariables[vara.Index].Internal);
                             }
                         }
-                        ccse.LocalVariables[locVar.Index].Internal = mt;
+                        curRunnable.LocalVariables[locVar.Index].Internal = mt;
                     }
                     if (sgood)
                     {
@@ -149,7 +149,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                 };
             }
-            queue.CommandStack.Push(cse);
+            queue.RunningStack.Push(runnable);
         }
     }
 }

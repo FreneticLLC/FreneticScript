@@ -295,11 +295,11 @@ namespace FreneticScript.TagHandlers
                 string outputText = "Filled tag " + TextStyle.Separate +
                     new TagArgumentBit(data.TagSystem.Engine, data.Bits).ToString() + TextStyle.Outgood + " with \"" + TextStyle.Separate + resultObject.GetDebugString()
                     + TextStyle.Outgood + "\".";
-                if (data.CSE != null)
+                if (data.Runnable != null)
                 {
-                    if (data.CSE.CurrentCommandEntry != null && data.CSE.CurrentQueue != null)
+                    if (data.Runnable.CurrentCommandEntry != null && data.Runnable.CurrentQueue != null)
                     {
-                        data.CSE.CurrentCommandEntry.GoodOutput(data.CSE.CurrentQueue, outputText);
+                        data.Runnable.CurrentCommandEntry.GoodOutput(data.Runnable.CurrentQueue, outputText);
                         return resultObject;
                     }
                 }

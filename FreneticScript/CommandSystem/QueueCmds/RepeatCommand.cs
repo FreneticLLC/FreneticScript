@@ -278,9 +278,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
-            RepeatCommandData dat = cse.EntryData[entry_ind] as RepeatCommandData;
-            return ((cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index) <= dat.Total;
+            RepeatCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as RepeatCommandData;
+            return ((queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index) <= dat.Total;
         }
 
         /// <summary>
@@ -291,9 +290,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="ri">Repeat Index location.</param>
         public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
-            RepeatCommandData dat = cse.EntryData[entry.BlockStart - 1] as RepeatCommandData;
-            (cse.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
+            RepeatCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as RepeatCommandData;
+            (queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue))
@@ -323,8 +321,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
-            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-            ccse.LocalVariables[ri].Internal = new IntegerTag(1);
+            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             return true;
         }
 
@@ -346,8 +343,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
-            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-            ccse.LocalVariables[ri].Internal = new IntegerTag(1);
+            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Repeating " + TextStyle.Separate + target + TextStyle.Base + " times...");

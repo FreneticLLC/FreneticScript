@@ -283,7 +283,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (entry.ShouldShowGood(queue))
             {
-                TemplateObject resultObject = queue.CurrentStackEntry.LocalVariables[varloc].Internal;
+                TemplateObject resultObject = queue.CurrentRunnable.LocalVariables[varloc].Internal;
                 entry.GoodOutput(queue, "Updated variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' to value: " + TextStyle.Separate + resultObject.GetDebugString());
             }
         }

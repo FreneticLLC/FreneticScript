@@ -62,7 +62,6 @@
     <Compile Include="CommandSystem\ObjectOperationAttribute.cs" />
     <Compile Include="CommandSystem\ScriptEngine.cs" />
     <Compile Include="CommandSystem\CommandScript.cs" />
-    <Compile Include="CommandSystem\CommandStackEntry.cs" />
     <Compile Include="CommandSystem\CommonCmds\ReloadCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\CleanmemCommand.cs" />
     <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
@@ -103,6 +102,7 @@
     <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />
     <Compile Include="CommandSystem\ScriptEvent.cs" />
     <Compile Include="CommandSystem\Arguments\TextArgumentBit.cs" />
+    <Compile Include="ScriptSystems\CompiledCommandRunnable.cs" />
     <Compile Include="UtilitySystems\CVar.cs" />
     <Compile Include="UtilitySystems\CVarSystem.cs" />
     <Compile Include="UtilitySystems\FreneticScriptUtilities.cs" />

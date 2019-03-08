@@ -253,7 +253,7 @@ namespace FreneticScript.TagHandlers.Objects
             for (int i = 0; i < Internal.Count; i++)
             {
                 // TODO: Restore: vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                TemplateObject tobj = data.Variables[data.cInd].Parse(data.ErrorAction, data.CSE);
+                TemplateObject tobj = data.Variables[data.cInd].Parse(data.ErrorAction, data.Runnable);
                 if (BooleanTag.CreateFor(tobj, data).Internal)
                 {
                     newlist.Internal.Add(Internal[i]);
@@ -273,7 +273,7 @@ namespace FreneticScript.TagHandlers.Objects
             for (int i = 0; i < Internal.Count; i++)
             {
                 // TODO: Restore: vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
-                newlist.Internal.Add(data.Variables[data.cInd].Parse(data.ErrorAction, data.CSE));
+                newlist.Internal.Add(data.Variables[data.cInd].Parse(data.ErrorAction, data.Runnable));
             }
             return newlist;
         }

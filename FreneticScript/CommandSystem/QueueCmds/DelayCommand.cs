@@ -11,6 +11,7 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -108,11 +109,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.BlockScript = new CommandScript("__delay__command__", "Special", entry.InnerCommandBlock, entry.System, entry.BlockStart);
             }
             CommandQueue nqueue = entry.BlockScript.ToQueue(entry.Command.Engine);
-            nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;
+            nqueue.RunningStack.Peek().Debug = queue.RunningStack.Peek().Debug;
             nqueue.Outputsystem = queue.Outputsystem;
             nqueue.Execute();
-            CommandStackEntry cse = queue.CurrentStackEntry;
-            cse.Index = entry.BlockEnd + 2;
+            CompiledCommandRunnable runnable = queue.CurrentRunnable;
+            runnable.Index = entry.BlockEnd + 2;
         }
     }
 }

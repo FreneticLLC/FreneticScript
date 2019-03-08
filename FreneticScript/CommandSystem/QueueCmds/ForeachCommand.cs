@@ -276,11 +276,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool TryForeachCILNoDebug(CommandQueue queue, int entry_ind, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
-            ForeachCommandData dat = cse.EntryData[entry_ind] as ForeachCommandData;
+            ForeachCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as ForeachCommandData;
             if (++dat.Index < dat.List.Count)
             {
-                (cse.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
+                (queue.CurrentRunnable.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
                 return true;
             }
             return false;
@@ -294,11 +293,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="ri">Repeat Index location.</param>
         public static bool TryForeachCIL(CommandQueue queue, CommandEntry entry, int ri)
         {
-            CompiledCommandStackEntry cse = queue.CurrentStackEntry;
-            ForeachCommandData dat = cse.EntryData[entry.BlockStart - 1] as ForeachCommandData;
+            ForeachCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as ForeachCommandData;
             if (++dat.Index < dat.List.Count)
             {
-                (cse.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
+                (queue.CurrentRunnable.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
                 if (entry.ShouldShowGood(queue))
                 {
                     entry.GoodOutput(queue, "Looping...: " + TextStyle.Separate + dat.Index + TextStyle.Base + "/" + TextStyle.Separate + dat.List.Count);
@@ -326,8 +324,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
-            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-            ccse.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
+            queue.CurrentRunnable.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
             return true;
         }
 
@@ -349,8 +346,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
-            CompiledCommandStackEntry ccse = queue.CurrentStackEntry;
-            ccse.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
+            queue.CurrentRunnable.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Looping " + TextStyle.Separate + list.Internal.Count + TextStyle.Base + " times...");

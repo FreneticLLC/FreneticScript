@@ -67,6 +67,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
+            queue.HandleError(entry, "Inject command is pending rewrite or deletion.");
+            /*
             string fname = entry.GetArgument(queue, 0);
             fname = fname.ToLowerFast();
             CommandScript script = queue.Engine.GetFunction(fname);
@@ -83,6 +85,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CompiledCommandStackEntry tcse = script.Compiled.Duplicate();
             tcse.Debug = cse.Debug; // TODO: Should debug editing be valid?
             queue.CommandStack.Push(tcse);
+            */
         }
     }
 }

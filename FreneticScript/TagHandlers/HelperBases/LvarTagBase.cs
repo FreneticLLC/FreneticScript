@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <returns>The result.</returns>
         public static TemplateObject HandleOneFast(TagData data, int loc)
         {
-            return data.CSE.LocalVariables[loc].Internal;
+            return data.Runnable.LocalVariables[loc].Internal;
         }
 
         /// <summary>

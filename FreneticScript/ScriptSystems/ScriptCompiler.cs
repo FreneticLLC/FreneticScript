@@ -39,176 +39,183 @@ namespace FreneticScript.ScriptSystems
         {
             CompiledCommandStackEntry Created = new CompiledCommandStackEntry()
             {
-                Debug = script.Debug,
                 Entries = script.CommandArray,
                 Script = script
             };
-            Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
-            {
-                string tname = "__script__" + IDINCR++ + "__" + NameTrimMatcher.TrimToMatches(script.Name);
-                AssemblyName asmname = new AssemblyName(tname) { Name = tname };
-                AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
+            string tname = "__script__" + IDINCR++ + "__" + NameTrimMatcher.TrimToMatches(script.Name);
+            AssemblyName asmname = new AssemblyName(tname) { Name = tname };
+            AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
 #if NET_4_5
-                    AssemblyBuilderAccess.RunAndCollect
+                AssemblyBuilderAccess.RunAndCollect
 #else
-                    AssemblyBuilderAccess.Run
+                AssemblyBuilderAccess.Run
 #endif
-                    );
-                ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
-                CompiledCommandStackEntry ccse = Created;
-                ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
-                TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
-                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), RUN_METHOD_PARAMETERS);
-                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
-                CILAdaptationValues values = new CILAdaptationValues()
+                );
+            ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
+            CompiledCommandStackEntry ccse = Created;
+            ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
+            TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
+            MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), RUN_METHOD_PARAMETERS);
+            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
+            CILAdaptationValues values = new CILAdaptationValues()
+            {
+                Entry = ccse,
+                Script = script,
+                ILGen = ilgen,
+                Method = methodbuild_c,
+                DBMode = script.Debug
+            };
+            values.PushVarSet();
+            for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
+            {
+                ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
+            }
+            int tagID = 0;
+            TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
+            List<TagArgumentBit> toClean = new List<TagArgumentBit>();
+            List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
+            for (int i = 0; i < ccse.Entries.Length; i++)
+            {
+                CommandEntry curEnt = ccse.Entries[i];
+                curEnt.DBMode = values.DBMode;
+                curEnt.VarLookup = values.CreateVarLookup();
+                for (int a = 0; a < curEnt.Arguments.Count; a++)
                 {
-                    Entry = ccse,
-                    Script = script,
-                    ILGen = ilgen,
-                    Method = methodbuild_c,
-                    DBMode = script.Debug
-                };
-                values.PushVarSet();
-                for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
-                {
-                    ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
-                }
-                int tagID = 0;
-                TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
-                List<TagArgumentBit> toClean = new List<TagArgumentBit>();
-                List<CILAdaptationValues.ILGeneratorTracker> ILGens = new List<CILAdaptationValues.ILGeneratorTracker>();
-                for (int i = 0; i < ccse.Entries.Length; i++)
-                {
-                    CommandEntry curEnt = ccse.Entries[i];
-                    curEnt.DBMode = values.DBMode;
-                    curEnt.VarLookup = values.CreateVarLookup();
-                    for (int a = 0; a < curEnt.Arguments.Count; a++)
+                    Argument arg = curEnt.Arguments[a];
+                    for (int b = 0; b < arg.Bits.Length; b++)
                     {
-                        Argument arg = curEnt.Arguments[a];
-                        for (int b = 0; b < arg.Bits.Length; b++)
+                        if (arg.Bits[b] is TagArgumentBit tab)
                         {
-                            if (arg.Bits[b] is TagArgumentBit tab)
+                            tagID++;
+                            try
                             {
-                                tagID++;
-                                try
-                                {
-                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt));
-                                }
-                                catch (TagErrorInducedException ex)
-                                {
-                                    TagException(curEnt, "argument " + TextStyle.Separate + a + TextStyle.Base, tab, ex.SubTagIndex, ex);
-                                }
-                                catch (ErrorInducedException ex)
-                                {
-                                    TagException(curEnt, "argument " + TextStyle.Separate + a + TextStyle.Base, tab, 0, ex);
-                                }
+                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt));
+                            }
+                            catch (TagErrorInducedException ex)
+                            {
+                                TagException(curEnt, "argument " + TextStyle.Separate + a + TextStyle.Base, tab, ex.SubTagIndex, ex);
+                            }
+                            catch (ErrorInducedException ex)
+                            {
+                                TagException(curEnt, "argument " + TextStyle.Separate + a + TextStyle.Base, tab, 0, ex);
                             }
                         }
-                        ArgumentCompiler.Compile(arg, Created);
                     }
-                    foreach (KeyValuePair<string, Argument> argPair in curEnt.NamedArguments)
+                    ArgumentCompiler.Compile(arg, Created);
+                }
+                foreach (KeyValuePair<string, Argument> argPair in curEnt.NamedArguments)
+                {
+                    for (int b = 0; b < argPair.Value.Bits.Length; b++)
                     {
-                        for (int b = 0; b < argPair.Value.Bits.Length; b++)
+                        if (argPair.Value.Bits[b] is TagArgumentBit tab)
                         {
-                            if (argPair.Value.Bits[b] is TagArgumentBit tab)
+                            tagID++;
+                            try
                             {
-                                tagID++;
-                                try
-                                {
-                                    ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key, curEnt));
-                                }
-                                catch (TagErrorInducedException ex)
-                                {
-                                    TagException(curEnt, "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, ex.SubTagIndex, ex);
-                                }
-                                catch (ErrorInducedException ex)
-                                {
-                                    TagException(curEnt, "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, 0, ex);
-                                }
+                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key, curEnt));
+                            }
+                            catch (TagErrorInducedException ex)
+                            {
+                                TagException(curEnt, "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, ex.SubTagIndex, ex);
+                            }
+                            catch (ErrorInducedException ex)
+                            {
+                                TagException(curEnt, "named argument '" + TextStyle.Separate + argPair.Key + TextStyle.Base + "'", tab, 0, ex);
                             }
                         }
-                        ArgumentCompiler.Compile(argPair.Value, Created);
                     }
-                    if (!curEnt.IsCallback)
-                    {
-                        try
-                        {
-                            curEnt.Command.PreAdaptToCIL(values, i);
-                        }
-                        catch (ErrorInducedException ex)
-                        {
-                            throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
-                        }
-                        curEnt.VarLookup = values.CreateVarLookup();
-                    }
-                    if (curEnt.NamedArguments.TryGetValue(CommandEntry.SAVE_NAME_ARG_ID, out Argument avarname))
-                    {
-                        if (!curEnt.VarLookup.ContainsKey(avarname.ToString()))
-                        {
-                            throw new ErrorInducedException("Error in command line " + curEnt.ScriptLine + ": (" + curEnt.CommandLine + "): Invalid variable save name: " + avarname.ToString());
-                        }
-                    }
-                    if (curEnt.IsCallback)
-                    {
-                        try
-                        {
-                            curEnt.Command.PreAdaptToCIL(values, i);
-                        }
-                        catch (ErrorInducedException ex)
-                        {
-                            throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
-                        }
-                    }
-                    curEnt.DBMode = values.DBMode;
+                    ArgumentCompiler.Compile(argPair.Value, Created);
                 }
-                ccse.LocalVariables = new ObjectHolder[values.CLVarID];
-                for (int n = 0; n < values.CLVariables.Count; n++)
+                if (!curEnt.IsCallback)
                 {
-                    foreach (SingleCILVariable locVar in values.CLVariables[n])
-                    {
-                        ccse.LocalVariables[locVar.Index] = new ObjectHolder();
-                    }
-                }
-                ilgen.Emit(OpCodes.Ldarg, 4);
-                ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
-                for (int i = 0; i < ccse.Entries.Length; i++)
-                {
-                    ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
                     try
                     {
-                        ccse.Entries[i].Command.AdaptToCIL(values, i);
+                        curEnt.Command.PreAdaptToCIL(values, i);
                     }
                     catch (ErrorInducedException ex)
                     {
-                        throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine + "), compile error (Adapt) occured: " + ex.Message);
+                        throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
                     }
+                    curEnt.VarLookup = values.CreateVarLookup();
                 }
-                ilgen.MarkLabel(ccse.AdaptedILPoints[ccse.AdaptedILPoints.Length - 1]);
-                values.MarkCommand(ccse.Entries.Length);
-                ilgen.Emit(OpCodes.Ret);
-                typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
-                Type t_c = typebuild_c.CreateType();
-                Type tP_c2 = typebuild_c2.CreateType();
-                ccse.MainCompiledRunnable = Activator.CreateInstance(t_c) as CompiledCommandRunnable;
-#if SAVE
-                StringBuilder outp = new StringBuilder();
-                for (int i = 0; i < ilgen.Codes.Count; i++)
+                if (curEnt.NamedArguments.TryGetValue(CommandEntry.SAVE_NAME_ARG_ID, out Argument avarname))
                 {
-                    outp.Append(ilgen.Codes[i].Key.Name + ": " + ilgen.Codes[i].Value + "\n");
-                }
-                for (int n = 0; n < ILGens.Count; n++)
-                {
-                    outp.Append("\n\n\n// -----\n\n\n");
-                    for (int i = 0; i < ILGens[n].Codes.Count; i++)
+                    if (!curEnt.VarLookup.ContainsKey(avarname.ToString()))
                     {
-                        outp.Append(ILGens[n].Codes[i].Key.Name + ": " + ILGens[n].Codes[i].Value + "\n");
+                        throw new ErrorInducedException("Error in command line " + curEnt.ScriptLine + ": (" + curEnt.CommandLine + "): Invalid variable save name: " + avarname.ToString());
                     }
                 }
-                System.IO.File.WriteAllText("script_" + tname + ".il", outp.ToString());
-#endif
-                return Created;
+                if (curEnt.IsCallback)
+                {
+                    try
+                    {
+                        curEnt.Command.PreAdaptToCIL(values, i);
+                    }
+                    catch (ErrorInducedException ex)
+                    {
+                        throw new ErrorInducedException("On script line " + curEnt.ScriptLine + " (" + curEnt.CommandLine + "), early compile (PreAdapt) error occured: " + ex.Message);
+                    }
+                }
+                curEnt.DBMode = values.DBMode;
             }
+            ilgen.Emit(OpCodes.Ldarg, 4);
+            ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
+            for (int i = 0; i < ccse.Entries.Length; i++)
+            {
+                ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
+                try
+                {
+                    ccse.Entries[i].Command.AdaptToCIL(values, i);
+                }
+                catch (ErrorInducedException ex)
+                {
+                    throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine + "), compile error (Adapt) occured: " + ex.Message);
+                }
+            }
+            ilgen.MarkLabel(ccse.AdaptedILPoints[ccse.AdaptedILPoints.Length - 1]);
+            values.MarkCommand(ccse.Entries.Length);
+            ilgen.Emit(OpCodes.Ret);
+            typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
+            ConstructorBuilder ctor = typebuild_c.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, CONSTRUCTOR_PARAMS);
+            ILGenerator ctorilgen = ctor.GetILGenerator();
+            ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
+            ctorilgen.Emit(OpCodes.Ldarg_1); // Load: CCSE
+            ctorilgen.Emit(OpCodes.Stfld, CompiledCommandRunnable.EntryField); // Store it to the readonly field.
+            ctorilgen.Emit(OpCodes.Ret); // return
+            Type t_c = typebuild_c.CreateType();
+            Type tP_c2 = typebuild_c2.CreateType();
+            CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse) as CompiledCommandRunnable;
+            ccse.ReferenceCompiledRunnable = runnable;
+            runnable.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
+            runnable.LocalVariables = new ObjectHolder[values.CLVarID];
+            runnable.Debug = script.Debug;
+            for (int n = 0; n < values.CLVariables.Count; n++)
+            {
+                foreach (SingleCILVariable locVar in values.CLVariables[n])
+                {
+                    runnable.LocalVariables[locVar.Index] = new ObjectHolder();
+                }
+            }
+#if SAVE
+            StringBuilder outp = new StringBuilder();
+            for (int i = 0; i < ilgen.Codes.Count; i++)
+            {
+                outp.Append(ilgen.Codes[i].Key.Name + ": " + ilgen.Codes[i].Value + "\n");
+            }
+            for (int n = 0; n < ILGens.Count; n++)
+            {
+                outp.Append("\n\n\n// -----\n\n\n");
+                for (int i = 0; i < ILGens[n].Codes.Count; i++)
+                {
+                    outp.Append(ILGens[n].Codes[i].Key.Name + ": " + ILGens[n].Codes[i].Value + "\n");
+                }
+            }
+            System.IO.File.WriteAllText("script_" + tname + ".il", outp.ToString());
+#endif
+            return Created;
         }
+
+        private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry) };
 
         /// <summary>
         /// Matcher for usable script name characters.
@@ -350,7 +357,7 @@ namespace FreneticScript.ScriptSystems
             {
                 BaseColor = TextStyle.Simple,
                 cInd = 0,
-                CSE = ccse,
+                Runnable = null,
                 ErrorHandler = null,
                 Fallback = tab.Fallback,
                 Bits = tab.Bits,
@@ -513,29 +520,9 @@ namespace FreneticScript.ScriptSystems
     }
 
     /// <summary>
-    /// Abstract class for compiled runnables.
-    /// </summary>
-    public abstract class CompiledCommandRunnable
-    {
-        /// <summary>
-        /// This class's <see cref="Run(CommandQueue, IntHolder, CommandEntry[], int)"/> method.
-        /// </summary>
-        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
-        
-        /// <summary>
-        /// Runs the runnable.
-        /// </summary>
-        /// <param name="queue">The queue to run on.</param>
-        /// <param name="counter">The current command index.</param>
-        /// <param name="fent">The first entry (the entry to start calculating at).</param>
-        /// <param name="entries">The entry set ran with.</param>
-        public abstract void Run(CommandQueue queue, IntHolder counter, CommandEntry[] entries, int fent);
-    }
-
-    /// <summary>
     /// Holds a 32-bit integer.
     /// </summary>
-    public class IntHolder
+    public class IntHolder // TODO: Remove!
     {
         /// <summary>
         /// The actual integer.

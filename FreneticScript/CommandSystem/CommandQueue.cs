@@ -12,6 +12,7 @@ using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem.QueueCmds;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
 using System.Reflection;
 using System.Threading;
 
@@ -25,12 +26,12 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// The current stack of all command execution data.
         /// </summary>
-        public Stack<CompiledCommandStackEntry> CommandStack = new Stack<CompiledCommandStackEntry>();
+        public Stack<CompiledCommandRunnable> RunningStack = new Stack<CompiledCommandRunnable>();
 
         /// <summary>
-        /// Represents the <see cref="CommandQueue.CurrentStackEntry"/> field.
+        /// Represents the <see cref="CommandQueue.CurrentRunnable"/> field.
         /// </summary>
-        public static FieldInfo COMMANDQUEUE_CURRENTENTRY = typeof(CommandQueue).GetField(nameof(CurrentStackEntry));
+        public static FieldInfo COMMANDQUEUE_CURRENTRUNNABLE = typeof(CommandQueue).GetField(nameof(CurrentRunnable));
 
         /// <summary>
         /// Represents the <see cref="GetTagData"/> method.
@@ -38,9 +39,9 @@ namespace FreneticScript.CommandSystem
         public static MethodInfo COMMANDQUEUE_GETTAGDATA = typeof(CommandQueue).GetMethod(nameof(GetTagData));
 
         /// <summary>
-        /// The current stack entry being used.
+        /// The current command runnable being processed.
         /// </summary>
-        public CompiledCommandStackEntry CurrentStackEntry;
+        public CompiledCommandRunnable CurrentRunnable;
         
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
@@ -95,8 +96,8 @@ namespace FreneticScript.CommandSystem
                 BasicTagData.TagSystem = Engine.TagSystem;
                 BasicTagData.ErrorHandler = Error;
             }
-            BasicTagData.CSE = CurrentStackEntry;
-            BasicTagData.DBMode = CurrentStackEntry == null ? DebugMode.FULL : CurrentStackEntry.Debug;
+            BasicTagData.Runnable = CurrentRunnable;
+            BasicTagData.DBMode = CurrentRunnable == null ? DebugMode.FULL : CurrentRunnable.Debug;
             return BasicTagData;
         }
 
@@ -132,18 +133,18 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether it should output.</returns>
         public bool ShouldOutputLast(out CommandEntry entry)
         {
-            if (CurrentStackEntry == null)
+            if (CurrentRunnable == null)
             {
                 entry = null;
                 return false;
             }
-            if (CurrentStackEntry.Index > CurrentStackEntry.Entries.Length)
+            if (CurrentRunnable.Index > CurrentRunnable.Entry.Entries.Length)
             {
-                entry = CurrentStackEntry.At(CurrentStackEntry.Entries.Length - 1);
+                entry = CurrentRunnable.Entry.At(CurrentRunnable.Entry.Entries.Length - 1);
             }
             else
             {
-                entry = CurrentStackEntry.At(CurrentStackEntry.Index - 1);
+                entry = CurrentRunnable.Entry.At(CurrentRunnable.Index - 1);
             }
             return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
         }
@@ -155,7 +156,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether it should output.</returns>
         public bool ShouldOutputCurrent(out CommandEntry entry)
         {
-            entry = CurrentStackEntry?.CurrentCommandEntry;
+            entry = CurrentRunnable?.CurrentCommandEntry;
             return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
         }
         
@@ -170,7 +171,7 @@ namespace FreneticScript.CommandSystem
             }
             Running = true;
             ID = Interlocked.Increment(ref HighestID);
-            CurrentStackEntry = CommandStack.Peek();
+            CurrentRunnable = RunningStack.Peek();
             if (ShouldOutputCurrent(out CommandEntry first))
             {
                 first.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " started.");
@@ -214,10 +215,10 @@ namespace FreneticScript.CommandSystem
                     current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " resuming processing.");
                 }
             }
-            while (CommandStack.Count > 0)
+            while (RunningStack.Count > 0)
             {
-                CurrentStackEntry = CommandStack.Peek();
-                CommandStackRetVal ret = CurrentStackEntry.Run(this);
+                CurrentRunnable = RunningStack.Peek();
+                CommandStackRetVal ret = CurrentRunnable.Entry.Run(this, CurrentRunnable);
                 if (ret == CommandStackRetVal.BREAK)
                 {
                     if (ShouldOutputLast(out CommandEntry current))
@@ -263,9 +264,9 @@ namespace FreneticScript.CommandSystem
         {
             if (entry == null)
             {
-                entry = CurrentStackEntry.Entries[CurrentStackEntry.Index];
+                entry = CurrentRunnable.Entry.Entries[CurrentRunnable.Index];
             }
-            CurrentStackEntry.HandleError(this, entry, message);
+            CurrentRunnable.Entry.HandleError(this, entry, message);
         }
 
         /// <summary>
@@ -275,7 +276,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The object result.</returns>
         public TemplateObject ParseArgument(Argument arg)
         {
-            return arg.Parse(Error, CurrentStackEntry);
+            return arg.Parse(Error, CurrentRunnable);
         }
 
         /// <summary>
@@ -285,7 +286,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The specified command.</returns>
         public CommandEntry GetCommand(int index)
         {
-            return CurrentStackEntry.Entries[index];
+            return CurrentRunnable.Entry.Entries[index];
         }
         
         /// <summary>
@@ -294,7 +295,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>Whether commands should output 'good' results.</returns>
         public bool ShouldShowGood()
         {
-            return CurrentStackEntry.Debug == DebugMode.FULL;
+            return CurrentRunnable.Debug == DebugMode.FULL;
         }
         
         /// <summary>
@@ -303,7 +304,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="text">The text to output.</param>
         public void GoodOutput(string text)
         {
-            if (CurrentStackEntry.Debug == DebugMode.FULL)
+            if (ShouldShowGood())
             {
                 Engine.Context.GoodOutput(text);
                 if (Outputsystem != null)
@@ -318,8 +319,8 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public void Stop()
         {
-            CurrentStackEntry.Index = CurrentStackEntry.Entries.Length + 1;
-            CommandStack.Clear();
+            CurrentRunnable.Index = CurrentRunnable.Entry.Entries.Length + 1;
+            RunningStack.Clear();
         }
         
         /// <summary>
@@ -329,7 +330,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="value">The new value.</param>
         public void SetLocalVar(int c, TemplateObject value)
         {
-            CurrentStackEntry.LocalVariables[c].Internal = value;
+            CurrentRunnable.LocalVariables[c].Internal = value;
         }
     }
 }

@@ -168,12 +168,12 @@ namespace FreneticScript.CommandSystem
         public void ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
         {
             queue = script.ToQueue(this);
-            CompiledCommandStackEntry cse = queue.CommandStack.Peek();
+            CompiledCommandRunnable runnable = queue.RunningStack.Peek();
             if (Variables != null)
             {
-                if (cse.Entries.Length > 0)
+                if (runnable.Entry.Entries.Length > 0)
                 {
-                    Dictionary<string, SingleCILVariable> varlookup = cse.Entries[0].VarLookup;
+                    Dictionary<string, SingleCILVariable> varlookup = runnable.Entry.Entries[0].VarLookup;
                     foreach (KeyValuePair<string, TemplateObject> var in Variables)
                     {
                         if (!var.Key.StartsWithNull())
@@ -181,13 +181,13 @@ namespace FreneticScript.CommandSystem
                             if (varlookup.TryGetValue(var.Key, out SingleCILVariable varx))
                             {
                                 // TODO: Type verification!
-                                cse.LocalVariables[varx.Index].Internal = var.Value;
+                                runnable.LocalVariables[varx.Index].Internal = var.Value;
                             }
                         }
                     }
                 }
             }
-            cse.Debug = mode; // TODO: Scrap this debug changer?
+            runnable.Debug = mode; // TODO: Scrap this debug changer?
             queue.Execute();
             // TODO: Restore the variable map set.
             //Variables = queue.LowestVariables;

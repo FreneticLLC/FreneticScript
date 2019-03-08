@@ -32,8 +32,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// Parse the argument part, reading any tags or other special data.
         /// </summary>
         /// <param name="error">What to invoke if there is an error.</param>
-        /// <param name="cse">The command stack entry.</param>
+        /// <param name="runnable">The command runnable.</param>
         /// <returns>The parsed final text.</returns>
-        public abstract TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse);
+        public abstract TemplateObject Parse(Action<string> error, CompiledCommandRunnable runnable);
     }
 }

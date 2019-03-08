@@ -123,9 +123,9 @@ namespace FreneticScript.CommandSystem
         /// <returns>The correct debug mode (whatever gives least output).</returns>
         public DebugMode CorrectDBMode(CommandQueue queue)
         {
-            if (queue.CurrentStackEntry.Debug.ShowsLessThan(DBMode))
+            if (queue.CurrentRunnable.Debug.ShowsLessThan(DBMode))
             {
-                return queue.CurrentStackEntry.Debug;
+                return queue.CurrentRunnable.Debug;
             }
             return DBMode;
         }
@@ -275,7 +275,7 @@ namespace FreneticScript.CommandSystem
         {
             if (NamedArguments.TryGetValue(name, out Argument arg))
             {
-                return arg.Parse(queue.Error, queue.CurrentStackEntry);
+                return arg.Parse(queue.Error, queue.CurrentRunnable);
             }
             return null;
         }
@@ -288,7 +288,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument.</returns>
         public TemplateObject GetArgumentObject(CommandQueue queue, int place)
         {
-            return Arguments[place].Parse(queue.Error, queue.CurrentStackEntry);
+            return Arguments[place].Parse(queue.Error, queue.CurrentRunnable);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The parsed argument as a string.</returns>
         public string GetArgument(CommandQueue queue, int place)
         {
-            return Arguments[place].Parse(queue.Error, queue.CurrentStackEntry).ToString();
+            return Arguments[place].Parse(queue.Error, queue.CurrentRunnable).ToString();
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The entry data.</returns>
         public void SetData(CommandQueue queue, AbstractCommandEntryData x)
         {
-            queue.CurrentStackEntry.EntryData[OwnIndex] = x;
+            queue.CurrentRunnable.EntryData[OwnIndex] = x;
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The entry data.</returns>
         public AbstractCommandEntryData GetData(CommandQueue queue)
         {
-            return queue.CurrentStackEntry.EntryData[OwnIndex];
+            return queue.CurrentRunnable.EntryData[OwnIndex];
         }
 
         /// <summary>

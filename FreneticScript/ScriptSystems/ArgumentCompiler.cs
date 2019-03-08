@@ -54,12 +54,12 @@ namespace FreneticScript.ScriptSystems
         public static FieldInfo Argument_FirstBit = typeof(Argument).GetField(nameof(Argument.FirstBit));
 
         /// <summary>
-        /// The <see cref="Argument.Parse(Action{string}, CompiledCommandStackEntry)"/> method.
+        /// The <see cref="Argument.Parse(Action{string}, CompiledCommandRunnable)"/> method.
         /// </summary>
         public static MethodInfo Argument_Parse = typeof(Argument).GetMethod(nameof(Argument.Parse));
 
         /// <summary>
-        /// The <see cref="ArgumentBit.Parse(Action{string}, CompiledCommandStackEntry)"/> method.
+        /// The <see cref="ArgumentBit.Parse(Action{string}, CompiledCommandRunnable)"/> method.
         /// </summary>
         public static MethodInfo ArgumentBit_Parse = typeof(ArgumentBit).GetMethod(nameof(ArgumentBit.Parse));
 
@@ -131,7 +131,7 @@ namespace FreneticScript.ScriptSystems
                     );
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(Argument));
-            MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandStackEntry) });
+            MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) });
             CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
             if (argument.Bits.Length == 0) // Empty argument
             {
@@ -163,7 +163,7 @@ namespace FreneticScript.ScriptSystems
                 else
                 {
                     ilgen.Emit(OpCodes.Ldarg_1); // Load Action<string> 'error'
-                    ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandStackEntry 'cse'
+                    ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandRunnable 'runnable'
                     ilgen.Emit(OpCodes.Callvirt, ArgumentBit_Parse); // Generic call to virtual parse method, for unknown argument bit types.
                 }
             }
@@ -216,7 +216,7 @@ namespace FreneticScript.ScriptSystems
                     else
                     {
                         ilgen.Emit(OpCodes.Ldarg_1); // Load Action<string> 'error'
-                        ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandStackEntry 'cse'
+                        ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandRunnable 'runnable'
                         ilgen.Emit(OpCodes.Callvirt, ArgumentBit_Parse); // Generic call to virtual parse method, for unknown argument bit types.
                     }
                     ilgen.Emit(OpCodes.Callvirt, Object_ToString); // Compress the result to a string

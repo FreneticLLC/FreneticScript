@@ -98,7 +98,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     values.DBMode = DebugMode.NONE;
                     break;
                 case "default":
-                    values.DBMode = values.Entry.Debug;
+                    values.DBMode = values.Entry.Script.Debug;
                     break;
                 default:
                     throw new ErrorInducedException("Unknown debug mode: " + TextStyle.Separate + larg + TextStyle.Error + "!");

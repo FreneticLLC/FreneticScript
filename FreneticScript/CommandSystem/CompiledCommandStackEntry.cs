@@ -21,12 +21,12 @@ namespace FreneticScript.CommandSystem
     /// <summary>
     /// Represents a precompiled command stack entry.
     /// </summary>
-    public class CompiledCommandStackEntry: CommandStackEntry
+    public class CompiledCommandStackEntry
     {
         /// <summary>
         /// The compiled runner object.
         /// </summary>
-        public CompiledCommandRunnable MainCompiledRunnable;
+        public CompiledCommandRunnable ReferenceCompiledRunnable;
 
         /// <summary>
         /// Where in the CIL code each entry starts.
@@ -34,61 +34,71 @@ namespace FreneticScript.CommandSystem
         public Label[] AdaptedILPoints;
 
         /// <summary>
-        /// Represents the <see cref="CompiledCommandStackEntry.LocalVariables"/> field.
+        /// The script that sourced this entry.
         /// </summary>
-        public static readonly FieldInfo CompiledCommandStackEntry_LocalVariables = typeof(CompiledCommandStackEntry).GetField(nameof(CompiledCommandStackEntry.LocalVariables));
+        public CommandScript Script;
 
         /// <summary>
-        /// Variables local to the compiled function.
+        /// The backing command system.
         /// </summary>
-        public ObjectHolder[] LocalVariables;
-        
-        /// <summary>
-        /// Perfectly duplicates this stack entry.
-        /// </summary>
-        /// <returns>The newly duplicated stack entry.</returns>
-        public CompiledCommandStackEntry Duplicate()
+        public ScriptEngine System
         {
-            CompiledCommandStackEntry ccse = MemberwiseClone() as CompiledCommandStackEntry;
-            ccse.LocalVariables = new ObjectHolder[LocalVariables.Length];
-            for (int i = 0; i < ccse.LocalVariables.Length; i++)
+            get
             {
-                ccse.LocalVariables[i] = new ObjectHolder() { Internal = LocalVariables[i].Internal };
+                return Script.System;
             }
-            ccse.IndexHelper = new IntHolder();
-            return ccse;
+        }
+
+        /// <summary>
+        /// All available commands.
+        /// </summary>
+        public CommandEntry[] Entries;
+
+        /// <summary>
+        /// Gets the command entry at a specified index.
+        /// </summary>
+        /// <param name="index">The specified index.</param>
+        /// <returns>The command entry, or null.</returns>
+        public CommandEntry At(int index)
+        {
+            if (index < 0 || index >= Entries.Length)
+            {
+                return null;
+            }
+            return Entries[index];
         }
 
         /// <summary>
         /// Run this command stack.
         /// </summary>
         /// <param name="queue">The queue to run under.</param>
+        /// <param name="runnable">The runnable to run.</param>
         /// <returns>Whether to continue looping.</returns>
-        public CommandStackRetVal Run(CommandQueue queue)
+        public CommandStackRetVal Run(CommandQueue queue, CompiledCommandRunnable runnable)
         {
-            CurrentQueue = queue;
+            runnable.CurrentQueue = queue;
             try
             {
-                MainCompiledRunnable.Run(queue, IndexHelper, Entries, Index);
-                Index = IndexHelper.Internal + 1;
+                runnable.Run(queue, runnable.IndexHelper, Entries, runnable.Index);
+                runnable.Index++;
                 if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
                 {
                     return CommandStackRetVal.BREAK;
                 }
-                Callback?.Invoke();
-                if (queue.CommandStack.Count == 0)
+                runnable.Callback?.Invoke();
+                if (queue.RunningStack.Count == 0)
                 {
                     return CommandStackRetVal.BREAK;
                 }
-                if (queue.CommandStack.Peek() != this)
+                if (queue.RunningStack.Peek() != runnable)
                 {
                     return CommandStackRetVal.CONTINUE;
                 }
-                if (Index >= Entries.Length)
+                if (runnable.Index >= Entries.Length)
                 {
-                    queue.CommandStack.Pop();
+                    queue.RunningStack.Pop();
                 }
-                if (queue.CommandStack.Count == 0)
+                if (queue.RunningStack.Count == 0)
                 {
                     return CommandStackRetVal.STOP;
                 }
@@ -101,14 +111,13 @@ namespace FreneticScript.CommandSystem
                 {
                     try
                     {
-                        Index = IndexHelper.Internal;
                         if (ex is ErrorInducedException)
                         {
-                            queue.HandleError(Entries[Index], ex.Message);
+                            queue.HandleError(Entries[runnable.Index], ex.Message);
                         }
                         else
                         {
-                            queue.HandleError(Entries[Index], "Internal exception:\n------\n" + ex.ToString() + "\n------");
+                            queue.HandleError(Entries[runnable.Index], "Internal exception:\n------\n" + ex.ToString() + "\n------");
                         }
                     }
                     catch (Exception ex2)
@@ -120,24 +129,24 @@ namespace FreneticScript.CommandSystem
                         if (!(ex2 is ErrorInducedException))
                         {
                             string message = ex2.ToString();
-                            if (Debug <= DebugMode.MINIMAL)
+                            if (runnable.Debug <= DebugMode.MINIMAL)
                             {
                                 queue.Engine.Context.BadOutput(message);
                                 if (queue.Outputsystem != null)
                                 {
                                     queue.Outputsystem.Invoke(message, MessageType.BAD);
                                 }
-                                Index = Entries.Length + 1;
-                                queue.CommandStack.Clear();
+                                runnable.Index = Entries.Length + 1;
+                                queue.RunningStack.Clear();
                             }
                         }
                     }
                 }
-                if (queue.CommandStack.Count > 0)
+                if (queue.RunningStack.Count > 0)
                 {
-                    if (queue.CommandStack.Peek() == this)
+                    if (queue.RunningStack.Peek() == runnable)
                     {
-                        queue.CommandStack.Pop();
+                        queue.RunningStack.Pop();
                     }
                     return CommandStackRetVal.CONTINUE;
                 }
@@ -145,15 +154,73 @@ namespace FreneticScript.CommandSystem
             }
             finally
             {
-                CurrentQueue = null;
+                runnable.CurrentQueue = null;
             }
+        }
+
+        /// <summary>
+        /// Handles an error as appropriate to the situation, in the current queue, from the current command.
+        /// </summary>
+        /// <param name="queue">The associated queue.</param>
+        /// <param name="entry">The command entry that errored.</param>
+        /// <param name="message">The error message.</param>
+        public void HandleError(CommandQueue queue, CommandEntry entry, string message)
+        {
+            StringBuilder stacktrace = new StringBuilder();
+            stacktrace.Append("ERROR: " + message + "\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
+                + ": (" + entry.Name + ")\n");
+            queue.WaitingOn = null;
+            CompiledCommandRunnable runnable = queue.RunningStack.Count > 0 ? queue.RunningStack.Peek() : null;
+            DebugMode dbmode = runnable == null ? DebugMode.FULL : runnable.Debug;
+            while (runnable != null)
+            {
+                for (int i = runnable.Index; i < runnable.Entry.Entries.Length; i++)
+                {
+                    CommandEntry entr = runnable.Entry.Entries[i];
+                    if (entr.Command is TryCommand &&
+                        entr.IsCallback)
+                    {
+                        entry.GoodOutput(queue, "Force-exiting try block.");
+                        // TODO: queue.SetVariable("stack_trace", new TextTag(stacktrace.ToString().Substring(0, stacktrace.Length - 1)));
+                        runnable.Index = i + 2;
+                        throw new ErrorInducedException();
+                    }
+                }
+                runnable.Index = runnable.Entry.Entries.Length + 1;
+                queue.RunningStack.Pop();
+                if (queue.RunningStack.Count > 0)
+                {
+                    runnable = queue.RunningStack.Peek();
+                    queue.CurrentRunnable = runnable;
+                    if (runnable.Index <= runnable.Entry.Entries.Length)
+                    {
+                        stacktrace.Append("    in script '" + runnable.Entry.Entries[runnable.Index - 1].ScriptName + "' at line " + (runnable.Entry.Entries[runnable.Index - 1].ScriptLine + 1)
+                            + ": (" + runnable.Entry.Entries[runnable.Index - 1].Name + ")\n");
+                    }
+                }
+                else
+                {
+                    runnable = null;
+                    break;
+                }
+            }
+            message = stacktrace.ToString().Substring(0, stacktrace.Length - 1);
+            if (dbmode <= DebugMode.MINIMAL)
+            {
+                queue.Engine.Context.BadOutput(message);
+                if (queue.Outputsystem != null)
+                {
+                    queue.Outputsystem.Invoke(message, MessageType.BAD);
+                }
+            }
+            throw new ErrorInducedException("");
         }
     }
 
     /// <summary>
     /// Holds a <see cref="TemplateObject"/>.
     /// </summary>
-    public class ObjectHolder
+    public class ObjectHolder // TODO: Remove!
     {
         /// <summary>
         /// The held object.

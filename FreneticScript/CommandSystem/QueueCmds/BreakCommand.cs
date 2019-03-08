@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
@@ -97,19 +98,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             for (int i = 0; i < count; i++)
             {
-                CommandStackEntry cse = queue.CurrentStackEntry;
-                for (int ind = cse.Index; ind < cse.Entries.Length; ind++)
+                CompiledCommandRunnable runnable = queue.CurrentRunnable;
+                for (int ind = runnable.Index; ind < runnable.Entry.Entries.Length; ind++)
                 {
-                    CommandEntry tentry = cse.Entries[ind];
+                    CommandEntry tentry = runnable.Entry.Entries[ind];
                     if (tentry.Command.IsBreakable && tentry.IsCallback)
                     {
-                        cse.Index = ind + 1;
+                        runnable.Index = ind + 1;
                         goto completed;
                     }
                 }
-                if (queue.CommandStack.Count > 1)
+                if (queue.RunningStack.Count > 1)
                 {
-                    queue.CommandStack.Pop();
+                    queue.RunningStack.Pop();
                 }
                 else
                 {

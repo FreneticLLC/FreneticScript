@@ -90,15 +90,15 @@ namespace FreneticScript.CommandSystem.Arguments
         /// Parse the argument, reading any tags or other special data.
         /// </summary>
         /// <param name="error">What to invoke if there is an error.</param>
-        /// <param name="cse">The command stack entry.</param>
+        /// <param name="runnable">The command runnable.</param>
         /// <returns>The parsed final text.</returns>
-        public virtual TemplateObject Parse(Action<string> error, CompiledCommandStackEntry cse)
+        public virtual TemplateObject Parse(Action<string> error, CompiledCommandRunnable runnable)
         {
             if (TrueForm == null)
             {
-                ArgumentCompiler.Compile(this, cse);
+                ArgumentCompiler.Compile(this, runnable.Entry);
             }
-            return TrueForm.Parse(error, cse);
+            return TrueForm.Parse(error, runnable);
         }
         
         /// <summary>

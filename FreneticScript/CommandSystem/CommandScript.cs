@@ -158,7 +158,7 @@ namespace FreneticScript.CommandSystem
         public CommandQueue ToQueue(ScriptEngine system)
         {
             CommandQueue queue = new CommandQueue(this, system);
-            queue.CommandStack.Push(Compiled.Duplicate());
+            queue.RunningStack.Push(Compiled.ReferenceCompiledRunnable.Duplicate());
             return queue;
         }
 
