@@ -28,7 +28,7 @@ namespace FreneticScript.ScriptSystems
     /// </summary>
     public static class ScriptCompiler
     {
-        private static readonly Type[] RUN_METHOD_PARAMETERS = new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) };
+        private static readonly Type[] RUN_METHOD_PARAMETERS = new Type[] { typeof(CommandQueue) };
 
         /// <summary>
         /// Compiles a command script.
@@ -63,8 +63,13 @@ namespace FreneticScript.ScriptSystems
                 Script = script,
                 ILGen = ilgen,
                 Method = methodbuild_c,
-                DBMode = script.Debug
+                DBMode = script.Debug,
+                EntryFields = new FieldInfo[ccse.Entries.Length]
             };
+            for (int i = 0; i < ccse.Entries.Length; i++)
+            {
+                values.EntryFields[i] = typebuild_c.DefineField("_field_entry_" + i, typeof(CommandEntry), FieldAttributes.Public | FieldAttributes.InitOnly);
+            }
             values.PushVarSet();
             for (int i = 0; i < ccse.AdaptedILPoints.Length; i++)
             {
@@ -158,7 +163,8 @@ namespace FreneticScript.ScriptSystems
                 }
                 curEnt.DBMode = values.DBMode;
             }
-            ilgen.Emit(OpCodes.Ldarg, 4);
+            values.LoadRunnable();
+            ilgen.Emit(OpCodes.Ldfld, CompiledCommandRunnable.IndexField);
             ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
@@ -181,10 +187,18 @@ namespace FreneticScript.ScriptSystems
             ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
             ctorilgen.Emit(OpCodes.Ldarg_1); // Load: CCSE
             ctorilgen.Emit(OpCodes.Stfld, CompiledCommandRunnable.EntryField); // Store it to the readonly field.
+            for (int i = 0; i < values.EntryFields.Length; i++)
+            {
+                ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
+                ctorilgen.Emit(OpCodes.Ldarg_2); // Load input array
+                ctorilgen.Emit(OpCodes.Ldc_I4, i); // Load index in the array
+                ctorilgen.Emit(OpCodes.Ldelem_Ref); // Load the value from the array
+                ctorilgen.Emit(OpCodes.Stfld, values.EntryFields[i]); // Store it to the readonly field.
+            }
             ctorilgen.Emit(OpCodes.Ret); // return
             Type t_c = typebuild_c.CreateType();
             Type tP_c2 = typebuild_c2.CreateType();
-            CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse) as CompiledCommandRunnable;
+            CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse, ccse.Entries) as CompiledCommandRunnable;
             ccse.ReferenceCompiledRunnable = runnable;
             runnable.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
             runnable.LocalVariables = new ObjectHolder[values.CLVarID];
@@ -215,7 +229,7 @@ namespace FreneticScript.ScriptSystems
             return Created;
         }
 
-        private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry) };
+        private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry), typeof(CommandEntry[]) };
 
         /// <summary>
         /// Matcher for usable script name characters.
@@ -517,16 +531,5 @@ namespace FreneticScript.ScriptSystems
         /// Incrementing ID value for method compilation.
         /// </summary>
         public static long IDINCR = 0;
-    }
-
-    /// <summary>
-    /// Holds a 32-bit integer.
-    /// </summary>
-    public class IntHolder // TODO: Remove!
-    {
-        /// <summary>
-        /// The actual integer.
-        /// </summary>
-        public int Internal;
     }
 }

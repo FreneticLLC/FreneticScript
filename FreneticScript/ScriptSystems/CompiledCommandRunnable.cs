@@ -21,9 +21,9 @@ namespace FreneticScript.ScriptSystems
     public abstract class CompiledCommandRunnable
     {
         /// <summary>
-        /// This class's <see cref="Run(CommandQueue, IntHolder, CommandEntry[], int)"/> method.
+        /// This class's <see cref="Run(CommandQueue)"/> method.
         /// </summary>
-        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
+        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue) });
 
         /// <summary>
         /// This class's <see cref="Entry"/> field.
@@ -36,24 +36,21 @@ namespace FreneticScript.ScriptSystems
         public static readonly FieldInfo LocalVariablesField = typeof(CompiledCommandRunnable).GetField(nameof(LocalVariables));
 
         /// <summary>
+        /// Represents the <see cref="Index"/> field.
+        /// </summary>
+        public static readonly FieldInfo IndexField = typeof(CompiledCommandRunnable).GetField(nameof(Index));
+
+        /// <summary>
         /// Runs the runnable.
         /// </summary>
         /// <param name="queue">The queue to run on.</param>
-        /// <param name="counter">The current command index.</param>
-        /// <param name="fent">The first entry (the entry to start calculating at).</param>
-        /// <param name="entries">The entry set ran with.</param>
-        public abstract void Run(CommandQueue queue, IntHolder counter, CommandEntry[] entries, int fent);
+        public abstract void Run(CommandQueue queue);
 
         /// <summary>
         /// Variables local to the compiled function.
         /// </summary>
         public ObjectHolder[] LocalVariables;
-
-        /// <summary>
-        /// Special helper object for index values.
-        /// </summary>
-        public IntHolder IndexHelper = new IntHolder();
-
+        
         /// <summary>
         /// How much debug information this portion of the stack should show.
         /// </summary>
@@ -67,17 +64,7 @@ namespace FreneticScript.ScriptSystems
         /// <summary>
         /// The index of the currently running command.
         /// </summary>
-        public int Index
-        {
-            get
-            {
-                return IndexHelper.Internal;
-            }
-            set
-            {
-                IndexHelper.Internal = value;
-            }
-        }
+        public int Index;
 
         /// <summary>
         /// Gets the current command entry, or null.
@@ -118,7 +105,6 @@ namespace FreneticScript.ScriptSystems
             {
                 lvars[i] = new ObjectHolder() { Internal = origLvars[i].Internal };
             }
-            newCopy.IndexHelper = new IntHolder();
             newCopy.EntryData = new AbstractCommandEntryData[EntryData.Length];
             return newCopy;
         }

@@ -79,7 +79,7 @@ namespace FreneticScript.CommandSystem
             runnable.CurrentQueue = queue;
             try
             {
-                runnable.Run(queue, runnable.IndexHelper, Entries, runnable.Index);
+                runnable.Run(queue);
                 runnable.Index++;
                 if (queue.Delayable && ((queue.Wait > 0f) || queue.WaitingOn != null))
                 {

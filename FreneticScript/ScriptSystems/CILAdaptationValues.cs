@@ -82,12 +82,7 @@ namespace FreneticScript.ScriptSystems
         {
             return Entry.Entries[index];
         }
-
-        /// <summary>
-        /// Represents the <see cref="CompiledCommandStackEntry.Entries"/> field.
-        /// </summary>
-        public static readonly FieldInfo EntriesField = typeof(CompiledCommandStackEntry).GetField(nameof(CompiledCommandStackEntry.Entries));
-
+        
         /// <summary>
         /// Represents the <see cref="CommandEntry.Command"/> field.
         /// </summary>
@@ -102,12 +97,7 @@ namespace FreneticScript.ScriptSystems
         /// Represents the <see cref="CommandEntry.Arguments"/> field.
         /// </summary>
         public static readonly FieldInfo Entry_ArgumentsField = typeof(CommandEntry).GetField(nameof(CommandEntry.Arguments));
-
-        /// <summary>
-        /// Represents the <see cref="IntHolder.Internal"/> field.
-        /// </summary>
-        public static readonly FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField(nameof(IntHolder.Internal));
-
+        
         /// <summary>
         /// Represents the <see cref="CommandQueue.SetLocalVar(int, TemplateObject)"/> method.
         /// </summary>
@@ -251,13 +241,17 @@ namespace FreneticScript.ScriptSystems
         public int CLVarID = 0;
 
         /// <summary>
+        /// Fields storing each command entry.
+        /// </summary>
+        public FieldInfo[] EntryFields;
+
+        /// <summary>
         /// Load the entry onto the stack.
         /// </summary>
         public void LoadEntry(int entry)
         {
-            ILGen.Emit(OpCodes.Ldarg_3);
-            ILGen.Emit(OpCodes.Ldc_I4, entry);
-            ILGen.Emit(OpCodes.Ldelem_Ref);
+            LoadRunnable();
+            ILGen.Emit(OpCodes.Ldfld, EntryFields[entry]);
         }
 
         /// <summary>
@@ -299,9 +293,9 @@ namespace FreneticScript.ScriptSystems
             {
                 ILGen.Comment("End command series at: " + entry);
             }
-            ILGen.Emit(OpCodes.Ldarg_2);
+            ILGen.Emit(OpCodes.Ldarg_0);
             ILGen.Emit(OpCodes.Ldc_I4, entry);
-            ILGen.Emit(OpCodes.Stfld, IntHolder_InternalField);
+            ILGen.Emit(OpCodes.Stfld, CompiledCommandRunnable.IndexField);
         }
 
         /// <summary>
