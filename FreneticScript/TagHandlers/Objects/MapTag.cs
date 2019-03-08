@@ -305,126 +305,13 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Recursive sub-call of Set.
+        /// Gets the sub-settable object, or null if none.
         /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to set it to.</param>
-        /// <param name="src">Source data.</param>
-        public void RecurseSet(string[] names, TemplateObject val, ObjectEditSource src)
+        /// <param name="name">The sub-settable object name.</param>
+        /// <returns>The sub-settable object, or null.</returns>
+        public TemplateObject GetSubSettable(string name)
         {
-            if (names.Length == 1)
-            {
-                Internal[names[0].ToLowerFast()] = val;
-                return;
-            }
-            if (Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
-            {
-                string[] n2 = new string[names.Length - 1];
-                Array.Copy(names, 1, n2, 0, n2.Length);
-                if (obj is MapTag mt)
-                {
-                    mt.RecurseSet(n2, val, src);
-                }
-                else
-                {
-                    obj.Set(n2, val, src);
-                }
-                return;
-            }
-            base.Set(names, val, src);
-        }
-
-        /// <summary>
-        /// Sets a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to set it to.</param>
-        /// <param name="src">Source data.</param>
-        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names == null)
-            {
-                base.Set(names, val, src);
-                return;
-            }
-            if (names.Length == 0)
-            {
-                Internal = For(val).Internal;
-                return;
-            }
-            RecurseSet(names, val, src);
-        }
-
-        /// <summary>
-        /// Adds a value to a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to add.</param>
-        /// <param name="src">Source data.</param>
-        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
-            {
-                string[] n2 = new string[names.Length - 1];
-                Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Add(n2, val, src);
-                return;
-            }
-            base.Add(names, val, src);
-        }
-
-        /// <summary>
-        /// Subtracts a value from a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to subtract.</param>
-        /// <param name="src">Source data.</param>
-        public override void Subtract(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
-            {
-                string[] n2 = new string[names.Length - 1];
-                Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Subtract(n2, val, src);
-                return;
-            }
-            base.Subtract(names, val, src);
-        }
-
-        /// <summary>
-        /// Multiplies a value by a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to multiply.</param>
-        /// <param name="src">Source data.</param>
-        public override void Multiply(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
-            {
-                string[] n2 = new string[names.Length - 1];
-                Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Multiply(n2, val, src);
-                return;
-            }
-            base.Multiply(names, val, src);
-        }
-
-        /// <summary>
-        /// Divides a value from a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to divide.</param>
-        /// <param name="src">Source data.</param>
-        public override void Divide(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names != null && names.Length > 0 && Internal.TryGetValue(names[0].ToLowerFast(), out TemplateObject obj))
-            {
-                string[] n2 = new string[names.Length - 1];
-                Array.Copy(names, 1, n2, 0, n2.Length);
-                obj.Divide(n2, val, src);
-                return;
-            }
-            base.Divide(names, val, src);
+            return Internal.TryGetValue(name.ToLowerFast(), out TemplateObject value) ? value : null;
         }
     }
 }

@@ -117,7 +117,8 @@ namespace FreneticScript.ScriptSystems
         /// Compiles the argument.
         /// </summary>
         /// <param name="argument">The argument.</param>
-        public static void Compile(Argument argument)
+        /// <param name="entry">The relative stack entry.</param>
+        public static void Compile(Argument argument, CompiledCommandStackEntry entry)
         {
             string tname = "__script_argument__" + IDINCR++;
             AssemblyName asmname = new AssemblyName(tname) { Name = tname };
@@ -131,7 +132,7 @@ namespace FreneticScript.ScriptSystems
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(Argument));
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandStackEntry) });
-            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator() };
+            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
             if (argument.Bits.Length == 0) // Empty argument
             {
                 ilgen.Emit(OpCodes.Ldstr, ""); // Load an empty string
@@ -232,6 +233,8 @@ namespace FreneticScript.ScriptSystems
             argument.TrueForm = Activator.CreateInstance(t_c) as Argument;
             argument.TrueForm.Bits = argument.Bits;
             argument.TrueForm.WasQuoted = argument.WasQuoted;
+            argument.TrueForm.CompiledParseMethod = methodbuild_c;
+            argument.CompiledParseMethod = methodbuild_c;
         }
     }
 }

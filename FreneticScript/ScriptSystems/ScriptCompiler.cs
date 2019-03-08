@@ -28,6 +28,8 @@ namespace FreneticScript.ScriptSystems
     /// </summary>
     public static class ScriptCompiler
     {
+        private static readonly Type[] RUN_METHOD_PARAMETERS = new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) };
+
         /// <summary>
         /// Compiles a command script.
         /// </summary>
@@ -38,7 +40,8 @@ namespace FreneticScript.ScriptSystems
             CompiledCommandStackEntry Created = new CompiledCommandStackEntry()
             {
                 Debug = script.Debug,
-                Entries = script.CommandArray
+                Entries = script.CommandArray,
+                Script = script
             };
             Created.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
             {
@@ -55,8 +58,8 @@ namespace FreneticScript.ScriptSystems
                 CompiledCommandStackEntry ccse = Created;
                 ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
                 TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
-                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
-                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator() };
+                MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), RUN_METHOD_PARAMETERS);
+                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
                 CILAdaptationValues values = new CILAdaptationValues()
                 {
                     Entry = ccse,
@@ -101,6 +104,7 @@ namespace FreneticScript.ScriptSystems
                                 }
                             }
                         }
+                        ArgumentCompiler.Compile(arg, Created);
                     }
                     foreach (KeyValuePair<string, Argument> argPair in curEnt.NamedArguments)
                     {
@@ -123,6 +127,7 @@ namespace FreneticScript.ScriptSystems
                                 }
                             }
                         }
+                        ArgumentCompiler.Compile(argPair.Value, Created);
                     }
                     if (!curEnt.IsCallback)
                     {
@@ -228,6 +233,8 @@ namespace FreneticScript.ScriptSystems
                 + TextStyle.Base + ", error occured: " + ex.Message);
         }
 
+        private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData) };
+
         /// <summary>
         /// Generates tag CIL.
         /// </summary>
@@ -272,8 +279,8 @@ namespace FreneticScript.ScriptSystems
             // Build a method that handles the tag.
             string methodName = "TagParse_" + id + "_Line_" + commandEntry.ScriptLine + "_Arg_" + NameTrimMatcher.TrimToMatches(argumentId) + "_" +
                 string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
-            MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), new Type[] { typeof(TagData) });
-            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator() };
+            MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), TYPES_TAGPARSE_PARAMS);
+            CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
             TagType returnable = tab.Start.ResultType;
             if (returnable == null)
             {
@@ -450,8 +457,9 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="method">The tag method.</param>
         /// <param name="meta">The tag method.</param>
+        /// <param name="system">The relevant script engine.</param>
         /// <returns>The callable.</returns>
-        public static Func<TemplateObject, TagData, TemplateObject> GenerateTagMethodCallable(MethodInfo method, TagMeta meta)
+        public static Func<TemplateObject, TagData, TemplateObject> GenerateTagMethodCallable(MethodInfo method, TagMeta meta, ScriptEngine system)
         {
             if (meta.SpecialCompiler)
             {
@@ -460,7 +468,7 @@ namespace FreneticScript.ScriptSystems
             try
             {
                 DynamicMethod genMethod = new DynamicMethod("tag_parse_for_" + method.DeclaringType.Name + "_" + method.Name, typeof(TemplateObject), new Type[] { typeof(TemplateObject), typeof(TagData) });
-                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = genMethod.GetILGenerator() };
+                CILAdaptationValues.ILGeneratorTracker ilgen = new CILAdaptationValues.ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = system };
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject.
                 ilgen.Emit(OpCodes.Castclass, method.GetParameters()[0].ParameterType); // Convert it to the correct type
                 if (meta.ModifierType != null)
@@ -510,10 +518,10 @@ namespace FreneticScript.ScriptSystems
     public abstract class CompiledCommandRunnable
     {
         /// <summary>
-        /// This class's "Run(queue)" method.
+        /// This class's <see cref="Run(CommandQueue, IntHolder, CommandEntry[], int)"/> method.
         /// </summary>
         public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue), typeof(IntHolder), typeof(CommandEntry[]), typeof(int) });
-
+        
         /// <summary>
         /// Runs the runnable.
         /// </summary>

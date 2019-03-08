@@ -18,6 +18,8 @@ using System.Reflection.Emit;
 using System.Diagnostics;
 using FreneticScript.TagHandlers;
 using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.ScriptSystems
 {
@@ -101,6 +103,11 @@ namespace FreneticScript.ScriptSystems
         public static readonly MethodInfo Entry_GetArgumentObjectMethod = typeof(CommandEntry).GetMethod(nameof(CommandEntry.GetArgumentObject), new Type[] { typeof(CommandQueue), typeof(int) });
 
         /// <summary>
+        /// Represents the <see cref="CommandEntry.Arguments"/> field.
+        /// </summary>
+        public static readonly FieldInfo Entry_ArgumentsField = typeof(CommandEntry).GetField(nameof(CommandEntry.Arguments));
+
+        /// <summary>
         /// Represents the <see cref="IntHolder.Internal"/> field.
         /// </summary>
         public static readonly FieldInfo IntHolder_InternalField = typeof(IntHolder).GetField(nameof(IntHolder.Internal));
@@ -109,6 +116,11 @@ namespace FreneticScript.ScriptSystems
         /// Represents the <see cref="CommandQueue.SetLocalVar(int, TemplateObject)"/> method.
         /// </summary>
         public static readonly MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod(nameof(CommandQueue.SetLocalVar), new Type[] { typeof(int), typeof(TemplateObject) });
+
+        /// <summary>
+        /// Represents the <see cref="CommandQueue.Error"/> field.
+        /// </summary>
+        public static readonly FieldInfo Queue_Error = typeof(CommandQueue).GetField(nameof(CommandQueue.Error));
 
         /// <summary>
         /// The type of the class <see cref="CommandEntry"/> class.
@@ -126,11 +138,16 @@ namespace FreneticScript.ScriptSystems
             public ILGenerator Internal;
 
             /// <summary>
+            /// The backing system.
+            /// </summary>
+            public ScriptEngine System;
+
+            /// <summary>
             /// All codes generated. Only has a value when compiled in DEBUG mode.
             /// </summary>
-            public List<KeyValuePair<OpCode, object>> Codes
+            public List<KeyValuePair<string, object>> Codes
 #if DEBUG
-                = new List<KeyValuePair<OpCode, object>>()
+                = new List<KeyValuePair<string, object>>()
 #endif
                 ;
 
@@ -149,7 +166,10 @@ namespace FreneticScript.ScriptSystems
             {
                 if (StackSize != expected)
                 {
-                    Console.WriteLine("Stack not well sized at " + situation + "... size = " + StackSize + " but should be " + expected + " for code:\n" + Stringify());
+                    System.Context.BadOutput("Stack not well sized at " + TextStyle.Separate + situation + TextStyle.Base
+                        + "... size = " + TextStyle.Separate + StackSize + TextStyle.Base
+                        + " but should be exactly " + TextStyle.Separate + expected + TextStyle.Base + " for code:\n"
+                        + TextStyle.Minor + Stringify());
                 }
             }
 
@@ -163,7 +183,10 @@ namespace FreneticScript.ScriptSystems
             {
                 if (StackSize < expected)
                 {
-                    Console.WriteLine("Stack not well sized at " + situation + "... size = " + StackSize + " but should be at least " + expected + " for code:\n" + Stringify());
+                    System.Context.BadOutput("Stack not well sized at " + TextStyle.Separate + situation + TextStyle.Base
+                        + "... size = " + TextStyle.Separate + StackSize + TextStyle.Base
+                        + " but should be at least " + TextStyle.Separate + expected + TextStyle.Base + " for code:\n"
+                        + TextStyle.Minor + Stringify());
                 }
             }
 
@@ -177,7 +200,10 @@ namespace FreneticScript.ScriptSystems
             {
                 if (StackSize > expected)
                 {
-                    Console.WriteLine("Stack not well sized at " + situation + "... size = " + StackSize + " but should be at most " + expected + " for code:\n" + Stringify());
+                    System.Context.BadOutput("Stack not well sized at " + TextStyle.Separate + situation + TextStyle.Base
+                        + "... size = " + TextStyle.Separate + StackSize + TextStyle.Base
+                        + " but should be at most " + TextStyle.Separate + expected + TextStyle.Base + " for code:\n"
+                        + TextStyle.Minor + Stringify());
                 }
             }
 
@@ -189,9 +215,16 @@ namespace FreneticScript.ScriptSystems
             {
 #if DEBUG
                 StringBuilder fullResult = new StringBuilder();
-                foreach (KeyValuePair<OpCode, object> code in Codes)
+                foreach (KeyValuePair<string, object> code in Codes)
                 {
-                    fullResult.Append(code.Key.Name + ": " + code.Value + "\n");
+                    if (code.Key == "minor")
+                    {
+                        fullResult.Append(TextStyle.Separate + "(Minor)" + TextStyle.Minor + ": " + code.Value + "\n");
+                    }
+                    else
+                    {
+                        fullResult.Append(TextStyle.Separate + code.Key + TextStyle.Minor + ": " + TextStyle.Base + code.Value + "\n");
+                    }
                 }
                 return fullResult.ToString();
 #else
@@ -205,10 +238,11 @@ namespace FreneticScript.ScriptSystems
             /// </summary>
             /// <param name="code">The OpCode used (or 'nop' for special comments).</param>
             /// <param name="val">The value attached to the opcode, if any.</param>
-            public void AddCode(OpCode code, object val)
+            /// <param name="typeName">The special code type name, if any.</param>
+            public void AddCode(OpCode code, object val, string typeName = null)
             {
 #if DEBUG
-                Codes.Add(new KeyValuePair<OpCode, object>(code, val));
+                Codes.Add(new KeyValuePair<string, object>(typeName ?? code.ToString().ToLowerFast(), val));
 #endif
                 Validator(code, val);
             }
@@ -218,8 +252,9 @@ namespace FreneticScript.ScriptSystems
             /// </summary>
             /// <param name="code">The operation code.</param>
             /// <param name="val">The object value.</param>
+            /// <param name="altParams">The number of parameters if GetParameters() is not stable.</param>
             [Conditional("VALIDATE")]
-            public void Validator(OpCode code, object val)
+            public void Validator(OpCode code, object val, int? altParams = null)
             {
                 if (code == OpCodes.Nop)
                 {
@@ -238,16 +273,16 @@ namespace FreneticScript.ScriptSystems
                     }
                     else
                     {
-                        int paramCount = method.GetParameters().Length;
+                        int paramCount = altParams ?? method.GetParameters().Length;
                         if (!method.IsStatic)
                         {
                             paramCount++;
                         }
-                        ValidateStackSizeIsAtLeast("calll opcode " + code, paramCount);
-                        StackSize -= paramCount;
+                        ValidateStackSizeIsAtLeast("call opcode " + code, paramCount);
+                        StackSizeChange(-paramCount);
                         if (method.ReturnType != typeof(void))
                         {
-                            StackSize += 1;
+                            StackSizeChange(1);
                         }
                     }
                 }
@@ -266,7 +301,7 @@ namespace FreneticScript.ScriptSystems
                         case StackBehaviour.Popref:
                         case StackBehaviour.Popi:
                             ValidateStackSizeIsAtLeast("opcode " + code, 1);
-                            StackSize -= 1;
+                            StackSizeChange(-1);
                             break;
                         case StackBehaviour.Pop1_pop1:
                         case StackBehaviour.Popi_pop1:
@@ -277,7 +312,7 @@ namespace FreneticScript.ScriptSystems
                         case StackBehaviour.Popref_pop1:
                         case StackBehaviour.Popref_popi:
                             ValidateStackSizeIsAtLeast("opcode " + code, 2);
-                            StackSize -= 2;
+                            StackSizeChange(-2);
                             break;
                         case StackBehaviour.Popi_popi_popi:
                         case StackBehaviour.Popref_popi_popi:
@@ -287,7 +322,7 @@ namespace FreneticScript.ScriptSystems
                         case StackBehaviour.Popref_popi_popref:
                         case StackBehaviour.Popref_popi_pop1:
                             ValidateStackSizeIsAtLeast("opcode " + code, 3);
-                            StackSize -= 3;
+                            StackSizeChange(-3);
                             break;
                     }
                     switch (code.StackBehaviourPush)
@@ -301,13 +336,14 @@ namespace FreneticScript.ScriptSystems
                         case StackBehaviour.Pushr8:
                         case StackBehaviour.Pushref:
                         case StackBehaviour.Varpush:
-                            StackSize += 1;
+                            StackSizeChange(1);
                             break;
                         case StackBehaviour.Push1_push1:
-                            StackSize += 2;
+                            StackSizeChange(2);
                             break;
                     }
                 }
+                ValidateStackSizeIsAtLeast("post opcode " + code, 0);
             }
 
             /// <summary>
@@ -335,11 +371,20 @@ namespace FreneticScript.ScriptSystems
             public Label BeginExceptionBlock()
             {
                 Label toRet = Internal.BeginExceptionBlock();
-                AddCode(OpCodes.Nop, "<start try block, label>: " + toRet);
-#if VALIDATE
+                AddCode(OpCodes.Nop, toRet, "<start try block, label>");
                 ValidateStackSizeIs("Starting exception block", 0);
-#endif
                 return toRet;
+            }
+
+            /// <summary>
+            /// Changes the stack size.
+            /// </summary>
+            /// <param name="amount">The amount to change by.</param>
+            [Conditional("VALIDATE")]
+            public void StackSizeChange(int amount)
+            {
+                StackSize += amount;
+                AddCode(OpCodes.Nop, "<stack size move: " + amount + ", now: " + StackSize + ">", "minor");
             }
 
             /// <summary>
@@ -348,11 +393,9 @@ namespace FreneticScript.ScriptSystems
             public void BeginCatchBlock(Type exType)
             {
                 Internal.BeginCatchBlock(exType);
-                AddCode(OpCodes.Nop, "<begin catch block, type:> " + exType.FullName);
-#if VALIDATE
+                AddCode(OpCodes.Nop, exType, "<begin catch block, type>");
                 ValidateStackSizeIs("Starting catch block", 0);
-                StackSize += 1;
-#endif
+                StackSizeChange(1);
             }
 
             /// <summary>
@@ -361,10 +404,8 @@ namespace FreneticScript.ScriptSystems
             public void EndExceptionBlock()
             {
                 Internal.EndExceptionBlock();
-                AddCode(OpCodes.Nop, "<end exception block>");
-#if VALIDATE
+                AddCode(OpCodes.Nop, null, "<EndExceptionBlock>");
                 ValidateStackSizeIs("Ending exception block", 0);
-#endif
             }
 
             /// <summary>
@@ -374,7 +415,7 @@ namespace FreneticScript.ScriptSystems
             public void MarkLabel(Label label)
             {
                 Internal.MarkLabel(label);
-                AddCode(OpCodes.Nop, "<Mark label>: " + label);
+                AddCode(OpCodes.Nop, label, "<MarkLabel>");
             }
 
             /// <summary>
@@ -436,11 +477,12 @@ namespace FreneticScript.ScriptSystems
             /// </summary>
             /// <param name="code">The operation code.</param>
             /// <param name="dat">The associated data.</param>
-            public void Emit(OpCode code, MethodInfo dat)
+            /// <param name="altParams">The number of parameters, if GetParameters is not stable.</param>
+            public void Emit(OpCode code, MethodInfo dat, int? altParams = null)
             {
                 Internal.Emit(code, dat);
-                AddCode(OpCodes.Nop, code + ": " + dat + ": " + dat.DeclaringType.Name);
-                Validator(code, dat);
+                AddCode(OpCodes.Nop, dat + ": " + dat.DeclaringType.Name, code.ToString().ToLowerFast());
+                Validator(code, dat, altParams);
             }
 
             /// <summary>
@@ -483,7 +525,7 @@ namespace FreneticScript.ScriptSystems
             public int DeclareLocal(Type t)
             {
                 int x = Internal.DeclareLocal(t).LocalIndex;
-                AddCode(OpCodes.Nop, "<Declare local>: " + t.FullName + " as " + x);
+                AddCode(OpCodes.Nop, t.FullName + " as " + x, "<declare local>");
                 return x;
             }
 
@@ -493,7 +535,7 @@ namespace FreneticScript.ScriptSystems
             /// <param name="str">The comment text.</param>
             public void Comment(string str)
             {
-                AddCode(OpCodes.Nop, "// Comment -- " + str + " --");
+                AddCode(OpCodes.Nop, "-- " + str + " --", "// Comment");
             }
         }
 
@@ -650,6 +692,15 @@ namespace FreneticScript.ScriptSystems
             LoadQueue();
             ILGen.Emit(OpCodes.Call, CommandQueue.COMMANDQUEUE_GETTAGDATA);
         }
+        
+        /// <summary>
+        /// Loads the linked command stack entry.
+        /// </summary>
+        public void LoadCCSE()
+        {
+            LoadQueue();
+            ILGen.Emit(OpCodes.Ldfld, CommandQueue.COMMANDQUEUE_CURRENTENTRY);
+        }
 
         /// <summary>
         /// Marks the command as the correct entry. Should be called with every command!
@@ -688,6 +739,80 @@ namespace FreneticScript.ScriptSystems
         {
             PrepareExecutionCall(entry);
             ILGen.Emit(OpCodes.Call, cmd.ExecuteMethod);
+        }
+
+        /// <summary>
+        /// Makes a call to load the argument at the specified index in the specified entry.
+        /// </summary>
+        /// <param name="entry">The entry.</param>
+        /// <param name="argument">The argument index.</param>
+        public void LoadArgumentObject(int entry, int argument)
+        {
+            Argument arg = Entry.Entries[entry].Arguments[argument];
+            LoadEntry(entry);
+            ILGen.Emit(OpCodes.Ldc_I4, argument);
+            ILGen.Emit(OpCodes.Call, Method_GetArgumentAt);
+            LoadQueue();
+            ILGen.Emit(OpCodes.Ldfld, Queue_Error);
+            LoadCCSE();
+            ILGen.Emit(OpCodes.Call, arg.CompiledParseMethod);
+        }
+
+        /// <summary>
+        /// Loads the local variable at the given index.
+        /// </summary>
+        /// <param name="index">The local variable index.</param>
+        public void LoadLocalVariable(int index)
+        {
+            LoadCCSE();
+            ILGen.Emit(OpCodes.Ldc_I4, index);
+            ILGen.Emit(OpCodes.Call, Method_GetLocalVariableAt);
+        }
+
+        /// <summary>
+        /// Emits logic that ensures the argument is of the given type, converting if needed.
+        /// </summary>
+        /// <param name="arg">The argument.</param>
+        /// <param name="requiredType">The type it needs to be.</param>
+        public void EnsureType(Argument arg, TagType requiredType)
+        {
+            if (ArgumentCompiler.ReturnType(arg, this) != requiredType)
+            {
+                LoadTagData();
+                ILGen.Emit(OpCodes.Call, requiredType.CreatorMethod);
+            }
+        }
+
+        /// <summary>
+        /// A reference to the <see cref="GetLocalVariableAt(CompiledCommandStackEntry, int)"/> method.
+        /// </summary>
+        public static readonly MethodInfo Method_GetLocalVariableAt = typeof(CILAdaptationValues).GetMethod(nameof(GetLocalVariableAt));
+
+        /// <summary>
+        /// Helper method to get the local variable at the specified index.
+        /// </summary>
+        /// <param name="entry">The command stack entry.</param>
+        /// <param name="loc">The variable location.</param>
+        /// <returns>The variable's value.</returns>
+        public static TemplateObject GetLocalVariableAt(CompiledCommandStackEntry entry, int loc)
+        {
+            return entry.LocalVariables[loc].Internal;
+        }
+
+        /// <summary>
+        /// A reference to the <see cref="GetArgumentAt(CommandEntry, int)"/> method.
+        /// </summary>
+        public static readonly MethodInfo Method_GetArgumentAt = typeof(CILAdaptationValues).GetMethod(nameof(GetArgumentAt));
+
+        /// <summary>
+        /// Helper method to get the argument in a command entry at the specified index.
+        /// </summary>
+        /// <param name="entry">The entry.</param>
+        /// <param name="loc">The index location.</param>
+        /// <returns>The argument.</returns>
+        public static Argument GetArgumentAt(CommandEntry entry, int loc)
+        {
+            return entry.Arguments[loc];
         }
     }
 }

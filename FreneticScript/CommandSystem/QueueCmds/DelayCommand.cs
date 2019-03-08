@@ -105,7 +105,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.GoodOutput(queue, "Compiling and running delay command...");
                 }
-                entry.BlockScript = new CommandScript("__delay__command__", "Special", entry.InnerCommandBlock, entry.BlockStart);
+                entry.BlockScript = new CommandScript("__delay__command__", "Special", entry.InnerCommandBlock, entry.System, entry.BlockStart);
             }
             CommandQueue nqueue = entry.BlockScript.ToQueue(entry.Command.Engine);
             nqueue.CommandStack.Peek().Debug = queue.CommandStack.Peek().Debug;

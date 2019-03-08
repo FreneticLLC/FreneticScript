@@ -36,41 +36,62 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandEntry cent = values.Entry.Entries[entry];
             bool debug = cent.DBMode.ShouldShow(DebugMode.FULL);
             string vn = cent.Arguments[0].ToString().ToLowerFast();
-            string mainVar = vn.BeforeAndAfter('.', out string subVar);
+            string[] split = vn.Split('.');
+            string mainVar = split[0];
             if (!cent.VarLookup.TryGetValue(mainVar, out SingleCILVariable locVar))
             {
                 throw new ErrorInducedException("Unknown variable name '" + mainVar + "' - cannot set its value.");
             }
-            string mode = cent.Arguments[1].ToString();
-            bool fasto = mode == "=" && subVar.Length == 0;
-            values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
-            if (!fasto)
+            TagType varType = locVar.Type;
+            if (split.Length > 1)
             {
-                // TODO: generate a field somewhere to store a pre-split value, rather than requiring it be split by the called methods!
-                values.ILGen.Emit(OpCodes.Ldstr, subVar);
+                if (varType.Operation_GetSubSettable == null)
+                {
+                    throw new ErrorInducedException("Cannot get sub-objects on a variable of type '" + varType.TypeName + "'!");
+                }
+                // TODO
             }
-            values.LoadQueue();
-            values.LoadEntry(entry);
-            // TODO: verify that the given mode is valid for the relevant tag type.
-            switch (mode)
+            string mode = cent.Arguments[1].ToString();
+            if (mode == "=")
             {
-                case "=":
-                    values.ILGen.Emit(OpCodes.Call, fasto ? (locVar.Type.DefinesSetMethod ? Method_SetImmediateFast : Method_RawSetImmediateFast) : Method_SetImmediate);
-                    break;
-                case "+=":
-                    values.ILGen.Emit(OpCodes.Call, Method_AddImmediate);
-                    break;
-                case "-=":
-                    values.ILGen.Emit(OpCodes.Call, Method_SubtractImmediate);
-                    break;
-                case "*=":
-                    values.ILGen.Emit(OpCodes.Call, Method_MultiplyImmediate);
-                    break;
-                case "/=":
-                    values.ILGen.Emit(OpCodes.Call, Method_DivideImmediate);
-                    break;
-                default:
-                    throw new NotSupportedException("That setter mode (" + mode + ") is not available!");
+                values.LoadQueue();
+                values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
+                values.LoadArgumentObject(entry, 2);
+                values.EnsureType(cent.Arguments[2], varType);
+                values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
+            }
+            else
+            {
+                ObjectOperationAttribute operation;
+                switch (mode)
+                {
+                    case "+=":
+                        operation = varType.Operation_Add;
+                        break;
+                    case "-=":
+                        operation = varType.Operation_Subtract;
+                        break;
+                    case "*=":
+                        operation = varType.Operation_Multiply;
+                        break;
+                    case "/=":
+                        operation = varType.Operation_Divide;
+                        break;
+                    default:
+                        throw new ErrorInducedException("That setter mode (" + mode + ") does not exist!");
+                }
+                if (operation == null)
+                {
+                    throw new ErrorInducedException("Cannot use that setter mode (" + mode + ") on a variable of type '" + varType.TypeName + "'!");
+                }
+                // This method: Queue.SetLocalVar(index, vars[varloc].Operation(entry.args[2]))
+                values.LoadQueue();
+                values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
+                values.LoadLocalVariable(locVar.Index);
+                values.LoadArgumentObject(entry, 2);
+                values.EnsureType(cent.Arguments[2], varType);
+                values.ILGen.Emit(OpCodes.Call, operation.Method);
+                values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
             }
             if (debug) // If in debug mode...
             {
@@ -102,83 +123,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entry.GoodOutput(queue, "Updated variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' to value: " + TextStyle.Separate + resultObject.GetDebugString());
             }
         }
-
-        /// <summary>
-        /// References <see cref="SetImmediateFast(int, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_SetImmediateFast = typeof(DebugVarSetCommand).GetMethod("SetImmediateFast");
-
-        /// <summary>
-        /// References <see cref="RawSetImmediateFast(int, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_RawSetImmediateFast = typeof(DebugVarSetCommand).GetMethod("RawSetImmediateFast");
-
-        /// <summary>
-        /// References <see cref="SetImmediate(int, string, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_SetImmediate = typeof(DebugVarSetCommand).GetMethod("SetImmediate");
-
-        /// <summary>
-        /// References <see cref="AddImmediate(int, string, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_AddImmediate = typeof(DebugVarSetCommand).GetMethod("AddImmediate");
-
-        /// <summary>
-        /// References <see cref="SubtractImmediate(int, string, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_SubtractImmediate = typeof(DebugVarSetCommand).GetMethod("SubtractImmediate");
-
-        /// <summary>
-        /// References <see cref="MultiplyImmediate(int, string, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_MultiplyImmediate = typeof(DebugVarSetCommand).GetMethod("MultiplyImmediate");
-
-        /// <summary>
-        /// References <see cref="DivideImmediate(int, string, CommandQueue, CommandEntry)"/>.
-        /// </summary>
-        public static MethodInfo Method_DivideImmediate = typeof(DebugVarSetCommand).GetMethod("DivideImmediate");
-
-        /// <summary>
-        /// Empty string array.
-        /// </summary>
-        private static readonly string[] EMPTY = new string[0];
-
-        /// <summary>
-        /// Immediately sets a var that lacks a set method, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void RawSetImmediateFast(int loc, CommandQueue queue, CommandEntry entry)
-        {
-            try
-            {
-                queue.CurrentStackEntry.LocalVariables[loc].Internal = entry.GetArgumentObject(queue, 2);
-            }
-            catch (ErrorInducedException ex)
-            {
-                queue.HandleError(entry, "Error while setting a variable value: " + ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Immediately sets a var, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void SetImmediateFast(int loc, CommandQueue queue, CommandEntry entry)
-        {
-            try
-            {
-                queue.CurrentStackEntry.LocalVariables[loc].Internal.SetFast(entry.GetArgumentObject(queue, 2));
-            }
-            catch (ErrorInducedException ex)
-            {
-                queue.HandleError(entry, "Error while setting a variable value: " + ex.Message);
-            }
-        }
-
+        
         /// <summary>
         /// Gets an object edit source for a queue+entry pair.
         /// </summary>
@@ -188,71 +133,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static ObjectEditSource GetOES(CommandQueue queue, CommandEntry entry)
         {
             return new ObjectEditSource() { Queue = queue, Entry = entry, Error = queue.Error };
-        }
-
-        /// <summary>
-        /// Immediately sets a var, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="sdat">The split data variable.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void SetImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
-        {
-            // TODO: Pre-split!
-            queue.CurrentStackEntry.LocalVariables[loc].Internal.Set(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
-        }
-
-        /// <summary>
-        /// Immediately adds a var, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="sdat">The split data variable.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void AddImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
-        {
-            // TODO: Pre-split!
-            queue.CurrentStackEntry.LocalVariables[loc].Internal.Add(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
-        }
-
-        /// <summary>
-        /// Immediately subtracts a var, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="sdat">The split data variable.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void SubtractImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
-        {
-            // TODO: Pre-split!
-            queue.CurrentStackEntry.LocalVariables[loc].Internal.Subtract(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
-        }
-
-        /// <summary>
-        /// Immediately multiplies a var, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="sdat">The split data variable.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void MultiplyImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
-        {
-            // TODO: Pre-split!
-            queue.CurrentStackEntry.LocalVariables[loc].Internal.Multiply(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
-        }
-
-        /// <summary>
-        /// Immediately divides a var, for compiler reasons.
-        /// </summary>
-        /// <param name="loc">The var location.</param>
-        /// <param name="sdat">The split data variable.</param>
-        /// <param name="queue">The relevant queue.</param>
-        /// <param name="entry">The relevant entry.</param>
-        public static void DivideImmediate(int loc, string sdat, CommandQueue queue, CommandEntry entry)
-        {
-            // TODO: Pre-split!
-            queue.CurrentStackEntry.LocalVariables[loc].Internal.Divide(sdat.Length == 0 ? EMPTY : sdat.SplitFast('.'), entry.GetArgumentObject(queue, 2), GetOES(queue, entry));
         }
 
         /// <summary>

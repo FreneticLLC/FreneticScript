@@ -90,6 +90,11 @@ namespace FreneticScript.CommandSystem
         public const string TYPE_NAME_ANONYMOUS = "Anonymous";
 
         /// <summary>
+        /// The backing command system.
+        /// </summary>
+        public ScriptEngine System;
+
+        /// <summary>
         /// The name of the type of script. Function, File, Event, and Anonymous are common.
         /// </summary>
         public string TypeName;
@@ -125,14 +130,16 @@ namespace FreneticScript.CommandSystem
         /// <param name="_name">The name of the script.</param>
         /// <param name="_typeName">The name of the script type.</param>
         /// <param name="_commands">All commands in the script.</param>
+        /// <param name="engine">The backing script engine.</param>
         /// <param name="adj">How far to negatively adjust the entries' block positions, if any.</param>
         /// <param name="mode">What debug mode to use for this script.</param>
-        public CommandScript(string _name, string _typeName, List<CommandEntry> _commands, int adj = 0, DebugMode mode = DebugMode.FULL)
+        public CommandScript(string _name, string _typeName, List<CommandEntry> _commands, ScriptEngine engine, int adj = 0, DebugMode mode = DebugMode.FULL)
         {
             Debug = mode;
             Name = _name.ToLowerFast();
             TypeName = _typeName;
             CommandArray = _commands.ToArray();
+            System = engine;
             for (int i = 0; i < CommandArray.Length; i++)
             {
                 CommandArray[i] = _commands[i].Duplicate();

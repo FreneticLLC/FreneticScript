@@ -196,7 +196,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 entries.Add(entry.System.TheRequireCommand.GenerateEntry(expectedContext, entry.ScriptName, entry.ScriptLine));
                 entries.AddRange(entry.InnerCommandBlock);
                 CommandScript script = new CommandScript(theEvent.Name + "__handler__" + name,
-                    CommandScript.TYPE_NAME_EVENT, entries, entry.BlockStart, DebugMode.MINIMAL);
+                    CommandScript.TYPE_NAME_EVENT, entries, entry.System, entry.BlockStart, DebugMode.MINIMAL);
                 theEvent.RegisterEventHandler(priority, script, name);
                 entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name + "" + TextStyle.Base
                     + "' defined for event '" + TextStyle.Separate + theEvent.Name + TextStyle.Base + "'.");

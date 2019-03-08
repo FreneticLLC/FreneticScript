@@ -37,6 +37,22 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// The script that sourced this entry.
+        /// </summary>
+        public CommandScript Script;
+
+        /// <summary>
+        /// The backing command system.
+        /// </summary>
+        public ScriptEngine System
+        {
+            get
+            {
+                return Script.System;
+            }
+        }
+
+        /// <summary>
         /// All available commands.
         /// </summary>
         public CommandEntry[] Entries;

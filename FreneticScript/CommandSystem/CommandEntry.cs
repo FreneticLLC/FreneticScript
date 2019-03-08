@@ -379,19 +379,20 @@ namespace FreneticScript.CommandSystem
         public string OutputPrefix(CommandQueue queue)
         {
             string outputableScriptName = OutputableNameMatcher.TrimToMatches(ScriptName);
-            if (outputableScriptName.Length > 8)
+            if (outputableScriptName.Length > 9)
             {
-                outputableScriptName = outputableScriptName.Substring(0, 8);
+                outputableScriptName = outputableScriptName.Substring(0, 8) + "+";
             }
             string outputableCommandName = OutputableNameMatcher.TrimToMatches(Command.Name);
-            if (outputableCommandName.Length > 10)
+            if (outputableCommandName.Length > 11)
             {
-                outputableCommandName = outputableCommandName.Substring(0, 10);
+                outputableCommandName = outputableCommandName.Substring(0, 10) + "+";
             }
             return TextStyle.Minor + "[Q:" + TextStyle.Separate + queue.ID
                 + TextStyle.Minor + ",S:" + TextStyle.Separate + outputableScriptName
                 + TextStyle.Minor + ",L:" + TextStyle.Separate + ScriptLine
-                + TextStyle.Minor + ";C:" + TextStyle.Separate + outputableCommandName + "] ";
+                + TextStyle.Minor + ";C:" + TextStyle.Separate + outputableCommandName
+                + TextStyle.Minor+ "] ";
         }
 
         /// <summary>

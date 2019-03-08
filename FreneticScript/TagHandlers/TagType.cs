@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
@@ -72,9 +73,29 @@ namespace FreneticScript.TagHandlers
         public TagTypeTag TagForm;
 
         /// <summary>
-        /// Whether this tag type defines its own custom "Set" method.
+        /// The add operation for this type, if any.
         /// </summary>
-        public bool DefinesSetMethod;
+        public ObjectOperationAttribute Operation_Add;
+
+        /// <summary>
+        /// The subtract operation for this type, if any.
+        /// </summary>
+        public ObjectOperationAttribute Operation_Subtract;
+
+        /// <summary>
+        /// The multiply operation for this type, if any.
+        /// </summary>
+        public ObjectOperationAttribute Operation_Multiply;
+
+        /// <summary>
+        /// The divide operation for this type, if any.
+        /// </summary>
+        public ObjectOperationAttribute Operation_Divide;
+
+        /// <summary>
+        /// The get-sub-settable operation for this type, if any.
+        /// </summary>
+        public ObjectOperationAttribute Operation_GetSubSettable;
 
         /// <summary>
         /// Constructs the <see cref="TagType"/>.

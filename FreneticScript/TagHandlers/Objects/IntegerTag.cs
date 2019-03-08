@@ -399,92 +399,45 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Sets a value on the integer object, fast.
+        /// Adds a value to the object.
         /// </summary>
-        /// <param name="val">The value to set it to.</param>
-        public override void SetFast(TemplateObject val)
-        {
-            Internal = TryFor(val).Internal;
-        }
-
-        /// <summary>
-        /// Sets a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to set it to.</param>
-        /// <param name="src">Source data.</param>
-        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names == null || names.Length == 0)
-            {
-                Internal = For(val, src.Error).Internal;
-                return;
-            }
-            base.Set(names, val, src);
-        }
-
-        /// <summary>
-        /// Adds a value to a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to add.</param>
-        /// <param name="src">Source data.</param>
-        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
+        [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
+        public IntegerTag Add(IntegerTag val)
         {
-            if (names == null || names.Length == 0)
-            {
-                Internal += For(val, src.Error).Internal;
-                return;
-            }
-            base.Add(names, val, src);
+            Console.WriteLine("ADd " + Internal + " and " + val.Internal);
+#warning temp
+            return new IntegerTag(Internal + val.Internal);
         }
 
         /// <summary>
-        /// Subtracts a value from a value on the object.
+        /// Subtracts a value from the object.
         /// </summary>
-        /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to subtract.</param>
-        /// <param name="src">Source data.</param>
-        public override void Subtract(string[] names, TemplateObject val, ObjectEditSource src)
+        [ObjectOperationAttribute(ObjectOperation.SUBTRACT, Input = TYPE)]
+        public IntegerTag Subtract(IntegerTag val)
         {
-            if (names == null || names.Length == 0)
-            {
-                Internal -= For(val, src.Error).Internal;
-                return;
-            }
-            base.Subtract(names, val, src);
+            return new IntegerTag(Internal - val.Internal);
         }
 
         /// <summary>
-        /// Multiplies a value by a value on the object.
+        /// Multiplies the object by a value.
         /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to multiply.</param>
-        /// <param name="src">Source data.</param>
-        public override void Multiply(string[] names, TemplateObject val, ObjectEditSource src)
+        /// <param name="val">The value to multiply by.</param>
+        [ObjectOperationAttribute(ObjectOperation.MULTIPLY, Input = TYPE)]
+        public IntegerTag Multiply(IntegerTag val)
         {
-            if (names == null || names.Length == 0)
-            {
-                Internal *= For(val, src.Error).Internal;
-                return;
-            }
-            base.Multiply(names, val, src);
+            return new IntegerTag(Internal * val.Internal);
         }
 
         /// <summary>
-        /// Divides a value from a value on the object.
+        /// Divides the object by a value.
         /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to divide.</param>
-        /// <param name="src">Source data.</param>
-        public override void Divide(string[] names, TemplateObject val, ObjectEditSource src)
+        /// <param name="val">The value to divide by.</param>
+        [ObjectOperationAttribute(ObjectOperation.DIVIDE, Input = TYPE)]
+        public IntegerTag Divide(IntegerTag val)
         {
-            if (names == null || names.Length == 0)
-            {
-                Internal /= For(val, src.Error).Internal;
-                return;
-            }
-            base.Divide(names, val, src);
+            return new IntegerTag(Internal / val.Internal);
         }
     }
 }

@@ -82,6 +82,11 @@ namespace FreneticScript.CommandSystem.Arguments
         public Argument TrueForm;
 
         /// <summary>
+        /// The compiled parse method (if available).
+        /// </summary>
+        public MethodInfo CompiledParseMethod;
+
+        /// <summary>
         /// Parse the argument, reading any tags or other special data.
         /// </summary>
         /// <param name="error">What to invoke if there is an error.</param>
@@ -91,7 +96,7 @@ namespace FreneticScript.CommandSystem.Arguments
         {
             if (TrueForm == null)
             {
-                ArgumentCompiler.Compile(this);
+                ArgumentCompiler.Compile(this, cse);
             }
             return TrueForm.Parse(error, cse);
         }

@@ -370,35 +370,13 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>
-        /// Sets a value on the object.
+        /// Adds a value to the object.
         /// </summary>
-        /// <param name="names">The name of the value.</param>
-        /// <param name="val">The value to set it to.</param>
-        /// <param name="src">Source data.</param>
-        public override void Set(string[] names, TemplateObject val, ObjectEditSource src)
-        {
-            if (names == null || names.Length == 0)
-            {
-                Internal = val.ToString();
-                return;
-            }
-            base.Set(names, val, src);
-        }
-
-        /// <summary>
-        /// Adds a value to a value on the object.
-        /// </summary>
-        /// <param name="names">The name of the value.</param>
         /// <param name="val">The value to add.</param>
-        /// <param name="src">Source data.</param>
-        public override void Add(string[] names, TemplateObject val, ObjectEditSource src)
+        [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
+        public TextTag Add(TextTag val)
         {
-            if (names == null || names.Length == 0)
-            {
-                Internal += val.ToString();
-                return;
-            }
-            base.Add(names, val, src);
+            return new TextTag(Internal + val.Internal);
         }
     }
 }

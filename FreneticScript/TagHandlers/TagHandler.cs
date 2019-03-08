@@ -188,7 +188,33 @@ namespace FreneticScript.TagHandlers
                             }
                         }
                     }
-                    type.DefinesSetMethod = type.RawType.GetMethod("Set", BindingFlags.DeclaredOnly, null, SET_METHOD_PARAMETERS, null) != null;
+                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    {
+                        ObjectOperationAttribute operation = method.GetCustomAttribute<ObjectOperationAttribute>();
+                        if (operation == null)
+                        {
+                            continue;
+                        }
+                        operation.Method = method;
+                        switch (operation.Operation)
+                        {
+                            case ObjectOperation.ADD:
+                                type.Operation_Add = operation;
+                                break;
+                            case ObjectOperation.SUBTRACT:
+                                type.Operation_Subtract = operation;
+                                break;
+                            case ObjectOperation.MULTIPLY:
+                                type.Operation_Multiply = operation;
+                                break;
+                            case ObjectOperation.DIVIDE:
+                                type.Operation_Divide = operation;
+                                break;
+                            case ObjectOperation.GETSUBSETTABLE:
+                                type.Operation_GetSubSettable = operation;
+                                break;
+                        }
+                    }
                     TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
                     auto_thi.Meta = auto_thi.Meta.Duplicate();
                     auto_thi.Meta.ReturnTypeResult = Types.RegisteredTypes[auto_thi.Meta.ReturnType];
@@ -204,7 +230,7 @@ namespace FreneticScript.TagHandlers
             {
                 foreach (TagHelpInfo helper in type.TagHelpers.Values)
                 {
-                    helper.RunTagLive = ScriptCompiler.GenerateTagMethodCallable(helper.Method, helper.Meta);
+                    helper.RunTagLive = ScriptCompiler.GenerateTagMethodCallable(helper.Method, helper.Meta, Engine);
                 }
             }
         }
