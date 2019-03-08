@@ -580,45 +580,49 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return Internal.ToString();
         }
-        
+
         /// <summary>
         /// Adds a value to the object.
         /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to add.</param>
         [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
-        public NumberTag Add(NumberTag val)
+        public static NumberTag Add(NumberTag first, NumberTag val)
         {
-            return new NumberTag(Internal + val.Internal);
+            return new NumberTag(first.Internal + val.Internal);
         }
 
         /// <summary>
         /// Subtracts a value from the object.
         /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to subtract.</param>
         [ObjectOperationAttribute(ObjectOperation.SUBTRACT, Input = TYPE)]
-        public NumberTag Subtract(NumberTag val)
+        public static NumberTag Subtract(NumberTag first, NumberTag val)
         {
-            return new NumberTag(Internal - val.Internal);
+            return new NumberTag(first.Internal - val.Internal);
         }
 
         /// <summary>
         /// Multiplies the object by a value.
         /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to multiply by.</param>
         [ObjectOperationAttribute(ObjectOperation.MULTIPLY, Input = TYPE)]
-        public NumberTag Multiply(NumberTag val)
+        public static NumberTag Multiply(NumberTag first, NumberTag val)
         {
-            return new NumberTag(Internal * val.Internal);
+            return new NumberTag(first.Internal * val.Internal);
         }
 
         /// <summary>
         /// Divides the object by a value.
         /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to divide by.</param>
         [ObjectOperationAttribute(ObjectOperation.DIVIDE, Input = TYPE)]
-        public NumberTag Divide(NumberTag val)
+        public static NumberTag Divide(NumberTag first, NumberTag val)
         {
-            return new NumberTag(Internal / val.Internal);
+            return new NumberTag(first.Internal / val.Internal);
         }
     }
 }

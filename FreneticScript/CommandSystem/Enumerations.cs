@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection;
 
 namespace FreneticScript.CommandSystem
 {
@@ -202,40 +201,9 @@ namespace FreneticScript.CommandSystem
     }
 
     /// <summary>
-    /// Represents an object operation method.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public class ObjectOperationAttribute : Attribute
-    {
-        /// <summary>
-        /// The type of operation.
-        /// </summary>
-        public ObjectOperation Operation;
-
-        /// <summary>
-        /// The input tag type (if any).
-        /// </summary>
-        public string Input;
-
-        /// <summary>
-        /// The method this is attached to.
-        /// </summary>
-        public MethodInfo Method;
-
-        /// <summary>
-        /// Constructs the object operation attribute.
-        /// </summary>
-        /// <param name="_operation">The operation type.</param>
-        public ObjectOperationAttribute(ObjectOperation _operation)
-        {
-            Operation = _operation;
-        }
-    }
-
-    /// <summary>
     /// Represents the types of object operation methods.
     /// </summary>
-    public enum ObjectOperation
+    public enum ObjectOperation : int
     {
         /// <summary>
         /// Adds a value to the object.
@@ -258,9 +226,14 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         DIVIDE = 3,
         /// <summary>
-        /// A get-sub-settable method returns a subobject by name.
-        /// Input parameters: string
+        /// Sets a subobject by name.
+        /// Input parameters: TemplateObject, string, (ObjectEditSource)
         /// </summary>
-        GETSUBSETTABLE = 4
+        SET = 4,
+        /// <summary>
+        /// A get-sub-settable method returns a subobject by name.
+        /// Input parameters: string, (ObjectEditSource)
+        /// </summary>
+        GETSUBSETTABLE = 5
     }
 }

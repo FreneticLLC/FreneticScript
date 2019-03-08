@@ -372,11 +372,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// Adds a value to the object.
         /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to add.</param>
         [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
-        public TextTag Add(TextTag val)
+        public static TextTag Add(TextTag first, TextTag val)
         {
-            return new TextTag(Internal + val.Internal);
+            return new TextTag(first.Internal + val.Internal);
         }
     }
 }

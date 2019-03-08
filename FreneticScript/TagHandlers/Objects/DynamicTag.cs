@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.CompilerServices;
-using FreneticScript.CommandSystem;
-using FreneticScript.CommandSystem.Arguments;
 using System.Reflection;
 using System.Reflection.Emit;
-using FreneticUtilities.FreneticExtensions;
+using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.ScriptSystems;
+using FreneticScript.CommandSystem.QueueCmds;
+using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
 {
@@ -204,6 +205,80 @@ namespace FreneticScript.TagHandlers.Objects
         public override string GetDebugString()
         {
             return Internal.GetDebugString();
+        }
+
+        /// <summary>
+        /// Gets the sub-settable object, or null if none.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <param name="name">The sub-settable object name.</param>
+        /// <param name="source">The object edit source.</param>
+        /// <returns>The sub-settable object, or null.</returns>
+        [ObjectOperationAttribute(ObjectOperation.GETSUBSETTABLE, Input = TYPE)]
+        public static TemplateObject GetSubSettable(DynamicTag tag, string name, ObjectEditSource source)
+        {
+            return DebugVarSetCommand.GetSubObject(tag.Internal, source.Entry, source.Queue, name);
+        }
+
+        /// <summary>
+        /// Sets a sub-object by name.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <param name="value">The value to insert.</param>
+        /// <param name="name">The sub-object name to insert.</param>
+        /// <param name="source">The object edit source.</param>
+        [ObjectOperationAttribute(ObjectOperation.SET, Input = TYPE)]
+        public static void SetSubObject(DynamicTag tag, TemplateObject value, string name, ObjectEditSource source)
+        {
+            DebugVarSetCommand.SetSubObject(tag.Internal, value, source.Entry, source.Queue, name);
+        }
+
+        /// <summary>
+        /// Adds a value to the object.
+        /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
+        /// <param name="val">The value to add.</param>
+        /// <param name="source">The object edit source.</param>
+        [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
+        public static DynamicTag Add(DynamicTag first, DynamicTag val, ObjectEditSource source)
+        {
+            return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.ADD));
+        }
+
+        /// <summary>
+        /// Subtracts a value from the object.
+        /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
+        /// <param name="val">The value to subtract.</param>
+        /// <param name="source">The object edit source.</param>
+        [ObjectOperationAttribute(ObjectOperation.SUBTRACT, Input = TYPE)]
+        public static DynamicTag Subtract(DynamicTag first, DynamicTag val, ObjectEditSource source)
+        {
+            return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.SUBTRACT));
+        }
+
+        /// <summary>
+        /// Multiplies the object by a value.
+        /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
+        /// <param name="val">The value to multiply by.</param>
+        /// <param name="source">The object edit source.</param>
+        [ObjectOperationAttribute(ObjectOperation.MULTIPLY, Input = TYPE)]
+        public static DynamicTag Multiply(DynamicTag first, DynamicTag val, ObjectEditSource source)
+        {
+            return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.MULTIPLY));
+        }
+
+        /// <summary>
+        /// Divides the object by a value.
+        /// </summary>
+        /// <param name="first">The value on the left side of the operator.</param>
+        /// <param name="val">The value to divide by.</param>
+        /// <param name="source">The object edit source.</param>
+        [ObjectOperationAttribute(ObjectOperation.DIVIDE, Input = TYPE)]
+        public static DynamicTag Divide(DynamicTag first, DynamicTag val, ObjectEditSource source)
+        {
+            return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.DIVIDE));
         }
     }
 }

@@ -187,34 +187,35 @@ namespace FreneticScript.TagHandlers
                                 type.CreatorMethod = method;
                             }
                         }
-                    }
-                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
-                    {
                         ObjectOperationAttribute operation = method.GetCustomAttribute<ObjectOperationAttribute>();
-                        if (operation == null)
+                        if (operation != null)
                         {
-                            continue;
-                        }
-                        operation.Method = method;
-                        switch (operation.Operation)
-                        {
-                            case ObjectOperation.ADD:
-                                type.Operation_Add = operation;
-                                break;
-                            case ObjectOperation.SUBTRACT:
-                                type.Operation_Subtract = operation;
-                                break;
-                            case ObjectOperation.MULTIPLY:
-                                type.Operation_Multiply = operation;
-                                break;
-                            case ObjectOperation.DIVIDE:
-                                type.Operation_Divide = operation;
-                                break;
-                            case ObjectOperation.GETSUBSETTABLE:
-                                type.Operation_GetSubSettable = operation;
-                                break;
+                            operation.Method = method;
+                            operation.GenerateFunctions();
+                            switch (operation.Operation)
+                            {
+                                case ObjectOperation.ADD:
+                                    type.Operation_Add = operation;
+                                    break;
+                                case ObjectOperation.SUBTRACT:
+                                    type.Operation_Subtract = operation;
+                                    break;
+                                case ObjectOperation.MULTIPLY:
+                                    type.Operation_Multiply = operation;
+                                    break;
+                                case ObjectOperation.DIVIDE:
+                                    type.Operation_Divide = operation;
+                                    break;
+                                case ObjectOperation.SET:
+                                    type.Operation_Set = operation;
+                                    break;
+                                case ObjectOperation.GETSUBSETTABLE:
+                                    type.Operation_GetSubSettable = operation;
+                                    break;
+                            }
                         }
                     }
+                    type.BuildOperations();
                     TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
                     auto_thi.Meta = auto_thi.Meta.Duplicate();
                     auto_thi.Meta.ReturnTypeResult = Types.RegisteredTypes[auto_thi.Meta.ReturnType];

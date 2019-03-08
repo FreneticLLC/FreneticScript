@@ -98,6 +98,27 @@ namespace FreneticScript.TagHandlers
         public ObjectOperationAttribute Operation_GetSubSettable;
 
         /// <summary>
+        /// The set operation for this type, if any.
+        /// </summary>
+        public ObjectOperationAttribute Operation_Set;
+
+        /// <summary>
+        /// An array of operations.
+        /// </summary>
+        public ObjectOperationAttribute[] Operations = new ObjectOperationAttribute[4];
+
+        /// <summary>
+        /// Builds the <see cref="Operations"/> field.
+        /// </summary>
+        public void BuildOperations()
+        {
+            Operations[(int)ObjectOperation.ADD] = Operation_Add;
+            Operations[(int)ObjectOperation.SUBTRACT] = Operation_Subtract;
+            Operations[(int)ObjectOperation.MULTIPLY] = Operation_Multiply;
+            Operations[(int)ObjectOperation.DIVIDE] = Operation_Divide;
+        }
+
+        /// <summary>
         /// Constructs the <see cref="TagType"/>.
         /// </summary>
         public TagType()

@@ -43,16 +43,62 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 throw new ErrorInducedException("Unknown variable name '" + mainVar + "' - cannot set its value.");
             }
             TagType varType = locVar.Type;
+            string mode = cent.Arguments[1].ToString();
+            ObjectOperation operationType;
+            switch (mode)
+            {
+                case "=":
+                    operationType = ObjectOperation.SET;
+                    break;
+                case "+=":
+                    operationType = ObjectOperation.ADD;
+                    break;
+                case "-=":
+                    operationType = ObjectOperation.SUBTRACT;
+                    break;
+                case "*=":
+                    operationType = ObjectOperation.MULTIPLY;
+                    break;
+                case "/=":
+                    operationType = ObjectOperation.DIVIDE;
+                    break;
+                default:
+                    throw new ErrorInducedException("That setter mode (" + mode + ") does not exist!");
+            }
             if (split.Length > 1)
             {
-                if (varType.Operation_GetSubSettable == null)
+                values.LoadLocalVariable(locVar.Index);
+                if (split.Length == 2)
                 {
-                    throw new ErrorInducedException("Cannot get sub-objects on a variable of type '" + varType.TypeName + "'!");
+                    values.ILGen.Emit(OpCodes.Dup);
                 }
-                // TODO
+                values.ILGen.Emit(OpCodes.Ldstr, split[1]);
+                if (varType.Operation_GetSubSettable.Method.GetParameters().Length == 3)
+                {
+                    values.LoadQueue();
+                    values.LoadEntry(entry);
+                    values.ILGen.Emit(OpCodes.Call, Method_GetOES);
+                }
+                values.ILGen.Emit(OpCodes.Call, varType.Operation_GetSubSettable.Method);
+                for (int i = 2; i < split.Length; i++)
+                {
+                    if (i + 1 == split.Length)
+                    {
+                        values.ILGen.Emit(OpCodes.Dup);
+                    }
+                    values.LoadEntry(entry);
+                    values.LoadQueue();
+                    values.ILGen.Emit(OpCodes.Ldstr, split[i]);
+                    values.ILGen.Emit(OpCodes.Call, Method_GetSubObject);
+                }
+                values.LoadArgumentObject(entry, 2);
+                values.ILGen.Emit(OpCodes.Ldstr, split[split.Length - 1]);
+                values.LoadEntry(entry);
+                values.LoadQueue();
+                values.ILGen.Emit(OpCodes.Ldc_I4, (int)operationType);
+                values.ILGen.Emit(OpCodes.Call, Method_OperateWithin);
             }
-            string mode = cent.Arguments[1].ToString();
-            if (mode == "=")
+            else if (operationType == ObjectOperation.SET)
             {
                 values.LoadQueue();
                 values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
@@ -62,27 +108,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                ObjectOperationAttribute operation;
-                switch (mode)
-                {
-                    case "+=":
-                        operation = varType.Operation_Add;
-                        break;
-                    case "-=":
-                        operation = varType.Operation_Subtract;
-                        break;
-                    case "*=":
-                        operation = varType.Operation_Multiply;
-                        break;
-                    case "/=":
-                        operation = varType.Operation_Divide;
-                        break;
-                    default:
-                        throw new ErrorInducedException("That setter mode (" + mode + ") does not exist!");
-                }
+                ObjectOperationAttribute operation = varType.Operations[(int)operationType];
                 if (operation == null)
                 {
-                    throw new ErrorInducedException("Cannot use that setter mode (" + mode + ") on a variable of type '" + varType.TypeName + "'!");
+                    throw new ErrorInducedException("Cannot use that setter mode (" + operationType + ") on a variable of type '" + varType.TypeName + "'!");
                 }
                 // This method: Queue.SetLocalVar(index, vars[varloc].Operation(entry.args[2]))
                 values.LoadQueue();
@@ -90,6 +119,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadLocalVariable(locVar.Index);
                 values.LoadArgumentObject(entry, 2);
                 values.EnsureType(cent.Arguments[2], varType);
+                if (operation.Method.GetParameters().Length == 3)
+                {
+                    values.LoadQueue();
+                    values.LoadEntry(entry);
+                    values.ILGen.Emit(OpCodes.Call, Method_GetOES);
+                }
                 values.ILGen.Emit(OpCodes.Call, operation.Method);
                 values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
             }
@@ -104,9 +139,138 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
+        /// References <see cref="GetSubObject(TemplateObject, CommandEntry, CommandQueue, string)"/>.
+        /// </summary>
+        public static MethodInfo Method_GetSubObject = typeof(DebugVarSetCommand).GetMethod(nameof(GetSubObject));
+
+        /// <summary>
+        /// References <see cref="SetSubObject(TemplateObject, TemplateObject, CommandEntry, CommandQueue, string)"/>.
+        /// </summary>
+        public static MethodInfo Method_SetSubObject = typeof(DebugVarSetCommand).GetMethod(nameof(SetSubObject));
+
+        /// <summary>
         /// References <see cref="DebugHelper(int, string, CommandQueue, CommandEntry)"/>.
         /// </summary>
         public static MethodInfo Method_DebugHelper = typeof(DebugVarSetCommand).GetMethod(nameof(DebugHelper));
+
+        /// <summary>
+        /// References <see cref="GetOES(CommandQueue, CommandEntry)"/>.
+        /// </summary>
+        public static MethodInfo Method_GetOES = typeof(DebugVarSetCommand).GetMethod(nameof(GetOES));
+
+        /// <summary>
+        /// References <see cref="OperateWithin(TemplateObject, TemplateObject, TemplateObject, string, CommandEntry, CommandQueue, ObjectOperation)"/>.
+        /// </summary>
+        public static MethodInfo Method_OperateWithin = typeof(DebugVarSetCommand).GetMethod(nameof(OperateWithin));
+
+        /// <summary>
+        /// Runs an operation on an object dynamically.
+        /// </summary>
+        /// <param name="within">The object being ran within.</param>
+        /// <param name="start">The object to run on.</param>
+        /// <param name="input">The value to input to the operation.</param>
+        /// <param name="label">The label to set back into.</param>
+        /// <param name="entry">The command entry.</param>
+        /// <param name="queue">The queue.</param>
+        /// <param name="operation">The operation to perform.</param>
+        public static void OperateWithin(TemplateObject within, TemplateObject start, TemplateObject input, string label, CommandEntry entry, CommandQueue queue, ObjectOperation operation)
+        {
+            if (start is DynamicTag dynTag)
+            {
+                OperateWithin(within, dynTag.Internal, input, label, entry, queue, operation);
+                return;
+            }
+            if (operation != ObjectOperation.SET)
+            {
+                TagType type = start.GetTagType(entry.TagSystem.Types);
+                ObjectOperationAttribute opAttrib = type.Operations[(int)operation];
+                if (opAttrib == null)
+                {
+                    throw new ErrorInducedException("Cannot use that setter mode (" + operation + ") on a variable of type '" + type.TypeName + "'!");
+                }
+                input = opAttrib.ObjectFunc(start, input, GetOES(queue, entry));
+            }
+            TagType withinType = within.GetTagType(entry.TagSystem.Types);
+            if (withinType.Operation_Set == null)
+            {
+                throw new ErrorInducedException("Cannot set back into a variable of type '" + withinType.TypeName + "'!");
+            }
+            withinType.Operation_Set.SetFunc(within, input, label, GetOES(queue, entry));
+        }
+
+        /// <summary>
+        /// References <see cref="Operate(TemplateObject, TemplateObject, CommandEntry, CommandQueue, ObjectOperation)"/>.
+        /// </summary>
+        public static MethodInfo Method_Operate = typeof(DebugVarSetCommand).GetMethod(nameof(Operate));
+
+        /// <summary>
+        /// Runs an operation on an object dynamically.
+        /// </summary>
+        /// <param name="start">The object to run on.</param>
+        /// <param name="input">The value to input to the operation.</param>
+        /// <param name="entry">The command entry.</param>
+        /// <param name="queue">The queue.</param>
+        /// <param name="operation">The operation to perform.</param>
+        /// <returns>The result of the operation.</returns>
+        public static TemplateObject Operate(TemplateObject start, TemplateObject input, CommandEntry entry, CommandQueue queue, ObjectOperation operation)
+        {
+            if (start is DynamicTag dynTag)
+            {
+                return Operate(dynTag.Internal, input, entry, queue, operation);
+            }
+            TagType type = start.GetTagType(entry.TagSystem.Types);
+            ObjectOperationAttribute opAttrib = type.Operations[(int)operation];
+            if (opAttrib == null)
+            {
+                throw new ErrorInducedException("Cannot use that setter mode (" + operation + ") on a variable of type '" + type.TypeName + "'!");
+            }
+            return opAttrib.ObjectFunc(start, input, GetOES(queue, entry));
+        }
+
+        /// <summary>
+        /// Helps set sub-objects dynamically for the var-set command.
+        /// </summary>
+        /// <param name="entry">The relevant command entry.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="value">The value to insert.</param>
+        /// <param name="start">The starting object.</param>
+        /// <param name="label">The sub-object label.</param>
+        public static void SetSubObject(TemplateObject start, TemplateObject value, CommandEntry entry, CommandQueue queue, string label)
+        {
+            if (start is DynamicTag dynTag)
+            {
+                SetSubObject(dynTag.Internal, value, entry, queue, label);
+                return;
+            }
+            TagType type = start.GetTagType(entry.TagSystem.Types);
+            if (type.Operation_GetSubSettable == null)
+            {
+                throw new ErrorInducedException("Cannot get sub-objects on a variable of type '" + type.TypeName + "'!");
+            }
+            type.Operation_Set.SetFunc(start, value, label, GetOES(queue, entry));
+        }
+
+        /// <summary>
+        /// Helps get sub-objects dynamically for the var-set command.
+        /// </summary>
+        /// <param name="entry">The relevant command entry.</param>
+        /// <param name="queue">The relevant queue.</param>
+        /// <param name="start">The starting object.</param>
+        /// <param name="label">The sub-object label.</param>
+        /// <returns>The sub-object gotten.</returns>
+        public static TemplateObject GetSubObject(TemplateObject start, CommandEntry entry, CommandQueue queue, string label)
+        {
+            if (start is DynamicTag dynTag)
+            {
+                return GetSubObject(dynTag.Internal, entry, queue, label);
+            }
+            TagType type = start.GetTagType(entry.TagSystem.Types);
+            if (type.Operation_GetSubSettable == null)
+            {
+                throw new ErrorInducedException("Cannot get sub-objects on a variable of type '" + type.TypeName + "'!");
+            }
+            return type.Operation_GetSubSettable.StringFunc(start, label, GetOES(queue, entry));
+        }
 
         /// <summary>
         /// Helps debug output for the var-set command.

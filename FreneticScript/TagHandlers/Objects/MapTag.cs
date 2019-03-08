@@ -307,11 +307,25 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>
         /// Gets the sub-settable object, or null if none.
         /// </summary>
+        /// <param name="tag">The map tag.</param>
         /// <param name="name">The sub-settable object name.</param>
         /// <returns>The sub-settable object, or null.</returns>
-        public TemplateObject GetSubSettable(string name)
+        [ObjectOperationAttribute(ObjectOperation.GETSUBSETTABLE, Input = TYPE)]
+        public static TemplateObject GetSubSettable(MapTag tag, string name)
         {
-            return Internal.TryGetValue(name.ToLowerFast(), out TemplateObject value) ? value : null;
+            return tag.Internal.TryGetValue(name.ToLowerFast(), out TemplateObject value) ? value : null;
+        }
+
+        /// <summary>
+        /// Sets a sub-object by name.
+        /// </summary>
+        /// <param name="tag">The map tag.</param>
+        /// <param name="value">The value to insert.</param>
+        /// <param name="name">The sub-object name to insert.</param>
+        [ObjectOperationAttribute(ObjectOperation.SET, Input = TYPE)]
+        public static void SetSubObject(MapTag tag, TemplateObject value, string name)
+        {
+            tag.Internal[name.ToLowerFast()] = value;
         }
     }
 }
