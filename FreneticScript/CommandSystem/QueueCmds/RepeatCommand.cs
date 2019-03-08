@@ -96,22 +96,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryRepeatCIL(CommandQueue, CommandEntry, IntegerTag)"/> method.
         /// </summary>
         public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatCILNoDebug(CommandQueue, int, int)"/> method.
+        /// Represents the <see cref="TryRepeatCILNoDebug(CommandQueue, int, IntegerTag)"/> method.
         /// </summary>
         public static MethodInfo TryRepeatCILMethodNoDebug = typeof(RepeatCommand).GetMethod(nameof(TryRepeatCILNoDebug));
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatNumberedCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryRepeatNumberedCIL(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatNumberedCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryRepeatNumberedCIL_NoDebug(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryRepeatNumberedCIL_NoDebug(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo TryRepeatNumberedCIL_NoDebugMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatNumberedCIL_NoDebug));
 
@@ -124,6 +124,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo DebugNextMethod = typeof(RepeatCommand).GetMethod(nameof(DebugNext));
+
+        /// <summary>
+        /// Represents the <see cref="CreateIndexObject"/> method.
+        /// </summary>
+        public static MethodInfo CreateIndexObjectMethod = typeof(RepeatCommand).GetMethod(nameof(CreateIndexObject));
 
         /// <summary>
         /// Adapts a command entry to CIL.
@@ -147,7 +152,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     values.ILGen.Emit(OpCodes.Ldc_I4, cent.BlockStart - 1);
                 }
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.LoadLocalVariable(lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Call, db ? TryRepeatCILMethod : TryRepeatCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
                 return;
@@ -203,10 +208,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("repeat_index"));
                 values.LoadQueue();
                 values.LoadEntry(entry);
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.LoadRunnable();
+                values.ILGen.Emit(OpCodes.Call, CreateIndexObjectMethod);
+                values.ILGen.Emit(OpCodes.Stfld, cent.VarLookup[cent.GetSaveNameNoParse("repeat_index")].Field);
                 values.ILGen.Emit(OpCodes.Call, db ? TryRepeatNumberedCILMethod : TryRepeatNumberedCIL_NoDebugMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
@@ -232,7 +238,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.PushVarSet();
             string sn = cent.GetSaveNameNoParse("repeat_index");
-            // TODO: scope properly!
             if (values.LocalVariableLocation(sn) >= 0)
             {
                 throw new ErrorInducedException("Already have a repeat_index var (labeled '" + sn + "')?!");
@@ -274,12 +279,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
+        /// <param name="integer">Repeat Index holder.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, int ri)
+        public static bool TryRepeatCILNoDebug(CommandQueue queue, int entry_ind, IntegerTag integer)
         {
             RepeatCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as RepeatCommandData;
-            return ((queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index) <= dat.Total;
+            return (integer.Internal = ++dat.Index) <= dat.Total;
         }
 
         /// <summary>
@@ -287,11 +292,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
-        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, int ri)
+        /// <param name="integer">Repeat Index holder.</param>
+        public static bool TryRepeatCIL(CommandQueue queue, CommandEntry entry, IntegerTag integer)
         {
             RepeatCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as RepeatCommandData;
-            (queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
+            integer.Internal = ++dat.Index;
             if (dat.Index <= dat.Total)
             {
                 if (entry.ShouldShowGood(queue))
@@ -312,8 +317,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
-        public static bool TryRepeatNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryRepeatNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry)
         {
             int target = (int)IntegerTag.TryFor(entry.GetArgumentObject(queue, 0)).Internal;
             if (target <= 0)
@@ -321,7 +325,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
-            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             return true;
         }
 
@@ -330,8 +333,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
-        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry)
         {
             int target = (int)IntegerTag.TryFor(entry.GetArgumentObject(queue, 0)).Internal;
             if (target <= 0)
@@ -343,12 +345,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
-            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Repeating " + TextStyle.Separate + target + TextStyle.Base + " times...");
             }
             return true;
+        }
+
+        /// <summary>
+        /// Creates a repeat index object.
+        /// </summary>
+        /// <returns>The index object.</returns>
+        public static IntegerTag CreateIndexObject()
+        {
+            return new IntegerTag(1);
         }
         
         /// <summary>

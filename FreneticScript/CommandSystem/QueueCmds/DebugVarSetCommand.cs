@@ -100,11 +100,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (operationType == ObjectOperation.SET)
             {
-                values.LoadQueue();
-                values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
+                values.LoadRunnable();
                 values.LoadArgumentObject(entry, 2);
                 values.EnsureType(cent.Arguments[2], varType);
-                values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
+                values.ILGen.Emit(OpCodes.Stfld, locVar.Field);
             }
             else
             {
@@ -113,9 +112,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     throw new ErrorInducedException("Cannot use that setter mode (" + operationType + ") on a variable of type '" + varType.TypeName + "'!");
                 }
-                // This method: Queue.SetLocalVar(index, vars[varloc].Operation(entry.args[2]))
-                values.LoadQueue();
-                values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
+                // This method: runnable.Var = runnable.Var.Operation(runnable.Entry.Arg2())
+                values.LoadRunnable();
                 values.LoadLocalVariable(locVar.Index);
                 values.LoadArgumentObject(entry, 2);
                 values.EnsureType(cent.Arguments[2], varType);
@@ -126,11 +124,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     values.ILGen.Emit(OpCodes.Call, Method_GetOES);
                 }
                 values.ILGen.Emit(OpCodes.Call, operation.Method);
-                values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod);
+                values.ILGen.Emit(OpCodes.Stfld, locVar.Field);
             }
             if (debug) // If in debug mode...
             {
-                values.ILGen.Emit(OpCodes.Ldc_I4, locVar.Index);
+                values.LoadLocalVariable(locVar.Index);
                 values.ILGen.Emit(OpCodes.Ldstr, vn);
                 values.LoadQueue();
                 values.LoadEntry(entry);
@@ -149,7 +147,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static MethodInfo Method_SetSubObject = typeof(DebugVarSetCommand).GetMethod(nameof(SetSubObject));
 
         /// <summary>
-        /// References <see cref="DebugHelper(int, string, CommandQueue, CommandEntry)"/>.
+        /// References <see cref="DebugHelper(TemplateObject, string, CommandQueue, CommandEntry)"/>.
         /// </summary>
         public static MethodInfo Method_DebugHelper = typeof(DebugVarSetCommand).GetMethod(nameof(DebugHelper));
 
@@ -275,16 +273,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>
         /// Helps debug output for the var-set command.
         /// </summary>
-        /// <param name="varloc">The var location.</param>
+        /// <param name="newValue">The new variable value.</param>
         /// <param name="varName">The variable name.</param>
         /// <param name="queue">The queue.</param>
         /// <param name="entry">The entry.</param>
-        public static void DebugHelper(int varloc, string varName, CommandQueue queue, CommandEntry entry)
+        public static void DebugHelper(TemplateObject newValue, string varName, CommandQueue queue, CommandEntry entry)
         {
             if (entry.ShouldShowGood(queue))
             {
-                TemplateObject resultObject = queue.CurrentRunnable.LocalVariables[varloc].Internal;
-                entry.GoodOutput(queue, "Updated variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' to value: " + TextStyle.Separate + resultObject.GetDebugString());
+                entry.GoodOutput(queue, "Updated variable '" + TextStyle.Separate + varName + TextStyle.Outgood + "' to value: " + TextStyle.Separate + newValue.GetDebugString());
             }
         }
         

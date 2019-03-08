@@ -37,12 +37,13 @@ namespace FreneticScript.ScriptSystems
         /// <returns>The compiled result.</returns>
         public static CompiledCommandStackEntry Compile(CommandScript script)
         {
+            string tname = "__script__" + IDINCR++ + "__" + NameTrimMatcher.TrimToMatches(script.Name);
             CompiledCommandStackEntry Created = new CompiledCommandStackEntry()
             {
                 Entries = script.CommandArray,
-                Script = script
+                Script = script,
+                AssemblyName = tname
             };
-            string tname = "__script__" + IDINCR++ + "__" + NameTrimMatcher.TrimToMatches(script.Name);
             AssemblyName asmname = new AssemblyName(tname) { Name = tname };
             AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
 #if NET_4_5
@@ -219,16 +220,10 @@ namespace FreneticScript.ScriptSystems
             Type tP_c2 = typebuild_c2.CreateType();
             CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse, ccse.Entries) as CompiledCommandRunnable;
             ccse.ReferenceCompiledRunnable = runnable;
+            ccse.Variables = values.Variables.ToArray();
+            ccse.VariableSetters = new Action<CompiledCommandRunnable, TemplateObject>[ccse.Variables.Length];
             runnable.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
-            runnable.LocalVariables = new ObjectHolder[values.CLVarID];
             runnable.Debug = script.Debug;
-            for (int n = 0; n < values.CLVariables.Count; n++)
-            {
-                foreach (SingleCILVariable locVar in values.CLVariables[n])
-                {
-                    runnable.LocalVariables[locVar.Index] = new ObjectHolder();
-                }
-            }
 #if SAVE
             StringBuilder outp = new StringBuilder();
             for (int i = 0; i < ilgen.Codes.Count; i++)
@@ -249,6 +244,26 @@ namespace FreneticScript.ScriptSystems
         }
 
         private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry), typeof(CommandEntry[]) };
+
+
+        private static readonly Type[] SETTER_ACTION_PARAMS = new Type[] { typeof(CompiledCommandRunnable), typeof(TemplateObject) };
+
+        /// <summary>
+        /// Creates a variable setter for the given variable.
+        /// </summary>
+        /// <param name="variable">The variable.</param>
+        /// <returns>The setter action.</returns>
+        public static Action<CompiledCommandRunnable, TemplateObject> CreateVariableSetter(SingleCILVariable variable)
+        {
+            DynamicMethod genMethod = new DynamicMethod("script_" + variable.Field.DeclaringType.Name + "_var_" + variable.Index + "_setter", typeof(void), SETTER_ACTION_PARAMS);
+            ILGenerator ILGen = genMethod.GetILGenerator();
+            ILGen.Emit(OpCodes.Ldarg_0); // Load argument: runnable
+            ILGen.Emit(OpCodes.Ldarg_1); // Load argument: input variable value
+            ILGen.Emit(OpCodes.Castclass, variable.Type.RawType); // Ensure type
+            ILGen.Emit(OpCodes.Stfld, variable.Field); // Store to field.
+            ILGen.Emit(OpCodes.Ret); // Return.
+            return genMethod.CreateDelegate(typeof(Action<CompiledCommandRunnable, TemplateObject>)) as Action<CompiledCommandRunnable, TemplateObject>;
+        }
 
         /// <summary>
         /// Matcher for usable script name characters.
@@ -400,28 +415,23 @@ namespace FreneticScript.ScriptSystems
                 TagSystem = tab.TagSystem,
                 SourceArgumentID = argumentId
             };
-            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
-            ilgen.Emit(OpCodes.Ldc_I4_0); // Load a '0' int32
-            ilgen.Emit(OpCodes.Stfld, TagData.Field_cInd); // Store x into TagData.cInd
-            if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
+            if (!tab.Start.AdaptToCIL(ilgen, tab, values))
             {
-                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
-            }
-            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            if (tab.Start is LvarTagBase) // If the 'var' compiled tag...
-            {
-                int index = (int)((tab.Bits[0].Variable.Bits[0] as TextArgumentBit).InputValue as IntegerTag).Internal;
-                ilgen.Emit(OpCodes.Ldc_I4, index); // Load the correct variable location.
-                ilgen.Emit(OpCodes.Call, LvarTagBase.Method_HandleOneFast); // Handle it quickly and directly.
-            }
-            else if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
-            {
-                ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOneObjective); // Run instance method: TemplateTagBase -> HandleOneObjective.
-            }
-            else // If faster static tag handling
-            {
-                ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOne); // Run static method: TemplateTagBase -> HandleOne.
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
+                ilgen.Emit(OpCodes.Ldc_I4_0); // Load a '0' int32
+                ilgen.Emit(OpCodes.Stfld, TagData.Field_cInd); // Store x into TagData.cInd
+                if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
+                {
+                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                    ilgen.Emit(OpCodes.Ldfld, TagData.Field_Start); // Load field TagData -> Start.
+                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                    ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOneObjective); // Run instance method: TemplateTagBase -> HandleOneObjective.
+                }
+                else // If faster static tag handling
+                {
+                    ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
+                    ilgen.Emit(OpCodes.Call, tab.Start.Method_HandleOne); // Run static method: TemplateTagBase -> HandleOne.
+                }
             }
             for (int x = 1; x < tab.Bits.Length; x++)
             {

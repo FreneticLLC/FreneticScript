@@ -64,7 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MapTag mt = MapTag.For(cent.Arguments[0].ToString());
             if (mt.Internal.Count == 0)
             {
-                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Empty map input to require!");
+                throw new ErrorInducedException("Empty map input to require!");
             }
             foreach (KeyValuePair<string, TemplateObject> pair in mt.Internal)
             {
@@ -75,7 +75,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else if (!cent.System.TagSystem.Types.RegisteredTypes.TryGetValue(pair.Value.ToString(), out tagType))
                 {
-                    throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Invalid local variable type: " + pair.Value.ToString() + "!");
+                    throw new ErrorInducedException("Invalid local variable type: " + pair.Value.ToString() + "!");
+                }
+                int loc = values.LocalVariableLocation(pair.Key);
+                if (loc >= 0)
+                {
+                    TagType type = values.LocalVariableType(loc);
+                    if (type != tagType)
+                    {
+                        throw new ErrorInducedException("Required local variable '" + pair.Key + "' already exists, but is of type '"
+                            + type.TypeName + "', when '" + pair.Value.ToString() + "' was required!");
+                    }
                 }
                 values.AddVariable(pair.Key, tagType);
             }
@@ -93,20 +103,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MapTag mt = MapTag.For(cent.Arguments[0].ToString());
             if (mt.Internal.Count == 0)
             {
-                throw new Exception("On script line " + cent.ScriptLine + " (" + cent.CommandLine + "), error occured: Empty map input to require!");
+                throw new ErrorInducedException("Empty map input to require!");
             }
-            int locArr = values.ILGen.DeclareLocal(typeof(ObjectHolder[]));
-            values.LoadQueue();
-            values.LoadRunnable();
-            values.ILGen.Emit(OpCodes.Ldfld, CompiledCommandRunnable.LocalVariablesField);
-            values.ILGen.Emit(OpCodes.Stloc, locArr);
             foreach (string varn in mt.Internal.Keys)
             {
                 values.LoadQueue();
                 values.LoadEntry(entry);
-                values.ILGen.Emit(OpCodes.Ldloc, locArr);
-                values.ILGen.Emit(OpCodes.Ldc_I4, cent.VarLoc(varn));
-                values.ILGen.Emit(OpCodes.Ldelem_Ref);
+                values.LoadLocalVariable(cent.VarLoc(varn));
                 values.ILGen.Emit(OpCodes.Ldstr, varn);
                 values.ILGen.Emit(OpCodes.Call, REQUIRECOMMAND_CHECKFORVALIDITY);
             }
@@ -137,7 +140,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the method <see cref="CheckForValidity(CommandQueue, CommandEntry, ObjectHolder, string)"/> in the class RequireCommand.
+        /// Represents the method <see cref="CheckForValidity(CommandQueue, CommandEntry, TemplateObject, string)"/>.
         /// </summary>
         public static MethodInfo REQUIRECOMMAND_CHECKFORVALIDITY = typeof(RequireCommand).GetMethod(nameof(CheckForValidity));
 
@@ -146,11 +149,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="objh">Object holder in question.</param>
+        /// <param name="obj">Object in question.</param>
         /// <param name="varn">Variable the object holder was gotten from.</param>
-        public static void CheckForValidity(CommandQueue queue, CommandEntry entry, ObjectHolder objh, string varn)
+        public static void CheckForValidity(CommandQueue queue, CommandEntry entry, TemplateObject obj, string varn)
         {
-            if (objh.Internal == null)
+            if (obj == null)
             {
                 queue.HandleError(entry, "A variable was required but not found: " + varn + "!");
             }

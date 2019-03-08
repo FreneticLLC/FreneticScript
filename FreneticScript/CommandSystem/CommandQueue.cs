@@ -322,15 +322,5 @@ namespace FreneticScript.CommandSystem
             CurrentRunnable.Index = CurrentRunnable.Entry.Entries.Length + 1;
             RunningStack.Clear();
         }
-        
-        /// <summary>
-        /// Sets a compiled stack entry's local variable.
-        /// </summary>
-        /// <param name="c">The location.</param>
-        /// <param name="value">The new value.</param>
-        public void SetLocalVar(int c, TemplateObject value)
-        {
-            CurrentRunnable.LocalVariables[c].Internal = value;
-        }
     }
 }

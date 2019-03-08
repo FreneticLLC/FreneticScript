@@ -40,16 +40,23 @@ namespace FreneticScript.ScriptSystems
         public TagType Type;
 
         /// <summary>
+        /// The field that holds this variable's value.
+        /// </summary>
+        public FieldInfo Field;
+
+        /// <summary>
         /// Constructs a single CIL adapter variable.
         /// </summary>
         /// <param name="_index">The variable index.</param>
         /// <param name="_name">The variable name.</param>
         /// <param name="_type">The variable type.</param>
-        public SingleCILVariable(int _index, string _name, TagType _type)
+        /// <param name="_field">The field for this variable.</param>
+        public SingleCILVariable(int _index, string _name, TagType _type, FieldInfo _field)
         {
             Index = _index;
             Name = _name;
             Type = _type;
+            Field = _field;
         }
     }
 
@@ -94,11 +101,6 @@ namespace FreneticScript.ScriptSystems
         public static readonly FieldInfo Entry_ArgumentsField = typeof(CommandEntry).GetField(nameof(CommandEntry.Arguments));
         
         /// <summary>
-        /// Represents the <see cref="CommandQueue.SetLocalVar(int, TemplateObject)"/> method.
-        /// </summary>
-        public static readonly MethodInfo Queue_SetLocalVarMethod = typeof(CommandQueue).GetMethod(nameof(CommandQueue.SetLocalVar), new Type[] { typeof(int), typeof(TemplateObject) });
-
-        /// <summary>
         /// Represents the <see cref="CommandQueue.Error"/> field.
         /// </summary>
         public static readonly FieldInfo Queue_Error = typeof(CommandQueue).GetField(nameof(CommandQueue.Error));
@@ -124,23 +126,27 @@ namespace FreneticScript.ScriptSystems
         public TypeBuilder Type;
 
         /// <summary>
+        /// Returns the data of a variable by its location ID.
+        /// </summary>
+        /// <param name="varId">The variable location ID.</param>
+        /// <returns>The variable data.</returns>
+        public SingleCILVariable LocalVariableData(int varId)
+        {
+            if (varId < 0 || varId >= Variables.Count)
+            {
+                return null;
+            }
+            return Variables[varId];
+        }
+
+        /// <summary>
         /// Returns the return-type of a variable by its location ID.
         /// </summary>
         /// <param name="varId">The variable location ID.</param>
         /// <returns>The return-type of the tag.</returns>
         public TagType LocalVariableType(int varId)
         {
-            for (int n = 0; n < CLVariables.Count; n++)
-            {
-                foreach (SingleCILVariable locVar in CLVariables[n])
-                {
-                    if (locVar.Index == varId)
-                    {
-                        return locVar.Type;
-                    }
-                }
-            }
-            return null;
+            return LocalVariableData(varId)?.Type;
         }
 
         /// <summary>
@@ -221,9 +227,17 @@ namespace FreneticScript.ScriptSystems
         public int AddVariable(string var, TagType type)
         {
             int id = CLVarID++;
-            CLVariables[LVarIDs.Peek()].Add(new SingleCILVariable(id, var, type));
+            FieldInfo newField = Type.DefineField("_field_locVar_" + id, type.RawType, FieldAttributes.Public);
+            SingleCILVariable variable = new SingleCILVariable(id, var, type, newField);
+            CLVariables[LVarIDs.Peek()].Add(variable);
+            Variables.Add(variable);
             return id;
         }
+
+        /// <summary>
+        /// A list of all variables.
+        /// </summary>
+        public List<SingleCILVariable> Variables = new List<SingleCILVariable>();
 
         /// <summary>
         /// All known CIL Variable data sets.
@@ -355,8 +369,7 @@ namespace FreneticScript.ScriptSystems
         public void LoadLocalVariable(int index)
         {
             LoadRunnable();
-            ILGen.Emit(OpCodes.Ldc_I4, index);
-            ILGen.Emit(OpCodes.Call, Method_GetLocalVariableAt);
+            ILGen.Emit(OpCodes.Ldfld, LocalVariableData(index).Field);
         }
 
         /// <summary>
@@ -371,22 +384,6 @@ namespace FreneticScript.ScriptSystems
                 LoadTagData();
                 ILGen.Emit(OpCodes.Call, requiredType.CreatorMethod);
             }
-        }
-
-        /// <summary>
-        /// A reference to the <see cref="GetLocalVariableAt(CompiledCommandRunnable, int)"/> method.
-        /// </summary>
-        public static readonly MethodInfo Method_GetLocalVariableAt = typeof(CILAdaptationValues).GetMethod(nameof(GetLocalVariableAt));
-
-        /// <summary>
-        /// Helper method to get the local variable at the specified index.
-        /// </summary>
-        /// <param name="runnable">The command runnable.</param>
-        /// <param name="loc">The variable location.</param>
-        /// <returns>The variable's value.</returns>
-        public static TemplateObject GetLocalVariableAt(CompiledCommandRunnable runnable, int loc)
-        {
-            return runnable.LocalVariables[loc].Internal;
         }
     }
 }

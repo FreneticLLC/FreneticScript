@@ -11,6 +11,7 @@ using System.Text;
 using System.Reflection;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers
 {
@@ -53,6 +54,18 @@ namespace FreneticScript.TagHandlers
         /// The name of the type this tag handler will return. Null for dynamic.
         /// </summary>
         public string ResultTypeString = null;
+
+        /// <summary>
+        /// Adapts the tag base to CIL.
+        /// </summary>
+        /// <param name="ilgen">IL Generator.</param>
+        /// <param name="tab">The TagArgumentBit.</param>
+        /// <param name="values">Related adaptation values.</param>
+        /// <returns>Whether any adaptation was done.</returns>
+        public virtual bool AdaptToCIL(ILGeneratorTracker ilgen, TagArgumentBit tab, CILAdaptationValues values)
+        {
+            return false;
+        }
         
         /// <summary>
         /// Adapts the template tab base for compiling.

@@ -181,7 +181,7 @@ namespace FreneticScript.CommandSystem
                             if (varlookup.TryGetValue(var.Key, out SingleCILVariable varx))
                             {
                                 // TODO: Type verification!
-                                runnable.LocalVariables[varx.Index].Internal = var.Value;
+                                // TODO: Fix // runnable.LocalVariables[varx.Index].Internal = var.Value;
                             }
                         }
                     }

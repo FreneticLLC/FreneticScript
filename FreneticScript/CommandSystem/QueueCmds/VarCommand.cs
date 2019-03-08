@@ -95,33 +95,23 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 returnType = type;
             }
             string lvarname = cent.Arguments[0].ToString().ToLowerFast();
-            int lvarloc = cent.VarLoc(lvarname);
+            SingleCILVariable locVar = cent.VarLookup[lvarname];
             // This method:
-            // queue.SetLocalVar(lvarloc, TYPE.CREATE_FOR(null, entry.GetArgumentObject(queue, 2)));
+            // runnable.Var = TYPE.CREATE_FOR(tagdata, runnable.entry.arg2());
             // or:
-            // queue.SetLocalVar(lvarloc, entry.GetArgumentObject(queue, 2));
+            // runnable.Var = runnable.entry.arg2();
             int localInd = -1;
-            if (debug)
-            {
-                localInd = values.ILGen.DeclareLocal(typeof(TemplateObject)); // Create variable 'o' for later usage.
-            }
-            values.LoadQueue(); // Load the queue
-            values.ILGen.Emit(OpCodes.Ldc_I4, lvarloc); // Prep the local variable location
+            values.LoadRunnable();
             values.LoadArgumentObject(entry, 2); // Load the argument object
             if (!isCorrect)
             {
                 values.LoadTagData(); // Load a basic TagData object appropriate to the queue.
                 values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
             }
+            values.ILGen.Emit(OpCodes.Stfld, locVar.Field); // Push the result into the local var
             if (debug) // If in debug mode...
             {
-                values.ILGen.Emit(OpCodes.Dup); // Duplicate the result on the stack
-                values.ILGen.Emit(OpCodes.Stloc, localInd); // Store it to the variable 'o'.
-            }
-            values.ILGen.Emit(OpCodes.Call, CILAdaptationValues.Queue_SetLocalVarMethod); // Push the result into the local var
-            if (debug) // If in debug mode...
-            {
-                values.ILGen.Emit(OpCodes.Ldloc, localInd); // Load variable 'o'.
+                values.LoadLocalVariable(localInd); // Load variable.
                 values.ILGen.Emit(OpCodes.Ldstr, lvarname); // Load the variable name as a string.
                 values.ILGen.Emit(OpCodes.Ldstr, returnType.TypeName); // Load the variable type name as a string.
                 values.LoadQueue(); // Load the queue

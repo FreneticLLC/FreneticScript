@@ -108,7 +108,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         if (varlookup.TryGetValue(var, out SingleCILVariable varx))
                         {
                             // TODO: Type verification!
-                            runnable.LocalVariables[varx.Index].Internal = entry.GetNamedArgumentObject(queue, var);
+                            entry.CCSE.GetSetter(varx.Index).Invoke(queue.CurrentRunnable, entry.GetNamedArgumentObject(queue, var));
                         }
                     }
                 }
@@ -129,7 +129,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 runnable.Callback = () =>
                 {
-                    if (runnable.Entry.Entries.Length > 0)
+                    // TODO: Fix!
+                    /*if (runnable.Entry.Entries.Length > 0)
                     {
                         MapTag mt = new MapTag();
                         Dictionary<string, SingleCILVariable> varlookup = runnable.Entry.Entries[0].VarLookup;
@@ -141,7 +142,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                             }
                         }
                         curRunnable.LocalVariables[locVar.Index].Internal = mt;
-                    }
+                    }*/
                     if (sgood)
                     {
                         entry.GoodOutput(queue, "Call complete.");

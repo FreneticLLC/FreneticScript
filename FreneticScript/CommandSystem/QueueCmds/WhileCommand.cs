@@ -50,22 +50,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the <see cref="TryWhileCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryWhileCIL(CommandQueue, CommandEntry, IntegerTag)"/> method.
         /// </summary>
         public static MethodInfo TryWhileCILMethod = typeof(WhileCommand).GetMethod(nameof(TryWhileCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryWhileCILNoDebug(CommandQueue, int, int)"/> method.
+        /// Represents the <see cref="TryWhileCILNoDebug(CommandQueue, int, IntegerTag)"/> method.
         /// </summary>
         public static MethodInfo TryWhileCILMethodNoDebug = typeof(WhileCommand).GetMethod(nameof(TryWhileCILNoDebug));
 
         /// <summary>
-        /// Represents the <see cref="TryWhileNumberedCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryWhileNumberedCIL(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo TryWhileNumberedCILMethod = typeof(WhileCommand).GetMethod(nameof(TryWhileNumberedCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryWhileNumberedCIL_NoDebug(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryWhileNumberedCIL_NoDebug(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo TryWhileNumberedCIL_NoDebugMethod = typeof(WhileCommand).GetMethod(nameof(TryWhileNumberedCIL_NoDebug));
 
@@ -78,6 +78,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo DebugNextMethod = typeof(WhileCommand).GetMethod(nameof(DebugNext));
+
+        /// <summary>
+        /// Represents the <see cref="CreateIndexObject"/> method.
+        /// </summary>
+        public static MethodInfo CreateIndexObjectMethod = typeof(WhileCommand).GetMethod(nameof(CreateIndexObject));
 
         /// <summary>
         /// Adapts a command entry to CIL.
@@ -101,7 +106,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     values.ILGen.Emit(OpCodes.Ldc_I4, cent.BlockStart - 1);
                 }
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.LoadLocalVariable(lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Call, db ? TryWhileCILMethod : TryWhileCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
                 return;
@@ -157,10 +162,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("while_index"));
                 values.LoadQueue();
                 values.LoadEntry(entry);
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.ILGen.Emit(OpCodes.Call, CreateIndexObjectMethod);
+                values.ILGen.Emit(OpCodes.Stfld, cent.VarLookup[cent.GetSaveNameNoParse("while_index")].Field);
                 values.ILGen.Emit(OpCodes.Call, db ? TryWhileNumberedCILMethod : TryWhileNumberedCIL_NoDebugMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
@@ -186,7 +191,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             values.PushVarSet();
             string sn = cent.GetSaveNameNoParse("while_index");
-            // TODO: scope properly!
             if (values.LocalVariableLocation(sn) >= 0)
             {
                 throw new ErrorInducedException("Already have a while_index var (labeled '" + sn + "')?!");
@@ -228,12 +232,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
-        /// <param name="ri">While Index location.</param>
+        /// <param name="integer">While Index holder.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryWhileCILNoDebug(CommandQueue queue, int entry_ind, int ri)
+        public static bool TryWhileCILNoDebug(CommandQueue queue, int entry_ind, IntegerTag integer)
         {
             WhileCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as WhileCommandData;
-            (queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
+            integer.Internal = ++dat.Index;
             return IfCommand.TryIf(queue, null, new List<Argument>(dat.ComparisonArgs));
         }
 
@@ -242,11 +246,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">While Index location.</param>
-        public static bool TryWhileCIL(CommandQueue queue, CommandEntry entry, int ri)
+        /// <param name="integer">While Index holder.</param>
+        public static bool TryWhileCIL(CommandQueue queue, CommandEntry entry, IntegerTag integer)
         {
             WhileCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as WhileCommandData;
-                (queue.CurrentRunnable.LocalVariables[ri].Internal as IntegerTag).Internal = ++dat.Index;
+            integer.Internal = ++dat.Index;
             if (IfCommand.TryIf(queue, entry, new List<Argument>(dat.ComparisonArgs)))
             {
                 if (entry.ShouldShowGood(queue))
@@ -267,8 +271,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">While Index location.</param>
-        public static bool TryWhileNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryWhileNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry)
         {
             bool success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
             if (!success)
@@ -276,7 +279,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments });
-            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             return true;
         }
 
@@ -285,8 +287,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">While Index location.</param>
-        public static bool TryWhileNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
+        public static bool TryWhileNumberedCIL(CommandQueue queue, CommandEntry entry)
         {
             bool success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
             if (!success)
@@ -298,12 +299,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new WhileCommandData() { Index = 1, ComparisonArgs = entry.Arguments });
-            queue.CurrentRunnable.LocalVariables[ri].Internal = new IntegerTag(1);
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "While looping...");
             }
             return true;
+        }
+
+        /// <summary>
+        /// Creates a while index object.
+        /// </summary>
+        /// <returns>The index object.</returns>
+        public static IntegerTag CreateIndexObject()
+        {
+            return new IntegerTag(1);
         }
 
         /// <summary>

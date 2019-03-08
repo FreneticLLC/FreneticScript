@@ -26,6 +26,10 @@ namespace FreneticScript.TagHandlers
         /// A field reference to the <see cref="SIMPLE_ERROR"/> field.
         /// </summary>
         public static readonly FieldInfo FIELD_TAGDATA_SIMPLE_ERROR = typeof(TagData).GetField(nameof(SIMPLE_ERROR), BindingFlags.Static | BindingFlags.Public);
+        /// <summary>
+        /// A field reference to the <see cref="Runnable"/> field.
+        /// </summary>
+        public static readonly FieldInfo Field_TagData_Runnable = typeof(TagData).GetField(nameof(Runnable));
 
         /// <summary>
         /// A simple error TagData object.

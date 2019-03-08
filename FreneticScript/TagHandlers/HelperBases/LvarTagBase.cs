@@ -8,9 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.Reflection.Emit;
+using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.CommandSystem;
-using System.Reflection;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
@@ -20,12 +23,7 @@ namespace FreneticScript.TagHandlers.HelperBases
     public class LvarTagBase : TemplateTagBase
     {
         // No meta: compiled only.
-
-        /// <summary>
-        /// The 'HandleOneFast' method, for compilation use.
-        /// </summary>
-        public static MethodInfo Method_HandleOneFast = typeof(LvarTagBase).GetMethod("HandleOneFast", BindingFlags.Public | BindingFlags.Static);
-
+        
         /// <summary>
         /// Construct the Lvar tag base.
         /// </summary>
@@ -33,18 +31,23 @@ namespace FreneticScript.TagHandlers.HelperBases
         {
             Name = "\0lvar";
         }
-        
-        /// <summary>
-        /// Handles a single entry.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="loc">The location of the variable.</param>
-        /// <returns>The result.</returns>
-        public static TemplateObject HandleOneFast(TagData data, int loc)
-        {
-            return data.Runnable.LocalVariables[loc].Internal;
-        }
 
+        /// <summary>
+        /// Adapts the tag base to CIL.
+        /// </summary>
+        /// <param name="ilgen">IL Generator.</param>
+        /// <param name="tab">The TagArgumentBit.</param>
+        /// <param name="values">Related adaptation values.</param>
+        /// <returns>Whether any adaptation was done.</returns>
+        public override bool AdaptToCIL(ILGeneratorTracker ilgen, TagArgumentBit tab, CILAdaptationValues values)
+        {
+            int index = (int)((tab.Bits[0].Variable.Bits[0] as TextArgumentBit).InputValue as IntegerTag).Internal;
+            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
+            ilgen.Emit(OpCodes.Ldfld, TagData.Field_TagData_Runnable); // Load TagData.Runnable
+            ilgen.Emit(OpCodes.Ldfld, values.LocalVariableData(index).Field); // Load Runnable.Var
+            return true;
+        }
+        
         /// <summary>
         /// Handles a single entry.
         /// </summary>

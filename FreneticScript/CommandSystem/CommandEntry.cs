@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
+using System.Reflection.Emit;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
@@ -115,6 +117,11 @@ namespace FreneticScript.CommandSystem
         /// The debug mode for this specific entry.
         /// </summary>
         public DebugMode DBMode = DebugMode.FULL;
+
+        /// <summary>
+        /// The original CCSE that contains this entry.
+        /// </summary>
+        public CompiledCommandStackEntry CCSE;
 
         /// <summary>
         /// Gets the correct debug mode for this entry and a specified queue.
@@ -250,6 +257,11 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>
+        /// A generated save result action.
+        /// </summary>
+        public Action<CompiledCommandRunnable, TemplateObject> SaveAction;
+
+        /// <summary>
         /// Saves the result of this command, if <see cref="AbstractCommand.SaveMode"/> is set.
         /// <para>Check <see cref="CanSave"/> to determine if a save is expected.</para>
         /// </summary>
@@ -261,7 +273,7 @@ namespace FreneticScript.CommandSystem
             {
                 return;
             }
-            queue.SetLocalVar(SaveLoc, resultObj);
+            SaveAction(queue.CurrentRunnable, resultObj);
         }
         
         /// <summary>

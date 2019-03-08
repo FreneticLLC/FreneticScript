@@ -98,22 +98,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         /// <summary>
-        /// Represents the <see cref="TryForeachCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryForeachCIL(CommandQueue, CommandEntry, DynamicTag)"/> method.
         /// </summary>
         public static MethodInfo TryForeachCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryForeachCILNoDebug(CommandQueue, int, int)"/> method.
+        /// Represents the <see cref="TryForeachCILNoDebug(CommandQueue, int, DynamicTag)"/> method.
         /// </summary>
         public static MethodInfo TryForeachCILMethodNoDebug = typeof(ForeachCommand).GetMethod(nameof(TryForeachCILNoDebug));
 
         /// <summary>
-        /// Represents the <see cref="TryForeachNumberedCIL(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryForeachNumberedCIL(CommandQueue, CommandEntry, DynamicTag)"/> method.
         /// </summary>
         public static MethodInfo TryForeachNumberedCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachNumberedCIL));
 
         /// <summary>
-        /// Represents the <see cref="TryForeachNumberedCIL_NoDebug(CommandQueue, CommandEntry, int)"/> method.
+        /// Represents the <see cref="TryForeachNumberedCIL_NoDebug(CommandQueue, CommandEntry, DynamicTag)"/> method.
         /// </summary>
         public static MethodInfo TryForeachNumberedCIL_NoDebugMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachNumberedCIL_NoDebug));
 
@@ -126,6 +126,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.
         /// </summary>
         public static MethodInfo DebugNextMethod = typeof(ForeachCommand).GetMethod(nameof(DebugNext));
+
+        /// <summary>
+        /// Represents the <see cref="CreateListItem"/> method.
+        /// </summary>
+        public static MethodInfo CreateListItemMethod = typeof(ForeachCommand).GetMethod(nameof(CreateListItem));
 
         /// <summary>
         /// Adapts a command entry to CIL.
@@ -148,7 +153,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     values.ILGen.Emit(OpCodes.Ldc_I4, cent.BlockStart - 1);
                 }
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.LoadLocalVariable(lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Call, db ? TryForeachCILMethod : TryForeachCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
             }
@@ -203,10 +208,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else if (arg == "start")
             {
-                int lvar_ind_loc = cent.VarLoc(cent.GetSaveNameNoParse("foreach_value"));
+                SingleCILVariable locVar = cent.VarLookup[cent.GetSaveNameNoParse("foreach_value")];
                 values.LoadQueue();
                 values.LoadEntry(entry);
-                values.ILGen.Emit(OpCodes.Ldc_I4, lvar_ind_loc);
+                values.ILGen.Emit(OpCodes.Call, CreateListItemMethod);
+                values.ILGen.Emit(OpCodes.Stfld, locVar.Field);
+                values.LoadLocalVariable(locVar.Index);
                 values.ILGen.Emit(OpCodes.Call, db ? TryForeachNumberedCILMethod : TryForeachNumberedCIL_NoDebugMethod);
                 values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
             }
@@ -272,14 +279,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
+        /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryForeachCILNoDebug(CommandQueue queue, int entry_ind, int ri)
+        public static bool TryForeachCILNoDebug(CommandQueue queue, int entry_ind, DynamicTag listItem)
         {
             ForeachCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as ForeachCommandData;
             if (++dat.Index < dat.List.Count)
             {
-                (queue.CurrentRunnable.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
+                listItem.Internal = dat.List[dat.Index];
                 return true;
             }
             return false;
@@ -290,13 +297,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
-        public static bool TryForeachCIL(CommandQueue queue, CommandEntry entry, int ri)
+        /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
+        public static bool TryForeachCIL(CommandQueue queue, CommandEntry entry, DynamicTag listItem)
         {
             ForeachCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as ForeachCommandData;
             if (++dat.Index < dat.List.Count)
             {
-                (queue.CurrentRunnable.LocalVariables[ri].Internal as DynamicTag).Internal = dat.List[dat.Index];
+                listItem.Internal = dat.List[dat.Index];
                 if (entry.ShouldShowGood(queue))
                 {
                     entry.GoodOutput(queue, "Looping...: " + TextStyle.Separate + dat.Index + TextStyle.Base + "/" + TextStyle.Separate + dat.List.Count);
@@ -315,8 +322,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
-        public static bool TryForeachNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry, int ri)
+        /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
+        public static bool TryForeachNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry, DynamicTag listItem)
         {
             ListTag list = ListTag.CreateFor(entry.GetArgumentObject(queue, 1));
             if (list.Internal.Count == 0)
@@ -324,7 +331,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
-            queue.CurrentRunnable.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
+            listItem.Internal = list.Internal[0];
             return true;
         }
 
@@ -333,8 +340,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
-        /// <param name="ri">Repeat Index location.</param>
-        public static bool TryForeachNumberedCIL(CommandQueue queue, CommandEntry entry, int ri)
+        /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
+        public static bool TryForeachNumberedCIL(CommandQueue queue, CommandEntry entry, DynamicTag listItem)
         {
             ListTag list = ListTag.CreateFor(entry.GetArgumentObject(queue, 1));
             if (list.Internal.Count == 0)
@@ -346,12 +353,21 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 return false;
             }
             entry.SetData(queue, new ForeachCommandData() { Index = 0, List = list.Internal });
-            queue.CurrentRunnable.LocalVariables[ri].Internal = new DynamicTag(list.Internal[0]);
+            listItem.Internal = list.Internal[0];
             if (entry.ShouldShowGood(queue))
             {
                 entry.GoodOutput(queue, "Looping " + TextStyle.Separate + list.Internal.Count + TextStyle.Base + " times...");
             }
             return true;
+        }
+
+        /// <summary>
+        /// Creates a repeat index object.
+        /// </summary>
+        /// <returns>The index object.</returns>
+        public static DynamicTag CreateListItem()
+        {
+            return new DynamicTag(NullTag.NULL_VALUE);
         }
 
         /// <summary>

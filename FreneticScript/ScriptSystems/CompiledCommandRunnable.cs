@@ -29,12 +29,7 @@ namespace FreneticScript.ScriptSystems
         /// This class's <see cref="Entry"/> field.
         /// </summary>
         public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(Entry));
-
-        /// <summary>
-        /// Represents the <see cref="LocalVariables"/> field.
-        /// </summary>
-        public static readonly FieldInfo LocalVariablesField = typeof(CompiledCommandRunnable).GetField(nameof(LocalVariables));
-
+        
         /// <summary>
         /// Represents the <see cref="Index"/> field.
         /// </summary>
@@ -45,11 +40,6 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="queue">The queue to run on.</param>
         public abstract void Run(CommandQueue queue);
-
-        /// <summary>
-        /// Variables local to the compiled function.
-        /// </summary>
-        public ObjectHolder[] LocalVariables;
         
         /// <summary>
         /// How much debug information this portion of the stack should show.
@@ -99,12 +89,6 @@ namespace FreneticScript.ScriptSystems
         public CompiledCommandRunnable Duplicate()
         {
             CompiledCommandRunnable newCopy = MemberwiseClone() as CompiledCommandRunnable;
-            ObjectHolder[] origLvars = LocalVariables;
-            ObjectHolder[] lvars = newCopy.LocalVariables = new ObjectHolder[origLvars.Length];
-            for (int i = 0; i < lvars.Length; i++)
-            {
-                lvars[i] = new ObjectHolder() { Internal = origLvars[i].Internal };
-            }
             newCopy.EntryData = new AbstractCommandEntryData[EntryData.Length];
             return newCopy;
         }

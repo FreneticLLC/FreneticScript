@@ -39,6 +39,11 @@ namespace FreneticScript.CommandSystem
         public CommandScript Script;
 
         /// <summary>
+        /// The generated assembly name.
+        /// </summary>
+        public String AssemblyName;
+
+        /// <summary>
         /// The backing command system.
         /// </summary>
         public ScriptEngine System
@@ -55,6 +60,11 @@ namespace FreneticScript.CommandSystem
         public CommandEntry[] Entries;
 
         /// <summary>
+        /// The variables on the stack entry.
+        /// </summary>
+        public SingleCILVariable[] Variables;
+
+        /// <summary>
         /// Gets the command entry at a specified index.
         /// </summary>
         /// <param name="index">The specified index.</param>
@@ -66,6 +76,25 @@ namespace FreneticScript.CommandSystem
                 return null;
             }
             return Entries[index];
+        }
+
+        /// <summary>
+        /// Setters for variables by ID.
+        /// </summary>
+        public Action<CompiledCommandRunnable, TemplateObject>[] VariableSetters;
+
+        /// <summary>
+        /// Gets a setter action, constructed on-demand.
+        /// </summary>
+        /// <param name="variable">The variable ID.</param>
+        /// <returns>The setter.</returns>
+        public Action<CompiledCommandRunnable, TemplateObject> GetSetter(int variable)
+        {
+            if (VariableSetters[variable] == null)
+            {
+                VariableSetters[variable] = ScriptCompiler.CreateVariableSetter(Variables[variable]);
+            }
+            return VariableSetters[variable];
         }
 
         /// <summary>
