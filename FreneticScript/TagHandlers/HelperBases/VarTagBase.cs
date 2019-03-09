@@ -63,7 +63,8 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <param name="ccse">The compiled CSE.</param>
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>
-        public override TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i)
+        /// <param name="values">Related adaptation values.</param>
+        public override TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, CILAdaptationValues values)
         {
             string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
             CommandEntry entry = ccse.Entries[i];
@@ -71,10 +72,10 @@ namespace FreneticScript.TagHandlers.HelperBases
             {
                 throw new ErrorInducedException("Var tag cannot compile: unknown variable name input '" + vn + "' (That variable name cannot be found. Have you declared it in this script section? Consider using the 'require' command.)");
             }
-            tab.Start = ccse.Entries[i].Command.Engine.TagSystem.LVar;
+            tab.Start = tab.TagSystem.LVar;
             tab.Bits[0].Key = "\0lvar";
             tab.Bits[0].Handler = null;
-            tab.Bits[0].OVar = tab.Bits[0].Variable;
+            tab.Bits[0].OriginalInput = "[" + tab.Bits[0].Variable.ToString() + "]";
             tab.Bits[0].Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(locVar.Index) } };
             return locVar.Type;
         }

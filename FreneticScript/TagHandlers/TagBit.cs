@@ -40,9 +40,9 @@ namespace FreneticScript.TagHandlers
         public Argument Variable = null;
 
         /// <summary>
-        /// The original input variable. (For use with compiled data).
+        /// The original input. (For use with compiled data).
         /// </summary>
-        public Argument OVar = null;
+        public string OriginalInput;
 
         /// <summary>
         /// The handler that could handle this tag, if any is available.
@@ -66,7 +66,7 @@ namespace FreneticScript.TagHandlers
             }
             else if (Key.StartsWithNull())
             {
-                return "[" + OVar.ToString() + "]";
+                return OriginalInput;
             }
             else
             {

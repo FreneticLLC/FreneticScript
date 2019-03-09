@@ -126,11 +126,14 @@ namespace FreneticScript.ScriptSystems
                         TagArgumentBit tab = new TagArgumentBit(system, bits.ToArray());
                         if (tab.Bits.Length > 0)
                         {
-                            if (!system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
+                            if (system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
                             {
-                                throw new ErrorInducedException("Invalid tag base '" + TextStyle.Separate + tab.Bits[0].Key.ToLowerFast() + TextStyle.Base + "'!");
+                                tab.Start = start;
                             }
-                            tab.Start = start;
+                            else
+                            {
+                                tab.Start = null;
+                            }
                         }
                         tab.Fallback = fallback == null ? null : SplitToArgument(system, fallback, false);
                         bitos.Add(tab);

@@ -336,10 +336,25 @@ namespace FreneticScript.ScriptSystems
                 string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
             MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), TYPES_TAGPARSE_PARAMS);
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
+            if (tab.Start == null)
+            {
+                TagBit firstBit = tab.Bits[0];
+                if ((firstBit.Variable == null || firstBit.Variable.Bits.Length == 0) && commandEntry.VarLookup.TryGetValue(firstBit.Key, out SingleCILVariable startVar))
+                {
+                    firstBit.OriginalInput = firstBit.Key;
+                    tab.Start = tab.TagSystem.LVar;
+                    firstBit.Key = "\0lvar";
+                    firstBit.Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(startVar.Index) } };
+                }
+                else
+                {
+                    throw new TagErrorInducedException("Invalid tag base '" + TextStyle.Separate + firstBit.Key + TextStyle.Base + "'!");
+                }
+            }
             TagType returnable = tab.Start.ResultType;
             if (returnable == null)
             {
-                returnable = tab.Start.Adapt(ccse, tab, entryIndex);
+                returnable = tab.Start.Adapt(ccse, tab, entryIndex, values);
             }
             if (returnable == null)
             {

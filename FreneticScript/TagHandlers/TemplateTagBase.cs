@@ -66,14 +66,15 @@ namespace FreneticScript.TagHandlers
         {
             return false;
         }
-        
+
         /// <summary>
         /// Adapts the template tab base for compiling.
         /// </summary>
         /// <param name="ccse">The compiled CSE.</param>
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>
-        public virtual TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i)
+        /// <param name="values">Related adaptation values.</param>
+        public virtual TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, CILAdaptationValues values)
         {
             return null;
         }
