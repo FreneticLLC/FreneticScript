@@ -84,34 +84,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandEntry cent = values.CommandAt(entry);
             bool debug = cent.DBMode.ShouldShow(DebugMode.FULL);
             values.MarkCommand(entry);
-            bool isCorrect = true;
-            TagType type = null;
             TagType returnType = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
-            if (cent.Arguments.Length > 4)
-            {
-                string type_name = cent.Arguments[4].ToString().ToLowerFast();
-                type = cent.System.TagSystem.Types.RegisteredTypes[type_name];
-                isCorrect = returnType.TypeName == type.TypeName;
-                returnType = type;
-            }
             string lvarname = cent.Arguments[0].ToString().ToLowerFast();
             SingleCILVariable locVar = cent.VarLookup[lvarname];
             // This method:
             // runnable.Var = TYPE.CREATE_FOR(tagdata, runnable.entry.arg2());
             // or:
             // runnable.Var = runnable.entry.arg2();
-            int localInd = -1;
             values.LoadRunnable();
-            values.LoadArgumentObject(entry, 2); // Load the argument object
-            if (!isCorrect)
+            values.LoadArgumentObject(entry, 2);
+            if (cent.Arguments.Length > 4)
             {
-                values.LoadTagData(); // Load a basic TagData object appropriate to the queue.
-                values.ILGen.Emit(OpCodes.Call, type.CreatorMethod); // Verify the type: Will either give back the object correctly, or throw an internal parsing exception (Probably not the best method...)
+                string type_name = cent.Arguments[4].ToString().ToLowerFast();
+                TagType specifiedType = cent.System.TagSystem.Types.RegisteredTypes[type_name];
+                values.EnsureType(returnType, specifiedType); // Ensure the correct object type.
+                returnType = specifiedType;
             }
             values.ILGen.Emit(OpCodes.Stfld, locVar.Field); // Push the result into the local var
             if (debug) // If in debug mode...
             {
-                values.LoadLocalVariable(localInd); // Load variable.
+                values.LoadLocalVariable(locVar.Index); // Load variable.
                 values.ILGen.Emit(OpCodes.Ldstr, lvarname); // Load the variable name as a string.
                 values.ILGen.Emit(OpCodes.Ldstr, returnType.TypeName); // Load the variable type name as a string.
                 values.LoadQueue(); // Load the queue

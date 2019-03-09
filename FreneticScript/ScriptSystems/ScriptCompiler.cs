@@ -550,7 +550,7 @@ namespace FreneticScript.ScriptSystems
                 throw new Exception("Failed to compile tag: '" + method.DeclaringType + "." + method.Name + "' (script: '" + meta.TagType + "." + meta.Name + "'), because: " + ex.Message, ex);
             }
         }
-
+        
         /// <summary>
         /// The method <see cref="Func{TagData, TemplateObject, TemplateObject}.Invoke(TagData, TemplateObject)"/> with typeparams <see cref="TagData"/>, <see cref="TemplateObject"/>, <see cref="TemplateObject"/>.
         /// </summary>

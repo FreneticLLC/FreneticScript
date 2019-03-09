@@ -41,6 +41,7 @@ namespace FreneticScript.TagHandlers
 
         /// <summary>
         /// The method that creates this tag. Set automatically based on raw type.
+        /// Has parameters (TemplateObject, TagData) and returns an instance of this tag type.
         /// </summary>
         public MethodInfo CreatorMethod = null;
 

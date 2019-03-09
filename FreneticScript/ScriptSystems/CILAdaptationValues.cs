@@ -375,15 +375,25 @@ namespace FreneticScript.ScriptSystems
         /// <summary>
         /// Emits logic that ensures the argument is of the given type, converting if needed.
         /// </summary>
-        /// <param name="arg">The argument.</param>
+        /// <param name="currentType">The current object type.</param>
         /// <param name="requiredType">The type it needs to be.</param>
-        public void EnsureType(Argument arg, TagType requiredType)
+        public void EnsureType(TagType currentType, TagType requiredType)
         {
-            if (ArgumentCompiler.ReturnType(arg, this) != requiredType)
+            if (currentType != requiredType)
             {
                 LoadTagData();
                 ILGen.Emit(OpCodes.Call, requiredType.CreatorMethod);
             }
+        }
+
+        /// <summary>
+        /// Emits logic that ensures the argument is of the given type, converting if needed.
+        /// </summary>
+        /// <param name="arg">The argument.</param>
+        /// <param name="requiredType">The type it needs to be.</param>
+        public void EnsureType(Argument arg, TagType requiredType)
+        {
+            EnsureType(ArgumentCompiler.ReturnType(arg, this), requiredType);
         }
     }
 }

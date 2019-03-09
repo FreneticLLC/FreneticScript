@@ -55,12 +55,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// The field <see cref="Internal"/>.
         /// </summary>
         public static readonly FieldInfo Field_DynamicTag_Internal = typeof(DynamicTag).GetField(nameof(Internal));
-
-        /// <summary>
-        /// The method <see cref="TagHelper_DynamicAnyProcessor(DynamicTag, TagData)"/>.
-        /// </summary>
-        public static readonly MethodInfo Method_DynamicTag_AnyProcessor = typeof(DynamicTag).GetMethod(nameof(TagHelper_DynamicAnyProcessor));
-
+        
         /// <summary>
         /// Constructs a new DynamicTag.
         /// </summary>
@@ -134,17 +129,9 @@ namespace FreneticScript.TagHandlers.Objects
             return varType;
         }
 
-        [TagMeta(TagType = TYPE, Name = "_", SpecialCompiler = true, Group = "Dynamics", ReturnType = TYPE,
+        [TagMeta(TagType = TYPE, Name = "_", Group = "Dynamics", ReturnType = TYPE,
             Returns = "The result of whatever tag is given, based on the runtime type of the object, as a DynamicTag.")]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TagType Compiler_Tag_DynamicAny(ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
-        {
-            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-            ilgen.Emit(OpCodes.Call, Method_DynamicTag_AnyProcessor); // Call AnyProcessor(obj, data) and push the return to the stack
-            return tab.TagSystem.Types.Type_Dynamic;
-        }
-
-        public static DynamicTag TagHelper_DynamicAnyProcessor(DynamicTag inputObject, TagData data)
+        public static DynamicTag Tag_DynamicAnyProcessor(DynamicTag inputObject, TagData data)
         {
             string tagName = data.Bits[data.cInd].Key;
             TemplateObject tagObject = inputObject.Internal;

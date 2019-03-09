@@ -248,6 +248,22 @@ namespace FreneticScript.TagHandlers.Objects
             return null;
         }
 
+        [TagMeta(TagType = TYPE, Name = "_", Group = "Map Entries", ReturnType = DynamicTag.TYPE,
+            Returns = "The specified entry value in the map.",
+            Examples = new string[] { "'one:a|two:b' .one returns 'a'.", "'one:a|two:b' .two returns 'b'." },
+            Others = new string[] { "generally, use .get[<name>] instead of this." })]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DynamicTag Tag_DynamicANyProcessor(MapTag obj, TagData data)
+        {
+            string tagName = data.Bits[data.cInd].Key;
+            if (obj.Internal.TryGetValue(tagName, out TemplateObject outp))
+            {
+                return new DynamicTag(outp);
+            }
+            data.Error("Unknown map entry for auto-tag: '" + tagName + "'!");
+            return null;
+        }
+
 #pragma warning restore 1591
 
         /// <summary>
