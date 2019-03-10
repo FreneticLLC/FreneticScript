@@ -84,6 +84,7 @@ namespace FreneticScript.CommandSystem.Arguments
             ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
             ilgen.Emit(OpCodes.Call, TagArgumentBit_PrepParse); // Call the PrepParse method (pulls TagArgumentBit + Error + CSE from stack)
             ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
+            ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
             ilgen.Emit(OpCodes.Call, GetResultMethod, 1); // Call the GetResultMethod (takes one param: TagData, returns a TemplateObject).
             ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
             ilgen.Emit(OpCodes.Leave, exceptionLabel); // }

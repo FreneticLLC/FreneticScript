@@ -64,6 +64,11 @@ namespace FreneticScript.ScriptSystems
         public static MethodInfo ArgumentBit_Parse = typeof(ArgumentBit).GetMethod(nameof(ArgumentBit.Parse));
 
         /// <summary>
+        /// The <see cref="TextTag.EMPTY"/> field.
+        /// </summary>
+        public static FieldInfo TextTag_Empty = typeof(TextTag).GetField(nameof(TextTag.EMPTY));
+
+        /// <summary>
         /// The <see cref="TextArgumentBit.InputValue"/> field.
         /// </summary>
         public static FieldInfo TextArgumentBit_InputValue = typeof(TextArgumentBit).GetField(nameof(TextArgumentBit.InputValue));
@@ -94,26 +99,6 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>
-        /// Automatically duplicates an object, if duplication is required.
-        /// </summary>
-        /// <param name="ilgen">The IL generator object.</param>
-        /// <param name="tab">The text argument bit.</param>
-        public static void Compile_DuplicateIfNeeded(ILGeneratorTracker ilgen, TextArgumentBit tab)
-        {
-            Type tx = tab.InputValue.GetType();
-            if (!DuplicatorCalls.TryGetValue(tx, out MethodInfo metinf)) // TODO: Store this early in TagType
-            {
-                metinf = tx.GetMethod("RequiredDuplicate", BindingFlags.Instance | BindingFlags.Public);
-                DuplicatorCalls.Add(tx, metinf);
-            }
-            if (metinf == null)
-            {
-                return;
-            }
-            ilgen.Emit(OpCodes.Call, metinf);
-        }
-
-        /// <summary>
         /// Compiles the argument.
         /// </summary>
         /// <param name="argument">The argument.</param>
@@ -135,9 +120,7 @@ namespace FreneticScript.ScriptSystems
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
             if (argument.Bits.Length == 0) // Empty argument
             {
-                ilgen.Emit(OpCodes.Ldstr, ""); // Load an empty string
-                ilgen.Emit(OpCodes.Newobj, TextTag_CTOR); // Construct a texttag of the empty string
-                // Note: have to construct new text tag every time, as text tag value can be modified (via Set call).
+                ilgen.Emit(OpCodes.Ldsfld, TextTag_Empty); // Load the empty texttag
             }
             else if (argument.Bits.Length == 1) // One argument input
             {
@@ -153,7 +136,6 @@ namespace FreneticScript.ScriptSystems
                 if (argument.FirstBit is TextArgumentBit textab)
                 {
                     ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the textab's input value directly
-                    Compile_DuplicateIfNeeded(ilgen, textab);
                 }
                 else if (argument.FirstBit is TagArgumentBit tab)
                 {

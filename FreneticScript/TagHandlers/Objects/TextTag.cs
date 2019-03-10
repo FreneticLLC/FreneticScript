@@ -21,7 +21,11 @@ namespace FreneticScript.TagHandlers.Objects
         Others = new string[] { "<@link explanation Text Tags>What are text tags?<@/link>" })] // Not sure about "<@link>" format.
     public class TextTag : TemplateObject
     {
-        
+        /// <summary>
+        /// An empty text tag.
+        /// </summary>
+        public static readonly TextTag EMPTY = new TextTag("");
+
         /// <summary>
         /// Return the type name of this tag.
         /// </summary>
@@ -52,15 +56,6 @@ namespace FreneticScript.TagHandlers.Objects
         public TextTag(string _text)
         {
             Internal = _text;
-        }
-        
-        /// <summary>
-        /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
-        /// </summary>
-        /// <returns>A duplicate object.</returns>
-        public TextTag RequiredDuplicate()
-        {
-            return new TextTag(Internal);
         }
 
         /// <summary>

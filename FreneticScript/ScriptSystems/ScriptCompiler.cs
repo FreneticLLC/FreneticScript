@@ -288,7 +288,7 @@ namespace FreneticScript.ScriptSystems
                 + TextStyle.Base + ", error occured: " + ex.Message);
         }
 
-        private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData) };
+        private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData), typeof(CompiledCommandRunnable) };
 
         /// <summary>
         /// Generates tag CIL.
@@ -434,7 +434,7 @@ namespace FreneticScript.ScriptSystems
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
                 ilgen.Emit(OpCodes.Ldc_I4_0); // Load a '0' int32
-                ilgen.Emit(OpCodes.Stfld, TagData.Field_cInd); // Store x into TagData.cInd
+                ilgen.Emit(OpCodes.Stfld, TagData.Field_cInd); // Store the '0' into TagData.cInd
                 if (tab.Start.Method_HandleOneObjective != null) // If objective tag handling...
                 {
                     ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.

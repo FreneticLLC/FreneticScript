@@ -55,17 +55,6 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        // TODO: Find a way to avoid the pain of Internal being settable preventing object reuse (and requiring duplication of objects).
-
-        /// <summary>
-        /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
-        /// </summary>
-        /// <returns>A duplicate object.</returns>
-        public NumberTag RequiredDuplicate()
-        {
-            return new NumberTag(Internal);
-        }
-
         /// <summary>
         /// Helper validator to validate an argument as a number tag.
         /// </summary>

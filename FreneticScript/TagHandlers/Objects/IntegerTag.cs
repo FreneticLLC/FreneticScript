@@ -65,20 +65,7 @@ namespace FreneticScript.TagHandlers.Objects
                 return Internal;
             }
         }
-
-        // TODO: Have a pre-built array of common small values (say, -256 to +256) to allow easy object grabbing.
-        // TODO: This could potentially have a pool (concurrent safe) for reusing short-need instances?
-        // TODO: Find a way to avoid the pain of Internal being settable preventing object reuse (and requiring duplication of objects).
-
-        /// <summary>
-        /// Performs a required duplication operation (for object types that should default to copy-by-value instead of copy-by-reference).
-        /// </summary>
-        /// <returns>A duplicate object.</returns>
-        public IntegerTag RequiredDuplicate()
-        {
-            return new IntegerTag(Internal);
-        }
-
+        
         /// <summary>
         /// Helper validator to validate an argument as an integer tag.
         /// </summary>

@@ -292,7 +292,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Reference to <see cref="GetModifierObjectKnown(int)"/>.
         /// </summary>
-        public static MethodInfo Method_GetModiferObjectKnown = typeof(TagData).GetMethod("GetModifierObjectKnown");
+        public static MethodInfo Method_GetModiferObjectKnown = typeof(TagData).GetMethod(nameof(GetModifierObjectKnown));
 
         /// <summary>
         /// Gets the modifier at a specified place, handling any tags within.
@@ -307,7 +307,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// Reference to <see cref="GetModifierObjectCurrent"/>.
         /// </summary>
-        public static MethodInfo Method_GetModifierObjectCurrent = typeof(TagData).GetMethod("GetModifierObjectCurrent");
+        public static MethodInfo Method_GetModifierObjectCurrent = typeof(TagData).GetMethod(nameof(GetModifierObjectCurrent));
 
         /// <summary>
         /// Gets the modifier at the current position, handling any tags within.
