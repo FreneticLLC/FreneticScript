@@ -103,9 +103,9 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="argument">The argument.</param>
         /// <param name="entry">The relative stack entry.</param>
-        public static void Compile(Argument argument, CompiledCommandStackEntry entry)
+        public static ILGeneratorTracker Compile(Argument argument, CompiledCommandStackEntry entry)
         {
-            string tname = "__script_argument__" + IDINCR++;
+            string tname = entry.AssemblyName + "_argument_" + IDINCR++;
             AssemblyName asmname = new AssemblyName(tname) { Name = tname };
             AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
 #if NET_4_5
@@ -118,6 +118,7 @@ namespace FreneticScript.ScriptSystems
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(Argument));
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) });
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
+            ilgen.AddCode(OpCodes.Nop, tname, "--- ARGUMENT PARSE ---");
             if (argument.Bits.Length == 0) // Empty argument
             {
                 ilgen.Emit(OpCodes.Ldsfld, TextTag_Empty); // Load the empty texttag
@@ -216,7 +217,9 @@ namespace FreneticScript.ScriptSystems
             argument.TrueForm.Bits = argument.Bits;
             argument.TrueForm.WasQuoted = argument.WasQuoted;
             argument.TrueForm.CompiledParseMethod = methodbuild_c;
+            argument.TrueForm.TrueForm = argument.TrueForm;
             argument.CompiledParseMethod = methodbuild_c;
+            return ilgen;
         }
     }
 }

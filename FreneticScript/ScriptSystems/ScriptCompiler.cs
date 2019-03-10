@@ -58,6 +58,7 @@ namespace FreneticScript.ScriptSystems
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), RUN_METHOD_PARAMETERS);
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
+            ilgen.AddCode(OpCodes.Nop, tname, "--- SCRIPT ---");
             CILAdaptationValues values = new CILAdaptationValues()
             {
                 Entry = ccse,
@@ -81,7 +82,13 @@ namespace FreneticScript.ScriptSystems
             int tagID = 0;
             TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
             List<TagArgumentBit> toClean = new List<TagArgumentBit>();
-            List<ILGeneratorTracker> ILGens = new List<ILGeneratorTracker>();
+            List<ILGeneratorTracker> ILGens
+#if SAVE
+                = new List<ILGeneratorTracker>();
+#else
+                = null;
+#endif
+            List<KeyValuePair<FieldInfo, Object>> specialFieldValues = new List<KeyValuePair<FieldInfo, object>>();
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
                 CommandEntry curEnt = ccse.Entries[i];
@@ -97,7 +104,7 @@ namespace FreneticScript.ScriptSystems
                             tagID++;
                             try
                             {
-                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt));
+                                GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt, specialFieldValues, ILGens);
                             }
                             catch (TagErrorInducedException ex)
                             {
@@ -109,7 +116,9 @@ namespace FreneticScript.ScriptSystems
                             }
                         }
                     }
-                    ArgumentCompiler.Compile(arg, Created);
+                    ILGeneratorTracker compiled = ArgumentCompiler.Compile(arg, Created);
+                    curEnt.Arguments[a] = arg.TrueForm;
+                    ILGens?.Add(compiled);
                 }
                 foreach (KeyValuePair<string, Argument> argPair in curEnt.NamedArguments)
                 {
@@ -120,7 +129,7 @@ namespace FreneticScript.ScriptSystems
                             tagID++;
                             try
                             {
-                                ILGens.Add(GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key, curEnt));
+                                GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key, curEnt, specialFieldValues, ILGens);
                             }
                             catch (TagErrorInducedException ex)
                             {
@@ -132,7 +141,8 @@ namespace FreneticScript.ScriptSystems
                             }
                         }
                     }
-                    ArgumentCompiler.Compile(argPair.Value, Created);
+                    ILGeneratorTracker compiled = ArgumentCompiler.Compile(argPair.Value, Created);
+                    ILGens?.Add(compiled);
                 }
                 if (!curEnt.IsCallback)
                 {
@@ -186,7 +196,8 @@ namespace FreneticScript.ScriptSystems
             ilgen.Emit(OpCodes.Ret);
             typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
             ConstructorBuilder ctor = typebuild_c.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, CONSTRUCTOR_PARAMS);
-            ILGenerator ctorilgen = ctor.GetILGenerator();
+            ILGeneratorTracker ctorilgen = new ILGeneratorTracker() { Internal = ctor.GetILGenerator(), System = ccse.System };
+            ILGens?.Add(ctorilgen);
             ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
             ctorilgen.Emit(OpCodes.Ldarg_1); // Load: CCSE
             ctorilgen.Emit(OpCodes.Stfld, CompiledCommandRunnable.EntryField); // Store it to the readonly field.
@@ -215,10 +226,24 @@ namespace FreneticScript.ScriptSystems
                     }
                 }
             }
+            for (int i = 0; i < specialFieldValues.Count; i++)
+            {
+                ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
+                ctorilgen.Emit(OpCodes.Ldarg_3); // Load input array
+                ctorilgen.Emit(OpCodes.Ldc_I4, i); // Load index in the array
+                ctorilgen.Emit(OpCodes.Ldelem_Ref); // Load the value from the array
+                ctorilgen.Emit(OpCodes.Castclass, specialFieldValues[i].Key.FieldType); // Guarantee the type.
+                ctorilgen.Emit(OpCodes.Stfld, specialFieldValues[i].Key); // Store it to the field.
+            }
             ctorilgen.Emit(OpCodes.Ret); // return
             Type t_c = typebuild_c.CreateType();
             Type tP_c2 = typebuild_c2.CreateType();
-            CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse, ccse.Entries) as CompiledCommandRunnable;
+            object[] fieldValues = new object[specialFieldValues.Count];
+            for (int i = 0; i < fieldValues.Length; i++)
+            {
+                fieldValues[i] = specialFieldValues[i].Value;
+            }
+            CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse, ccse.Entries, fieldValues) as CompiledCommandRunnable;
             ccse.ReferenceCompiledRunnable = runnable;
             ccse.Variables = values.Variables.ToArray();
             ccse.VariableSetters = new Action<CompiledCommandRunnable, TemplateObject>[ccse.Variables.Length];
@@ -228,14 +253,14 @@ namespace FreneticScript.ScriptSystems
             StringBuilder outp = new StringBuilder();
             for (int i = 0; i < ilgen.Codes.Count; i++)
             {
-                outp.Append(ilgen.Codes[i].Key + ": " + ilgen.Codes[i].Value + "\n");
+                outp.Append(ilgen.Codes[i].Key + ": " + ilgen.Codes[i].Value?.ToString()?.Replace("\n", "\\n")?.Replace("\r", "\\r") + "\n");
             }
             for (int n = 0; n < ILGens.Count; n++)
             {
                 outp.Append("\n\n\n// -----\n\n\n");
                 for (int i = 0; i < ILGens[n].Codes.Count; i++)
                 {
-                    outp.Append(ILGens[n].Codes[i].Key + ": " + ILGens[n].Codes[i].Value + "\n");
+                    outp.Append(ILGens[n].Codes[i].Key + ": " + ILGens[n].Codes[i].Value?.ToString()?.Replace("\n", "\\n")?.Replace("\r", "\\r") + "\n");
                 }
             }
             System.IO.File.WriteAllText("script_" + tname + ".il", outp.ToString());
@@ -243,7 +268,7 @@ namespace FreneticScript.ScriptSystems
             return Created;
         }
 
-        private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry), typeof(CommandEntry[]) };
+        private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry), typeof(CommandEntry[]), typeof(Object[]) };
 
 
         private static readonly Type[] SETTER_ACTION_PARAMS = new Type[] { typeof(CompiledCommandRunnable), typeof(TemplateObject) };
@@ -288,8 +313,8 @@ namespace FreneticScript.ScriptSystems
                 + TextStyle.Base + ", error occured: " + ex.Message);
         }
 
-        private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData), typeof(CompiledCommandRunnable) };
-
+        private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData), typeof(CompiledCommandRunnable), typeof(Action<string>) };
+        
         /// <summary>
         /// Generates tag CIL.
         /// </summary>
@@ -302,8 +327,11 @@ namespace FreneticScript.ScriptSystems
         /// <param name="toClean">Cleanable tag bits.</param>
         /// <param name="argumentId">Source command argument ID.</param>
         /// <param name="commandEntry">The source command entry.</param>
-        public static ILGeneratorTracker GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
-            ref int tID, CILAdaptationValues values, int entryIndex, List<TagArgumentBit> toClean, string argumentId, CommandEntry commandEntry)
+        /// <param name="specialFieldValues">Field values to set on the runnable.</param>
+        /// <param name="trackers">All generator trackers thus far.</param>
+        public static void GenerateTagData(TypeBuilder typeBuild_c, CompiledCommandStackEntry ccse, TagArgumentBit tab,
+            ref int tID, CILAdaptationValues values, int entryIndex, List<TagArgumentBit> toClean, string argumentId, CommandEntry commandEntry,
+            List<KeyValuePair<FieldInfo, Object>> specialFieldValues, List<ILGeneratorTracker> trackers)
         {
             int id = tID;
             // Build a list of sub-arguments (within the tag) that may need to be compiled
@@ -324,18 +352,22 @@ namespace FreneticScript.ScriptSystems
             {
                 for (int b = 0; b < altArgs[sx].Bits.Length; b++)
                 {
-                    if (altArgs[sx].Bits[b] is TagArgumentBit)
+                    if (altArgs[sx].Bits[b] is TagArgumentBit subTab)
                     {
                         tID++;
-                        GenerateTagData(typeBuild_c, ccse, ((TagArgumentBit)altArgs[sx].Bits[b]), ref tID, values, entryIndex, toClean, argumentId, commandEntry);
+                        GenerateTagData(typeBuild_c, ccse, subTab, ref tID, values, entryIndex, toClean, argumentId, commandEntry, specialFieldValues, trackers);
                     }
                 }
+                ILGeneratorTracker tracker = ArgumentCompiler.Compile(altArgs[sx], ccse);
+                trackers?.Add(tracker);
             }
             // Build a method that handles the tag.
-            string methodName = "TagParse_" + id + "_Line_" + commandEntry.ScriptLine + "_Arg_" + NameTrimMatcher.TrimToMatches(argumentId) + "_" +
+            string methodName = "TagParse_" + id + "_" + ccse.AssemblyName + "_Line_" + commandEntry.ScriptLine + "_Arg_" + NameTrimMatcher.TrimToMatches(argumentId) + "_" +
                 string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
             MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), TYPES_TAGPARSE_PARAMS);
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
+            ilgen.AddCode(OpCodes.Nop, methodName, "--- TAGPARSE ---");
+            trackers?.Add(ilgen);
             if (tab.Start == null)
             {
                 TagBit firstBit = tab.Bits[0];
@@ -474,10 +506,30 @@ namespace FreneticScript.ScriptSystems
                     TagType modt = tab.Bits[x].TagHandler.Meta.ModifierType;
                     if (modt != null) // If we have a modifier input type pre-requirement...
                     {
-                        ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                        ilgen.Emit(OpCodes.Ldc_I4, x); // Load the correct tag modifier location in exact.
-                        ilgen.Emit(OpCodes.Call, TagData.Method_GetModiferObjectKnown); // Call the method to get the tag modifier object at the x location.
-                        TagType atype = ArgumentCompiler.ReturnType(tab.Bits[x].Variable, values);
+                        Argument variableArg = tab.Bits[x].Variable.TrueForm;
+                        tab.Bits[x].Variable = variableArg;
+                        if (variableArg.Bits.Length == 0)
+                        {
+                            ilgen.Emit(OpCodes.Ldsfld, ArgumentCompiler.TextTag_Empty); // Load the empty texttag
+                        }
+                        else if (variableArg.Bits.Length == 1 && variableArg.Bits[0] is TextArgumentBit text)
+                        {
+                            FieldInfo argValueField = typeBuild_c.DefineField("_field_tag_line_" + entryIndex + "_" + id + "_argVal_" + x, text.InputValue.GetType(), FieldAttributes.Public | FieldAttributes.InitOnly);
+                            specialFieldValues.Add(new KeyValuePair<FieldInfo, object>(argValueField, text.InputValue));
+                            ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
+                            ilgen.Emit(OpCodes.Ldfld, argValueField); // Load the modifier argument value
+                        }
+                        else
+                        {
+                            FieldInfo argToParse = typeBuild_c.DefineField("_field_tag_line_" + entryIndex + "_" + id + "_arg_" + x, typeof(Argument), FieldAttributes.Public | FieldAttributes.InitOnly);
+                            specialFieldValues.Add(new KeyValuePair<FieldInfo, object>(argToParse, variableArg));
+                            ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
+                            ilgen.Emit(OpCodes.Ldfld, argToParse); // Load the modifier argument
+                            ilgen.Emit(OpCodes.Ldarg_2); // Load argument: Error.
+                            ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
+                            ilgen.Emit(OpCodes.Call, variableArg.CompiledParseMethod, 2); // Call the modifier Parse(Error, Runnable) method.
+                        }
+                        TagType atype = ArgumentCompiler.ReturnType(variableArg, values);
                         if (modt != atype) // If the modifier input is of the wrong type...
                         {
                             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
@@ -502,7 +554,6 @@ namespace FreneticScript.ScriptSystems
 #endif
             tab.GetResultMethod = methodbuild_c;
             toClean.Add(tab);
-            return ilgen;
         }
 
 #if NET_4_5
@@ -553,7 +604,7 @@ namespace FreneticScript.ScriptSystems
                 StringBuilder outp = new StringBuilder();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
                 {
-                    outp.Append(ilgen.Codes[i].Key.Name + ": " + ilgen.Codes[i].Value + "\n");
+                    outp.Append(ilgen.Codes[i].Key + ": " + ilgen.Codes[i].Value + "\n");
                 }
                 System.IO.Directory.CreateDirectory("debug_tags");
                 System.IO.File.WriteAllText("debug_tags/script_" + genMethod.Name + ".il", outp.ToString());

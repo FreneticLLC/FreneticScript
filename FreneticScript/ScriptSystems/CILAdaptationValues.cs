@@ -359,7 +359,7 @@ namespace FreneticScript.ScriptSystems
             LoadQueue();
             ILGen.Emit(OpCodes.Ldfld, Queue_Error);
             LoadRunnable();
-            ILGen.Emit(OpCodes.Call, arg.CompiledParseMethod);
+            ILGen.Emit(OpCodes.Call, arg.CompiledParseMethod, 2);
         }
 
         /// <summary>

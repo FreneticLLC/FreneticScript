@@ -79,19 +79,20 @@ namespace FreneticScript.CommandSystem.Arguments
             ilgen.Emit(OpCodes.Stloc, tab_loc); // Store the TAB to the proper location
             Label exceptionLabel = ilgen.BeginExceptionBlock(); // try {
             ilgen.Emit(OpCodes.Ldloc, tab_loc); // Load the tag onto stack
-            ilgen.Emit(OpCodes.Dup); // Duplicate the tag for repeated usage
             ilgen.Emit(load_Error); // Load the error object onto stack
             ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
             ilgen.Emit(OpCodes.Call, TagArgumentBit_PrepParse); // Call the PrepParse method (pulls TagArgumentBit + Error + CSE from stack)
-            ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
+            ilgen.Emit(OpCodes.Ldloc, tab_loc); // Load the tag onto stack
+            ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab)
             ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
-            ilgen.Emit(OpCodes.Call, GetResultMethod, 1); // Call the GetResultMethod (takes one param: TagData, returns a TemplateObject).
+            ilgen.Emit(load_Error); // Load the error object onto stack.
+            ilgen.Emit(OpCodes.Call, GetResultMethod, 3); // Call the GetResultMethod (takes three params: (TagData, CompiledCommandRunnable, Action<string>), and returns a TemplateObject).
             ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
             ilgen.Emit(OpCodes.Leave, exceptionLabel); // }
             ilgen.BeginCatchBlock(typeof(TagErrorInducedException)); // catch (Exception ex) {
             ilgen.Emit(OpCodes.Pop); // pop the exception off stack
             ilgen.Emit(OpCodes.Ldloc, tab_loc); // Load the tag onto stack
-            ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab, gathered from duplicate above)
+            ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab)
             ilgen.Emit(OpCodes.Ldfld, TagData.Field_Fallback); // Read 'data'.Fallback field
             ilgen.Emit(load_Error); // Load the error object onto stack
             ilgen.Emit(load_Runnable); // Load the runnable object onto stack.

@@ -26,6 +26,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// </summary>
         public Argument()
         {
+            TrueForm = this;
         }
 
         /// <summary>
@@ -35,6 +36,7 @@ namespace FreneticScript.CommandSystem.Arguments
         public Argument(params ArgumentBit[] _bits)
         {
             Bits = _bits;
+            TrueForm = this;
         }
 
         /// <summary>
