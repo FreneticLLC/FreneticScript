@@ -80,7 +80,6 @@ namespace FreneticScript.ScriptSystems
                 ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
             }
             int tagID = 0;
-            TypeBuilder typebuild_c2 = modbuild.DefineType(tname + "__TAGPARSE", TypeAttributes.Class | TypeAttributes.Public);
             List<TagArgumentBit> toClean = new List<TagArgumentBit>();
             List<ILGeneratorTracker> ILGens
 #if SAVE
@@ -104,7 +103,7 @@ namespace FreneticScript.ScriptSystems
                             tagID++;
                             try
                             {
-                                GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt, specialFieldValues, ILGens);
+                                GenerateTagData(typebuild_c, ccse, tab, ref tagID, values, i, toClean, (a + 1).ToString(), curEnt, specialFieldValues, ILGens);
                             }
                             catch (TagErrorInducedException ex)
                             {
@@ -129,7 +128,7 @@ namespace FreneticScript.ScriptSystems
                             tagID++;
                             try
                             {
-                                GenerateTagData(typebuild_c2, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key, curEnt, specialFieldValues, ILGens);
+                                GenerateTagData(typebuild_c, ccse, tab, ref tagID, values, i, toClean, "named " + argPair.Key, curEnt, specialFieldValues, ILGens);
                             }
                             catch (TagErrorInducedException ex)
                             {
@@ -237,7 +236,6 @@ namespace FreneticScript.ScriptSystems
             }
             ctorilgen.Emit(OpCodes.Ret); // return
             Type t_c = typebuild_c.CreateType();
-            Type tP_c2 = typebuild_c2.CreateType();
             object[] fieldValues = new object[specialFieldValues.Count];
             for (int i = 0; i < fieldValues.Length; i++)
             {
