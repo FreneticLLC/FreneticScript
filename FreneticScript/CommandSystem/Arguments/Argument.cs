@@ -45,33 +45,9 @@ namespace FreneticScript.CommandSystem.Arguments
         public static readonly ArgumentBit[] EMPTY_BITS = new ArgumentBit[0];
 
         /// <summary>
-        /// Raw value of the parts that build up the argument.
-        /// </summary>
-        public ArgumentBit[] RawBits = EMPTY_BITS;
-
-        /// <summary>
         /// The parts that build up the argument.
         /// </summary>
-        public ArgumentBit[] Bits
-        {
-            get
-            {
-                return RawBits;
-            }
-            set
-            {
-                RawBits = value;
-                if (value.Length != 0)
-                {
-                    FirstBit = value[0];
-                }
-            }
-        }
-
-        /// <summary>
-        /// The first bit in <see cref="Bits"/>.
-        /// </summary>
-        public ArgumentBit FirstBit;
+        public ArgumentBit[] Bits = EMPTY_BITS;
 
         /// <summary>
         /// Whether the argument was input with "quotes" around it.

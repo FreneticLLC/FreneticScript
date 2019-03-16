@@ -39,20 +39,20 @@ namespace FreneticScript.ScriptSystems
         public static MethodInfo StringBuilder_Append = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
 
         /// <summary>
+        /// The <see cref="StringBuilder.ToString()"/> method.
+        /// </summary>
+        public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null);
+
+        /// <summary>
         /// The <see cref="TextTag(string)"/> constructor.
         /// </summary>
         public static ConstructorInfo TextTag_CTOR = typeof(TextTag).GetConstructor(new Type[] { typeof(string) });
 
         /// <summary>
-        /// The <see cref="Argument.RawBits"/> field.
+        /// The <see cref="Argument.Bits"/> field.
         /// </summary>
-        public static FieldInfo Argument_RawBits = typeof(Argument).GetField(nameof(Argument.RawBits));
-
-        /// <summary>
-        /// The <see cref="Argument.FirstBit"/> field.
-        /// </summary>
-        public static FieldInfo Argument_FirstBit = typeof(Argument).GetField(nameof(Argument.FirstBit));
-
+        public static FieldInfo Argument_Bits = typeof(Argument).GetField(nameof(Argument.Bits));
+        
         /// <summary>
         /// The <see cref="Argument.Parse(Action{string}, CompiledCommandRunnable)"/> method.
         /// </summary>
@@ -119,6 +119,31 @@ namespace FreneticScript.ScriptSystems
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) });
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
             ilgen.AddCode(OpCodes.Nop, tname, "--- ARGUMENT PARSE ---");
+            Type[] fieldTypes = new Type[argument.Bits.Length];
+            FieldInfo[] bitFields = new FieldInfo[argument.Bits.Length];
+            Object[] fieldValues = new object[argument.Bits.Length];
+            for (int i = 0; i < argument.Bits.Length; i++)
+            {
+                if (argument.Bits[i] is TextArgumentBit textab)
+                {
+                    if (argument.Bits.Length == 1)
+                    {
+                        fieldTypes[i] = textab.InputValue.GetType();
+                        fieldValues[i] = textab.InputValue;
+                    }
+                    else
+                    {
+                        fieldTypes[i] = typeof(string);
+                        fieldValues[i] = textab.InputValue.ToString();
+                    }
+                }
+                else
+                {
+                    fieldTypes[i] = argument.Bits[i].GetType();
+                    fieldValues[i] = argument.Bits[i];
+                }
+                bitFields[i] = typebuild_c.DefineField("_field_argbit_" + i, fieldTypes[i], FieldAttributes.Public | FieldAttributes.InitOnly);
+            }
             if (argument.Bits.Length == 0) // Empty argument
             {
                 ilgen.Emit(OpCodes.Ldsfld, TextTag_Empty); // Load the empty texttag
@@ -127,18 +152,18 @@ namespace FreneticScript.ScriptSystems
             {
                 int tab_tracker_loc = 0;
                 int object_result_loc = 1;
-                if (argument.FirstBit is TagArgumentBit)
+                if (argument.Bits[0] is TagArgumentBit)
                 {
                     tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)); // Declare variable of type TagArgumentBit as local-0
                     object_result_loc = ilgen.DeclareLocal(typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
                 }
                 ilgen.Emit(OpCodes.Ldarg_0); // Load the argument object
-                ilgen.Emit(OpCodes.Ldfld, Argument_FirstBit); // Load the only argument bit
-                if (argument.FirstBit is TextArgumentBit textab)
+                ilgen.Emit(OpCodes.Ldfld, bitFields[0]); // Load the only argument bit
+                if (argument.Bits[0] is TextArgumentBit)
                 {
-                    ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the textab's input value directly
+                    // That's all we need!
                 }
-                else if (argument.FirstBit is TagArgumentBit tab)
+                else if (argument.Bits[0] is TagArgumentBit tab)
                 {
                     tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
                     ilgen.Emit(OpCodes.Ldloc, object_result_loc); // Load the object result
@@ -183,37 +208,45 @@ namespace FreneticScript.ScriptSystems
                         ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the local variable containing the string builder
                     }
                     ilgen.Emit(OpCodes.Ldarg_0); // Load the argument object
-                    ilgen.Emit(OpCodes.Ldfld, Argument_RawBits); // Load the bits array
-                    ilgen.Emit(OpCodes.Ldc_I4, i); // Load the current index (will be a constant integer load at runtime)
-                    ilgen.Emit(OpCodes.Ldelem_Ref); // Load the ArgumentBit
+                    ilgen.Emit(OpCodes.Ldfld, bitFields[i]); // Load the argument bit
                     if (argument.Bits[i] is TagArgumentBit tab)
                     {
                         tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
                         ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the local variable containing the string builder
                         ilgen.Emit(OpCodes.Ldloc, object_result_loc); // Load the object result
+                        ilgen.Emit(OpCodes.Callvirt, Object_ToString); // Compress the result to a string
                     }
                     else if (argument.Bits[i] is TextArgumentBit)
                     {
-                        ilgen.Emit(OpCodes.Ldfld, TextArgumentBit_InputValue); // Load the tab's input value directly
+                        // That's all we need!
                     }
                     else
                     {
                         ilgen.Emit(OpCodes.Ldarg_1); // Load Action<string> 'error'
                         ilgen.Emit(OpCodes.Ldarg_2); // Load CompiledCommandRunnable 'runnable'
                         ilgen.Emit(OpCodes.Callvirt, ArgumentBit_Parse); // Generic call to virtual parse method, for unknown argument bit types.
+                        ilgen.Emit(OpCodes.Callvirt, Object_ToString); // Compress the result to a string
                     }
-                    ilgen.Emit(OpCodes.Callvirt, Object_ToString); // Compress the result to a string
                     ilgen.Emit(OpCodes.Call, StringBuilder_Append); // Append it to the string builder
                     ilgen.Emit(OpCodes.Pop); // Remove the stringbuilder.append return value from the stack, as it's not needed (final assembly code should automatically discard the return push-n-pop)
                 }
                 ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the stringbuilder
-                ilgen.Emit(OpCodes.Callvirt, Object_ToString); // ToString it (maybe this doesn't need to be virtual?)
+                ilgen.Emit(OpCodes.Call, StringBuilder_ToString); // ToString it
                 ilgen.Emit(OpCodes.Newobj, TextTag_CTOR); // Construct a texttag of the full complex input
             }
             ilgen.Emit(OpCodes.Ret); // Return the resultant texttag or tag return value
             typebuild_c.DefineMethodOverride(methodbuild_c, Argument_Parse);
+            ConstructorBuilder ctor = typebuild_c.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, fieldTypes);
+            ILGeneratorTracker ctorilgen = new ILGeneratorTracker() { Internal = ctor.GetILGenerator(), System = entry.System };
+            for (int i = 0; i < argument.Bits.Length; i++)
+            {
+                ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
+                ctorilgen.Emit(OpCodes.Ldarg, i + 1); // Load the bit value
+                ctorilgen.Emit(OpCodes.Stfld, bitFields[i]); // Store it to the field.
+            }
+            ctorilgen.Emit(OpCodes.Ret); // return
             Type t_c = typebuild_c.CreateType();
-            argument.TrueForm = Activator.CreateInstance(t_c) as Argument;
+            argument.TrueForm = Activator.CreateInstance(t_c, fieldValues) as Argument;
             argument.TrueForm.Bits = argument.Bits;
             argument.TrueForm.WasQuoted = argument.WasQuoted;
             argument.TrueForm.CompiledParseMethod = methodbuild_c;
