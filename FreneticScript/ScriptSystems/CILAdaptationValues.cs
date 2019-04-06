@@ -37,7 +37,7 @@ namespace FreneticScript.ScriptSystems
         /// <summary>
         /// The type of the variable.
         /// </summary>
-        public TagType Type;
+        public TagReturnType Type;
 
         /// <summary>
         /// The field that holds this variable's value.
@@ -51,7 +51,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="_name">The variable name.</param>
         /// <param name="_type">The variable type.</param>
         /// <param name="_field">The field for this variable.</param>
-        public SingleCILVariable(int _index, string _name, TagType _type, FieldInfo _field)
+        public SingleCILVariable(int _index, string _name, TagReturnType _type, FieldInfo _field)
         {
             Index = _index;
             Name = _name;
@@ -126,6 +126,11 @@ namespace FreneticScript.ScriptSystems
         public TypeBuilder Type;
 
         /// <summary>
+        /// The trackers list (if tracking CIL output).
+        /// </summary>
+        public List<ILGeneratorTracker> Trackers;
+
+        /// <summary>
         /// Returns the data of a variable by its location ID.
         /// </summary>
         /// <param name="varId">The variable location ID.</param>
@@ -144,9 +149,9 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="varId">The variable location ID.</param>
         /// <returns>The return-type of the tag.</returns>
-        public TagType LocalVariableType(int varId)
+        public TagReturnType LocalVariableType(int varId)
         {
-            return LocalVariableData(varId)?.Type;
+            return LocalVariableData(varId)?.Type ?? default;
         }
 
         /// <summary>
@@ -167,7 +172,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="name">The name.</param>
         /// <param name="type">The type of the local variable.</param>
         /// <returns>The location.</returns>
-        public int LocalVariableLocation(string name, out TagType type)
+        public int LocalVariableLocation(string name, out TagReturnType type)
         {
             foreach (int i in LVarIDs)
             {
@@ -180,7 +185,7 @@ namespace FreneticScript.ScriptSystems
                     }
                 }
             }
-            type = null;
+            type = default;
             return -1;
         }
 
@@ -227,8 +232,17 @@ namespace FreneticScript.ScriptSystems
         public int AddVariable(string var, TagType type)
         {
             int id = CLVarID++;
-            FieldInfo newField = Type.DefineField("_field_locVar_" + id, type.RawType, FieldAttributes.Public);
-            SingleCILVariable variable = new SingleCILVariable(id, var, type, newField);
+            Type rawType;
+            if (type.Meta.RawInternal)
+            {
+                rawType = type.RawInternalType;
+            }
+            else
+            {
+                rawType = type.RawType;
+            }
+            FieldInfo newField = Type.DefineField("_field_locVar_" + id, rawType, FieldAttributes.Public);
+            SingleCILVariable variable = new SingleCILVariable(id, var, new TagReturnType(type, type.Meta.RawInternal), newField);
             CLVariables[LVarIDs.Peek()].Add(variable);
             Variables.Add(variable);
             return id;
@@ -359,7 +373,7 @@ namespace FreneticScript.ScriptSystems
             LoadQueue();
             ILGen.Emit(OpCodes.Ldfld, Queue_Error);
             LoadRunnable();
-            ILGen.Emit(OpCodes.Call, arg.CompiledParseMethod, 2);
+            ILGen.Emit(OpCodes.Call, arg.RawParseMethod ?? arg.CompiledParseMethod, 2);
         }
 
         /// <summary>
@@ -377,12 +391,28 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="currentType">The current object type.</param>
         /// <param name="requiredType">The type it needs to be.</param>
-        public void EnsureType(TagType currentType, TagType requiredType)
+        public void EnsureType(TagReturnType currentType, TagReturnType requiredType)
         {
-            if (currentType != requiredType)
+            if (currentType.Type != requiredType.Type)
             {
+                if (currentType.IsRaw)
+                {
+                    ILGen.Emit(OpCodes.Newobj, currentType.Type.RawInternalConstructor);
+                }
                 LoadTagData();
-                ILGen.Emit(OpCodes.Call, requiredType.CreatorMethod);
+                ILGen.Emit(OpCodes.Call, requiredType.Type.CreatorMethod);
+                if (requiredType.IsRaw)
+                {
+                    ILGen.Emit(OpCodes.Ldfld, requiredType.Type.RawInternalField);
+                }
+            }
+            else if (currentType.IsRaw && !requiredType.IsRaw)
+            {
+                ILGen.Emit(OpCodes.Newobj, currentType.Type.RawInternalConstructor);
+            }
+            else if (!currentType.IsRaw && requiredType.IsRaw)
+            {
+                ILGen.Emit(OpCodes.Ldfld, currentType.Type.RawInternalField);
             }
         }
 
@@ -391,7 +421,7 @@ namespace FreneticScript.ScriptSystems
         /// </summary>
         /// <param name="arg">The argument.</param>
         /// <param name="requiredType">The type it needs to be.</param>
-        public void EnsureType(Argument arg, TagType requiredType)
+        public void EnsureType(Argument arg, TagReturnType requiredType)
         {
             EnsureType(ArgumentCompiler.ReturnType(arg, this), requiredType);
         }

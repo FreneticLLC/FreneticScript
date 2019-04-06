@@ -51,14 +51,13 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// Handles a 'color' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public TemplateObject HandleOneObjective(TagData data)
+        public TextTag HandleOneObjective(TagData data)
         {
             if (Colors.TryGetValue(data.GetModifierCurrent().ToLowerFast(), out Func<string> getter))
             {
                 return new TextTag(getter());
             }
-            data.Error("Invalid text color specified!");
-            return NullTag.NULL_VALUE;
+            throw data.Error("Invalid text color specified!");
         }
     }
 }

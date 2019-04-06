@@ -54,6 +54,11 @@ namespace FreneticScript.CommandSystem.Arguments
         /// The method that gets the result of this TagArgumentBit.
         /// </summary>
         public MethodInfo GetResultMethod;
+
+        /// <summary>
+        /// The type that will be returned by the <see cref="GetResultMethod"/>.
+        /// </summary>
+        public TagReturnType CompiledReturnType;
         
         /// <summary>
         /// Constructs a TagArgumentBit.
@@ -74,7 +79,8 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="load_Error">The OpCode to load the error object.</param>
         /// <param name="load_Runnable">The OpCode to load the runnable object.</param>
         /// <param name="obj_loc">The TemplateObject helper local-variable location.</param>
-        public void GenerateCall(ILGeneratorTracker ilgen, int tab_loc, OpCode load_Error, OpCode load_Runnable, int obj_loc)
+        /// <param name="return_raw">Whether a raw value should be returned.</param>
+        public void GenerateCall(ILGeneratorTracker ilgen, int tab_loc, OpCode load_Error, OpCode load_Runnable, int obj_loc, bool return_raw)
         {
             ilgen.Emit(OpCodes.Stloc, tab_loc); // Store the TAB to the proper location
             Label exceptionLabel = default;
@@ -91,6 +97,10 @@ namespace FreneticScript.CommandSystem.Arguments
             ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
             ilgen.Emit(load_Error); // Load the error object onto stack.
             ilgen.Emit(OpCodes.Call, GetResultMethod, 3); // Call the GetResultMethod (takes three params: (TagData, CompiledCommandRunnable, Action<string>), and returns a TemplateObject).
+            if (CompiledReturnType.IsRaw && !return_raw)
+            {
+                ilgen.Emit(OpCodes.Newobj, CompiledReturnType.Type.RawInternalConstructor); // Handle raw translation if needed.
+            }
             ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
             if (Data.HasFallback)
             {
@@ -103,6 +113,11 @@ namespace FreneticScript.CommandSystem.Arguments
                 ilgen.Emit(load_Error); // Load the error object onto stack
                 ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
                 ilgen.Emit(OpCodes.Callvirt, ArgumentCompiler.Argument_Parse); // Virtual call the Argument.Parse method, which returns a TemplateObject
+                ilgen.Emit(OpCodes.Call, CompiledReturnType.Type.CreatorMethod); // Validate type
+                if (CompiledReturnType.IsRaw && return_raw)
+                {
+                    ilgen.Emit(OpCodes.Ldfld, CompiledReturnType.Type.RawInternalField); // Handle raw translation if needed.
+                }
                 ilgen.Emit(OpCodes.Stloc, obj_loc); // Store the TemplateObject where it belongs
                 ilgen.EndExceptionBlock(); // }
             }
@@ -113,7 +128,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// </summary>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
-        public override TagType ReturnType(CILAdaptationValues values)
+        public override TagReturnType ReturnType(CILAdaptationValues values)
         {
             if (Bits.Length == 1)
             {

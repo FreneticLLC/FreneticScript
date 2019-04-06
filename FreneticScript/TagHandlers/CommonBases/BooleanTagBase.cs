@@ -37,7 +37,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         /// Handles the 'boolean' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public static TemplateObject HandleOne(TagData data)
+        public static BooleanTag HandleOne(TagData data)
         {
             return BooleanTag.For(data.GetModifierObjectCurrent(), data);
         }

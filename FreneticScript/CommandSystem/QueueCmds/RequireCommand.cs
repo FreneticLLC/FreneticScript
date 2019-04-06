@@ -80,11 +80,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 int loc = values.LocalVariableLocation(pair.Key);
                 if (loc >= 0)
                 {
-                    TagType type = values.LocalVariableType(loc);
-                    if (type != tagType)
+                    TagReturnType type = values.LocalVariableType(loc);
+                    if (type.Type != tagType)
                     {
                         throw new ErrorInducedException("Required local variable '" + pair.Key + "' already exists, but is of type '"
-                            + type.TypeName + "', when '" + pair.Value.ToString() + "' was required!");
+                            + type.Type.TypeName + "', when '" + pair.Value.ToString() + "' was required!");
                     }
                 }
                 values.AddVariable(pair.Key, tagType);

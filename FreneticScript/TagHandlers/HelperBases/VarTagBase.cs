@@ -64,7 +64,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>
         /// <param name="values">Related adaptation values.</param>
-        public override TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, CILAdaptationValues values)
+        public override TagReturnType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, CILAdaptationValues values)
         {
             string vn = tab.Bits[0].Variable.ToString().ToLowerFast();
             CommandEntry entry = ccse.Entries[i];

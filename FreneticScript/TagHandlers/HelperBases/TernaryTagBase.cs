@@ -43,7 +43,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// Handles the 'ternary[]' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public static TemplateObject HandleOne(TagData data)
+        public static TernaryPassTag HandleOne(TagData data)
         {
             bool basevalue = (BooleanTag.TryFor(data.GetModifierObjectCurrent()) ?? BooleanTag.FALSE).Internal;
             return new TernaryPassTag() { Passed = basevalue };

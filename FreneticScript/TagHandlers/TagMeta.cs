@@ -50,7 +50,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// The internal return tag type of this tag.
         /// </summary>
-        public TagType ReturnTypeResult;
+        public TagReturnType ReturnTypeResult;
 
         /// <summary>
         /// The modifier type of this tag.
@@ -60,7 +60,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// The internal modifier tag type of this tag.
         /// </summary>
-        public TagType ModifierType;
+        public TagReturnType ModifierType;
 
         /// <summary>
         /// Indicates that this tag is to be treated as a special self-compiler tag.
@@ -68,9 +68,14 @@ namespace FreneticScript.TagHandlers
         public bool SpecialCompiler;
 
         /// <summary>
+        /// Indicates whether the object self-input should be in raw form.
+        /// </summary>
+        public bool SelfIsRaw;
+
+        /// <summary>
         /// The special compiler callable for this tag, if marked with <see cref="SpecialCompiler"/>.
         /// </summary>
-        public Func<ILGeneratorTracker, TagArgumentBit, int, TagType, TagType> SpecialCompileAction;
+        public Func<ILGeneratorTracker, TagArgumentBit, int, TagReturnType, TagReturnType> SpecialCompileAction;
 
         /// <summary>
         /// The method name of the type helper for this tag, if any.
@@ -81,7 +86,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>
         /// The special type helper callable for this tag, if named by <see cref="SpecialTypeHelperName"/>.
         /// </summary>
-        public Func<TagArgumentBit, int, TagType> SpecialTypeHelper;
+        public Func<TagArgumentBit, int, TagReturnType> SpecialTypeHelper;
 
         /// <summary>
         /// Prepares the tag meta.
@@ -90,11 +95,15 @@ namespace FreneticScript.TagHandlers
         public void Ready(TagHandler tags)
         {
             ActualType = TagType == null ? null : tags.Types.RegisteredTypes[TagType];
-            if (ReturnType == null || !tags.Types.RegisteredTypes.TryGetValue(ReturnType, out ReturnTypeResult))
+            if (ReturnType == null || !tags.Types.RegisteredTypes.TryGetValue(ReturnType, out TagType returnedTagType))
             {
-                ReturnTypeResult = null;
+                ReturnTypeResult = default;
             }
-            ModifierType = Modifier == null ? null : tags.Types.RegisteredTypes[Modifier];
+            else
+            {
+                ReturnTypeResult = new TagReturnType(returnedTagType, false);
+            }
+            ModifierType = new TagReturnType(Modifier == null ? null : tags.Types.RegisteredTypes[Modifier], false);
         }
 
         /// <summary>

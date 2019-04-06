@@ -45,9 +45,9 @@ namespace FreneticScript.CommandSystem.Arguments
         /// </summary>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
-        public override TagType ReturnType(CILAdaptationValues values)
+        public override TagReturnType ReturnType(CILAdaptationValues values)
         {
-            return Engine.TagSystem.Types.RegisteredTypes[ResType];
+            return new TagReturnType(Engine.TagSystem.Types.RegisteredTypes[ResType], false);
         }
 
         /// <summary>

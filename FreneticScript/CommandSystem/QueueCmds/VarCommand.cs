@@ -69,7 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                t = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
+                t = ArgumentCompiler.ReturnType(cent.Arguments[2], values).Type;
             }
             values.AddVariable(larg, t);
         }
@@ -84,7 +84,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandEntry cent = values.CommandAt(entry);
             bool debug = cent.DBMode.ShouldShow(DebugMode.FULL);
             values.MarkCommand(entry);
-            TagType returnType = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
+            TagReturnType returnType = ArgumentCompiler.ReturnType(cent.Arguments[2], values);
             string lvarname = cent.Arguments[0].ToString().ToLowerFast();
             SingleCILVariable locVar = cent.VarLookup[lvarname];
             // This method:
@@ -97,15 +97,26 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 string type_name = cent.Arguments[4].ToString().ToLowerFast();
                 TagType specifiedType = cent.System.TagSystem.Types.RegisteredTypes[type_name];
-                values.EnsureType(returnType, specifiedType); // Ensure the correct object type.
-                returnType = specifiedType;
+                TagReturnType specifiedReturnType = new TagReturnType(specifiedType, specifiedType.Meta.RawInternal);
+                values.EnsureType(returnType, specifiedReturnType); // Ensure the correct object type.
+                returnType = specifiedReturnType;
+            }
+            else
+            {
+                TagReturnType specifiedReturnType = new TagReturnType(returnType.Type, returnType.Type.Meta.RawInternal);
+                values.EnsureType(returnType, specifiedReturnType); // Ensure the correct object type.
+                returnType = specifiedReturnType;
             }
             values.ILGen.Emit(OpCodes.Stfld, locVar.Field); // Push the result into the local var
             if (debug) // If in debug mode...
             {
                 values.LoadLocalVariable(locVar.Index); // Load variable.
+                if (returnType.IsRaw)
+                {
+                    values.ILGen.Emit(OpCodes.Newobj, returnType.Type.RawInternalConstructor); // Handle raw translation if needed.
+                }
                 values.ILGen.Emit(OpCodes.Ldstr, lvarname); // Load the variable name as a string.
-                values.ILGen.Emit(OpCodes.Ldstr, returnType.TypeName); // Load the variable type name as a string.
+                values.ILGen.Emit(OpCodes.Ldstr, returnType.Type.TypeName); // Load the variable type name as a string.
                 values.LoadQueue(); // Load the queue
                 values.LoadEntry(entry); // Load the entry
                 values.ILGen.Emit(OpCodes.Call, Method_DebugHelper); // Call the debug method

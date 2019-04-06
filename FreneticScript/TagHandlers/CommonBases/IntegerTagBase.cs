@@ -40,9 +40,9 @@ namespace FreneticScript.TagHandlers.CommonBases
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Auto-apply!
-        public static TemplateObject HandleOne(TagData data)
+        public static long HandleOne(TagData data)
         {
-            return IntegerTag.For(data.GetModifierObjectCurrent(), data);
+            return IntegerTag.CreateFor_Raw(data.GetModifierObjectCurrent(), data);
         }
     }
 }

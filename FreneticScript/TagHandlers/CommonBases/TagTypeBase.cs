@@ -38,7 +38,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         /// </summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
-        public static TemplateObject HandleOne(TagData data)
+        public static TagTypeTag HandleOne(TagData data)
         {
             return TagTypeTag.For(data.GetModifierObjectCurrent(), data);
         }

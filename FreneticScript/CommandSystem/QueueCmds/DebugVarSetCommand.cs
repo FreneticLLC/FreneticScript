@@ -42,7 +42,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new ErrorInducedException("Unknown variable name '" + mainVar + "' - cannot set its value.");
             }
-            TagType varType = locVar.Type;
+            TagReturnType varType = locVar.Type;
             string mode = cent.Arguments[1].ToString();
             ObjectOperation operationType;
             switch (mode)
@@ -68,18 +68,22 @@ namespace FreneticScript.CommandSystem.QueueCmds
             if (split.Length > 1)
             {
                 values.LoadLocalVariable(locVar.Index);
+                if (locVar.Type.IsRaw)
+                { // TODO: Work directly with raws
+                    values.ILGen.Emit(OpCodes.Newobj, locVar.Type.Type.RawInternalConstructor); // Handle raw translation if needed.
+                }
                 if (split.Length == 2)
                 {
                     values.ILGen.Emit(OpCodes.Dup);
                 }
                 values.ILGen.Emit(OpCodes.Ldstr, split[1]);
-                if (varType.Operation_GetSubSettable.Method.GetParameters().Length == 3)
+                if (varType.Type.Operation_GetSubSettable.Method.GetParameters().Length == 3)
                 {
                     values.LoadQueue();
                     values.LoadEntry(entry);
                     values.ILGen.Emit(OpCodes.Call, Method_GetOES);
                 }
-                values.ILGen.Emit(OpCodes.Call, varType.Operation_GetSubSettable.Method);
+                values.ILGen.Emit(OpCodes.Call, varType.Type.Operation_GetSubSettable.Method);
                 for (int i = 2; i < split.Length; i++)
                 {
                     if (i + 1 == split.Length)
@@ -107,16 +111,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             else
             {
-                ObjectOperationAttribute operation = varType.Operations[(int)operationType];
+                ObjectOperationAttribute operation = varType.Type.Operations[(int)operationType];
                 if (operation == null)
                 {
-                    throw new ErrorInducedException("Cannot use that setter mode (" + operationType + ") on a variable of type '" + varType.TypeName + "'!");
+                    throw new ErrorInducedException("Cannot use that setter mode (" + operationType + ") on a variable of type '" + varType.Type.TypeName + "'!");
                 }
                 // This method: runnable.Var = runnable.Var.Operation(runnable.Entry.Arg2())
                 values.LoadRunnable();
                 values.LoadLocalVariable(locVar.Index);
+                if (locVar.Type.IsRaw)
+                { // TODO: Work directly with raws
+                    values.ILGen.Emit(OpCodes.Newobj, locVar.Type.Type.RawInternalConstructor); // Handle raw translation if needed.
+                }
                 values.LoadArgumentObject(entry, 2);
-                values.EnsureType(cent.Arguments[2], varType);
+                values.EnsureType(cent.Arguments[2], new TagReturnType(varType.Type, false));
                 if (operation.Method.GetParameters().Length == 3)
                 {
                     values.LoadQueue();
@@ -124,11 +132,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     values.ILGen.Emit(OpCodes.Call, Method_GetOES);
                 }
                 values.ILGen.Emit(OpCodes.Call, operation.Method);
+                if (locVar.Type.IsRaw)
+                { // TODO: Work directly with raws
+                    values.ILGen.Emit(OpCodes.Ldfld, locVar.Type.Type.RawInternalField); // Handle raw translation if needed.
+                }
                 values.ILGen.Emit(OpCodes.Stfld, locVar.Field);
             }
             if (debug) // If in debug mode...
             {
                 values.LoadLocalVariable(locVar.Index);
+                if (locVar.Type.IsRaw)
+                { // TODO: Work directly with raws
+                    values.ILGen.Emit(OpCodes.Newobj, locVar.Type.Type.RawInternalConstructor); // Handle raw translation if needed.
+                }
                 values.ILGen.Emit(OpCodes.Ldstr, vn);
                 values.LoadQueue();
                 values.LoadEntry(entry);

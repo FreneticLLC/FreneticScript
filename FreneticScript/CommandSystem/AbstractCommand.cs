@@ -228,16 +228,16 @@ namespace FreneticScript.CommandSystem
                 }
                 throw new ErrorInducedException("Command '" + Name + "' requires a save name, but none was given.");
             }
-            int preVarLoc = values.LocalVariableLocation(saveName, out TagType preVarType);
+            int preVarLoc = values.LocalVariableLocation(saveName, out TagReturnType preVarType);
             if (preVarLoc >= 0)
             {
                 if (!canPreExist)
                 {
                     throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "')?!");
                 }
-                if (preVarType != tagType)
+                if (preVarType.Type != tagType)
                 {
-                    throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "', with type '" + preVarType.TypeName + "') of wrong type (expected '" + tagType.TypeName + "').");
+                    throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "', with type '" + preVarType.Type.TypeName + "') of wrong type (expected '" + tagType.TypeName + "').");
                 }
                 cent.SaveLoc = preVarLoc;
             }

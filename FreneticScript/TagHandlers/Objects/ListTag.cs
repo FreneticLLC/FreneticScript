@@ -395,7 +395,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new ListTag(Entries);
         }
 
-        [TagMeta(TagType = TYPE, Name = "include", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "A list with the input list added to the end.",
+        [TagMeta(TagType = TYPE, Name = "include", Modifier = TYPE, Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "A list with the input list added to the end.",
             Examples = new string[] { "'one|two|three|' .include[four|five|] returns 'one|two|three|four|five|'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag Tag_Include(ListTag obj, ListTag modifier)

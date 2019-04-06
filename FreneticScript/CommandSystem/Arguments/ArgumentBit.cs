@@ -26,7 +26,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// </summary>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
-        public abstract TagType ReturnType(CILAdaptationValues values);
+        public abstract TagReturnType ReturnType(CILAdaptationValues values);
 
         /// <summary>
         /// Parse the argument part, reading any tags or other special data.

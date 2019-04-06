@@ -87,6 +87,7 @@ namespace FreneticScript.ScriptSystems
 #else
                 = null;
 #endif
+            values.Trackers = ILGens;
             List<KeyValuePair<FieldInfo, Object>> specialFieldValues = new List<KeyValuePair<FieldInfo, object>>();
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
@@ -115,7 +116,7 @@ namespace FreneticScript.ScriptSystems
                             }
                         }
                     }
-                    ILGeneratorTracker compiled = ArgumentCompiler.Compile(arg, Created);
+                    ILGeneratorTracker compiled = ArgumentCompiler.Compile(arg, Created, values);
                     curEnt.Arguments[a] = arg.TrueForm;
                     ILGens?.Add(compiled);
                 }
@@ -140,7 +141,7 @@ namespace FreneticScript.ScriptSystems
                             }
                         }
                     }
-                    ILGeneratorTracker compiled = ArgumentCompiler.Compile(argPair.Value, Created);
+                    ILGeneratorTracker compiled = ArgumentCompiler.Compile(argPair.Value, Created, values);
                     ILGens?.Add(compiled);
                 }
                 if (!curEnt.IsCallback)
@@ -282,7 +283,11 @@ namespace FreneticScript.ScriptSystems
             ILGenerator ILGen = genMethod.GetILGenerator();
             ILGen.Emit(OpCodes.Ldarg_0); // Load argument: runnable
             ILGen.Emit(OpCodes.Ldarg_1); // Load argument: input variable value
-            ILGen.Emit(OpCodes.Castclass, variable.Type.RawType); // Ensure type
+            ILGen.Emit(OpCodes.Castclass, variable.Type.Type.RawType); // Ensure type
+            if (variable.Type.IsRaw)
+            {
+                ILGen.Emit(OpCodes.Newobj, variable.Type.Type.RawInternalConstructor); // Convert to a full object if needed
+            }
             ILGen.Emit(OpCodes.Stfld, variable.Field); // Store to field.
             ILGen.Emit(OpCodes.Ret); // Return.
             return genMethod.CreateDelegate(typeof(Action<CompiledCommandRunnable, TemplateObject>)) as Action<CompiledCommandRunnable, TemplateObject>;
@@ -356,58 +361,37 @@ namespace FreneticScript.ScriptSystems
                         GenerateTagData(typeBuild_c, ccse, subTab, ref tID, values, entryIndex, toClean, argumentId, commandEntry, specialFieldValues, trackers);
                     }
                 }
-                ILGeneratorTracker tracker = ArgumentCompiler.Compile(altArgs[sx], ccse);
+                ILGeneratorTracker tracker = ArgumentCompiler.Compile(altArgs[sx], ccse, values);
                 trackers?.Add(tracker);
             }
-            // Build a method that handles the tag.
-            string methodName = "TagParse_" + id + "_" + ccse.AssemblyName + "_Line_" + commandEntry.ScriptLine + "_Arg_" + NameTrimMatcher.TrimToMatches(argumentId) + "_" +
-                string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
-            MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, typeof(TemplateObject), TYPES_TAGPARSE_PARAMS);
-            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
-            ilgen.AddCode(OpCodes.Nop, methodName, "--- TAGPARSE ---");
-            trackers?.Add(ilgen);
-            if (tab.Start == null)
-            {
-                TagBit firstBit = tab.Bits[0];
-                if ((firstBit.Variable == null || firstBit.Variable.Bits.Length == 0) && commandEntry.VarLookup.TryGetValue(firstBit.Key, out SingleCILVariable startVar))
-                {
-                    firstBit.OriginalInput = firstBit.Key;
-                    tab.Start = tab.TagSystem.LVar;
-                    firstBit.Key = "\0lvar";
-                    firstBit.Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(startVar.Index) } };
-                }
-                else
-                {
-                    throw new TagErrorInducedException("Invalid tag base '" + TextStyle.Separate + firstBit.Key + TextStyle.Base + "'!");
-                }
-            }
-            TagType returnable = tab.Start.ResultType;
-            if (returnable == null)
+            // Basic setup
+            TagReturnType returnable = tab.Start.ResultType;
+            if (returnable.Type == null)
             {
                 returnable = tab.Start.Adapt(ccse, tab, entryIndex, values);
             }
-            if (returnable == null)
+            if (returnable.Type == null)
             {
                 throw new TagErrorInducedException("Invalid tag top-handler '"
                     + TextStyle.Separate + tab.Start.Name
                     + TextStyle.Base + "' (failed to identify return type)!", 0);
             }
-            TagType prevType = returnable;
+            TagReturnType prevType = returnable;
             for (int x = 1; x < tab.Bits.Length; x++)
             {
                 string key = tab.Bits[x].Key;
-                if (!returnable.TagHelpers.ContainsKey(key))
+                if (!returnable.Type.TagHelpers.ContainsKey(key))
                 {
-                    if (returnable.TagHelpers.ContainsKey("_"))
+                    if (returnable.Type.TagHelpers.ContainsKey("_"))
                     {
                         key = "_";
                         goto ready;
                     }
-                    TagType basicType = returnable;
-                    while (returnable.SubType != null)
+                    TagReturnType basicType = returnable;
+                    while (returnable.Type.SubType != null)
                     {
-                        returnable = returnable.SubType;
-                        if (returnable.TagHelpers.ContainsKey(key))
+                        returnable = new TagReturnType(returnable.Type.SubType, false);
+                        if (returnable.Type.TagHelpers.ContainsKey(key))
                         {
                             goto ready;
                         }
@@ -415,13 +399,13 @@ namespace FreneticScript.ScriptSystems
                     throw new TagErrorInducedException("Invalid sub-tag '"
                         + TextStyle.Separate + key + TextStyle.Base + "' at sub-tag index "
                         + TextStyle.Separate + x + TextStyle.Base + " for type '"
-                        + TextStyle.Separate + basicType.TypeName + TextStyle.Base
+                        + TextStyle.Separate + basicType.Type.TypeName + TextStyle.Base
                         + (key.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"), x);
                 }
-                ready:
-                TagHelpInfo tsh = returnable.TagHelpers[key];
+            ready:
+                TagHelpInfo tsh = returnable.Type.TagHelpers[key];
                 tab.Bits[x].TagHandler = tsh;
-                if (tsh.Meta.ReturnTypeResult == null)
+                if (tsh.Meta.ReturnTypeResult.Type == null)
                 {
                     if (tab.Bits[x].TagHandler.Meta.SpecialTypeHelper != null)
                     {
@@ -460,6 +444,30 @@ namespace FreneticScript.ScriptSystems
                 TagSystem = tab.TagSystem,
                 SourceArgumentID = argumentId
             };
+            TagReturnType finalReturnType = tab.ReturnType(values);
+            // Build a method that handles the tag.
+            string methodName = "TagParse_" + id + "_" + ccse.AssemblyName + "_Line_" + commandEntry.ScriptLine + "_Arg_" + NameTrimMatcher.TrimToMatches(argumentId) + "_" +
+                string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
+            Type methodReturnType = finalReturnType.IsRaw ? finalReturnType.Type.RawInternalType : typeof(TemplateObject);
+            MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, methodReturnType, TYPES_TAGPARSE_PARAMS);
+            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
+            ilgen.AddCode(OpCodes.Nop, methodName, "--- TAGPARSE ---");
+            trackers?.Add(ilgen);
+            if (tab.Start == null)
+            {
+                TagBit firstBit = tab.Bits[0];
+                if ((firstBit.Variable == null || firstBit.Variable.Bits.Length == 0) && commandEntry.VarLookup.TryGetValue(firstBit.Key, out SingleCILVariable startVar))
+                {
+                    firstBit.OriginalInput = firstBit.Key;
+                    tab.Start = tab.TagSystem.LVar;
+                    firstBit.Key = "\0lvar";
+                    firstBit.Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(startVar.Index) } };
+                }
+                else
+                {
+                    throw new TagErrorInducedException("Invalid tag base '" + TextStyle.Separate + firstBit.Key + TextStyle.Base + "'!");
+                }
+            }
             if (!tab.Start.AdaptToCIL(ilgen, tab, values))
             {
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
@@ -490,22 +498,35 @@ namespace FreneticScript.ScriptSystems
                 }
                 else // For normal tags...
                 {
-                    while (tab.Bits[x].TagHandler.Meta.TagType != prevType.TypeName)
+                    while (tab.Bits[x].TagHandler.Meta.ActualType != prevType.Type)
                     {
-                        ilgen.Emit(OpCodes.Call, prevType.GetNextTypeDown.Method);
-                        prevType = prevType.SubType;
-                        if (prevType == null)
+                        if (prevType.IsRaw)
+                        {
+                            ilgen.Emit(OpCodes.Newobj, prevType.Type.RawInternalConstructor); // Handle raw translation if needed.
+                        }
+                        ilgen.Emit(OpCodes.Call, prevType.Type.GetNextTypeDown.Method);
+                        prevType = new TagReturnType(prevType.Type.SubType, false);
+                        if (prevType.Type == null)
                         {
                             throw new Exception("Failed to parse down a tag: type reached the base type without finding the expected tag type! (Compiler bug?)"
                                 + " Processing tag " + tab + " on bit " + x);
                         }
                     }
+                    if (prevType.IsRaw && !tab.Bits[x].TagHandler.Meta.SelfIsRaw)
+                    {
+                        ilgen.Emit(OpCodes.Newobj, prevType.Type.RawInternalConstructor); // Handle raw translation if needed.
+                    }
+                    else if (!prevType.IsRaw && tab.Bits[x].TagHandler.Meta.SelfIsRaw)
+                    {
+                        ilgen.Emit(OpCodes.Ldfld, prevType.Type.RawInternalField); // Handle raw translation if needed.
+                    }
                     prevType = tab.Bits[x].TagHandler.Meta.ReturnTypeResult;
-                    TagType modt = tab.Bits[x].TagHandler.Meta.ModifierType;
-                    if (modt != null) // If we have a modifier input type pre-requirement...
+                    TagReturnType modt = tab.Bits[x].TagHandler.Meta.ModifierType;
+                    if (modt.Type != null) // If we have a modifier input type pre-requirement...
                     {
                         Argument variableArg = tab.Bits[x].Variable.TrueForm;
                         tab.Bits[x].Variable = variableArg;
+                        TagReturnType atype = ArgumentCompiler.ReturnType(variableArg, values);
                         if (variableArg.Bits.Length == 0)
                         {
                             ilgen.Emit(OpCodes.Ldsfld, ArgumentCompiler.TextTag_Empty); // Load the empty texttag
@@ -516,6 +537,7 @@ namespace FreneticScript.ScriptSystems
                             specialFieldValues.Add(new KeyValuePair<FieldInfo, object>(argValueField, text.InputValue));
                             ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
                             ilgen.Emit(OpCodes.Ldfld, argValueField); // Load the modifier argument value
+                            atype.IsRaw = false; // TODO: Store correct raw value in the field
                         }
                         else
                         {
@@ -525,14 +547,9 @@ namespace FreneticScript.ScriptSystems
                             ilgen.Emit(OpCodes.Ldfld, argToParse); // Load the modifier argument
                             ilgen.Emit(OpCodes.Ldarg_2); // Load argument: Error.
                             ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
-                            ilgen.Emit(OpCodes.Call, variableArg.CompiledParseMethod, 2); // Call the modifier Parse(Error, Runnable) method.
+                            ilgen.Emit(OpCodes.Call, variableArg.RawParseMethod ?? variableArg.CompiledParseMethod, 2); // Call the modifier Parse(Error, Runnable) method.
                         }
-                        TagType atype = ArgumentCompiler.ReturnType(variableArg, values);
-                        if (modt != atype) // If the modifier input is of the wrong type...
-                        {
-                            ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
-                            ilgen.Emit(OpCodes.Call, modt.CreatorMethod); // Run the creator method to convert the tag to the correct type.
-                        }
+                        Tag_MethodEnsureType(ilgen, atype, modt); // Automatic type correction
                     }
                     else
                     {
@@ -543,15 +560,55 @@ namespace FreneticScript.ScriptSystems
             }
             if (relevantEntry.DBMode <= DebugMode.FULL) // If debug mode is on...
             {
+                if (prevType.IsRaw)
+                {
+                    ilgen.Emit(OpCodes.Newobj, prevType.Type.RawInternalConstructor); // Handle raw translation if needed.
+                }
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
                 ilgen.Emit(OpCodes.Call, TagHandler.Method_DebugTagHelper); // Debug the tag as a final step. Will give back the object to the stack.
+                if (prevType.IsRaw)
+                {
+                    ilgen.Emit(OpCodes.Ldfld, prevType.Type.RawInternalField); // Handle raw translation if needed.
+                }
             }
             ilgen.Emit(OpCodes.Ret); // Return.
 #if NET_4_5
             methodbuild_c.SetCustomAttribute(new CustomAttributeBuilder(Ctor_MethodImplAttribute_Options, Input_Params_AggrInline));
 #endif
             tab.GetResultMethod = methodbuild_c;
+            tab.CompiledReturnType = prevType;
             toClean.Add(tab);
+        }
+
+        /// <summary>
+        /// Emits logic that ensures the argument is of the given type, converting if needed.
+        /// </summary>
+        /// <param name="ilgen">The IL generator.</param>
+        /// <param name="currentType">The current object type.</param>
+        /// <param name="requiredType">The type it needs to be.</param>
+        public static void Tag_MethodEnsureType(ILGeneratorTracker ilgen, TagReturnType currentType, TagReturnType requiredType)
+        {
+            if (currentType.Type != requiredType.Type)
+            {
+                if (currentType.IsRaw)
+                {
+                    ilgen.Emit(OpCodes.Newobj, currentType.Type.RawInternalConstructor);
+                }
+                ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData
+                ilgen.Emit(OpCodes.Call, requiredType.Type.CreatorMethod);
+                if (requiredType.IsRaw)
+                {
+                    ilgen.Emit(OpCodes.Ldfld, requiredType.Type.RawInternalField);
+                }
+            }
+            else if (currentType.IsRaw && !requiredType.IsRaw)
+            {
+                ilgen.Emit(OpCodes.Newobj, currentType.Type.RawInternalConstructor);
+            }
+            else if (!currentType.IsRaw && requiredType.IsRaw)
+            {
+                ilgen.Emit(OpCodes.Ldfld, currentType.Type.RawInternalField);
+            }
         }
 
 #if NET_4_5
@@ -585,18 +642,26 @@ namespace FreneticScript.ScriptSystems
                 ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = system };
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject.
                 ilgen.Emit(OpCodes.Castclass, method.GetParameters()[0].ParameterType); // Convert it to the correct type
-                if (meta.ModifierType != null)
+                if (meta.ModifierType.Type != null)
                 {
                     ilgen.Emit(OpCodes.Ldarg_1); // Load argument: TagData.
                     ilgen.Emit(OpCodes.Call, TagData.Method_GetModifierObjectCurrent); // Call the method to get the tag modifier object at the current location.
                     ilgen.Emit(OpCodes.Ldarg_1); // Load argument: TagData.
-                    ilgen.Emit(OpCodes.Call, meta.ModifierType.CreatorMethod); // Run the creator method to convert the tag to the correct type if needed.
+                    ilgen.Emit(OpCodes.Call, meta.ModifierType.Type.CreatorMethod); // Run the creator method to convert the tag to the correct type if needed.
+                    if (meta.ModifierType.IsRaw)
+                    {
+                        ilgen.Emit(OpCodes.Ldfld, meta.ModifierType.Type.RawInternalField); // Handle raw translation if needed.
+                    }
                 }
                 else
                 {
                     ilgen.Emit(OpCodes.Ldarg_1); // Load argument: TagData.
                 }
                 ilgen.Emit(OpCodes.Call, method); // Run the tag's own runner method.
+                if (meta.ReturnTypeResult.IsRaw)
+                {
+                    ilgen.Emit(OpCodes.Newobj, meta.ReturnTypeResult.Type.RawInternalConstructor); // Handle raw translation if needed.
+                }
                 ilgen.Emit(OpCodes.Ret); // Return.
 #if SAVE
                 StringBuilder outp = new StringBuilder();
@@ -611,7 +676,7 @@ namespace FreneticScript.ScriptSystems
             }
             catch (ArgumentException ex)
             {
-                throw new Exception("Failed to compile tag: '" + method.DeclaringType + "." + method.Name + "' (script: '" + meta.TagType + "." + meta.Name + "'), because: " + ex.Message, ex);
+                throw new Exception("Failed to compile tag: '" + method.DeclaringType + "." + method.Name + "' (tag: '" + meta.TagType + "." + meta.Name + "'), because: " + ex.Message, ex);
             }
         }
         
@@ -624,5 +689,32 @@ namespace FreneticScript.ScriptSystems
         /// Incrementing ID value for method compilation.
         /// </summary>
         public static long IDINCR = 0;
+    }
+
+    /// <summary>
+    /// Represents a tag type returned from a tag method.
+    /// </summary>
+    public struct TagReturnType
+    {
+        /// <summary>
+        /// Constructs a <see cref="TagReturnType"/> instance.
+        /// </summary>
+        /// <param name="_type">The returned tag type.</param>
+        /// <param name="_isRaw">Whether the type is raw.</param>
+        public TagReturnType(TagType _type, bool _isRaw = false)
+        {
+            Type = _type;
+            IsRaw = _isRaw;
+        }
+
+        /// <summary>
+        /// The returned tag type.
+        /// </summary>
+        public TagType Type;
+
+        /// <summary>
+        /// Whether the type is raw.
+        /// </summary>
+        public bool IsRaw;
     }
 }

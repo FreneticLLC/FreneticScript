@@ -119,14 +119,14 @@ namespace FreneticScript.TagHandlers.Objects
         [TagMeta(TagType = TYPE, Name = "as", SpecialCompiler = true, SpecialTypeHelperName = nameof(TypeHelper_Tag_As)
             , Group = "Dynamics", ReturnType = null, Returns = "The object as the specified type.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TagType Compiler_Tag_As(ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagType prevType)
+        public static TagReturnType Compiler_Tag_As(ILGeneratorTracker ilgen, TagArgumentBit tab, int bit, TagReturnType prevType)
         {
             ilgen.Emit(OpCodes.Ldfld, Field_DynamicTag_Internal); // Load field "Internal" on the input DynamicTag instance.
             ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TagData.
             string type_name = tab.Bits[bit].Variable.ToString();
             TagType varType = tab.Engine.TagSystem.Types.RegisteredTypes[type_name.ToLowerFast()];
             ilgen.Emit(OpCodes.Call, varType.CreatorMethod); // Run the creator method for the type on the input tag.
-            return varType;
+            return new TagReturnType(varType, false);
         }
 
         [TagMeta(TagType = TYPE, Name = "_", Group = "Dynamics", ReturnType = TYPE,
@@ -154,12 +154,12 @@ namespace FreneticScript.TagHandlers.Objects
             return new DynamicTag(tagHelper.RunTagLive(tagObject, data));
         }
         
-        public static TagType TypeHelper_Tag_As(TagArgumentBit tab, int bit)
+        public static TagReturnType TypeHelper_Tag_As(TagArgumentBit tab, int bit)
         {
             string type_name = tab.Bits[bit].Variable.ToString().ToLowerFast();
             if (tab.Engine.TagSystem.Types.RegisteredTypes.TryGetValue(type_name, out TagType type))
             {
-                return type;
+                return new TagReturnType(type);
             }
             throw new ErrorInducedException("Invalid tag type '" + type_name + "' in as[] handler!");
         }

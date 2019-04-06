@@ -90,7 +90,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// Handles the escape tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public static TemplateObject HandleOne(TagData data)
+        public static TextTag HandleOne(TagData data)
         {
             string modif = data.GetModifierCurrent();
             return new TextTag(Escape(modif));

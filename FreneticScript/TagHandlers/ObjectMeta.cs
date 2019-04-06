@@ -45,6 +45,11 @@ namespace FreneticScript.TagHandlers
         /// A description of this tag type.
         /// </summary>
         public string Description;
+
+        /// <summary>
+        /// Whether to use the raw internal type where possible (instead of the full tag object type).
+        /// </summary>
+        public bool RawInternal;
         
         /// <summary>
         /// Prepares the object meta.

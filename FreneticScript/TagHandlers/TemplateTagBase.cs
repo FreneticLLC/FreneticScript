@@ -46,9 +46,9 @@ namespace FreneticScript.TagHandlers
         public string Name = null;
         
         /// <summary>
-        /// What type this tag handler will return. Null for dynamic.
+        /// What type this tag handler will return. Default for dynamic.
         /// </summary>
-        public TagType ResultType = null;
+        public TagReturnType ResultType = default;
 
         /// <summary>
         /// The name of the type this tag handler will return. Null for dynamic.
@@ -74,9 +74,9 @@ namespace FreneticScript.TagHandlers
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>
         /// <param name="values">Related adaptation values.</param>
-        public virtual TagType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, CILAdaptationValues values)
+        public virtual TagReturnType Adapt(CompiledCommandStackEntry ccse, TagArgumentBit tab, int i, CILAdaptationValues values)
         {
-            return null;
+            return default;
         }
         
         /// <summary>

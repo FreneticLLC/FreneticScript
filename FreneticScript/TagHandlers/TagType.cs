@@ -40,6 +40,26 @@ namespace FreneticScript.TagHandlers
         public TagType SubType;
 
         /// <summary>
+        /// The meta for this tag object type.
+        /// </summary>
+        public ObjectMeta Meta;
+
+        /// <summary>
+        /// The raw internal type (if set to use a raw internal type, otherwise null).
+        /// </summary>
+        public Type RawInternalType;
+
+        /// <summary>
+        /// The raw internal data field (if set to use a raw internal type, otherwise null).
+        /// </summary>
+        public FieldInfo RawInternalField;
+
+        /// <summary>
+        /// The raw internal type based object constructor (if set to use a raw internal type, otherwise null).
+        /// </summary>
+        public ConstructorInfo RawInternalConstructor;
+
+        /// <summary>
         /// The method that creates this tag. Set automatically based on raw type.
         /// Has parameters (TemplateObject, TagData) and returns an instance of this tag type.
         /// </summary>

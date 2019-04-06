@@ -65,6 +65,11 @@ namespace FreneticScript.CommandSystem.Arguments
         public MethodInfo CompiledParseMethod;
 
         /// <summary>
+        /// The compiled raw parse method (if available).
+        /// </summary>
+        public MethodInfo RawParseMethod;
+
+        /// <summary>
         /// Parse the argument, reading any tags or other special data.
         /// </summary>
         /// <param name="error">What to invoke if there is an error.</param>
@@ -74,7 +79,7 @@ namespace FreneticScript.CommandSystem.Arguments
         {
             if (TrueForm == null)
             {
-                ArgumentCompiler.Compile(this, runnable.Entry);
+                throw new ErrorInducedException("Arguments must be compiled before usage!");
             }
             return TrueForm.Parse(error, runnable);
         }

@@ -37,7 +37,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         /// Handles the 'time' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public static TemplateObject HandleOne(TagData data)
+        public static TimeTag HandleOne(TagData data)
         {
             return TimeTag.CreateFor(data.GetModifierObjectCurrent(), data);
         }

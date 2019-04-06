@@ -135,6 +135,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="code">The OpCode used (or 'nop' for special comments).</param>
         /// <param name="val">The value attached to the opcode, if any.</param>
         /// <param name="typeName">The special code type name, if any.</param>
+        [Conditional("VALIDATE")]
         public void AddCode(OpCode code, object val, string typeName = null)
         {
 #if DEBUG
@@ -332,7 +333,7 @@ namespace FreneticScript.ScriptSystems
         public void Emit(OpCode code, FieldInfo dat)
         {
             Internal.Emit(code, dat);
-            AddCode(code, dat.Name);
+            AddCode(code, dat.Name + " <" + dat.FieldType.Name + ">");
         }
 
         /// <summary>
@@ -350,11 +351,13 @@ namespace FreneticScript.ScriptSystems
         /// Emits an operation.
         /// </summary>
         /// <param name="code">The operation code.</param>
-        /// <param name="t">The associated data.</param>
-        public void Emit(OpCode code, ConstructorInfo t)
+        /// <param name="dat">The associated data.</param>
+        /// <param name="altParams">The number of parameters, if GetParameters is not stable.</param>
+        public void Emit(OpCode code, ConstructorInfo dat, int? altParams = null)
         {
-            Internal.Emit(code, t);
-            AddCode(code, t);
+            Internal.Emit(code, dat);
+            AddCode(OpCodes.Nop, dat.DeclaringType.Name + " constructor: " + dat, code.ToString().ToLowerFast());
+            Validator(code, dat, altParams);
         }
 
         /// <summary>

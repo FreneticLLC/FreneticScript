@@ -38,9 +38,9 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// Parse any direct tag input values.
         /// </summary>
         /// <param name="data">The input tag data.</param>
-        public static TemplateObject HandleOne(TagData data)
+        public static SystemTag HandleOne(TagData data)
         {
-            return new SystemTag();
+            return SystemTag.Instance;
         }
 
         /// <summary>
@@ -49,6 +49,10 @@ namespace FreneticScript.TagHandlers.HelperBases
         [ObjectMeta(Name = SystemTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Utilities", Description = "Holds system-related helped tags.")]
         public class SystemTag : TemplateObject
         {
+            /// <summary>
+            /// A reference SystemTag instance.
+            /// </summary>
+            public static readonly SystemTag Instance = new SystemTag();
 
             /// <summary>
             /// Return the type name of this tag.
@@ -81,7 +85,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                     data.Error("Invalid CVar specified!");
                     return null;
                 }
-                return new SystemTag();
+                return Instance;
             }
 
             /// <summary>
@@ -114,13 +118,6 @@ namespace FreneticScript.TagHandlers.HelperBases
             }
 
             /// <summary>
-            /// Constructs a System tag.
-            /// </summary>
-            public SystemTag()
-            {
-            }
-
-            /// <summary>
             /// The SystemTag type.
             /// </summary>
             public const string TYPE = "systemtagbase";
@@ -133,21 +130,21 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <returns>A valid system tag.</returns>
             public static TemplateObject CreateFor(TagData data, TemplateObject text)
             {
-                return new SystemTag();
+                return Instance;
             }
 
 #pragma warning disable 1591
 
             [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static TagTypeTag Tag_Duplicate(TagTypeTag obj, TagData data)
+            public static SystemTag Tag_Duplicate(SystemTag obj, TagData data)
             {
-                return new TagTypeTag(obj.Internal);
+                return obj;
             }
 
             [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (SystemTag).")]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static TagTypeTag Tag_Type(IntegerTag obj, TagData data)
+            public static TagTypeTag Tag_Type(SystemTag obj, TagData data)
             {
                 return new TagTypeTag(data.TagSystem.Types.Type_System);
             }

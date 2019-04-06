@@ -86,7 +86,7 @@ namespace FreneticScript.ScriptSystems
         /// <param name="argument">The argument.</param>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
-        public static TagType ReturnType(Argument argument, CILAdaptationValues values)
+        public static TagReturnType ReturnType(Argument argument, CILAdaptationValues values)
         {
             if (argument.Bits.Length == 1)
             {
@@ -94,16 +94,19 @@ namespace FreneticScript.ScriptSystems
             }
             else
             {
-                return argument.Bits[0].Engine.TagSystem.Types.Type_Text;
+                return new TagReturnType(values.Entry.System.TagTypes.Type_Text, false);
             }
         }
+
+        private static readonly Type[] ParseMethodParams = new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) };
 
         /// <summary>
         /// Compiles the argument.
         /// </summary>
         /// <param name="argument">The argument.</param>
         /// <param name="entry">The relative stack entry.</param>
-        public static ILGeneratorTracker Compile(Argument argument, CompiledCommandStackEntry entry)
+        /// <param name="values">Relevant CIL adaptation values object.</param>
+        public static ILGeneratorTracker Compile(Argument argument, CompiledCommandStackEntry entry, CILAdaptationValues values)
         {
             string tname = entry.AssemblyName + "_argument_" + IDINCR++;
             AssemblyName asmname = new AssemblyName(tname) { Name = tname };
@@ -114,9 +117,18 @@ namespace FreneticScript.ScriptSystems
                     AssemblyBuilderAccess.Run
 #endif
                     );
+            TagReturnType finalReturnType = ReturnType(argument, values);
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(Argument));
-            MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Virtual, typeof(TemplateObject), new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) });
+            MethodBuilder methodbuild_c;
+            if (finalReturnType.IsRaw)
+            {
+                methodbuild_c = typebuild_c.DefineMethod("Parse_Raw", MethodAttributes.Public, finalReturnType.Type.RawInternalType, ParseMethodParams);
+            }
+            else
+            {
+                methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual, typeof(TemplateObject), ParseMethodParams);
+            }
             ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
             ilgen.AddCode(OpCodes.Nop, tname, "--- ARGUMENT PARSE ---");
             Type[] fieldTypes = new Type[argument.Bits.Length];
@@ -155,7 +167,7 @@ namespace FreneticScript.ScriptSystems
                 if (argument.Bits[0] is TagArgumentBit)
                 {
                     tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)); // Declare variable of type TagArgumentBit as local-0
-                    object_result_loc = ilgen.DeclareLocal(typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
+                    object_result_loc = ilgen.DeclareLocal(finalReturnType.IsRaw ? finalReturnType.Type.RawInternalType : typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
                 }
                 ilgen.Emit(OpCodes.Ldarg_0); // Load the argument object
                 ilgen.Emit(OpCodes.Ldfld, bitFields[0]); // Load the only argument bit
@@ -165,7 +177,7 @@ namespace FreneticScript.ScriptSystems
                 }
                 else if (argument.Bits[0] is TagArgumentBit tab)
                 {
-                    tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
+                    tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc, finalReturnType.IsRaw); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
                     ilgen.Emit(OpCodes.Ldloc, object_result_loc); // Load the object result
                 }
                 else
@@ -211,7 +223,7 @@ namespace FreneticScript.ScriptSystems
                     ilgen.Emit(OpCodes.Ldfld, bitFields[i]); // Load the argument bit
                     if (argument.Bits[i] is TagArgumentBit tab)
                     {
-                        tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
+                        tab.GenerateCall(ilgen, tab_tracker_loc, OpCodes.Ldarg_1, OpCodes.Ldarg_2, object_result_loc, false); // Call the tag - takes TAB on stack and adds a TemplateObject result onto it
                         ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the local variable containing the string builder
                         ilgen.Emit(OpCodes.Ldloc, object_result_loc); // Load the object result
                         ilgen.Emit(OpCodes.Callvirt, Object_ToString); // Compress the result to a string
@@ -235,7 +247,22 @@ namespace FreneticScript.ScriptSystems
                 ilgen.Emit(OpCodes.Newobj, TextTag_CTOR); // Construct a texttag of the full complex input
             }
             ilgen.Emit(OpCodes.Ret); // Return the resultant texttag or tag return value
-            typebuild_c.DefineMethodOverride(methodbuild_c, Argument_Parse);
+            MethodBuilder methodbuild_parse_override = methodbuild_c;
+            if (finalReturnType.IsRaw)
+            {
+                argument.RawParseMethod = methodbuild_c;
+                methodbuild_parse_override = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual, typeof(TemplateObject), ParseMethodParams);
+                ILGeneratorTracker ilgen_parse = new ILGeneratorTracker() { Internal = methodbuild_parse_override.GetILGenerator(), System = entry.System };
+                ilgen_parse.AddCode(OpCodes.Nop, tname, "--- ARGUMENT nonraw PARSE ---");
+                ilgen_parse.Emit(OpCodes.Ldarg_0); // Load arg: this
+                ilgen_parse.Emit(OpCodes.Ldarg_1); // Load arg: Error
+                ilgen_parse.Emit(OpCodes.Ldarg_2); // Load arg: Runnable
+                ilgen_parse.Emit(OpCodes.Call, methodbuild_c, 2); // Call the raw handler method
+                ilgen_parse.Emit(OpCodes.Newobj, finalReturnType.Type.RawInternalConstructor); // Handle raw.
+                ilgen_parse.Emit(OpCodes.Ret); // Return the resultant texttag or tag return value
+                values.Trackers?.Add(ilgen_parse);
+            }
+            typebuild_c.DefineMethodOverride(methodbuild_parse_override, Argument_Parse);
             ConstructorBuilder ctor = typebuild_c.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, fieldTypes);
             ILGeneratorTracker ctorilgen = new ILGeneratorTracker() { Internal = ctor.GetILGenerator(), System = entry.System };
             for (int i = 0; i < argument.Bits.Length; i++)
@@ -247,11 +274,12 @@ namespace FreneticScript.ScriptSystems
             ctorilgen.Emit(OpCodes.Ret); // return
             Type t_c = typebuild_c.CreateType();
             argument.TrueForm = Activator.CreateInstance(t_c, fieldValues) as Argument;
+            argument.TrueForm.RawParseMethod = argument.RawParseMethod;
             argument.TrueForm.Bits = argument.Bits;
             argument.TrueForm.WasQuoted = argument.WasQuoted;
-            argument.TrueForm.CompiledParseMethod = methodbuild_c;
+            argument.TrueForm.CompiledParseMethod = methodbuild_parse_override;
             argument.TrueForm.TrueForm = argument.TrueForm;
-            argument.CompiledParseMethod = methodbuild_c;
+            argument.CompiledParseMethod = methodbuild_parse_override;
             return ilgen;
         }
     }

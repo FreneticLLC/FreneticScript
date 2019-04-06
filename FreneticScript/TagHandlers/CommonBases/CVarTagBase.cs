@@ -38,7 +38,7 @@ namespace FreneticScript.TagHandlers.CommonBases
         /// Handles a 'cvar' tag.
         /// </summary>
         /// <param name="data">The data to be handled.</param>
-        public static TemplateObject HandleOne(TagData data)
+        public static CVarTag HandleOne(TagData data)
         {
             return CVarTag.For(data.GetModifierObjectCurrent(), data);
         }

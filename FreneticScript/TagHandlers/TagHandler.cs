@@ -129,102 +129,206 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public void PostInit()
         {
-            foreach (TemplateTagBase tagbase in Handlers.Values)
+            foreach (TagType type in Types.RegisteredTypes.Values)
             {
-                if (tagbase.ResultTypeString != null)
+                try
                 {
-                    if (!Types.RegisteredTypes.TryGetValue(tagbase.ResultTypeString, out tagbase.ResultType))
+                    if (type.SubTypeName == null)
                     {
-                        Engine.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid result type '" + tagbase.ResultTypeString + "'.");
+                        type.SubType = null;
                     }
+                    else
+                    {
+                        type.SubType = Types.RegisteredTypes[type.SubTypeName];
+                    }
+                    type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
+                    if (type.RawType == null)
+                    {
+                        Engine.Context.BadOutput("Bad tag declaration (no RawType): " + type.TypeName);
+                    }
+                    else
+                    {
+                        type.Meta = type.RawType.GetCustomAttribute<ObjectMeta>();
+                        if (type.Meta == null)
+                        {
+                            Engine.Context.BadOutput("Bad tag declaration (no ObjectMeta): " + type.TypeName);
+                        }
+                        else
+                        {
+                            if (type.Meta.RawInternal)
+                            {
+                                type.RawInternalField = type.RawType.GetField("Internal");
+                                if (type.RawInternalField == null)
+                                {
+                                    Engine.Context.BadOutput("Bad tag declaration (RawInternal set, but no 'Internal' field): " + type.TypeName);
+                                }
+                                else
+                                {
+                                    type.RawInternalType = type.RawInternalField.FieldType;
+                                    type.RawInternalConstructor = type.RawType.GetConstructor(new Type[] { type.RawInternalType });
+                                    if (type.RawInternalConstructor == null)
+                                    {
+                                        Engine.Context.BadOutput("Bad tag declaration (RawInternal set, but no constructor of the same type as the 'Internal' field): " + type.TypeName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Engine.Context.BadOutput("Internal exception while process TagType " + type.TypeName + ": " + ex.ToString());
                 }
             }
             foreach (TagType type in Types.RegisteredTypes.Values)
             {
-                if (type.SubTypeName == null)
+                try
                 {
-                    type.SubType = null;
-                }
-                else
-                {
-                    type.SubType = Types.RegisteredTypes[type.SubTypeName];
-                }
-                type.TagHelpers = new Dictionary<string, TagHelpInfo>(500);
-                if (type.RawType == null)
-                {
-                    Engine.Context.BadOutput("Possible bad tag declaration (no RawType): " + type.TypeName);
-                }
-                else
-                {
-                    foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.Public))
+                    if (type.RawType != null)
                     {
-                        TagMeta tm = method.GetCustomAttribute<TagMeta>();
-                        if (tm != null)
+                        foreach (MethodInfo method in type.RawType.GetMethods(BindingFlags.Static | BindingFlags.Public))
                         {
-                            TagHelpInfo thi = new TagHelpInfo(method);
-                            thi.Meta.Ready(this);
-                            if (thi.Meta.SpecialCompiler)
+                            try
                             {
-                                thi.Meta.SpecialCompileAction = method.CreateDelegate(typeof(Func<ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>))
-                                    as Func<ILGeneratorTracker, TagArgumentBit, int, TagType, TagType>;
+                                TagMeta tm = method.GetCustomAttribute<TagMeta>();
+                                if (tm != null)
+                                {
+                                    TagHelpInfo thi = new TagHelpInfo(method);
+                                    thi.Meta.Ready(this);
+                                    if (thi.Meta.SpecialCompiler)
+                                    {
+                                        thi.Meta.SpecialCompileAction = method.CreateDelegate(typeof(Func<ILGeneratorTracker, TagArgumentBit, int, TagReturnType, TagReturnType>))
+                                            as Func<ILGeneratorTracker, TagArgumentBit, int, TagReturnType, TagReturnType>;
+                                    }
+                                    else
+                                    {
+                                        if (thi.Meta.ReturnTypeResult.Type == null)
+                                        {
+                                            Engine.Context.BadOutput("Bad tag declaration (invalid return '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                            continue;
+                                        }
+                                        if (method.ReturnType == null || method.ReturnType == typeof(void))
+                                        {
+                                            Engine.Context.BadOutput("Bad tag declaration (can't have void return type): " + type.TypeName + "." + thi.Meta.Name);
+                                            continue;
+                                        }
+                                        if (method.ReturnType == thi.Meta.ReturnTypeResult.Type.RawType)
+                                        {
+                                            thi.Meta.ReturnTypeResult.IsRaw = false;
+                                        }
+                                        else if (method.ReturnType == thi.Meta.ReturnTypeResult.Type.RawInternalType)
+                                        {
+                                            thi.Meta.ReturnTypeResult.IsRaw = true;
+                                        }
+                                        else
+                                        {
+                                            Engine.Context.BadOutput("Bad tag declaration (unrecognized return type '" + method.ReturnType.Name + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                            continue;
+                                        }
+                                        ParameterInfo[] paramList = method.GetParameters();
+                                        if (paramList.Length != 2)
+                                        {
+                                            Engine.Context.BadOutput("Bad tag declaration (has " + paramList.Length + ", but should have exactly 2): " + type.TypeName + "." + thi.Meta.Name);
+                                            continue;
+                                        }
+                                        if (paramList[0].ParameterType == type.RawType)
+                                        {
+                                            thi.Meta.SelfIsRaw = false;
+                                        }
+                                        else if (paramList[0].ParameterType == type.RawInternalType)
+                                        {
+                                            thi.Meta.SelfIsRaw = true;
+                                        }
+                                        else
+                                        {
+                                            Engine.Context.BadOutput("Bad tag declaration (first argument is '" + paramList[0].ParameterType.Name + "', but should be a valid '" + type.TypeName + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                            continue;
+                                        }
+                                        if (thi.Meta.ModifierType.Type == null)
+                                        {
+                                            if (paramList[1].ParameterType != typeof(TagData))
+                                            {
+                                                Engine.Context.BadOutput("Bad tag declaration (second argument is '" + paramList[0].ParameterType.Name + "', but should be TagData): " + type.TypeName + "." + thi.Meta.Name);
+                                                continue;
+                                            }
+                                        }
+                                        else if (paramList[1].ParameterType == thi.Meta.ModifierType.Type.RawType)
+                                        {
+                                            thi.Meta.ModifierType.IsRaw = false;
+                                        }
+                                        else if (paramList[1].ParameterType == thi.Meta.ModifierType.Type.RawInternalType)
+                                        {
+                                            thi.Meta.ModifierType.IsRaw = true;
+                                        }
+                                        else
+                                        {
+                                            Engine.Context.BadOutput("Bad tag declaration (second argument is '" + paramList[0].ParameterType.Name + "', but should be a valid '" + type.TypeName + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                            continue;
+                                        }
+                                    }
+                                    if (thi.Meta.SpecialTypeHelperName != null)
+                                    {
+                                        thi.Meta.SpecialTypeHelper = type.RawType.GetMethod(thi.Meta.SpecialTypeHelperName, BindingFlags.Static | BindingFlags.Public)
+                                            .CreateDelegate(typeof(Func<TagArgumentBit, int, TagReturnType>)) as Func<TagArgumentBit, int, TagReturnType>;
+                                    }
+                                    type.TagHelpers.Add(tm.Name, thi);
+                                }
+                                else if (method.Name == "CreateFor")
+                                {
+                                    ParameterInfo[] prms = method.GetParameters();
+                                    if (prms.Length == 2 && prms[0].ParameterType == typeof(TemplateObject) && prms[1].ParameterType == typeof(TagData))
+                                    {
+                                        type.CreatorMethod = method;
+                                    }
+                                }
+                                ObjectOperationAttribute operation = method.GetCustomAttribute<ObjectOperationAttribute>();
+                                if (operation != null)
+                                {
+                                    operation.Method = method;
+                                    operation.GenerateFunctions();
+                                    switch (operation.Operation)
+                                    {
+                                        case ObjectOperation.ADD:
+                                            type.Operation_Add = operation;
+                                            break;
+                                        case ObjectOperation.SUBTRACT:
+                                            type.Operation_Subtract = operation;
+                                            break;
+                                        case ObjectOperation.MULTIPLY:
+                                            type.Operation_Multiply = operation;
+                                            break;
+                                        case ObjectOperation.DIVIDE:
+                                            type.Operation_Divide = operation;
+                                            break;
+                                        case ObjectOperation.SET:
+                                            type.Operation_Set = operation;
+                                            break;
+                                        case ObjectOperation.GETSUBSETTABLE:
+                                            type.Operation_GetSubSettable = operation;
+                                            break;
+                                    }
+                                }
                             }
-                            else if (thi.Meta.ReturnTypeResult == null)
+                            catch (Exception ex)
                             {
-                                Engine.Context.BadOutput("Bad tag declaration (returns '" + thi.Meta.ReturnType + "'): " + type.TypeName + "." + thi.Meta.Name);
+                                Engine.Context.BadOutput("Internal exception while processing method '" + method.Name + "' within TagType " + type.TypeName + ": " + ex.ToString());
                             }
-                            if (thi.Meta.SpecialTypeHelperName != null)
-                            {
-                                thi.Meta.SpecialTypeHelper = type.RawType.GetMethod(thi.Meta.SpecialTypeHelperName, BindingFlags.Static | BindingFlags.Public)
-                                    .CreateDelegate(typeof(Func<TagArgumentBit, int, TagType>)) as Func<TagArgumentBit, int, TagType>;
-                            }
-                            type.TagHelpers.Add(tm.Name, thi);
                         }
-                        else if (method.Name == "CreateFor")
+                        type.BuildOperations();
+                        TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
+                        auto_thi.Meta = auto_thi.Meta.Duplicate();
+                        auto_thi.Meta.ReturnTypeResult = new TagReturnType(Types.RegisteredTypes[auto_thi.Meta.ReturnType], false);
+                        auto_thi.Meta.ActualType = type;
+                        type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
+                        if (type.CreatorMethod == null)
                         {
-                            ParameterInfo[] prms = method.GetParameters();
-                            if (prms.Length == 2 && prms[0].ParameterType == typeof(TemplateObject) && prms[1].ParameterType == typeof(TagData))
-                            {
-                                type.CreatorMethod = method;
-                            }
-                        }
-                        ObjectOperationAttribute operation = method.GetCustomAttribute<ObjectOperationAttribute>();
-                        if (operation != null)
-                        {
-                            operation.Method = method;
-                            operation.GenerateFunctions();
-                            switch (operation.Operation)
-                            {
-                                case ObjectOperation.ADD:
-                                    type.Operation_Add = operation;
-                                    break;
-                                case ObjectOperation.SUBTRACT:
-                                    type.Operation_Subtract = operation;
-                                    break;
-                                case ObjectOperation.MULTIPLY:
-                                    type.Operation_Multiply = operation;
-                                    break;
-                                case ObjectOperation.DIVIDE:
-                                    type.Operation_Divide = operation;
-                                    break;
-                                case ObjectOperation.SET:
-                                    type.Operation_Set = operation;
-                                    break;
-                                case ObjectOperation.GETSUBSETTABLE:
-                                    type.Operation_GetSubSettable = operation;
-                                    break;
-                            }
+                            Engine.Context.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
                         }
                     }
-                    type.BuildOperations();
-                    TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
-                    auto_thi.Meta = auto_thi.Meta.Duplicate();
-                    auto_thi.Meta.ReturnTypeResult = Types.RegisteredTypes[auto_thi.Meta.ReturnType];
-                    auto_thi.Meta.ActualType = type;
-                    type.TagHelpers.Add(auto_thi.Meta.Name, auto_thi);
-                    if (type.CreatorMethod == null)
-                    {
-                        Engine.Context.BadOutput("Possible bad tag declaration (no CreateFor method): " + type.TypeName);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Engine.Context.BadOutput("Internal exception while processing methods within TagType " + type.TypeName + ": " + ex.ToString());
                 }
             }
             foreach (TagType type in Types.RegisteredTypes.Values)
@@ -234,9 +338,45 @@ namespace FreneticScript.TagHandlers
                     helper.RunTagLive = ScriptCompiler.GenerateTagMethodCallable(helper.Method, helper.Meta, Engine);
                 }
             }
+            foreach (TemplateTagBase tagbase in Handlers.Values)
+            {
+                if (tagbase.ResultTypeString != null)
+                {
+                    MethodInfo runnerMethod = tagbase.Method_HandleOne;
+                    if (runnerMethod != null)
+                    {
+                        Type returnType = runnerMethod.ReturnType;
+                        if (returnType == null || returnType == typeof(void))
+                        {
+                            Engine.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: can't have void method return type '" + returnType.Name + "'.");
+                            continue;
+                        }
+                        if (!Types.RegisteredTypes.TryGetValue(tagbase.ResultTypeString, out TagType resultType))
+                        {
+                            Engine.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid result type '" + tagbase.ResultTypeString + "'.");
+                            continue;
+                        }
+                        if (returnType == resultType.RawType)
+                        {
+                            tagbase.ResultType = new TagReturnType(resultType, false);
+                        }
+                        else if (returnType == resultType.RawInternalType)
+                        {
+                            tagbase.ResultType = new TagReturnType(resultType, true);
+                        }
+                        else
+                        {
+                            Engine.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid return type '" + tagbase.ResultTypeString + "' vs '" + returnType.Name + "'.");
+                        }
+                        ParameterInfo[] paramList = runnerMethod.GetParameters();
+                        if (paramList.Length != 1 || paramList[0].ParameterType != typeof(TagData))
+                        {
+                            Engine.Context.BadOutput("TagBase " + tagbase.Name + " (" + tagbase.GetType().FullName + ") failed to parse: invalid paramter list (should just be 'TagData').");
+                        }
+                    }
+                }
+            }
         }
-
-        private static readonly Type[] SET_METHOD_PARAMETERS = new Type[] { typeof(string[]), typeof(TemplateObject), typeof(ObjectEditSource) };
 
         /// <summary>
         /// An automatic tag for the 'or_else' system.
