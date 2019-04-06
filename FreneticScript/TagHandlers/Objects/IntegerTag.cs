@@ -72,7 +72,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
-            validator.ObjectValue = For(validator.ObjectValue, (s) => validator.ErrorResult = s);
+            validator.ObjectValue = For(validator.ObjectValue, validator.ErrorAction);
         }
 
         /// <summary>

@@ -319,5 +319,14 @@ namespace FreneticScript.CommandSystem
         /// An error result, if any.
         /// </summary>
         public string ErrorResult = null;
+
+        /// <summary>
+        /// An error action helper method, for when an error action is needed.
+        /// </summary>
+        /// <param name="s">The error message.</param>
+        public void ErrorAction(string s)
+        {
+            ErrorResult = s;
+        }
     }
 }
