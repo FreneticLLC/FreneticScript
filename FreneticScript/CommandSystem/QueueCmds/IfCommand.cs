@@ -219,7 +219,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                             {
                                 bool cfound = TryIf(queue, entry, subargs);
                                 arguments.RemoveRange(i, (x - i) + 1);
-                                Argument narg = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(cfound) } };
+                                Argument narg = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(cfound, queue.Engine) } };
                                 arguments.Insert(i, narg);
                                 found = true;
                             }

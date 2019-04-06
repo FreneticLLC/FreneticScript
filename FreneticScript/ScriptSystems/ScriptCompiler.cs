@@ -461,7 +461,7 @@ namespace FreneticScript.ScriptSystems
                     firstBit.OriginalInput = firstBit.Key;
                     tab.Start = tab.TagSystem.LVar;
                     firstBit.Key = "\0lvar";
-                    firstBit.Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(startVar.Index) } };
+                    firstBit.Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(startVar.Index, tab.Engine) } };
                 }
                 else
                 {

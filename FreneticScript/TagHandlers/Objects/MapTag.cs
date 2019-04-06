@@ -118,7 +118,7 @@ namespace FreneticScript.TagHandlers.Objects
                     continue;
                 }
                 string key = UnescapeTagBase.Unescape(kvp[0]).ToLowerFast();
-                map.Internal[key] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false, true).InputValue;
+                map.Internal[key] = new TextArgumentBit(UnescapeTagBase.Unescape(kvp[1]), false, true, null).InputValue;
             }
             return map;
         }

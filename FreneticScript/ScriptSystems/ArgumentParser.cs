@@ -38,7 +38,7 @@ namespace FreneticScript.ScriptSystems
             if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
             {
                 Argument a = new Argument() { WasQuoted = wasquoted };
-                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted) { Engine = system } };
+                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted, system) };
                 return a;
             }
             Argument arg = new Argument() { WasQuoted = wasquoted };
@@ -65,7 +65,7 @@ namespace FreneticScript.ScriptSystems
                     {
                         if (tbuilder.Length > 0)
                         {
-                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { Engine = system });
+                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
                             tbuilder = new StringBuilder();
                         }
                         string value = blockbuilder.ToString();
@@ -178,7 +178,7 @@ namespace FreneticScript.ScriptSystems
             }
             if (tbuilder.Length > 0)
             {
-                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true) { Engine = system });
+                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
             }
             arg.Bits = bitos.ToArray();
             return arg;

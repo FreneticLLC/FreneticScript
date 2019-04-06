@@ -273,6 +273,10 @@ namespace FreneticScript.CommandSystem
             {
                 return;
             }
+            if (SaveAction == null)
+            {
+                SaveAction = ScriptCompiler.CreateVariableSetter(CCSE.Variables[SaveLoc]);
+            }
             SaveAction(queue.CurrentRunnable, resultObj);
         }
         

@@ -171,8 +171,6 @@ namespace FreneticScript.CommandSystem
                 entry.Name, CommandPrefix.CALLBACK, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
-        private static readonly Type[] SAVE_ACTION_PARAMS = new Type[] { typeof(CompiledCommandRunnable), typeof(TemplateObject) };
-
         /// <summary>
         /// Adapts a command entry to CIL.
         /// </summary>
@@ -181,11 +179,6 @@ namespace FreneticScript.CommandSystem
         public virtual void AdaptToCIL(CILAdaptationValues values, int entry)
         {
             values.CallExecute(entry, this);
-            CommandEntry cent = values.CommandAt(entry);
-            if (cent.CanSave)
-            {
-                cent.SaveAction = ScriptCompiler.CreateVariableSetter(values.LocalVariableData(cent.SaveLoc));
-            }
         }
 
         /// <summary>

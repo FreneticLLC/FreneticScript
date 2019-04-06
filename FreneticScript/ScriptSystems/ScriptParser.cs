@@ -415,13 +415,13 @@ namespace FreneticScript.ScriptSystems
                     {
                         Argument varname = args[0];
                         args.RemoveRange(0, 2);
-                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit("\0" + varname.ToString().ToLowerFast(), true, true) } };
+                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit("\0" + varname.ToString().ToLowerFast(), true, true, system) } };
                     }
                     else if (args.Count >= 4 && args[0].ToString() == "var" && args[2].ToString() == "^=")
                     {
                         Argument varname = args[1];
                         args.RemoveRange(0, 3);
-                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFast(), true, true) } };
+                        nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFast(), true, true, system) } };
                     }
                 }
                 string BaseCommand = args[0].ToString();
@@ -476,7 +476,7 @@ namespace FreneticScript.ScriptSystems
         public static CommandEntry CreateErrorOutputEntry(string message, ScriptEngine system, string script, string tabs)
         {
             return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.TheErrorCommand,
-                new Argument[] { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true) } } }, "error", CommandPrefix.NONE, script, 0, tabs, system);
+                new Argument[] { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true, system) } } }, "error", CommandPrefix.NONE, script, 0, tabs, system);
 
         }
 

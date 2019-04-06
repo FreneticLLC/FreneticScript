@@ -24,39 +24,36 @@ namespace FreneticScript.CommandSystem.Arguments
         /// Constructs the argument with an input object.
         /// </summary>
         /// <param name="_object">The input object.</param>
-        public TextArgumentBit(TemplateObject _object)
+        /// <param name="_engine">The backing script engine.</param>
+        public TextArgumentBit(TemplateObject _object, ScriptEngine _engine)
         {
             InputValue = _object;
             ResType = _object.GetTagTypeName();
+            Engine = _engine;
         }
 
         /// <summary>
         /// Constructs the argument with an input boolean.
         /// </summary>
         /// <param name="_text">The input boolean.</param>
-        public TextArgumentBit(bool _text)
+        /// <param name="_engine">The backing script engine.</param>
+        public TextArgumentBit(bool _text, ScriptEngine _engine)
         {
             InputValue = BooleanTag.ForBool(_text);
             ResType = BooleanTag.TYPE;
-        }
-
-        /// <summary>
-        /// Gets the resultant type of this argument bit.
-        /// </summary>
-        /// <param name="values">The relevant variable set.</param>
-        /// <returns>The tag type.</returns>
-        public override TagReturnType ReturnType(CILAdaptationValues values)
-        {
-            return new TagReturnType(Engine.TagSystem.Types.RegisteredTypes[ResType], false);
+            Engine = _engine;
         }
 
         /// <summary>
         /// Constructs the argument with an input integer.
         /// </summary>
         /// <param name="_text">The input integer.</param>
-        public TextArgumentBit(long _text)
+        /// <param name="_engine">The backing script engine.</param>
+        public TextArgumentBit(long _text, ScriptEngine _engine)
         {
             InputValue = new IntegerTag(_text);
+            ResType = IntegerTag.TYPE;
+            Engine = _engine;
         }
 
         /// <summary>
@@ -65,8 +62,10 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <param name="_text">The input text.</param>
         /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
         /// <param name="perfect">Whether the argument must parse back "perfectly" (meaning, it will ToString to the exact original input).</param>
-        public TextArgumentBit(string _text, bool wasquoted, bool perfect)
+        /// <param name="_engine">The backing script engine.</param>
+        public TextArgumentBit(string _text, bool wasquoted, bool perfect, ScriptEngine _engine)
         {
+            Engine = _engine;
             if (wasquoted)
             {
                 InputValue = new TextTag(_text);
@@ -125,6 +124,16 @@ namespace FreneticScript.CommandSystem.Arguments
             }
             InputValue = new TextTag(_text);
             ResType = TextTag.TYPE;
+        }
+
+        /// <summary>
+        /// Gets the resultant type of this argument bit.
+        /// </summary>
+        /// <param name="values">The relevant variable set.</param>
+        /// <returns>The tag type.</returns>
+        public override TagReturnType ReturnType(CILAdaptationValues values)
+        {
+            return new TagReturnType(Engine.TagSystem.Types.RegisteredTypes[ResType], false);
         }
 
         /// <summary>

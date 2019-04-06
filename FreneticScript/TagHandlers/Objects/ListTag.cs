@@ -122,7 +122,7 @@ namespace FreneticScript.TagHandlers.Objects
                     break;
                 }
                 string dat = UnescapeTagBase.Unescape(baselist[i]);
-                TextArgumentBit tab = new TextArgumentBit(dat, false, true);
+                TextArgumentBit tab = new TextArgumentBit(dat, false, true, null);
                 tlist.Internal.Add(tab.InputValue);
             }
             return tlist;
