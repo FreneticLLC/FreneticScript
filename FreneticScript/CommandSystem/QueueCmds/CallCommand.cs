@@ -108,7 +108,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                         if (varlookup.TryGetValue(var, out SingleCILVariable varx))
                         {
                             // TODO: Type verification!
-                            entry.CCSE.GetSetter(varx.Index).Invoke(queue.CurrentRunnable, entry.GetNamedArgumentObject(queue, var));
+                            runnable.Entry.GetSetter(varx.Index).Invoke(runnable, entry.GetNamedArgumentObject(queue, var));
                         }
                     }
                 }

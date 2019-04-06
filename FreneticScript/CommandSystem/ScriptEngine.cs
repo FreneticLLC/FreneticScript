@@ -162,26 +162,25 @@ namespace FreneticScript.CommandSystem
         /// Returns the determined value(s).
         /// </summary>
         /// <param name="script">The script to execute.</param>
-        /// <param name="Variables">What variables to add to the commandqueue.</param>
+        /// <param name="variables">What variables to add to the commandqueue.</param>
         /// <param name="queue">Outputs the generated queue (already ran or running).</param>
         /// <param name="mode">The debug mode to run it in.</param>
-        public void ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> Variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
+        public void ExecuteScript(CommandScript script, ref Dictionary<string, TemplateObject> variables, out CommandQueue queue, DebugMode mode = DebugMode.FULL)
         {
             queue = script.ToQueue(this);
             CompiledCommandRunnable runnable = queue.RunningStack.Peek();
-            if (Variables != null)
+            if (variables != null)
             {
                 if (runnable.Entry.Entries.Length > 0)
                 {
                     Dictionary<string, SingleCILVariable> varlookup = runnable.Entry.Entries[0].VarLookup;
-                    foreach (KeyValuePair<string, TemplateObject> var in Variables)
+                    foreach (KeyValuePair<string, TemplateObject> varToSet in variables)
                     {
-                        if (!var.Key.StartsWithNull())
+                        if (!varToSet.Key.StartsWithNull())
                         {
-                            if (varlookup.TryGetValue(var.Key, out SingleCILVariable varx))
+                            if (varlookup.TryGetValue(varToSet.Key, out SingleCILVariable varx))
                             {
-                                // TODO: Type verification!
-                                // TODO: Fix // runnable.LocalVariables[varx.Index].Internal = var.Value;
+                                runnable.Entry.GetSetter(varx.Index)(runnable, varToSet.Value);
                             }
                         }
                     }

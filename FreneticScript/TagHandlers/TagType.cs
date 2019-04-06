@@ -129,6 +129,11 @@ namespace FreneticScript.TagHandlers
         public ObjectOperationAttribute[] Operations = new ObjectOperationAttribute[4];
 
         /// <summary>
+        /// The backing script engine.
+        /// </summary>
+        public ScriptEngine Engine;
+
+        /// <summary>
         /// Builds the <see cref="Operations"/> field.
         /// </summary>
         public void BuildOperations()

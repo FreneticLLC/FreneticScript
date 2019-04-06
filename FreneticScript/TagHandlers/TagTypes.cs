@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.TagHandlers.Objects;
 using FreneticScript.TagHandlers.HelperBases;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers
 {
@@ -38,6 +39,11 @@ namespace FreneticScript.TagHandlers
             }
             return null;
         }
+
+        /// <summary>
+        /// The backing script engine.
+        /// </summary>
+        public ScriptEngine Engine;
 
         /// <summary>
         /// Helpers to load tags for any given type, input by name.
@@ -128,6 +134,7 @@ namespace FreneticScript.TagHandlers
         {
             RegisteredTypes.Add(type.TypeName, type);
             SaveCreators[type.TypeName.ToLowerFast()] = creator;
+            type.Engine = Engine;
         }
 
         /// <summary>

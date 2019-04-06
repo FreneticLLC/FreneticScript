@@ -275,7 +275,7 @@ namespace FreneticScript.CommandSystem
             }
             if (SaveAction == null)
             {
-                SaveAction = ScriptCompiler.CreateVariableSetter(CCSE.Variables[SaveLoc]);
+                SaveAction = CCSE.GetSetter(SaveLoc);
             }
             SaveAction(queue.CurrentRunnable, resultObj);
         }

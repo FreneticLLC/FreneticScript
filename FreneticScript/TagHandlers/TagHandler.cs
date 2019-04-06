@@ -122,6 +122,7 @@ namespace FreneticScript.TagHandlers
             Register(new UnescapeTagBase());
             Register(new VarTagBase());
             // Object types
+            Types.Engine = Engine;
             Types.RegisterDefaultTypes();
         }
         /// <summary>

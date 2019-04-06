@@ -92,6 +92,7 @@ namespace FreneticScript.ScriptSystems
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
                 CommandEntry curEnt = ccse.Entries[i];
+                curEnt.CCSE = ccse;
                 curEnt.DBMode = values.DBMode;
                 curEnt.VarLookup = values.CreateVarLookup();
                 for (int a = 0; a < curEnt.Arguments.Length; a++)
@@ -245,6 +246,10 @@ namespace FreneticScript.ScriptSystems
             CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse, ccse.Entries, fieldValues) as CompiledCommandRunnable;
             ccse.ReferenceCompiledRunnable = runnable;
             ccse.Variables = values.Variables.ToArray();
+            foreach (SingleCILVariable variable in ccse.Variables)
+            {
+                variable.Field = variable.Field.DeclaringType.GetField(variable.Field.Name); // Patch runtime field issues
+            }
             ccse.VariableSetters = new Action<CompiledCommandRunnable, TemplateObject>[ccse.Variables.Length];
             runnable.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
             runnable.Debug = script.Debug;
@@ -280,13 +285,15 @@ namespace FreneticScript.ScriptSystems
         public static Action<CompiledCommandRunnable, TemplateObject> CreateVariableSetter(SingleCILVariable variable)
         {
             DynamicMethod genMethod = new DynamicMethod("script_" + variable.Field.DeclaringType.Name + "_var_" + variable.Index + "_setter", typeof(void), SETTER_ACTION_PARAMS);
-            ILGenerator ILGen = genMethod.GetILGenerator();
+            ILGeneratorTracker ILGen = new ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = variable.Type.Type.Engine };
             ILGen.Emit(OpCodes.Ldarg_0); // Load argument: runnable
+            ILGen.Emit(OpCodes.Castclass, variable.Field.DeclaringType); // Jank patch for type misinterpretation in CILL validator
             ILGen.Emit(OpCodes.Ldarg_1); // Load argument: input variable value
-            ILGen.Emit(OpCodes.Castclass, variable.Type.Type.RawType); // Ensure type
+            ILGen.Emit(OpCodes.Ldsfld, TagData.FIELD_TAGDATA_SIMPLE_ERROR); // Grab a blank TagData
+            ILGen.Emit(OpCodes.Call, variable.Type.Type.CreatorMethod); // Ensure type
             if (variable.Type.IsRaw)
             {
-                ILGen.Emit(OpCodes.Newobj, variable.Type.Type.RawInternalConstructor); // Convert to a full object if needed
+                ILGen.Emit(OpCodes.Ldfld, variable.Type.Type.RawInternalField); // Handle raw if needed.
             }
             ILGen.Emit(OpCodes.Stfld, variable.Field); // Store to field.
             ILGen.Emit(OpCodes.Ret); // Return.
@@ -533,7 +540,7 @@ namespace FreneticScript.ScriptSystems
                         }
                         else if (variableArg.Bits.Length == 1 && variableArg.Bits[0] is TextArgumentBit text)
                         {
-                            FieldInfo argValueField = typeBuild_c.DefineField("_field_tag_line_" + entryIndex + "_" + id + "_argVal_" + x, text.InputValue.GetType(), FieldAttributes.Public | FieldAttributes.InitOnly);
+                            FieldBuilder argValueField = typeBuild_c.DefineField("_field_tag_line_" + entryIndex + "_" + id + "_argVal_" + x, text.InputValue.GetType(), FieldAttributes.Public | FieldAttributes.InitOnly);
                             specialFieldValues.Add(new KeyValuePair<FieldInfo, object>(argValueField, text.InputValue));
                             ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
                             ilgen.Emit(OpCodes.Ldfld, argValueField); // Load the modifier argument value
@@ -541,7 +548,7 @@ namespace FreneticScript.ScriptSystems
                         }
                         else
                         {
-                            FieldInfo argToParse = typeBuild_c.DefineField("_field_tag_line_" + entryIndex + "_" + id + "_arg_" + x, typeof(Argument), FieldAttributes.Public | FieldAttributes.InitOnly);
+                            FieldBuilder argToParse = typeBuild_c.DefineField("_field_tag_line_" + entryIndex + "_" + id + "_arg_" + x, typeof(Argument), FieldAttributes.Public | FieldAttributes.InitOnly);
                             specialFieldValues.Add(new KeyValuePair<FieldInfo, object>(argToParse, variableArg));
                             ilgen.Emit(OpCodes.Ldarg_1); // Load argument: Runnable.
                             ilgen.Emit(OpCodes.Ldfld, argToParse); // Load the modifier argument
