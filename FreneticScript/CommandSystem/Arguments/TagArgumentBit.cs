@@ -113,6 +113,8 @@ namespace FreneticScript.CommandSystem.Arguments
                 ilgen.Emit(load_Error); // Load the error object onto stack
                 ilgen.Emit(load_Runnable); // Load the runnable object onto stack.
                 ilgen.Emit(OpCodes.Callvirt, ArgumentCompiler.Argument_Parse); // Virtual call the Argument.Parse method, which returns a TemplateObject
+                ilgen.Emit(OpCodes.Ldloc, tab_loc); // Load the tag onto stack
+                ilgen.Emit(OpCodes.Ldfld, TagArgumentBit_Data); // Read 'data' (from current tab)
                 ilgen.Emit(OpCodes.Call, CompiledReturnType.Type.CreatorMethod); // Validate type
                 if (CompiledReturnType.IsRaw && return_raw)
                 {
