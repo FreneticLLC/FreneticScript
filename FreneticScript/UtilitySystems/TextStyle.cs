@@ -20,28 +20,12 @@ namespace FreneticScript
     {
         /// <summary>Default style, default (SysConsole) value: ^r^7</summary>
         public static string Default = "^r^7";
-        /// <summary>Reset style, default (SysConsole) value: ^r</summary>
-        public static string Reset = "^r";
-        /// <summary>Bold style, default (SysConsole) value: ^b</summary>
-        public static string Bold = "^b";
-        /// <summary>Italic style, default (SysConsole) value: ^i</summary>
-        public static string Italic = "^i";
-        /// <summary>Transparent style, default (SysConsole) value: ^t</summary>
-        public static string Transparent = "^t";
-        /// <summary>Opaque style, default (SysConsole) value: ^o</summary>
-        public static string Opaque = "^o";
-        /// <summary>White color: ^7</summary>
-        public static string White = "^7";
         /// <summary>Minor style, default (SysConsole) value: ^r^)</summary>
         public static string Minor = "^r^)";
         /// <summary>Simple style, default (SysConsole) value: ^r^7</summary>
         public static string Simple = "^r^7";
         /// <summary>Standout style, default (SysConsole) value: ^r^0^h^5</summary>
         public static string Standout = "^r^0^h^5";
-        /// <summary>Readable style, default (SysConsole) value: ^r^7^e^0^b</summary>
-        public static string Readable = "^r^7^e^0^b";
-        /// <summary>Chat style, default (SysConsole) value: ^r^2^d</summary>
-        public static string Chat = "^r^2^d";
         /// <summary>Error style, default (SysConsole) value: ^r^0^h^3</summary>
         public static string Error = "^r^0^h^3";
         /// <summary>Warning style, default (SysConsole) value: ^r^0^h^1</summary>
