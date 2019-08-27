@@ -115,7 +115,7 @@ namespace FreneticScript.ScriptSystems
             {
                 if (code.Key == "minor")
                 {
-                    fullResult.Append(TextStyle.White + "(Minor)" + TextStyle.Minor + ": " + code.Value + "\n");
+                    fullResult.Append(TextStyle.Default + "(Minor)" + TextStyle.Minor + ": " + code.Value + "\n");
                 }
                 else
                 {
