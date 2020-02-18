@@ -46,25 +46,24 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             // TODO: Remove/replace CVar system (FDS handler)
-            /*
-            if (entry.Arguments.Count < 1)
+            if (entry.Arguments.Length < 1)
             {
-                entry.Info(queue, "Listing " + TextStyle.Separate + queue.CommandSystem.Context.CVarSys.CVars.Count + TextStyle.Base + " CVars...");
-                for (int i = 0; i < queue.CommandSystem.Context.CVarSys.CVars.Count; i++)
+                entry.InfoOutput(queue, "Listing " + TextStyle.Separate + queue.Engine.Context.CVarSys.CVars.Count + TextStyle.Base + " CVars...");
+                for (int i = 0; i < queue.Engine.Context.CVarSys.CVars.Count; i++)
                 {
-                    CVar cvar = queue.CommandSystem.Context.CVarSys.CVarList[i];
-                    entry.Info(queue, "" + TextStyle.Separate + (i + 1).ToString() + "<{text_color[simple]}>)" + TextStyle.Separate + " " + TagParser.Escape(cvar.Info()));
+                    CVar cvar = queue.Engine.Context.CVarSys.CVarList[i];
+                    entry.InfoOutput(queue, "" + TextStyle.Separate + (i + 1).ToString() + TextStyle.Simple + ")" + TextStyle.Separate + " " + cvar.Info());
                 }
             }
             else
             {
                 string target = entry.GetArgument(queue, 0).ToLowerFast();
                 List<CVar> cvars = new List<CVar>();
-                for (int i = 0; i < queue.CommandSystem.Context.CVarSys.CVars.Count; i++)
+                for (int i = 0; i < queue.Engine.Context.CVarSys.CVars.Count; i++)
                 {
-                    if (queue.CommandSystem.Context.CVarSys.CVarList[i].Name.StartsWith(target))
+                    if (queue.Engine.Context.CVarSys.CVarList[i].Name.StartsWith(target))
                     {
-                        cvars.Add(queue.CommandSystem.Context.CVarSys.CVarList[i]);
+                        cvars.Add(queue.Engine.Context.CVarSys.CVarList[i]);
                     }
                 }
                 if (cvars.Count == 0)
@@ -73,15 +72,14 @@ namespace FreneticScript.CommandSystem.CommonCmds
                 }
                 else
                 {
-                    entry.Info(queue, "Listing " + TextStyle.Separate + cvars.Count + TextStyle.Base + " CVars...");
+                    entry.InfoOutput(queue, "Listing " + TextStyle.Separate + cvars.Count + TextStyle.Base + " CVars...");
                     for (int i = 0; i < cvars.Count; i++)
                     {
                         CVar cvar = cvars[i];
-                        entry.Info(queue, "" + TextStyle.Separate + (i + 1).ToString() + "<{text_color[simple]}>)" + TextStyle.Separate + " " + TagParser.Escape(cvar.Info()));
+                        entry.InfoOutput(queue, "" + TextStyle.Separate + (i + 1).ToString() + TextStyle.Simple + ")" + TextStyle.Separate + " " + cvar.Info());
                     }
                 }
             }
-            */
         }
     }
 }
