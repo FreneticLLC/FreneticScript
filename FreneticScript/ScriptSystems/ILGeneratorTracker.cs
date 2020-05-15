@@ -157,7 +157,7 @@ namespace FreneticScript.ScriptSystems
             {
                 // Do nothing
             }
-            if (code == OpCodes.Ret)
+            else if (code == OpCodes.Ret)
             {
                 ValidateStackSizeIsAtMost("return op", 1);
                 StackSize = 0;
@@ -181,6 +181,20 @@ namespace FreneticScript.ScriptSystems
                     {
                         StackSizeChange(1);
                     }
+                }
+            }
+            else if (code == OpCodes.Newobj)
+            {
+                if (!(val is ConstructorInfo method))
+                {
+                    Console.WriteLine("Invalid NEWOBJ (code " + code + ", to object " + val + ") - not a constructor reference");
+                }
+                else
+                {
+                    int paramCount = altParams ?? method.GetParameters().Length;
+                    ValidateStackSizeIsAtLeast("opcode newobj", paramCount);
+                    StackSizeChange(-paramCount);
+                    StackSizeChange(1);
                 }
             }
             else if (code == OpCodes.Leave || code == OpCodes.Leave_S)
@@ -296,6 +310,16 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>
+        /// Begins a finally block.
+        /// </summary>
+        public void BeginFinallyBlock()
+        {
+            Internal.BeginFinallyBlock();
+            AddCode(OpCodes.Nop, null, "<BeginFinallyBlock>");
+            ValidateStackSizeIs("Beginning finally block", 0);
+        }
+
+        /// <summary>
         /// Ends an exception block.
         /// </summary>
         public void EndExceptionBlock()
@@ -380,7 +404,7 @@ namespace FreneticScript.ScriptSystems
         public void Emit(OpCode code, MethodInfo dat, int? altParams = null)
         {
             Internal.Emit(code, dat);
-            AddCode(OpCodes.Nop, dat + ": " + dat.DeclaringType.Name, code.ToString().ToLowerFast());
+            AddCode(OpCodes.Nop, dat + ": " + dat.DeclaringType?.Name, code.ToString().ToLowerFast());
             Validator(code, dat, altParams);
         }
 
