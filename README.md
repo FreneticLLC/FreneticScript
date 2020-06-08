@@ -40,16 +40,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-----
-
-----
-
-![YourKit](https://www.yourkit.com/images/yklogo.png)
-
-The FreneticLLC team uses YourKit .NET Profiler to improve performance. We'd like to thank them for their amazing tool and recommend them to all .NET developers!
-
-YourKit supports open source projects with its full-featured .NET Profiler.  
-YourKit, LLC is the creator of [YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/index.jsp)  
-and [YourKit Java Profiler](https://www.yourkit.com/java/profiler/index.jsp)  
-innovative and intelligent tools for profiling .NET and Java applications.
