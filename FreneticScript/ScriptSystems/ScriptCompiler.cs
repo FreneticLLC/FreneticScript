@@ -372,6 +372,10 @@ namespace FreneticScript.ScriptSystems
                 trackers?.Add(tracker);
             }
             // Basic setup
+            if (tab.Start == null)
+            {
+                throw new TagErrorInducedException($"Invalid tag base '{TextStyle.Separate}{tab.Bits[0].Key}{TextStyle.Base}' (unknown)!", 0);
+            }
             TagReturnType returnable = tab.Start.ResultType;
             if (returnable.Type == null)
             {
@@ -379,9 +383,7 @@ namespace FreneticScript.ScriptSystems
             }
             if (returnable.Type == null)
             {
-                throw new TagErrorInducedException("Invalid tag top-handler '"
-                    + TextStyle.Separate + tab.Start.Name
-                    + TextStyle.Base + "' (failed to identify return type)!", 0);
+                throw new TagErrorInducedException($"Invalid tag top-handler '{TextStyle.Separate}{tab.Start.Name}{TextStyle.Base}' (failed to identify return type)!", 0);
             }
             TagReturnType prevType = returnable;
             for (int x = 1; x < tab.Bits.Length; x++)
