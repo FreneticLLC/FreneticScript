@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// Represents a list as a usable tag.
     /// </summary>
     [ObjectMeta(Name = ListTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a list of objects.")]
-    public class ListTag: TemplateObject, ListTagForm
+    public class ListTag: TemplateObject, IListTagForm
     {
 
         /// <summary>
@@ -158,19 +158,14 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag CreateFor(TemplateObject input)
         {
-            switch (input)
+            return input switch
             {
-                case ListTag ltag:
-                    return ltag;
-                case ListTagForm lform:
-                    return lform.ListForm;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal);
-                case TextTag ttag:
-                    return For(input.ToString());
-                default:
-                    return new ListTag(new List<TemplateObject>() { input });
-            }
+                ListTag ltag => ltag,
+                IListTagForm lform => lform.ListForm,
+                DynamicTag dtag => CreateFor(dtag.Internal),
+                TextTag _ => For(input.ToString()),
+                _ => new ListTag(new List<TemplateObject>() { input }),
+            };
         }
 
         /// <summary>

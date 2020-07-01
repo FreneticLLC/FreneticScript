@@ -79,15 +79,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid CVarTag.</returns>
         public static CVarTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case CVarTag ctag:
-                    return ctag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                CVarTag ctag => ctag,
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
         /// <summary>

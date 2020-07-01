@@ -18,7 +18,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// </summary>
     [ObjectMeta(Name = NumberTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a number.",
         Others = new string[] { "Note that the number is internally stored as a 64-bit signed floating point number (a 'double')." })]
-    public class NumberTag : TemplateObject, NumberTagForm
+    public class NumberTag : TemplateObject, INumberTagForm
     {
 
         /// <summary>
@@ -90,21 +90,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The number tag.</returns>
         public static NumberTag For(TemplateObject input, Action<string> err)
         {
-            switch (input)
+            return input switch
             {
-                case NumberTag ntag:
-                    return ntag;
-                case IntegerTag itag:
-                    return new NumberTag(itag.Internal);
-                case IntegerTagForm itf:
-                    return new NumberTag(itf.IntegerForm);
-                case NumberTagForm ntf:
-                    return new NumberTag(ntf.NumberForm);
-                case DynamicTag dtag:
-                    return For(dtag.Internal, err);
-                default:
-                    return For(err, input.ToString());
-            }
+                NumberTag ntag => ntag,
+                IntegerTag itag => new NumberTag(itag.Internal),
+                IIntegerTagForm itf => new NumberTag(itf.IntegerForm),
+                INumberTagForm ntf => new NumberTag(ntf.NumberForm),
+                DynamicTag dtag => For(dtag.Internal, err),
+                _ => For(err, input.ToString()),
+            };
         }
 
         /// <summary>
@@ -160,9 +154,9 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return null;
             }
-            if (input is NumberTag)
+            if (input is NumberTag tag)
             {
-                return (NumberTag)input;
+                return tag;
             }
             return TryFor(input.ToString());
         }
@@ -195,21 +189,15 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid number tag.</returns>
         public static NumberTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case NumberTag ntag:
-                    return ntag;
-                case IntegerTag itag:
-                    return new NumberTag(itag.Internal);
-                case IntegerTagForm itf:
-                    return new NumberTag(itf.IntegerForm);
-                case NumberTagForm ntf:
-                    return new NumberTag(ntf.NumberForm);
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                NumberTag ntag => ntag,
+                IntegerTag itag => new NumberTag(itag.Internal),
+                IIntegerTagForm itf => new NumberTag(itf.IntegerForm),
+                INumberTagForm ntf => new NumberTag(ntf.NumberForm),
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
         /// <summary>

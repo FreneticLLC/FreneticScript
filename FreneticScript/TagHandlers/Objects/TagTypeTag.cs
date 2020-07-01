@@ -95,15 +95,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid TagTypeTag.</returns>
         public static TagTypeTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case TagTypeTag tttag:
-                    return tttag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                TagTypeTag tttag => tttag,
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
         /// <summary>

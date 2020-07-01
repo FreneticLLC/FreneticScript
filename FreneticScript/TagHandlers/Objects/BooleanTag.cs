@@ -105,15 +105,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The boolean tag.</returns>
         public static BooleanTag For(TemplateObject input, Action<string> err)
         {
-            switch (input)
+            return input switch
             {
-                case BooleanTag itag:
-                    return itag;
-                case DynamicTag dtag:
-                    return For(dtag.Internal, err);
-                default:
-                    return For(err, input.ToString());
-            }
+                BooleanTag itag => itag,
+                DynamicTag dtag => For(dtag.Internal, err),
+                _ => For(err, input.ToString()),
+            };
         }
 
         /// <summary>
@@ -210,15 +207,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid boolean tag.</returns>
         public static BooleanTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case BooleanTag itag:
-                    return itag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                BooleanTag itag => itag,
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
 #pragma warning disable 1591

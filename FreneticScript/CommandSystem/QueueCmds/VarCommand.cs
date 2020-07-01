@@ -54,7 +54,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 throw new ErrorInducedException("Invalid input to var command: second argument must be '='.");
             }
-            TagType t = null;
+            TagType t;
             if (cent.Arguments.Length >= 5)
             {
                 if (cent.Arguments[3].ToString().ToLowerFast() != "as")

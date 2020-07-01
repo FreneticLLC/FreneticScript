@@ -132,7 +132,7 @@ namespace FreneticScript
         /// <summary>
         /// The system that generated this CVar.
         /// </summary>
-        CVarSystem system;
+        public CVarSystem System;
 
         /// <summary>
         /// An implementor can optionally apply a description to a CVar to show in Info() and any implementor-managed code.
@@ -153,7 +153,7 @@ namespace FreneticScript
         /// <param name="_system">The CVarSystem to create this CVar within.</param>
         public CVar(string newname, string newvalue, CVarFlag newflags, CVarSystem _system)
         {
-            system = _system;
+            System = _system;
             Name = newname;
             Set(newvalue);
             Flags = newflags;
@@ -180,7 +180,7 @@ namespace FreneticScript
             {
                 return;
             }
-            if (Flags.HasFlagsFS(CVarFlag.InitOnly) && !system.Output.Initializing)
+            if (Flags.HasFlagsFS(CVarFlag.InitOnly) && !System.Output.Initializing)
             {
                 return;
             }
@@ -196,7 +196,7 @@ namespace FreneticScript
             ValueB = newvalue.ToLowerFast() == "true" || ValueF > 0f;
             if (!force)
             {
-                system.Modified = true;
+                System.Modified = true;
             }
             OnChanged?.Invoke(this, null);
         }
@@ -211,7 +211,7 @@ namespace FreneticScript
             {
                 return;
             }
-            if (Flags.HasFlagsFS(CVarFlag.InitOnly) && !system.Output.Initializing)
+            if (Flags.HasFlagsFS(CVarFlag.InitOnly) && !System.Output.Initializing)
             {
                 return;
             }
@@ -236,7 +236,7 @@ namespace FreneticScript
                 ValueL = 0;
                 ValueD = 0;
             }
-            system.Modified = true;
+            System.Modified = true;
             OnChanged?.Invoke(this, null);
         }
 

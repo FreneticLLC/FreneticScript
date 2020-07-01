@@ -16,7 +16,7 @@ namespace FreneticScript.TagHandlers
     /// <summary>
     /// The form of an <see cref="IntegerTag"/>.
     /// </summary>
-    public interface IntegerTagForm
+    public interface IIntegerTagForm
     {
         /// <summary>
         /// The integer value of this <see cref="IntegerTag"/>-like object.
@@ -27,7 +27,7 @@ namespace FreneticScript.TagHandlers
     /// <summary>
     /// The form of a <see cref="NumberTag"/>.
     /// </summary>
-    public interface NumberTagForm
+    public interface INumberTagForm
     {
         /// <summary>
         /// The number value of this <see cref="NumberTag"/>-like object.
@@ -38,7 +38,7 @@ namespace FreneticScript.TagHandlers
     /// <summary>
     /// The form of a <see cref="ListTag"/>.
     /// </summary>
-    public interface ListTagForm
+    public interface IListTagForm
     {
         /// <summary>
         /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.

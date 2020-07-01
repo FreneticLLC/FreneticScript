@@ -21,7 +21,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// Represents a relationship between textual names and object data.
     /// </summary>
     [ObjectMeta(Name = MapTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a relationship between textual names and object data.")]
-    public class MapTag : TemplateObject, ListTagForm
+    public class MapTag : TemplateObject, IListTagForm
     {
 
         /// <summary>
@@ -155,15 +155,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The map represented by the input object.</returns>
         public static MapTag For(TemplateObject input)
         {
-            switch (input)
+            return input switch
             {
-                case MapTag itag:
-                    return itag;
-                case DynamicTag dtag:
-                    return For(dtag.Internal);
-                default:
-                    return For(input.ToString());
-            }
+                MapTag itag => itag,
+                DynamicTag dtag => For(dtag.Internal),
+                _ => For(input.ToString()),
+            };
         }
 
         /// <summary>

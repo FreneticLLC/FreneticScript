@@ -86,23 +86,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             CommandEntry cent = values.Entry.Entries[entry];
             string larg = cent.Arguments[0].ToString().ToLowerFast();
-            switch (larg)
+            values.DBMode = larg switch
             {
-                case "full":
-                    values.DBMode = DebugMode.FULL;
-                    break;
-                case "minimal":
-                    values.DBMode = DebugMode.MINIMAL;
-                    break;
-                case "none":
-                    values.DBMode = DebugMode.NONE;
-                    break;
-                case "default":
-                    values.DBMode = values.Entry.Script.Debug;
-                    break;
-                default:
-                    throw new ErrorInducedException("Unknown debug mode: " + TextStyle.Separate + larg + TextStyle.Error + "!");
-            }
+                "full" => DebugMode.FULL,
+                "minimal" => DebugMode.MINIMAL,
+                "none" => DebugMode.NONE,
+                "default" => values.Entry.Script.Debug,
+                _ => throw new ErrorInducedException("Unknown debug mode: " + TextStyle.Separate + larg + TextStyle.Error + "!"),
+            };
         }
 
         /// <summary>

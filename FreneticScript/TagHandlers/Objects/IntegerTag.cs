@@ -18,7 +18,7 @@ namespace FreneticScript.TagHandlers.Objects
     /// </summary>
     [ObjectMeta(Name = IntegerTag.TYPE, SubTypeName = NumberTag.TYPE, RawInternal = true, Group = "Mathematics", Description = "Represents an integer.",
         Others = new string[] { "Note that the number is internally stored as a 64-bit signed integer (a 'long')." })]
-    public class IntegerTag : TemplateObject, IntegerTagForm, NumberTagForm
+    public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     {
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new IntegerTag(tval);
             }
-            err("Invalid integer: '" + input + "'!");
+            err($"Invalid integer: '{input}'!");
             return new IntegerTag(0);
         }
 
@@ -101,17 +101,13 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The integer tag.</returns>
         public static IntegerTag For(TemplateObject input, Action<string> err)
         {
-            switch (input)
+            return input switch
             {
-                case IntegerTag itag:
-                    return itag;
-                case IntegerTagForm itf:
-                    return new IntegerTag(itf.IntegerForm);
-                case DynamicTag dtag:
-                    return For(dtag.Internal, err);
-                default:
-                    return For(err, input.ToString());
-            }
+                IntegerTag itag => itag,
+                IIntegerTagForm itf => new IntegerTag(itf.IntegerForm),
+                DynamicTag dtag => For(dtag.Internal, err),
+                _ => For(err, input.ToString()),
+            };
         }
 
         /// <summary>
@@ -201,7 +197,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 case IntegerTag itag:
                     return itag.Internal;
-                case IntegerTagForm itf:
+                case IIntegerTagForm itf:
                     return itf.IntegerForm;
                 case DynamicTag dtag:
                     return CreateFor_Raw(dtag.Internal, dat);
@@ -210,7 +206,7 @@ namespace FreneticScript.TagHandlers.Objects
                     {
                         return tval;
                     }
-                    throw dat.Error("Invalid integer: '" + input + "'!");
+                    throw dat.Error($"Invalid integer: '{input}'!");
             }
         }
 
@@ -222,17 +218,13 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid integer tag.</returns>
         public static IntegerTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case IntegerTag itag:
-                    return itag;
-                case IntegerTagForm itf:
-                    return new IntegerTag(itf.IntegerForm);
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                IntegerTag itag => itag,
+                IIntegerTagForm itf => new IntegerTag(itf.IntegerForm),
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
 #pragma warning disable 1591

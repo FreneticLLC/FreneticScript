@@ -326,7 +326,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>
         /// Scripts loaded in for precalculation that will be ran by <see cref="RunPrecalculated"/> when next called.
         /// </summary>
-        List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
+        public List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
 
         /// <summary>
         /// A function to invoke when output is generated.

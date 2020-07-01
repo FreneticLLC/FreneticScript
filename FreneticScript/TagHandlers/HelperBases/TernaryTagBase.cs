@@ -111,15 +111,12 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <returns>A valid TernaryPassTag.</returns>
             public static TernaryPassTag CreateFor(TemplateObject input, TagData dat)
             {
-                switch (input)
+                return input switch
                 {
-                    case TernaryPassTag tptag:
-                        return tptag;
-                    case DynamicTag dtag:
-                        return CreateFor(dtag.Internal, dat);
-                    default:
-                        return For(dat, input.ToString());
-                }
+                    TernaryPassTag tptag => tptag,
+                    DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                    _ => For(dat, input.ToString()),
+                };
             }
 
             /// <summary>

@@ -119,15 +119,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid FunctionTag.</returns>
         public static FunctionTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case FunctionTag ftag:
-                    return ftag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                FunctionTag ftag => ftag,
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
         /// <summary>

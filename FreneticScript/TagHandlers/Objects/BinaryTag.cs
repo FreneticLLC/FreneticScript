@@ -118,15 +118,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A valid binary tag.</returns>
         public static BinaryTag CreateFor(TemplateObject input, TagData dat)
         {
-            switch (input)
+            return input switch
             {
-                case BinaryTag itag:
-                    return itag;
-                case DynamicTag dtag:
-                    return CreateFor(dtag.Internal, dat);
-                default:
-                    return For(dat, input.ToString());
-            }
+                BinaryTag itag => itag,
+                DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                _ => For(dat, input.ToString()),
+            };
         }
 
 #pragma warning disable 1591

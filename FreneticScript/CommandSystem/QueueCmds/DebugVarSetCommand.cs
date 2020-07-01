@@ -44,27 +44,15 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
             TagReturnType varType = locVar.Type;
             string mode = cent.Arguments[1].ToString();
-            ObjectOperation operationType;
-            switch (mode)
+            var operationType = mode switch
             {
-                case "=":
-                    operationType = ObjectOperation.SET;
-                    break;
-                case "+=":
-                    operationType = ObjectOperation.ADD;
-                    break;
-                case "-=":
-                    operationType = ObjectOperation.SUBTRACT;
-                    break;
-                case "*=":
-                    operationType = ObjectOperation.MULTIPLY;
-                    break;
-                case "/=":
-                    operationType = ObjectOperation.DIVIDE;
-                    break;
-                default:
-                    throw new ErrorInducedException("That setter mode (" + mode + ") does not exist!");
-            }
+                "=" => ObjectOperation.SET,
+                "+=" => ObjectOperation.ADD,
+                "-=" => ObjectOperation.SUBTRACT,
+                "*=" => ObjectOperation.MULTIPLY,
+                "/=" => ObjectOperation.DIVIDE,
+                _ => throw new ErrorInducedException("That setter mode (" + mode + ") does not exist!"),
+            };
             if (split.Length > 1)
             {
                 values.LoadLocalVariable(locVar.Index);

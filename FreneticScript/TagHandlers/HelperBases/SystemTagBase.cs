@@ -95,7 +95,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <param name="input">The input.</param>
             public static SystemTag For(TemplateObject input, TagData data)
             {
-                return input is SystemTag ? (SystemTag)input : For(data, input.ToString());
+                return input is SystemTag tag ? tag : For(data, input.ToString());
             }
 
             /// <summary>
@@ -106,15 +106,12 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <returns>A valid SystemTag.</returns>
             public static SystemTag CreateFor(TemplateObject input, TagData dat)
             {
-                switch (input)
+                return input switch
                 {
-                    case SystemTag stag:
-                        return stag;
-                    case DynamicTag dtag:
-                        return CreateFor(dtag.Internal, dat);
-                    default:
-                        return For(dat, input.ToString());
-                }
+                    SystemTag stag => stag,
+                    DynamicTag dtag => CreateFor(dtag.Internal, dat),
+                    _ => For(dat, input.ToString()),
+                };
             }
 
             /// <summary>
