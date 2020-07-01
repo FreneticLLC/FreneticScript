@@ -64,20 +64,19 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A TagTypeTag.</returns>
         public static FunctionTag For(TagData data, string input)
         {
-            ListTag list = ListTag.For(input);
-            if (list.Internal.Count == 0)
+            if (!input.Contains('|'))
             {
-                throw data.Error("Cannot construct FunctionTag with empty input.");
-            }
-            if (list.Internal.Count == 1)
-            {
-                string scriptName = list.Internal[0].ToString();
-                CommandScript script = data.Engine.GetFunction(scriptName);
+                CommandScript script = data.Engine.GetFunction(input);
                 if (script == null)
                 {
-                    throw data.Error("Unknown script name '" + TextStyle.Separate + scriptName + TextStyle.Base + "'.");
+                    throw data.Error($"Unknown script name '{TextStyle.Separate}{input}{TextStyle.Base}'.");
                 }
                 return new FunctionTag(script);
+            }
+            ListTag list = ListTag.For(input);
+            if (list.Internal.Count < 2)
+            {
+                throw data.Error("Cannot construct FunctionTag with empty input.");
             }
             string type = list.Internal[0].ToString();
             if (type == "anon")
@@ -105,11 +104,11 @@ namespace FreneticScript.TagHandlers.Objects
                 CommandScript script = data.Engine.GetFunction(scriptName);
                 if (script == null)
                 {
-                    throw data.Error("Unknown script name '" + TextStyle.Separate + scriptName + TextStyle.Base + "'.");
+                    throw data.Error($"Unknown script name '{TextStyle.Separate}{scriptName}{TextStyle.Base}'.");
                 }
                 return new FunctionTag(script);
             }
-            throw data.Error("Unknown Function type '" + TextStyle.Separate + type + TextStyle.Base + "'.");
+            throw data.Error($"Unknown Function type '{TextStyle.Separate}{type}{TextStyle.Base}'.");
         }
         
         /// <summary>
