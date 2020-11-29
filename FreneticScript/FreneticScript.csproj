@@ -1,193 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0672DD5F-6F33-4853-BD6E-8716D3ABC7AD}</ProjectGuid>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FreneticScript</RootNamespace>
-    <AssemblyName>FreneticScript</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DocumentationFile>FreneticScript.xml</DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>NET_4_5</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>FreneticScript.xml</DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugSave|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;NET_4_5;SAVE;VALIDATE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;SAVE;VALIDATE</DefineConstants>
     <DocumentationFile>FreneticScript.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="$(SolutionDir)FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandSystem\AbstractCommand.cs" />
-    <Compile Include="CommandSystem\AbstractCommandEntryData.cs" />
-    <Compile Include="CommandSystem\Arguments\Argument.cs" />
-    <Compile Include="CommandSystem\Arguments\ArgumentBit.cs" />
-    <Compile Include="CommandSystem\Arguments\TagArgumentBit.cs" />
-    <Compile Include="CommandSystem\CommandEntry.cs" />
-    <Compile Include="CommandSystem\CommandEvents\ScriptRanPreScriptEvent.cs" />
-    <Compile Include="CommandSystem\CommandEvents\ScriptRanPostScriptEvent.cs" />
-    <Compile Include="CommandSystem\CommandEvents\ScriptRanScriptEvent.cs" />
-    <Compile Include="CommandSystem\CommandQueue.cs" />
-    <Compile Include="CommandSystem\CommandQueueEventArgs.cs" />
-    <Compile Include="CommandSystem\ObjectOperationAttribute.cs" />
-    <Compile Include="CommandSystem\ScriptEngine.cs" />
-    <Compile Include="CommandSystem\CommandScript.cs" />
-    <Compile Include="CommandSystem\CommonCmds\ReloadCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\CleanmemCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\CvarinfoCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\DebugOutputInvalidCommand.cs" />
-    <Compile Include="CommandSystem\CompiledCommandStackEntry.cs" />
-    <Compile Include="CommandSystem\Enumerations.cs" />
-    <Compile Include="CommandSystem\QueueCmds\InjectCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\DebugVarSetCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\EchoCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\HelpCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\NoopCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\SetCommand.cs" />
-    <Compile Include="CommandSystem\CommonCmds\ToggleCommand.cs" />
-    <Compile Include="CommandSystem\ErrorInducedException.cs" />
-    <Compile Include="CommandSystem\ScriptEngineContext.cs" />
-    <Compile Include="CommandSystem\QueueCmds\BreakCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\CallCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\CatchCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\DelayCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\GotoCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\DebugCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\ElseCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\EventCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\ForeachCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\FunctionCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\IfCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\ErrorCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\MarkCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\OnceCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\RepeatCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\AssertCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\RequireCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\RunfileCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\StopCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\TryCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\VarCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\WaitCommand.cs" />
-    <Compile Include="CommandSystem\QueueCmds\WhileCommand.cs" />
-    <Compile Include="CommandSystem\ScriptEvent.cs" />
-    <Compile Include="CommandSystem\Arguments\TextArgumentBit.cs" />
-    <Compile Include="ScriptSystems\CompiledCommandRunnable.cs" />
-    <Compile Include="ScriptSystems\ILGeneratorTracker.cs" />
-    <Compile Include="UtilitySystems\CVar.cs" />
-    <Compile Include="UtilitySystems\CVarSystem.cs" />
-    <Compile Include="UtilitySystems\FreneticScriptUtilities.cs" />
-    <Compile Include="UtilitySystems\ListQueue.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScriptSystems\ArgumentCompiler.cs" />
-    <Compile Include="ScriptSystems\ArgumentParser.cs" />
-    <Compile Include="ScriptSystems\CILAdaptationValues.cs" />
-    <Compile Include="ScriptSystems\ScriptCompiler.cs" />
-    <Compile Include="ScriptSystems\ScriptMetaAttribute.cs" />
-    <Compile Include="ScriptSystems\ScriptParser.cs" />
-    <Compile Include="TagHandlers\HelperBases\FromSavedTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\FunctionTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\SaveTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\NullTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\DynamicTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\BinaryTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\LvarTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\SystemTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\TagTypeBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\TimeTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\IntegerTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\MapTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\NumberTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\TextColorTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\CVarTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\EscapeTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\ListTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\TernaryTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\BooleanTagBase.cs" />
-    <Compile Include="TagHandlers\CommonBases\TextTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\UnescapeTagBase.cs" />
-    <Compile Include="TagHandlers\HelperBases\VarTagBase.cs" />
-    <Compile Include="TagHandlers\ObjectEditSource.cs" />
-    <Compile Include="TagHandlers\Objects\BinaryTag.cs" />
-    <Compile Include="TagHandlers\Objects\CVarTag.cs" />
-    <Compile Include="TagHandlers\Objects\DynamicTag.cs" />
-    <Compile Include="TagHandlers\Objects\IntegerTag.cs" />
-    <Compile Include="TagHandlers\Objects\MapTag.cs" />
-    <Compile Include="TagHandlers\Objects\NullTag.cs" />
-    <Compile Include="TagHandlers\Objects\NumberTag.cs" />
-    <Compile Include="TagHandlers\Objects\ListTag.cs" />
-    <Compile Include="TagHandlers\Objects\FunctionTag.cs" />
-    <Compile Include="TagHandlers\Objects\TagTypeTag.cs" />
-    <Compile Include="TagHandlers\Objects\TextTag.cs" />
-    <Compile Include="TagHandlers\Objects\BooleanTag.cs" />
-    <Compile Include="TagHandlers\Objects\TimeTag.cs" />
-    <Compile Include="TagHandlers\TagBit.cs" />
-    <Compile Include="TagHandlers\TagData.cs" />
-    <Compile Include="TagHandlers\TagForms.cs" />
-    <Compile Include="TagHandlers\TagHelpInfo.cs" />
-    <Compile Include="TagHandlers\ObjectMeta.cs" />
-    <Compile Include="TagHandlers\TagMeta.cs" />
-    <Compile Include="TagHandlers\TagHandler.cs" />
-    <Compile Include="TagHandlers\TagSubHandler.cs" />
-    <Compile Include="TagHandlers\TagType.cs" />
-    <Compile Include="TagHandlers\TagTypes.cs" />
-    <Compile Include="TagHandlers\TemplateObject.cs" />
-    <Compile Include="TagHandlers\TemplateTagBase.cs" />
-    <Compile Include="TagHandlers\Variable.cs" />
-    <Compile Include="UtilitySystems\TextStyle.cs" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj">
-      <Project>{cd58eda9-4d2f-4e27-b88b-f7b96b3410a4}</Project>
-      <Name>FreneticUtilities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

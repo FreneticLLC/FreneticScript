@@ -45,13 +45,7 @@ namespace FreneticScript.ScriptSystems
                 AssemblyName = tname
             };
             AssemblyName asmname = new AssemblyName(tname) { Name = tname };
-            AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
-#if NET_4_5
-                AssemblyBuilderAccess.RunAndCollect
-#else
-                AssemblyBuilderAccess.Run
-#endif
-                );
+            AssemblyBuilder asmbuild = AssemblyBuilder.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             CompiledCommandStackEntry ccse = Created;
             ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
@@ -192,7 +186,7 @@ namespace FreneticScript.ScriptSystems
                     throw new ErrorInducedException("On script line " + ccse.Entries[i].ScriptLine + " (" + ccse.Entries[i].CommandLine + "), compile error (Adapt) occured: " + ex.Message);
                 }
             }
-            ilgen.MarkLabel(ccse.AdaptedILPoints[ccse.AdaptedILPoints.Length - 1]);
+            ilgen.MarkLabel(ccse.AdaptedILPoints[^1]);
             values.MarkCommand(ccse.Entries.Length);
             ilgen.Emit(OpCodes.Ret);
             typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
@@ -581,9 +575,7 @@ namespace FreneticScript.ScriptSystems
                 }
             }
             ilgen.Emit(OpCodes.Ret); // Return.
-#if NET_4_5
             methodbuild_c.SetCustomAttribute(new CustomAttributeBuilder(Ctor_MethodImplAttribute_Options, Input_Params_AggrInline));
-#endif
             tab.GetResultMethod = methodbuild_c;
             tab.CompiledReturnType = prevType;
             toClean.Add(tab);
@@ -620,7 +612,6 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-#if NET_4_5
         /// <summary>
         /// The <see cref="MethodImplAttribute(MethodImplOptions)"/> constructor.
         /// </summary>
@@ -630,7 +621,6 @@ namespace FreneticScript.ScriptSystems
         /// A reusable input object array that contains <see cref="MethodImplOptions.AggressiveInlining"/>.
         /// </summary>
         public static readonly object[] Input_Params_AggrInline = new object[] { MethodImplOptions.AggressiveInlining };
-#endif
         
         /// <summary>
         /// Generates a dynamically callable method for a tag.

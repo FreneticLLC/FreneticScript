@@ -41,7 +41,7 @@ namespace FreneticScript.ScriptSystems
         /// <summary>
         /// The <see cref="StringBuilder.ToString()"/> method.
         /// </summary>
-        public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null);
+        public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
 
         /// <summary>
         /// The <see cref="TextTag(string)"/> constructor.
@@ -110,13 +110,7 @@ namespace FreneticScript.ScriptSystems
         {
             string tname = entry.AssemblyName + "_argument_" + IDINCR++;
             AssemblyName asmname = new AssemblyName(tname) { Name = tname };
-            AssemblyBuilder asmbuild = AppDomain.CurrentDomain.DefineDynamicAssembly(asmname,
-#if NET_4_5
-                    AssemblyBuilderAccess.RunAndCollect
-#else
-                    AssemblyBuilderAccess.Run
-#endif
-                    );
+            AssemblyBuilder asmbuild = AssemblyBuilder.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.RunAndCollect);
             TagReturnType finalReturnType = ReturnType(argument, values);
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(Argument));
@@ -133,7 +127,7 @@ namespace FreneticScript.ScriptSystems
             ilgen.AddCode(OpCodes.Nop, tname, "--- ARGUMENT PARSE ---");
             Type[] fieldTypes = new Type[argument.Bits.Length];
             FieldInfo[] bitFields = new FieldInfo[argument.Bits.Length];
-            Object[] fieldValues = new object[argument.Bits.Length];
+            object[] fieldValues = new object[argument.Bits.Length];
             for (int i = 0; i < argument.Bits.Length; i++)
             {
                 if (argument.Bits[i] is TextArgumentBit textab)
@@ -193,7 +187,7 @@ namespace FreneticScript.ScriptSystems
                 bool hasTag = false;
                 for (int i = 0; i < argument.Bits.Length; i++)
                 {
-                    if (argument.Bits[i] is TagArgumentBit tab)
+                    if (argument.Bits[i] is TagArgumentBit)
                     {
                         hasTag = true;
                         break;

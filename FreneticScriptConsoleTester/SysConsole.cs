@@ -24,6 +24,8 @@ namespace FreneticScriptConsoleTester
 
         static Thread ConsoleOutputThread;
 
+        static readonly CancellationTokenSource ConsoleCancelToken = new CancellationTokenSource();
+
         /// <summary>
         /// Closes the SysConsole.
         /// </summary>
@@ -33,7 +35,7 @@ namespace FreneticScriptConsoleTester
             {
                 lock (WriteLock)
                 {
-                    ConsoleOutputThread.Abort();
+                    ConsoleCancelToken.Cancel();
                     if (Waiting.Count > 0)
                     {
                         foreach (KeyValuePair<string, string> message in Waiting)
@@ -71,6 +73,10 @@ namespace FreneticScriptConsoleTester
         {
             while (true)
             {
+                if (ConsoleCancelToken.IsCancellationRequested)
+                {
+                    return;
+                }
                 List<KeyValuePair<string, string>> twaiting;
                 lock (ConsoleLock)
                 {
@@ -105,7 +111,7 @@ namespace FreneticScriptConsoleTester
         /// </summary>
         public static void FixTitle()
         {
-            Title = "FreneticScriptConsoleTest / " + Process.GetCurrentProcess().Id.ToString();
+            Title = "FreneticScriptConsoleTest / " + Environment.ProcessId.ToString();
             Console.Title = Title;
         }
 
@@ -273,7 +279,7 @@ namespace FreneticScriptConsoleTester
         /// <returns>The time as a string.</returns>
         public static string DateTimeToString(DateTime dt)
         {
-            string utcoffset = "";
+            string utcoffset;
             DateTime UTC = dt.ToUniversalTime();
             if (dt.CompareTo(UTC) < 0)
             {
@@ -333,7 +339,7 @@ namespace FreneticScriptConsoleTester
                 OutputNames[(int)ot] + "^r^7] " + OutputColors[(int)ot] + text, bcolor ?? OutputColors[(int)ot]);
         }
 
-        static string[] OutputColors = new string[]
+        static readonly string[] OutputColors = new string[]
         {
             "^r^7ERROR:OUTPUTTYPE=NONE?",
             "^r^7",
@@ -345,7 +351,7 @@ namespace FreneticScriptConsoleTester
             "^r^2"
         };
 
-        static string[] OutputNames = new string[]
+        static readonly string[] OutputNames = new string[]
         {
             "NONE",
             "INFO/CLIENT",
