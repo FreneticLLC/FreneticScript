@@ -164,7 +164,7 @@ namespace FreneticScript.ScriptSystems
             }
             else if (code == OpCodes.Call || code == OpCodes.Callvirt)
             {
-                if (!(val is MethodInfo method))
+                if (val is not MethodInfo method)
                 {
                     Console.WriteLine("Invalid call (code " + code + ", to object " + val + ") - not a method reference");
                 }
@@ -185,7 +185,7 @@ namespace FreneticScript.ScriptSystems
             }
             else if (code == OpCodes.Newobj)
             {
-                if (!(val is ConstructorInfo method))
+                if (val is not ConstructorInfo method)
                 {
                     Console.WriteLine("Invalid NEWOBJ (code " + code + ", to object " + val + ") - not a constructor reference");
                 }

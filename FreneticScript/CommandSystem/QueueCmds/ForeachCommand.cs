@@ -156,6 +156,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadLocalVariable(lvar_ind_loc);
                 values.ILGen.Emit(OpCodes.Call, db ? TryForeachCILMethod : TryForeachCILMethodNoDebug);
                 values.ILGen.Emit(OpCodes.Brtrue, values.Entry.AdaptedILPoints[cent.BlockStart]);
+                return;
             }
             string arg = cent.Arguments[0].ToString();
             if (arg == "stop")
@@ -211,6 +212,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 SingleCILVariable locVar = cent.VarLookup[cent.GetSaveNameNoParse("foreach_value")];
                 values.LoadQueue();
                 values.LoadEntry(entry);
+                values.LoadRunnable();
                 values.ILGen.Emit(OpCodes.Call, CreateListItemMethod);
                 values.ILGen.Emit(OpCodes.Stfld, locVar.Field);
                 values.LoadLocalVariable(locVar.Index);

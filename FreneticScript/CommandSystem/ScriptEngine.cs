@@ -270,7 +270,7 @@ namespace FreneticScript.CommandSystem
                     }
                     if (trimmed.StartsWith(PREPROCESSOR_PREFIX))
                     {
-                        string[] args = trimmed.Substring(PREPROCESSOR_PREFIX.Length).SplitFast('=');
+                        string[] args = trimmed[PREPROCESSOR_PREFIX.Length..].SplitFast('=');
                         string mode = args[0].Trim().ToLowerFast();
                         if (mode == "autorun")
                         {

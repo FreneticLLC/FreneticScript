@@ -165,9 +165,9 @@ namespace FreneticScript.CommandSystem
         /// Gets the follower (callback) entry for an entry.
         /// </summary>
         /// <param name="entry">The entry.</param>
-        public CommandEntry GetFollower(CommandEntry entry)
+        public static CommandEntry GetFollower(CommandEntry entry)
         {
-            return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, new Argument[] { new Argument() { Bits = new ArgumentBit[] {} } },
+            return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, new Argument[] { new Argument() { Bits = Array.Empty<ArgumentBit>() } },
                 entry.Name, CommandPrefix.CALLBACK, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
@@ -246,7 +246,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         /// <param name="defaultName">The default name (or null if none).</param>
-        public int GetSaveLoc(CILAdaptationValues values, int entry, string defaultName = null)
+        public static int GetSaveLoc(CILAdaptationValues values, int entry, string defaultName = null)
         {
             CommandEntry cent = values.CommandAt(entry);
             string sn = values.Entry.Entries[cent.BlockStart - 1].GetSaveNameNoParse(defaultName);

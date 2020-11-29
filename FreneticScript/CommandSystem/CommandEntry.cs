@@ -342,7 +342,7 @@ namespace FreneticScript.CommandSystem
                 result.Append(GetArgument(queue, i));
                 if (i + 1 < Arguments.Length)
                 {
-                    result.Append(" ");
+                    result.Append(' ');
                 }
             }
             return result.ToString();
@@ -361,7 +361,7 @@ namespace FreneticScript.CommandSystem
                 result.Append(Arguments[i]);
                 if (i + 1 < Arguments.Length)
                 {
-                    result.Append(" ");
+                    result.Append(' ');
                 }
             }
             return result.ToString();

@@ -56,7 +56,7 @@ namespace FreneticScript.ScriptSystems
                         }
                         if (x < commands.Length)
                         {
-                            commands = commands.Substring(0, i) + commands.Substring(x);
+                            commands = commands.Substring(0, i) + commands[x..];
                             i--;
                             continue;
                         }
@@ -78,7 +78,7 @@ namespace FreneticScript.ScriptSystems
                         }
                         if (x + 1 < commands.Length)
                         {
-                            commands = commands.Substring(0, i) + commands.Substring(x + 1);
+                            commands = commands.Substring(0, i) + commands[(x + 1)..];
                         }
                         else
                         {
@@ -136,8 +136,8 @@ namespace FreneticScript.ScriptSystems
                         string funcText = commands.Substring(funcStart, i - funcStart - 1);
                         anons++;
                         commandConstruct.Append("<function[anon|");
-                        commandConstruct.Append(EscapeTagBase.Escape(name + "#anon:" + anons)).Append("|");
-                        commandConstruct.Append(funcLine).Append("|");
+                        commandConstruct.Append(EscapeTagBase.Escape(name + "#anon:" + anons)).Append('|');
+                        commandConstruct.Append(funcLine).Append('|');
                         commandConstruct.Append(EscapeTagBase.Escape(funcText));
                         commandConstruct.Append("]>");
                         continue;
@@ -222,13 +222,13 @@ namespace FreneticScript.ScriptSystems
         /// <param name="system">The command system to create this block inside.</param>
         /// <param name="tabs">How far out tabulation should go.</param>
         /// <param name="had_error">Whether there was a compile error.</param>
-        /// <param name="istart">The starting index.</param>
+        /// <param name="indexStart">The starting index.</param>
         /// <returns>A list of entries with blocks separated.</returns>
-        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, ScriptEngine system, string tabs, int istart, out bool had_error)
+        public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, ScriptEngine system, string tabs, int indexStart, out bool had_error)
         {
-            List<CommandEntry> toret = new List<CommandEntry>();
-            List<string> Temp = null;
-            List<int> Temp2 = null;
+            List<CommandEntry> outEntryList = new List<CommandEntry>();
+            List<string> fromArgsHelper = null;
+            List<int> lineArgsHelper = null;
             int blocks = 0;
             for (int i = 0; i < from.Count; i++)
             {
@@ -237,13 +237,13 @@ namespace FreneticScript.ScriptSystems
                     blocks++;
                     if (blocks == 1)
                     {
-                        Temp = new List<string>();
-                        Temp2 = new List<int>();
+                        fromArgsHelper = new List<string>();
+                        lineArgsHelper = new List<int>();
                     }
                     else
                     {
-                        Temp.Add("{");
-                        Temp2.Add(lines[i]);
+                        fromArgsHelper.Add("{");
+                        lineArgsHelper.Add(lines[i]);
                     }
                 }
                 else if (from[i] == "}")
@@ -251,38 +251,38 @@ namespace FreneticScript.ScriptSystems
                     blocks--;
                     if (blocks == 0)
                     {
-                        if (toret.Count == 0)
+                        if (outEntryList.Count == 0)
                         {
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, entry, system, tabs + "    ", istart, out bool err);
+                            List<CommandEntry> block = CreateBlock(name, lineArgsHelper, fromArgsHelper, entry, system, tabs + "    ", indexStart, out bool err);
                             if (err)
                             {
                                 had_error = true;
                                 return block;
                             }
-                            toret.AddRange(block);
-                            istart += block.Count;
+                            outEntryList.AddRange(block);
+                            indexStart += block.Count;
                         }
                         else
                         {
-                            CommandEntry cent = toret[toret.Count - 1];
-                            List<CommandEntry> block = CreateBlock(name, Temp2, Temp, cent, system, tabs + "    ", istart, out bool err);
+                            CommandEntry cent = outEntryList[^1];
+                            List<CommandEntry> block = CreateBlock(name, lineArgsHelper, fromArgsHelper, cent, system, tabs + "    ", indexStart, out bool err);
                             if (err)
                             {
                                 had_error = true;
                                 return block;
                             }
-                            cent.BlockStart = istart;
-                            istart += block.Count;
-                            cent.BlockEnd = istart - 1;
-                            List<CommandEntry> toinj = new List<CommandEntry>(block);
+                            cent.BlockStart = indexStart;
+                            indexStart += block.Count;
+                            cent.BlockEnd = indexStart - 1;
+                            List<CommandEntry> blockToInject = new List<CommandEntry>(block);
                             int bc = block.Count;
                             if (cent.Command != null)
                             {
-                                cent.Command.AdaptBlockFollowers(cent, toinj, block);
+                                cent.Command.AdaptBlockFollowers(cent, blockToInject, block);
                             }
-                            istart += (toinj.Count - bc);
+                            indexStart += (blockToInject.Count - bc);
                             cent.InnerCommandBlock = block.ToArray();
-                            toret.AddRange(toinj);
+                            outEntryList.AddRange(blockToInject);
                         }
                     }
                     else if (blocks < 0)
@@ -291,44 +291,44 @@ namespace FreneticScript.ScriptSystems
                     }
                     else
                     {
-                        Temp.Add("}");
-                        Temp2.Add(lines[i]);
+                        fromArgsHelper.Add("}");
+                        lineArgsHelper.Add(lines[i]);
                     }
                 }
                 else if (blocks > 0)
                 {
-                    Temp.Add(from[i]);
-                    Temp2.Add(lines[i]);
+                    fromArgsHelper.Add(from[i]);
+                    lineArgsHelper.Add(lines[i]);
                 }
                 else
                 {
                     CommandEntry centry = EntryFromInput(from[i], system, name, lines[i], tabs);
                     if (centry != null)
                     {
-                        istart++;
-                        toret.Add(centry);
+                        indexStart++;
+                        outEntryList.Add(centry);
                     }
                 }
             }
-            for (int i = 0; i < toret.Count; i++)
+            for (int i = 0; i < outEntryList.Count; i++)
             {
-                if (toret[i].Command != null)
+                if (outEntryList[i].Command != null)
                 {
-                    string msg = toret[i].Command.TestForValidity(toret[i]);
+                    string msg = outEntryList[i].Command.TestForValidity(outEntryList[i]);
                     if (msg != null)
                     {
-                        string fullmsg = "FAILED TO COMPILE SCRIPT '" + name + "': (line " + toret[i].ScriptLine + "): " + msg;
+                        string fullmsg = $"FAILED TO COMPILE SCRIPT '{name}': (line {outEntryList[i].ScriptLine}): {msg}";
                         system.Context.BadOutput(fullmsg);
                         had_error = true;
-                        toret.Clear();
+                        outEntryList.Clear();
                         // TODO: Maybe throw an exception?
-                        toret.Add(CreateErrorOutputEntry(fullmsg, system, name, tabs));
-                        return toret;
+                        outEntryList.Add(CreateErrorOutputEntry(fullmsg, system, name, tabs));
+                        return outEntryList;
                     }
                 }
             }
             had_error = false;
-            return toret;
+            return outEntryList;
         }
 
 
@@ -353,7 +353,7 @@ namespace FreneticScript.ScriptSystems
                 }
                 if (command.StartsWith("/"))
                 {
-                    command = command.Substring(1);
+                    command = command[1..];
                 }
                 command = command.Replace('\0', ' ');
                 List<Argument> args = new List<Argument>();
@@ -377,13 +377,13 @@ namespace FreneticScript.ScriptSystems
                     }
                     else if (command[i] == '\n' && !quoted)
                     {
-                        command = (i + 1 < command.Length) ? command.Substring(0, i) + command.Substring(i + 1) : command.Substring(0, i);
+                        command = (i + 1 < command.Length) ? command.Substring(0, i) + command[(i + 1)..] : command.Substring(0, i);
                     }
                     else if (!quoted && command[i] == ' ')
                     {
                         if (i - start > 0)
                         {
-                            string arg = command.Substring(start, i - start).Trim().Replace('\'', '"').Replace("\"", "");
+                            string arg = command[start..i].Trim().Replace('\'', '"').Replace("\"", "");
                             args.Add(ArgumentParser.SplitToArgument(system, arg, thisArgQuoted));
                             start = i + 1;
                             thisArgQuoted = false;
@@ -396,7 +396,7 @@ namespace FreneticScript.ScriptSystems
                 }
                 if (command.Length - start > 0)
                 {
-                    string arg = command.Substring(start, command.Length - start).Trim().Replace('\'', '"').Replace("\"", "");
+                    string arg = command[start..].Trim().Replace('\'', '"').Replace("\"", "");
                     args.Add(ArgumentParser.SplitToArgument(system, arg, thisArgQuoted));
                 }
                 if (args.Count == 0)
@@ -431,7 +431,7 @@ namespace FreneticScript.ScriptSystems
                     prefix = CommandPrefixHelpers.ForCharacter(BaseCommand[0]);
                     if (prefix != CommandPrefix.NONE)
                     {
-                        BaseCommand = BaseCommand.Substring(1);
+                        BaseCommand = BaseCommand[1..];
                     }
                 }
                 string BaseCommandLow = BaseCommand.ToLowerFast();
@@ -440,7 +440,7 @@ namespace FreneticScript.ScriptSystems
                 {
                     if (!args[i].WasQuoted && args[i].ToString().StartsWith("--"))
                     {
-                        nameds[args[i].ToString().Substring(2).ToLowerFast()] = args[i + 1];
+                        nameds[args[i].ToString()[2..].ToLowerFast()] = args[i + 1];
                         args.RemoveRange(i, 2);
                         i -= 2;
                     }

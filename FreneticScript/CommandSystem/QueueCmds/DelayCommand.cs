@@ -87,6 +87,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
+            if (entry.IsCallback)
+            {
+                return;
+            }
             if (entry.InnerCommandBlock == null)
             {
                 queue.HandleError(entry, "No commands follow!");
