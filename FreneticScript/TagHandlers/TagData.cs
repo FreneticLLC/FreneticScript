@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public static TagData GenerateSimpleErrorTagData()
         {
-            return new TagData(null, new Argument[0], new TagBit[0], null, DebugMode.FULL, (s) => throw new ErrorInducedException("Script error occured: " + s), null, null);
+            return new TagData(null, Array.Empty<Argument>(), Array.Empty<TagBit>(), null, DebugMode.FULL, (s) => throw new ErrorInducedException("Script error occured: " + s), null, null);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace FreneticScript.TagHandlers
                 sb.Append(Bits[i].ToString());
                 if (i + 1 < Bits.Length)
                 {
-                    sb.Append(".");
+                    sb.Append('.');
                 }
             }
             return sb.ToString();
