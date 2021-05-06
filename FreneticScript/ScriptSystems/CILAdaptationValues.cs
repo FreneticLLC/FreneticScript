@@ -6,16 +6,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Diagnostics;
-using FreneticScript.TagHandlers;
+using System.Text;
+using System.Threading.Tasks;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
-using FreneticUtilities.FreneticExtensions;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScript.ScriptSystems
 {

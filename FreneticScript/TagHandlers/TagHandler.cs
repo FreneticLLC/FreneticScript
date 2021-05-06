@@ -7,16 +7,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using FreneticScript.TagHandlers.CommonBases;
-using FreneticScript.TagHandlers.HelperBases;
-using FreneticScript.CommandSystem;
-using FreneticScript.CommandSystem.Arguments;
-using FreneticScript.TagHandlers.Objects;
-using FreneticScript.ScriptSystems;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Text;
 using FreneticUtilities.FreneticExtensions;
+using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
+using FreneticScript.ScriptSystems;
+using FreneticScript.TagHandlers.CommonBases;
+using FreneticScript.TagHandlers.HelperBases;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {

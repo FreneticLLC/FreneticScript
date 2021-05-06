@@ -4,10 +4,14 @@
 // See README.md or LICENSE.txt in the FreneticScript source root for the contents of the license.
 //
 
-using System.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information

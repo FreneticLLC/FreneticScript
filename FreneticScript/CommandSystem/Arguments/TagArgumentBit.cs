@@ -7,15 +7,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using System.Text;
+using FreneticScript.ScriptSystems;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.CommonBases;
 using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.TagHandlers.Objects;
-using FreneticScript.TagHandlers;
-using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.CommandSystem.Arguments
 {

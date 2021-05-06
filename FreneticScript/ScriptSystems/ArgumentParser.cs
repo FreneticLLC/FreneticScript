@@ -9,10 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
-using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.ScriptSystems
 {

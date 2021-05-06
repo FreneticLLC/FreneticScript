@@ -7,15 +7,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Runtime.CompilerServices;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Text;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
-using FreneticScript.ScriptSystems;
 using FreneticScript.CommandSystem.QueueCmds;
-using FreneticUtilities.FreneticExtensions;
+using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers.Objects
 {

@@ -9,10 +9,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript;
-using FreneticScript.CommandSystem;
 using System.Threading;
 using System.Threading.Tasks;
+using FreneticScript;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScriptConsoleTester
 {

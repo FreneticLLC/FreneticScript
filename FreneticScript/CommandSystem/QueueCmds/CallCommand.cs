@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using FreneticScript.TagHandlers;
-using FreneticScript.TagHandlers.Objects;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Text;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.ScriptSystems;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {

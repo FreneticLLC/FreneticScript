@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using FreneticScript.TagHandlers;
+using System.Text;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.ScriptSystems;
+using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem

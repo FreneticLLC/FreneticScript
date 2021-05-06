@@ -8,14 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.CommandSystem.QueueCmds;
-using FreneticScript.CommandSystem.CommonCmds;
-using FreneticScript.TagHandlers;
-using FreneticScript.CommandSystem.CommandEvents;
-using FreneticScript.ScriptSystems;
 using System.Threading;
 using FreneticUtilities.FreneticExtensions;
 using FreneticUtilities.FreneticToolkit;
+using FreneticScript.CommandSystem.CommandEvents;
+using FreneticScript.CommandSystem.CommonCmds;
+using FreneticScript.CommandSystem.QueueCmds;
+using FreneticScript.ScriptSystems;
+using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem
 {

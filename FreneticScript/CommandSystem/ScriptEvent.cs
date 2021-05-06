@@ -5,14 +5,14 @@
 //
 
 using System;
-using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.TagHandlers;
-using FreneticScript.TagHandlers.Objects;
+using System.Threading;
 using FreneticUtilities.FreneticExtensions;
 using FreneticUtilities.FreneticToolkit;
+using FreneticScript.TagHandlers;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem
 {

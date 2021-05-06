@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.CommandSystem;
 using FreneticUtilities.FreneticExtensions;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript
 {

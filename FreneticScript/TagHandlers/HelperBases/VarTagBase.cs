@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.ScriptSystems;
-using FreneticUtilities.FreneticExtensions;
+using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {

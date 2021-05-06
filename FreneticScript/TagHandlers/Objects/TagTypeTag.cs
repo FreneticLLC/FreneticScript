@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.CompilerServices;
-using FreneticScript.CommandSystem;
+using System.Text;
 using FreneticUtilities.FreneticExtensions;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {

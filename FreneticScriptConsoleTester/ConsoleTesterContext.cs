@@ -6,14 +6,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticToolkit;
 using FreneticScript;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
-using System.IO;
-using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScriptConsoleTester
 {

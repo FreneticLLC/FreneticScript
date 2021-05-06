@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using FreneticUtilities.FreneticExtensions;
+using FreneticScript.CommandSystem;
+using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers.CommonBases;
 using FreneticScript.TagHandlers.HelperBases;
-using FreneticScript.CommandSystem.Arguments;
-using FreneticScript.CommandSystem;
-using System.Runtime.CompilerServices;
-using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
 {

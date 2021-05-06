@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.CompilerServices;
+using System.Text;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 

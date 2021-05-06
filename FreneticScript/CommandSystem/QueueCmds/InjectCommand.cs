@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
-using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
