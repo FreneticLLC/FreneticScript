@@ -5,29 +5,24 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>FreneticScript.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DocumentationFile>FreneticScript.xml</DocumentationFile>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>FreneticScript.xml</DocumentationFile>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugSave|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;SAVE;VALIDATE</DefineConstants>
-    <DocumentationFile>FreneticScript.xml</DocumentationFile>
-    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
 </Project>
