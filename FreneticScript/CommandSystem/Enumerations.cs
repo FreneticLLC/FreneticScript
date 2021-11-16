@@ -12,26 +12,16 @@ using System.Threading.Tasks;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// Enumeration of modes describing the way a command saves.
-    /// </summary>
+    /// <summary>Enumeration of modes describing the way a command saves.</summary>
     public enum CommandSaveMode
     {
-        /// <summary>
-        /// The command does not save.
-        /// </summary>
+        /// <summary>The command does not save.</summary>
         NO_SAVE = 0,
-        /// <summary>
-        /// The command can only save when a name is given.
-        /// </summary>
+        /// <summary>The command can only save when a name is given.</summary>
         WHEN_NAME_SPECIFIED = 1,
-        /// <summary>
-        /// The command has a default save name value.
-        /// </summary>
+        /// <summary>The command has a default save name value.</summary>
         DEFAULT_NAME = 2,
-        /// <summary>
-        /// The command must have a specified save name.
-        /// </summary>
+        /// <summary>The command must have a specified save name.</summary>
         MUST_SPECIFY = 3
     }
 
@@ -41,28 +31,18 @@ namespace FreneticScript.CommandSystem
     /// </summary>
     public enum DebugMode : byte
     {
-        /// <summary>
-        /// Debug everything.
-        /// </summary>
+        /// <summary>Debug everything.</summary>
         FULL = 1,
-        /// <summary>
-        /// Only debug errors.
-        /// </summary>
+        /// <summary>Only debug errors.</summary>
         MINIMAL = 2,
-        /// <summary>
-        /// Debug nothing.
-        /// </summary>
+        /// <summary>Debug nothing.</summary>
         NONE = 3
     }
 
-    /// <summary>
-    /// Extension methods for DebugMode.
-    /// </summary>
+    /// <summary>Extension methods for DebugMode.</summary>
     public static class DebugModeExtensions
     {
-        /// <summary>
-        /// Whether this mode should show output of the specified mode.
-        /// </summary>
+        /// <summary>Whether this mode should show output of the specified mode.</summary>
         /// <param name="mode">This mode.</param>
         /// <param name="testShowMode">The specified mode to compare with.</param>
         /// <returns>Whether it should show.</returns>
@@ -71,9 +51,7 @@ namespace FreneticScript.CommandSystem
             return mode <= testShowMode;
         }
 
-        /// <summary>
-        /// Whether this mode should show less output than the specified mode.
-        /// </summary>
+        /// <summary>Whether this mode should show less output than the specified mode.</summary>
         /// <param name="mode">This mode.</param>
         /// <param name="testShowMode">The specified mode to compare with.</param>
         /// <returns>Whether it should show less output.</returns>
@@ -83,92 +61,54 @@ namespace FreneticScript.CommandSystem
         }
     }
 
-    /// <summary>
-    /// Represents the return value from a command stack run call.
-    /// </summary>
+    /// <summary>Represents the return value from a command stack run call.</summary>
     public enum CommandStackRetVal : byte
     {
-        /// <summary>
-        /// Tells the queue to continue.
-        /// </summary>
+        /// <summary>Tells the queue to continue.</summary>
         CONTINUE = 1,
-        /// <summary>
-        /// Tells the queue to wait a while.
-        /// </summary>
+        /// <summary>Tells the queue to wait a while.</summary>
         BREAK = 2,
-        /// <summary>
-        /// Tells the queue to stop entirely.
-        /// </summary>
+        /// <summary>Tells the queue to stop entirely.</summary>
         STOP = 3
     }
 
-    /// <summary>
-    /// Command output message types.
-    /// </summary>
+    /// <summary>Command output message types.</summary>
     public enum MessageType : int
     {
-        /// <summary>
-        /// No output type, null, 0.
-        /// </summary>
+        /// <summary>No output type, null, 0.</summary>
         NUL = 0,
-        /// <summary>
-        /// Bad output type, 1.
-        /// </summary>
+        /// <summary>Bad output type, 1.</summary>
         BAD = 1,
-        /// <summary>
-        /// Good output type, 2.
-        /// </summary>
+        /// <summary>Good output type, 2.</summary>
         GOOD = 2,
-        /// <summary>
-        /// Informational output type, 3.
-        /// </summary>
+        /// <summary>Informational output type, 3.</summary>
         INFO = 3
     }
 
-    /// <summary>
-    /// Represents the types of command prefixing symbol.
-    /// </summary>
+    /// <summary>Represents the types of command prefixing symbol.</summary>
     public enum CommandPrefix
     {
-        /// <summary>
-        /// No prefix.
-        /// </summary>
+        /// <summary>No prefix.</summary>
         NONE = 0,
-        /// <summary>
-        /// Add to a command value, or temporarily enable.
-        /// </summary>
+        /// <summary>Add to a command value, or temporarily enable.</summary>
         ADD = 1,
-        /// <summary>
-        /// Subtract from a command value, or end a temporary enable.
-        /// </summary>
+        /// <summary>Subtract from a command value, or end a temporary enable.</summary>
         SUBTRACT = 2,
-        /// <summary>
-        /// Flip a command value.
-        /// </summary>
+        /// <summary>Flip a command value.</summary>
         FLIP = 3,
-        /// <summary>
-        /// Wait for the command to finish.
-        /// </summary>
+        /// <summary>Wait for the command to finish.</summary>
         WAIT = 4,
-        /// <summary>
-        /// Special internal marker: this command is a callback.
-        /// </summary>
+        /// <summary>Special internal marker: this command is a callback.</summary>
         CALLBACK = 5
     }
 
-    /// <summary>
-    /// Helpers for command prefixes.
-    /// </summary>
+    /// <summary>Helpers for command prefixes.</summary>
     public static class CommandPrefixHelpers
     {
-        /// <summary>
-        /// Standard prefix characters, starting at ID 1.
-        /// </summary>
+        /// <summary>Standard prefix characters, starting at ID 1.</summary>
         public const string PREFIXES = "+-!&";
 
-        /// <summary>
-        /// An array mapping ASCII characters to prefix values.
-        /// </summary>
+        /// <summary>An array mapping ASCII characters to prefix values.</summary>
         public static readonly CommandPrefix[] BY_CHAR = new CommandPrefix[128];
 
         static CommandPrefixHelpers()
@@ -179,9 +119,7 @@ namespace FreneticScript.CommandSystem
             BY_CHAR['&'] = CommandPrefix.WAIT;
         }
 
-        /// <summary>
-        /// Gets the <see cref="CommandPrefix"/> for a character. Returns <see cref="CommandPrefix.NONE"/> if the character is not a prefix character.
-        /// </summary>
+        /// <summary>Gets the <see cref="CommandPrefix"/> for a character. Returns <see cref="CommandPrefix.NONE"/> if the character is not a prefix character.</summary>
         /// <param name="character">The character.</param>
         /// <returns>The prefix.</returns>
         public static CommandPrefix ForCharacter(char character)
@@ -189,9 +127,7 @@ namespace FreneticScript.CommandSystem
             return character < 128 ? BY_CHAR[character] : CommandPrefix.NONE;
         }
 
-        /// <summary>
-        /// Returns the character for the prefix.
-        /// </summary>
+        /// <summary>Returns the character for the prefix.</summary>
         /// <param name="prefix">The prefix.</param>
         /// <returns>The character.</returns>
         public static char Character(this CommandPrefix prefix)
@@ -200,9 +136,7 @@ namespace FreneticScript.CommandSystem
         }
     }
 
-    /// <summary>
-    /// Represents the types of object operation methods.
-    /// </summary>
+    /// <summary>Represents the types of object operation methods.</summary>
     public enum ObjectOperation : int
     {
         /// <summary>

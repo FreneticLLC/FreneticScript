@@ -16,16 +16,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Wait command.
-    /// </summary>
+    /// <summary>The Wait command.</summary>
     public class WaitCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Constructs the wait command.
-        /// </summary>
+        /// <summary>Constructs the wait command.</summary>
         public WaitCommand()
         {
             Name = "wait";
@@ -41,9 +37,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -52,9 +46,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Ret);
         }
 
-        /// <summary>
-        /// Converts a string to a float.
-        /// </summary>
+        /// <summary>Converts a string to a float.</summary>
         /// <param name="input">The input string.</param>
         /// <returns>The float.</returns>
         public static float StringToFloat(string input)
@@ -63,9 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return output;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

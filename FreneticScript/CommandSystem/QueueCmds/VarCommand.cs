@@ -17,16 +17,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The var command.
-    /// </summary>
+    /// <summary>The var command.</summary>
     public class VarCommand : AbstractCommand
     {
         // TODO: Meta
 
-        /// <summary>
-        /// Construct the var command.
-        /// </summary>
+        /// <summary>Construct the var command.</summary>
         public VarCommand()
         {
             Name = "var";
@@ -37,9 +33,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 5;
         }
 
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -74,9 +68,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.AddVariable(larg, t);
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -123,14 +115,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// References <see cref="DebugHelper(TemplateObject, string, string, CommandQueue, CommandEntry)"/>.
-        /// </summary>
+        /// <summary>References <see cref="DebugHelper(TemplateObject, string, string, CommandQueue, CommandEntry)"/>.</summary>
         public static MethodInfo Method_DebugHelper = typeof(VarCommand).GetMethod(nameof(DebugHelper));
 
-        /// <summary>
-        /// Helps debug output for the var command.
-        /// </summary>
+        /// <summary>Helps debug output for the var command.</summary>
         /// <param name="res">The object saved as a var.</param>
         /// <param name="varName">The variable name stored into.</param>
         /// <param name="typeName">The variable type name.</param>
@@ -146,9 +134,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

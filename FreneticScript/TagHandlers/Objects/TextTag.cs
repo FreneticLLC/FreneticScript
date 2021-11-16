@@ -14,62 +14,46 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents text as a usable tag.
-    /// </summary>
+    /// <summary>Represents text as a usable tag.</summary>
     [ObjectMeta(Name = TextTag.TYPE, SubTypeName = null, Group = "", Description = "Represents any text.",
         Others = new string[] { "<@link explanation Text Tags>What are text tags?<@/link>" })] // Not sure about "<@link>" format.
     public class TextTag : TemplateObject
     {
-        /// <summary>
-        /// An empty text tag.
-        /// </summary>
+        /// <summary>An empty text tag.</summary>
         public static readonly TextTag EMPTY = new TextTag("");
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Text;
         }
 
-        /// <summary>
-        /// The text this TextTag represents.
-        /// </summary>
+        /// <summary>The text this TextTag represents.</summary>
         public string Internal = null;
 
-        /// <summary>
-        /// Constructs a text tag.
-        /// </summary>
+        /// <summary>Constructs a text tag.</summary>
         /// <param name="_text">The text to construct it from.</param>
         public TextTag(string _text)
         {
             Internal = _text;
         }
 
-        /// <summary>
-        /// Helper validator to validate an argument as a text tag.
-        /// </summary>
+        /// <summary>Helper validator to validate an argument as a text tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
             validator.ObjectValue = new TextTag(validator.ObjectValue.ToString());
         }
 
-        /// <summary>
-        /// Converts a template object to a text tag.
-        /// </summary>
+        /// <summary>Converts a template object to a text tag.</summary>
         /// <param name="text">The text input.</param>
         /// <returns>A valid text tag.</returns>
         public static TextTag For(TemplateObject text)
@@ -77,9 +61,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new TextTag(text.ToString());
         }
 
-        /// <summary>
-        /// Creates a TextTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a TextTag for the given input data.</summary>
         /// <param name="data">The tag data.</param>
         /// <param name="text">The text input.</param>
         /// <returns>A valid text tag.</returns>
@@ -88,9 +70,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new TextTag(text.ToString());
         }
 
-        /// <summary>
-        /// The TextTag type.
-        /// </summary>
+        /// <summary>The TextTag type.</summary>
         public const string TYPE = "text";
 
 #pragma warning disable 1591
@@ -173,7 +153,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new TextTag(obj.Internal.ToLowerFast());
         }
 
-        [TagMeta(TagType = TYPE, Name = "to_list_of_characters", Group = "Text Modification", ReturnType = ListTag.TYPE, 
+        [TagMeta(TagType = TYPE, Name = "to_list_of_characters", Group = "Text Modification", ReturnType = ListTag.TYPE,
             Returns = "The text as a list of characters.", Examples = new string[] { "'alpha' .to_list_of_characters returns 'a|l|p|h|a'." },
             Others = new string[] { "Can be reverted via <@link tag ListTag.unseparated>ListTag.unseparated<@/link>." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -189,7 +169,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "replace", Group = "Text Modification", ReturnType = TextTag.TYPE,
-            Returns = "The text with all instances of the first text replaced with the second.", 
+            Returns = "The text with all instances of the first text replaced with the second.",
             Examples = new string[] { "'alpha' .replace[a|b] returns 'blphb'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TextTag Tag_Replace(TextTag obj, TagData data)
@@ -354,19 +334,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-        
-        /// <summary>
-        /// Converts the text tag to a string by returning the internal text.
-        /// </summary>
+
+        /// <summary>Converts the text tag to a string by returning the internal text.</summary>
         /// <returns>A string representation of this text tag.</returns>
         public override string ToString()
         {
             return Internal;
         }
 
-        /// <summary>
-        /// Adds a value to the object.
-        /// </summary>
+        /// <summary>Adds a value to the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to add.</param>
         [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]

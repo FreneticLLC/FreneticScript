@@ -18,75 +18,49 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// Represents a set of commands to be run, and related information.
-    /// </summary>
+    /// <summary>Represents a set of commands to be run, and related information.</summary>
     public class CommandQueue
     {
-        /// <summary>
-        /// The current stack of all command execution data.
-        /// </summary>
+        /// <summary>The current stack of all command execution data.</summary>
         public Stack<CompiledCommandRunnable> RunningStack = new Stack<CompiledCommandRunnable>();
 
-        /// <summary>
-        /// Represents the <see cref="CommandQueue.CurrentRunnable"/> field.
-        /// </summary>
+        /// <summary>Represents the <see cref="CommandQueue.CurrentRunnable"/> field.</summary>
         public static FieldInfo COMMANDQUEUE_CURRENTRUNNABLE = typeof(CommandQueue).GetField(nameof(CurrentRunnable));
 
-        /// <summary>
-        /// Represents the <see cref="GetTagData"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="GetTagData"/> method.</summary>
         public static MethodInfo COMMANDQUEUE_GETTAGDATA = typeof(CommandQueue).GetMethod(nameof(GetTagData));
 
-        /// <summary>
-        /// The current command runnable being processed.
-        /// </summary>
+        /// <summary>The current command runnable being processed.</summary>
         public CompiledCommandRunnable CurrentRunnable;
-        
+
         /// <summary>
         /// Whether the queue can be delayed (EG, via a WAIT command).
         /// Almost always true.
         /// </summary>
         public bool Delayable = true;
 
-        /// <summary>
-        /// How long until the queue may continue.
-        /// </summary>
+        /// <summary>How long until the queue may continue.</summary>
         public double Wait = 0;
 
-        /// <summary>
-        /// Whether the queue is running.
-        /// </summary>
+        /// <summary>Whether the queue is running.</summary>
         public bool Running = false;
 
-        /// <summary>
-        /// The command system running this queue.
-        /// </summary>
+        /// <summary>The command system running this queue.</summary>
         public ScriptEngine Engine;
 
-        /// <summary>
-        /// The script that was used to build this queue.
-        /// </summary>
+        /// <summary>The script that was used to build this queue.</summary>
         public CommandScript Script;
-        
-        /// <summary>
-        /// What function to invoke when output is generated.
-        /// </summary>
+
+        /// <summary>What function to invoke when output is generated.</summary>
         public ScriptEngine.OutputFunction Outputsystem = null;
 
-        /// <summary>
-        /// A basic tag data object for this queue. Not necessarily generated, use <see cref="GetTagData"/>.
-        /// </summary>
+        /// <summary>A basic tag data object for this queue. Not necessarily generated, use <see cref="GetTagData"/>.</summary>
         public TagData BasicTagData = null;
 
-        /// <summary>
-        /// Error handler action.
-        /// </summary>
+        /// <summary>Error handler action.</summary>
         public Action<string> Error;
 
-        /// <summary>
-        /// Gets a basic tag data object appropriate to this queue.
-        /// </summary>
+        /// <summary>Gets a basic tag data object appropriate to this queue.</summary>
         /// <returns>The tag data object.</returns>
         public TagData GetTagData()
         {
@@ -101,34 +75,24 @@ namespace FreneticScript.CommandSystem
             return BasicTagData;
         }
 
-        /// <summary>
-        /// Constructs a new CommandQueue - generally kept to the FreneticScript internals.
-        /// </summary>
+        /// <summary>Constructs a new CommandQueue - generally kept to the FreneticScript internals.</summary>
         public CommandQueue(CommandScript _script, ScriptEngine _system)
         {
             Script = _script;
             Engine = _system;
             Error = HandleError;
         }
-        
-        /// <summary>
-        /// Called when the queue is completed.
-        /// </summary>
+
+        /// <summary>Called when the queue is completed.</summary>
         public EventHandler<CommandQueueEventArgs> Complete;
 
-        /// <summary>
-        /// Current highest ID.
-        /// </summary>
+        /// <summary>Current highest ID.</summary>
         public static long HighestID = 1;
 
-        /// <summary>
-        /// This queue's ID.
-        /// </summary>
+        /// <summary>This queue's ID.</summary>
         public long ID;
 
-        /// <summary>
-        /// Whether the last queue entry should output.
-        /// </summary>
+        /// <summary>Whether the last queue entry should output.</summary>
         /// <param name="entry">The last entry.</param>
         /// <returns>Whether it should output.</returns>
         public bool ShouldOutputLast(out CommandEntry entry)
@@ -149,9 +113,7 @@ namespace FreneticScript.CommandSystem
             return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
         }
 
-        /// <summary>
-        /// Whether the current queue entry should output.
-        /// </summary>
+        /// <summary>Whether the current queue entry should output.</summary>
         /// <param name="entry">The current entry.</param>
         /// <returns>Whether it should output.</returns>
         public bool ShouldOutputCurrent(out CommandEntry entry)
@@ -159,10 +121,8 @@ namespace FreneticScript.CommandSystem
             entry = CurrentRunnable?.CurrentCommandEntry;
             return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
         }
-        
-        /// <summary>
-        /// Starts running the command queue.
-        /// </summary>
+
+        /// <summary>Starts running the command queue.</summary>
         public void Execute()
         {
             if (Running)
@@ -183,9 +143,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Whether the last run of this queue had waited.
-        /// </summary>
+        /// <summary>Whether the last run of this queue had waited.</summary>
         public bool DidWaitLast = false;
 
         /// <summary>
@@ -241,23 +199,17 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Whether this Queue is waiting on the last command.
-        /// </summary>
+        /// <summary>Whether this Queue is waiting on the last command.</summary>
         public CommandEntry WaitingOn = null;
 
-        /// <summary>
-        /// Handles an error as appropriate to the situation, in the current queue, from the current command.
-        /// </summary>
+        /// <summary>Handles an error as appropriate to the situation, in the current queue, from the current command.</summary>
         /// <param name="message">The error message.</param>
         public void HandleError(string message)
         {
             HandleError(null, message);
         }
 
-        /// <summary>
-        /// Handles an error as appropriate to the situation, in the current queue, from the specified command.
-        /// </summary>
+        /// <summary>Handles an error as appropriate to the situation, in the current queue, from the specified command.</summary>
         /// <param name="entry">The command entry that errored.</param>
         /// <param name="message">The error message.</param>
         public void HandleError(CommandEntry entry, string message)
@@ -269,9 +221,7 @@ namespace FreneticScript.CommandSystem
             CurrentRunnable.Entry.HandleError(this, entry, message);
         }
 
-        /// <summary>
-        /// Parse an argument within this queue.
-        /// </summary>
+        /// <summary>Parse an argument within this queue.</summary>
         /// <param name="arg">The argument.</param>
         /// <returns>The object result.</returns>
         public TemplateObject ParseArgument(Argument arg)
@@ -279,28 +229,22 @@ namespace FreneticScript.CommandSystem
             return arg.Parse(Error, CurrentRunnable);
         }
 
-        /// <summary>
-        /// Gets the command at the specified index.
-        /// </summary>
+        /// <summary>Gets the command at the specified index.</summary>
         /// <param name="index">The index of the command.</param>
         /// <returns>The specified command.</returns>
         public CommandEntry GetCommand(int index)
         {
             return CurrentRunnable.Entry.Entries[index];
         }
-        
-        /// <summary>
-        /// Returns whether commands should output 'good' results.
-        /// </summary>
+
+        /// <summary>Returns whether commands should output 'good' results.</summary>
         /// <returns>Whether commands should output 'good' results.</returns>
         public bool ShouldShowGood()
         {
             return CurrentRunnable.Debug == DebugMode.FULL;
         }
-        
-        /// <summary>
-        /// Used to output a success message.
-        /// </summary>
+
+        /// <summary>Used to output a success message.</summary>
         /// <param name="text">The text to output.</param>
         public void GoodOutput(string text)
         {
@@ -314,9 +258,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Immediately stops the Command Queue by jumping to the end.
-        /// </summary>
+        /// <summary>Immediately stops the Command Queue by jumping to the end.</summary>
         public void Stop()
         {
             CurrentRunnable.Index = CurrentRunnable.Entry.Entries.Length + 1;

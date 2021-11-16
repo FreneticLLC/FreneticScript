@@ -13,34 +13,26 @@ using System.Threading.Tasks;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// The CVar tag object.
-    /// </summary>
+    /// <summary>The CVar tag object.</summary>
     [ObjectMeta(Name = CVarTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Variables", Description = "Represents a control variable.")]
     public class CVarTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Cvar;
         }
 
-        /// <summary>
-        /// Gets an object for the input data.
-        /// </summary>
+        /// <summary>Gets an object for the input data.</summary>
         /// <param name="input">The input text.</param>
         /// <param name="data">The input tag data.</param>
         /// <returns>The object.</returns>
@@ -55,14 +47,10 @@ namespace FreneticScript.TagHandlers.Objects
             return new CVarTag(tcv);
         }
 
-        /// <summary>
-        /// The internal CVar object.
-        /// </summary>
+        /// <summary>The internal CVar object.</summary>
         public CVar Internal;
-        
-        /// <summary>
-        /// Gets an object for the input data.
-        /// </summary>
+
+        /// <summary>Gets an object for the input data.</summary>
         /// <param name="input">The input object.</param>
         /// <param name="data">The input tag data.</param>
         /// <returns>The object.</returns>
@@ -71,9 +59,7 @@ namespace FreneticScript.TagHandlers.Objects
             return input as CVarTag ?? For(data, input.ToString());
         }
 
-        /// <summary>
-        /// Creates a CVarTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a CVarTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid CVarTag.</returns>
@@ -87,17 +73,13 @@ namespace FreneticScript.TagHandlers.Objects
             };
         }
 
-        /// <summary>
-        /// Constructs a CVar tag.
-        /// </summary>
+        /// <summary>Constructs a CVar tag.</summary>
         public CVarTag(CVar _cvar)
         {
             Internal = _cvar;
         }
 
-        /// <summary>
-        /// The CVarTag type.
-        /// </summary>
+        /// <summary>The CVarTag type.</summary>
         public const string TYPE = "cvar";
 
 #pragma warning disable 1591
@@ -230,9 +212,7 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
-        /// <summary>
-        /// Gets the name of the CVar.
-        /// </summary>
+        /// <summary>Gets the name of the CVar.</summary>
         /// <returns>The name.</returns>
         public override string ToString()
         {

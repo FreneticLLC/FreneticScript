@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.CommonBases
 {
-    /// <summary>
-    /// Gets a boolean tag.
-    /// </summary>
+    /// <summary>Gets a boolean tag.</summary>
     public class BooleanTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -24,18 +22,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // @Returns the input boolean as a BooleanTag.
         // -->
 
-        /// <summary>
-        /// Constructs the BooleanTagBase - for internal use only.
-        /// </summary>
+        /// <summary>Constructs the BooleanTagBase - for internal use only.</summary>
         public BooleanTagBase()
         {
             Name = "boolean";
             ResultTypeString = BooleanTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the 'boolean' tag.
-        /// </summary>
+        /// <summary>Handles the 'boolean' tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public static BooleanTag HandleOne(TagData data)
         {

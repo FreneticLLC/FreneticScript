@@ -15,14 +15,10 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Delay command.
-    /// </summary>
+    /// <summary>The Delay command.</summary>
     public class DelayCommand : AbstractCommand
     {
-        /// <summary>
-        /// Adjust list of commands that are formed by an inner block.
-        /// </summary>
+        /// <summary>Adjust list of commands that are formed by an inner block.</summary>
         /// <param name="entry">The producing entry.</param>
         /// <param name="input">The block of commands.</param>
         /// <param name="fblock">The final block to add to the entry.</param>
@@ -59,10 +55,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Example
         // // TODO: More examples!
         // -->
-        
-        /// <summary>
-        /// Constructs the delays command.
-        /// </summary>
+
+        /// <summary>Constructs the delays command.</summary>
         public DelayCommand()
         {
             Name = "delay";
@@ -80,9 +74,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         // TODO: Compile!
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

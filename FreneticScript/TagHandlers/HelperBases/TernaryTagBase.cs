@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// Handles Ternary calculations.
-    /// </summary>
+    /// <summary>Handles Ternary calculations.</summary>
     public class TernaryTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -28,9 +26,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         // Otherwise, the contents of .or_else[...] will be returned.
         // -->
 
-        /// <summary>
-        /// Construct the TernaryTags - for internal use only.
-        /// </summary>
+        /// <summary>Construct the TernaryTags - for internal use only.</summary>
         public TernaryTagBase()
         {
             Name = "ternary";
@@ -39,53 +35,39 @@ namespace FreneticScript.TagHandlers.HelperBases
 
         // TODO: Special compiler to handle type continuation (the "or_else[]" should be treated as returning the type input to both "pass[]" and "or_else[]")
 
-        /// <summary>
-        /// Handles the 'ternary[]' tag.
-        /// </summary>
+        /// <summary>Handles the 'ternary[]' tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public static TernaryPassTag HandleOne(TagData data)
         {
             bool basevalue = (BooleanTag.TryFor(data.GetModifierObjectCurrent()) ?? BooleanTag.FALSE).Internal;
             return new TernaryPassTag() { Passed = basevalue };
         }
-        
-        /// <summary>
-        /// Handles Ternary calculations.
-        /// </summary>
+
+        /// <summary>Handles Ternary calculations.</summary>
         [ObjectMeta(Name = TernaryPassTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Utilities", Description = "Partial component for ternary tags.")]
         public class TernaryPassTag : TemplateObject
         {
-            /// <summary>
-            /// Whether this ternary tag passed.
-            /// </summary>
+            /// <summary>Whether this ternary tag passed.</summary>
             public bool Passed = false;
 
-            /// <summary>
-            /// Return the type name of this tag.
-            /// </summary>
+            /// <summary>Return the type name of this tag.</summary>
             /// <returns>The tag type name.</returns>
             public override string GetTagTypeName()
             {
                 return TYPE;
             }
 
-            /// <summary>
-            /// Return the type of this tag.
-            /// </summary>
+            /// <summary>Return the type of this tag.</summary>
             /// <returns>The tag type.</returns>
             public override TagType GetTagType(TagTypes tagTypeSet)
             {
                 return tagTypeSet.Type_TernayPass;
             }
 
-            /// <summary>
-            /// The TernaryPassTag type.
-            /// </summary>
+            /// <summary>The TernaryPassTag type.</summary>
             public const string TYPE = "ternarypasstagbase";
 
-            /// <summary>
-            /// Gets a ternary pass tag. Shouldn't be used.
-            /// </summary>
+            /// <summary>Gets a ternary pass tag. Shouldn't be used.</summary>
             /// <param name="data">The data.</param>
             /// <param name="input">The input.</param>
             public static TernaryPassTag For(TagData data, string input)
@@ -93,9 +75,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                 return new TernaryPassTag() { Passed = BooleanTag.For(data, input).Internal };
             }
 
-            /// <summary>
-            /// Gets a ternary pass tag. Shouldn't be used.
-            /// </summary>
+            /// <summary>Gets a ternary pass tag. Shouldn't be used.</summary>
             /// <param name="data">The data.</param>
             /// <param name="input">The input.</param>
             public static TernaryPassTag For(TemplateObject input, TagData data)
@@ -103,9 +83,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                 return input as TernaryPassTag ?? For(data, input.ToString());
             }
 
-            /// <summary>
-            /// Creates a TernaryPassTag for the given input data.
-            /// </summary>
+            /// <summary>Creates a TernaryPassTag for the given input data.</summary>
             /// <param name="dat">The tag data.</param>
             /// <param name="input">The text input.</param>
             /// <returns>A valid TernaryPassTag.</returns>
@@ -119,9 +97,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                 };
             }
 
-            /// <summary>
-            /// Returns a boolean true or false as text.
-            /// </summary>
+            /// <summary>Returns a boolean true or false as text.</summary>
             public override string ToString()
             {
                 return BooleanTag.ForBool(Passed).ToString();

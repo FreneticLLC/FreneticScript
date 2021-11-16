@@ -15,16 +15,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// Cvarinfo command: displays information on CVars.
-    /// </summary>
+    /// <summary>Cvarinfo command: displays information on CVars.</summary>
     public class CvarinfoCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Construct the CVar Info Command.
-        /// </summary>
+        /// <summary>Construct the CVar Info Command.</summary>
         public CvarinfoCommand()
         {
             Name = "cvarinfo";
@@ -38,9 +34,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

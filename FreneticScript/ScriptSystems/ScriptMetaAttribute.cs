@@ -12,19 +12,13 @@ using System.Threading.Tasks;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Base class for script meta attribute types.
-    /// </summary>
+    /// <summary>Base class for script meta attribute types.</summary>
     public abstract class ScriptMetaAttribute : Attribute
     {
-        /// <summary>
-        /// The group this meta documentation piece belongs to.
-        /// </summary>
+        /// <summary>The group this meta documentation piece belongs to.</summary>
         public string Group;
 
-        /// <summary>
-        /// Any other information/notes for this meta documentation piece.
-        /// </summary>
+        /// <summary>Any other information/notes for this meta documentation piece.</summary>
         public string[] Others;
     }
 }

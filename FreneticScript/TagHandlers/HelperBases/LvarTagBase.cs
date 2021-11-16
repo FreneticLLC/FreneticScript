@@ -17,24 +17,18 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// Handles internal compiled var tags.
-    /// </summary>
+    /// <summary>Handles internal compiled var tags.</summary>
     public class LvarTagBase : TemplateTagBase
     {
         // No meta: compiled only.
-        
-        /// <summary>
-        /// Construct the Lvar tag base.
-        /// </summary>
+
+        /// <summary>Construct the Lvar tag base.</summary>
         public LvarTagBase()
         {
             Name = "\0lvar";
         }
 
-        /// <summary>
-        /// Adapts the tag base to CIL.
-        /// </summary>
+        /// <summary>Adapts the tag base to CIL.</summary>
         /// <param name="ilgen">IL Generator.</param>
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="values">Related adaptation values.</param>
@@ -48,9 +42,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             return true;
         }
 
-        /// <summary>
-        /// Adapts the var tag base for compiling.
-        /// </summary>
+        /// <summary>Adapts the var tag base for compiling.</summary>
         /// <param name="ccse">The compiled CSE.</param>
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>
@@ -61,9 +53,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             return values.LocalVariableType(index);
         }
 
-        /// <summary>
-        /// Handles a single entry.
-        /// </summary>
+        /// <summary>Handles a single entry.</summary>
         /// <param name="data">The data.</param>
         /// <returns>The result.</returns>
         public static TemplateObject HandleOne(TagData data)

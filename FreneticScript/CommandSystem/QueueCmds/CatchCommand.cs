@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Catch command.
-    /// </summary>
+    /// <summary>The Catch command.</summary>
     public class CatchCommand: AbstractCommand
     {
         // <--[command]
@@ -45,9 +43,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Var stack_trace TextTag The error message that was caught, with full script tracing information.
         // -->
 
-        /// <summary>
-        /// Constructs the catch command.
-        /// </summary>
+        /// <summary>Constructs the catch command.</summary>
         public CatchCommand()
         {
             Name = "catch";
@@ -59,9 +55,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 0;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

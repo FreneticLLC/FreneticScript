@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.CommonBases
 {
-    /// <summary>
-    /// Gets a time tag.
-    /// </summary>
+    /// <summary>Gets a time tag.</summary>
     public class TimeTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -24,18 +22,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // @Returns the input time as a TimeTag.
         // -->
 
-        /// <summary>
-        /// Constructs the TimeTagBase - for internal use only.
-        /// </summary>
+        /// <summary>Constructs the TimeTagBase - for internal use only.</summary>
         public TimeTagBase()
         {
             Name = "time";
             ResultTypeString = TimeTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the 'time' tag.
-        /// </summary>
+        /// <summary>Handles the 'time' tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public static TimeTag HandleOne(TagData data)
         {

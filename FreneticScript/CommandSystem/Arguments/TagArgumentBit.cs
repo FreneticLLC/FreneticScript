@@ -19,24 +19,16 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.Arguments
 {
-    /// <summary>
-    /// Part of an argument that contains tags.
-    /// </summary>
+    /// <summary>Part of an argument that contains tags.</summary>
     public class TagArgumentBit: ArgumentBit
     {
-        /// <summary>
-        /// The <see cref="PrepParse(Action{string}, CompiledCommandRunnable)"/> method.
-        /// </summary>
+        /// <summary>The <see cref="PrepParse(Action{string}, CompiledCommandRunnable)"/> method.</summary>
         public static MethodInfo TagArgumentBit_PrepParse = typeof(TagArgumentBit).GetMethod(nameof(PrepParse));
 
-        /// <summary>
-        /// The <see cref="Data"/> field.
-        /// </summary>
+        /// <summary>The <see cref="Data"/> field.</summary>
         public static FieldInfo TagArgumentBit_Data = typeof(TagArgumentBit).GetField(nameof(Data));
 
-        /// <summary>
-        /// Gets the <see cref="TagHandler"/> for this TagArgumentBit.
-        /// </summary>
+        /// <summary>Gets the <see cref="TagHandler"/> for this TagArgumentBit.</summary>
         public TagHandler TagSystem
         {
             get
@@ -45,24 +37,16 @@ namespace FreneticScript.CommandSystem.Arguments
             }
         }
 
-        /// <summary>
-        /// The pieces that make up the tag.
-        /// </summary>
+        /// <summary>The pieces that make up the tag.</summary>
         public TagBit[] Bits;
 
-        /// <summary>
-        /// The method that gets the result of this TagArgumentBit.
-        /// </summary>
+        /// <summary>The method that gets the result of this TagArgumentBit.</summary>
         public MethodInfo GetResultMethod;
 
-        /// <summary>
-        /// The type that will be returned by the <see cref="GetResultMethod"/>.
-        /// </summary>
+        /// <summary>The type that will be returned by the <see cref="GetResultMethod"/>.</summary>
         public TagReturnType CompiledReturnType;
-        
-        /// <summary>
-        /// Constructs a TagArgumentBit.
-        /// </summary>
+
+        /// <summary>Constructs a TagArgumentBit.</summary>
         /// <param name="system">The relevant command system.</param>
         /// <param name="bits">The tag bits.</param>
         public TagArgumentBit(ScriptEngine system, TagBit[] bits)
@@ -71,9 +55,7 @@ namespace FreneticScript.CommandSystem.Arguments
             Bits = bits;
         }
 
-        /// <summary>
-        /// Generates a compiled call to the TagArgumentBit.
-        /// </summary>
+        /// <summary>Generates a compiled call to the TagArgumentBit.</summary>
         /// <param name="ilgen">The IL Generator.</param>
         /// <param name="tab_loc">The TagArgumentBit helper local-variable location.</param>
         /// <param name="load_Error">The OpCode to load the error object.</param>
@@ -125,9 +107,7 @@ namespace FreneticScript.CommandSystem.Arguments
             }
         }
 
-        /// <summary>
-        /// Gets the resultant type of this argument bit.
-        /// </summary>
+        /// <summary>Gets the resultant type of this argument bit.</summary>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
         public override TagReturnType ReturnType(CILAdaptationValues values)
@@ -145,24 +125,16 @@ namespace FreneticScript.CommandSystem.Arguments
             return Bits[Bits.Length - 1].TagHandler.Meta.ReturnTypeResult;
         }
 
-        /// <summary>
-        /// The tag to fall back on if this tag fails.
-        /// </summary>
+        /// <summary>The tag to fall back on if this tag fails.</summary>
         public Argument Fallback;
 
-        /// <summary>
-        /// The starting point for this tag.
-        /// </summary>
+        /// <summary>The starting point for this tag.</summary>
         public TemplateTagBase Start = null;
 
-        /// <summary>
-        /// The approximate tag data object to be used.
-        /// </summary>
+        /// <summary>The approximate tag data object to be used.</summary>
         public TagData Data;
 
-        /// <summary>
-        /// Preps the parsing of a <see cref="TagArgumentBit"/>.
-        /// </summary>
+        /// <summary>Preps the parsing of a <see cref="TagArgumentBit"/>.</summary>
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="runnable">The command runnable.</param>
         public void PrepParse(Action<string> error, CompiledCommandRunnable runnable)
@@ -185,9 +157,7 @@ namespace FreneticScript.CommandSystem.Arguments
             throw new NotSupportedException("Use the compiled argument parse handler.");
         }
 
-        /// <summary>
-        /// Returns the tag as tag input text, highlighting a specific index. Does not include wrapping tag marks.
-        /// </summary>
+        /// <summary>Returns the tag as tag input text, highlighting a specific index. Does not include wrapping tag marks.</summary>
         /// <param name="index">The index to highlight at.</param>
         /// <param name="highlight">The highlight string.</param>
         /// <returns>Tag input text.</returns>
@@ -209,9 +179,7 @@ namespace FreneticScript.CommandSystem.Arguments
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Returns the tag as tag input text.
-        /// </summary>
+        /// <summary>Returns the tag as tag input text.</summary>
         /// <returns>Tag input text.</returns>
         public override string ToString()
         {

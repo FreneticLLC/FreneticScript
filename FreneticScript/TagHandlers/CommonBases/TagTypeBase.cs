@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.CommonBases
 {
-    /// <summary>
-    /// Handles the 'tagtype' tag base.
-    /// </summary>
+    /// <summary>Handles the 'tagtype' tag base.</summary>
     public class TagTypeBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -24,18 +22,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // @Returns the input data as a TagTypeTag.
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public TagTypeBase()
         {
             Name = "tagtype";
             ResultTypeString = TagTypeTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         public static TagTypeTag HandleOne(TagData data)

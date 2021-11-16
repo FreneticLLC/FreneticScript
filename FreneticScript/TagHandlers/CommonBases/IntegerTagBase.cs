@@ -13,9 +13,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.CommonBases
 {
-    /// <summary>
-    /// Handles the 'integer' tag base.
-    /// </summary>
+    /// <summary>Handles the 'integer' tag base.</summary>
     public class IntegerTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -25,18 +23,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // @Returns the input number as a IntegerTag.
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public IntegerTagBase()
         {
             Name = "integer";
             ResultTypeString = IntegerTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Auto-apply!

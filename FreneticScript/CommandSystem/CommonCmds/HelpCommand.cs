@@ -13,16 +13,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// The Help command: shows help information on commands.
-    /// </summary>
+    /// <summary>The Help command: shows help information on commands.</summary>
     public class HelpCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Constructs the help command.
-        /// </summary>
+        /// <summary>Constructs the help command.</summary>
         public HelpCommand()
         {
             Name = "help";
@@ -36,9 +32,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

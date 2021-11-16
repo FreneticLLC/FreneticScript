@@ -25,9 +25,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public int Index;
     }
 
-    /// <summary>
-    /// Command to loop through a list.
-    /// </summary>
+    /// <summary>Command to loop through a list.</summary>
     public class ForeachCommand : AbstractCommand
     {
         // <--[command]
@@ -81,9 +79,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Var foreach_list ListTag returns the full list being looped through.
         // -->
 
-        /// <summary>
-        /// Construct the foreach command.
-        /// </summary>
+        /// <summary>Construct the foreach command.</summary>
         public ForeachCommand()
         {
             Name = "foreach";
@@ -97,44 +93,28 @@ namespace FreneticScript.CommandSystem.QueueCmds
             SaveMode = CommandSaveMode.MUST_SPECIFY;
         }
 
-        /// <summary>
-        /// Represents the <see cref="TryForeachCIL(CommandQueue, CommandEntry, DynamicTag)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryForeachCIL(CommandQueue, CommandEntry, DynamicTag)"/> method.</summary>
         public static MethodInfo TryForeachCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachCIL));
 
-        /// <summary>
-        /// Represents the <see cref="TryForeachCILNoDebug(CommandQueue, int, DynamicTag)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryForeachCILNoDebug(CommandQueue, int, DynamicTag)"/> method.</summary>
         public static MethodInfo TryForeachCILMethodNoDebug = typeof(ForeachCommand).GetMethod(nameof(TryForeachCILNoDebug));
 
-        /// <summary>
-        /// Represents the <see cref="TryForeachNumberedCIL(CommandQueue, CommandEntry, DynamicTag)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryForeachNumberedCIL(CommandQueue, CommandEntry, DynamicTag)"/> method.</summary>
         public static MethodInfo TryForeachNumberedCILMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachNumberedCIL));
 
-        /// <summary>
-        /// Represents the <see cref="TryForeachNumberedCIL_NoDebug(CommandQueue, CommandEntry, DynamicTag)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryForeachNumberedCIL_NoDebug(CommandQueue, CommandEntry, DynamicTag)"/> method.</summary>
         public static MethodInfo TryForeachNumberedCIL_NoDebugMethod = typeof(ForeachCommand).GetMethod(nameof(TryForeachNumberedCIL_NoDebug));
 
-        /// <summary>
-        /// Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugStopMethod = typeof(ForeachCommand).GetMethod(nameof(DebugStop));
 
-        /// <summary>
-        /// Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugNextMethod = typeof(ForeachCommand).GetMethod(nameof(DebugNext));
 
-        /// <summary>
-        /// Represents the <see cref="CreateListItem"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="CreateListItem"/> method.</summary>
         public static MethodInfo CreateListItemMethod = typeof(ForeachCommand).GetMethod(nameof(CreateListItem));
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -225,9 +205,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -248,9 +226,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             PreAdaptSaveMode(values, entry, false, cent.System.TagSystem.Types.Type_Dynamic, true);
         }
 
-        /// <summary>
-        /// Shows debug for a foreach 'stop' command.
-        /// </summary>
+        /// <summary>Shows debug for a foreach 'stop' command.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,9 +238,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Shows debug for a foreach 'next' command.
-        /// </summary>
+        /// <summary>Shows debug for a foreach 'next' command.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -276,9 +250,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the callback part of the foreach command, without debug output.
-        /// </summary>
+        /// <summary>Executes the callback part of the foreach command, without debug output.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
         /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
@@ -294,9 +266,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return false;
         }
 
-        /// <summary>
-        /// Executes the callback part of the foreach command.
-        /// </summary>
+        /// <summary>Executes the callback part of the foreach command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
@@ -319,9 +289,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return false;
         }
 
-        /// <summary>
-        /// Executes the list input part of the foreached command, without debug.
-        /// </summary>
+        /// <summary>Executes the list input part of the foreached command, without debug.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
@@ -337,9 +305,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return true;
         }
 
-        /// <summary>
-        /// Executes the list input part of the foreached command.
-        /// </summary>
+        /// <summary>Executes the list input part of the foreached command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="listItem">Dynamic tag to hold the item in the list.</param>
@@ -363,18 +329,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return true;
         }
 
-        /// <summary>
-        /// Creates a repeat index object.
-        /// </summary>
+        /// <summary>Creates a repeat index object.</summary>
         /// <returns>The index object.</returns>
         public static DynamicTag CreateListItem()
         {
             return new DynamicTag(NullTag.NULL_VALUE);
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

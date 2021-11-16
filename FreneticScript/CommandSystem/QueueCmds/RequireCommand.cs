@@ -17,16 +17,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The require command.
-    /// </summary>
+    /// <summary>The require command.</summary>
     public class RequireCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Constructs the require command.
-        /// </summary>
+        /// <summary>Constructs the require command.</summary>
         public RequireCommand()
         {
             Name = "require";
@@ -42,9 +38,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Generates a basic Require command entry.
-        /// </summary>
+        /// <summary>Generates a basic Require command entry.</summary>
         /// <param name="expectedMap">The expected variables maps.</param>
         /// <param name="scriptName">The script name.</param>
         /// <param name="line">The script line.</param>
@@ -55,9 +49,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 new Argument[] { new Argument(new TextArgumentBit(expectedMap, Engine)) }, Name, CommandPrefix.NONE, scriptName, line, "", Engine);
         }
 
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -93,9 +85,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -123,14 +113,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Represents the method <see cref="OutputSuccess(CommandQueue, CommandEntry)"/> in the class RequireCommand.
-        /// </summary>
+        /// <summary>Represents the method <see cref="OutputSuccess(CommandQueue, CommandEntry)"/> in the class RequireCommand.</summary>
         public static MethodInfo REQUIRECOMMAND_OUTPUTSUCCESS = typeof(RequireCommand).GetMethod(nameof(OutputSuccess));
 
-        /// <summary>
-        /// Outputs success at the end of a require command execution.
-        /// </summary>
+        /// <summary>Outputs success at the end of a require command execution.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">The command entry.</param>
         public static void OutputSuccess(CommandQueue queue, CommandEntry entry)
@@ -141,14 +127,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Represents the method <see cref="CheckForValidity(CommandQueue, CommandEntry, TemplateObject, string)"/>.
-        /// </summary>
+        /// <summary>Represents the method <see cref="CheckForValidity(CommandQueue, CommandEntry, TemplateObject, string)"/>.</summary>
         public static MethodInfo REQUIRECOMMAND_CHECKFORVALIDITY = typeof(RequireCommand).GetMethod(nameof(CheckForValidity));
 
-        /// <summary>
-        /// Checks an object holder's validity (non-null and contains non-null data), for CIL usage.
-        /// </summary>
+        /// <summary>Checks an object holder's validity (non-null and contains non-null data), for CIL usage.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="obj">Object in question.</param>
@@ -161,9 +143,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

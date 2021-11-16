@@ -13,16 +13,12 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// A non-user-invocable command called when no other command exists.
-    /// </summary>
+    /// <summary>A non-user-invocable command called when no other command exists.</summary>
     public class DebugOutputInvalidCommand: AbstractCommand
     {
         // Note: Intentionally no meta!
 
-        /// <summary>
-        /// Constructs the command.
-        /// </summary>
+        /// <summary>Constructs the command.</summary>
         public DebugOutputInvalidCommand()
         {
             Name = "\0DebugOutputInvalidCommand";
@@ -35,9 +31,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             MaximumArguments = -1;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

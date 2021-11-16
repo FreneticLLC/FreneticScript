@@ -59,14 +59,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: More examples!
     // -->
 
-    /// <summary>
-    /// The Function command.
-    /// </summary>
+    /// <summary>The Function command.</summary>
     public class FunctionCommand : AbstractCommand
     {
-        /// <summary>
-        /// Adjust list of commands that are formed by an inner block.
-        /// </summary>
+        /// <summary>Adjust list of commands that are formed by an inner block.</summary>
         /// <param name="entry">The producing entry.</param>
         /// <param name="input">The block of commands.</param>
         /// <param name="fblock">The final block to add to the entry.</param>
@@ -78,9 +74,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             fblock.Add(GetFollower(entry));
         }
 
-        /// <summary>
-        /// Constructs the function command.
-        /// </summary>
+        /// <summary>Constructs the function command.</summary>
         public FunctionCommand()
         {
             Name = "function";
@@ -90,10 +84,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 1;
             MaximumArguments = 3;
         }
-        
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -115,30 +107,20 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 throw new ErrorInducedException("First argument must be 'define', 'undefine', or 'stop'.");
             }
         }
-        
-        /// <summary>
-        /// Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+
+        /// <summary>Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugStopMethod = typeof(FunctionCommand).GetMethod(nameof(DebugStop));
 
-        /// <summary>
-        /// Represents the <see cref="DebugCallback(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="DebugCallback(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugCallbackMethod = typeof(FunctionCommand).GetMethod(nameof(DebugCallback));
 
-        /// <summary>
-        /// Represents the <see cref="Undefine(CommandEntry, CommandQueue)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="Undefine(CommandEntry, CommandQueue)"/> method.</summary>
         public static MethodInfo UndefineMethod = typeof(FunctionCommand).GetMethod(nameof(Undefine));
 
-        /// <summary>
-        /// Represents the <see cref="Define(CommandEntry, CommandQueue)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="Define(CommandEntry, CommandQueue)"/> method.</summary>
         public static MethodInfo DefineMethod = typeof(FunctionCommand).GetMethod(nameof(Define));
 
-        /// <summary>
-        /// Shows debug for a function 'stop' command.
-        /// </summary>
+        /// <summary>Shows debug for a function 'stop' command.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -150,9 +132,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Shows debug for a function callback.
-        /// </summary>
+        /// <summary>Shows debug for a function callback.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -164,9 +144,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -234,9 +212,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes an undefine.
-        /// </summary>
+        /// <summary>Executes an undefine.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Undefine(CommandEntry entry, CommandQueue queue)
@@ -265,9 +241,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes a define.
-        /// </summary>
+        /// <summary>Executes a define.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Define(CommandEntry entry, CommandQueue queue)
@@ -297,9 +271,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

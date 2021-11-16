@@ -18,34 +18,22 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// Represents a precompiled command stack entry.
-    /// </summary>
+    /// <summary>Represents a precompiled command stack entry.</summary>
     public class CompiledCommandStackEntry
     {
-        /// <summary>
-        /// The compiled runner object.
-        /// </summary>
+        /// <summary>The compiled runner object.</summary>
         public CompiledCommandRunnable ReferenceCompiledRunnable;
 
-        /// <summary>
-        /// Where in the CIL code each entry starts.
-        /// </summary>
+        /// <summary>Where in the CIL code each entry starts.</summary>
         public Label[] AdaptedILPoints;
 
-        /// <summary>
-        /// The script that sourced this entry.
-        /// </summary>
+        /// <summary>The script that sourced this entry.</summary>
         public CommandScript Script;
 
-        /// <summary>
-        /// The generated assembly name.
-        /// </summary>
+        /// <summary>The generated assembly name.</summary>
         public String AssemblyName;
 
-        /// <summary>
-        /// The backing command system.
-        /// </summary>
+        /// <summary>The backing command system.</summary>
         public ScriptEngine System
         {
             get
@@ -54,19 +42,13 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// All available commands.
-        /// </summary>
+        /// <summary>All available commands.</summary>
         public CommandEntry[] Entries;
 
-        /// <summary>
-        /// The variables on the stack entry.
-        /// </summary>
+        /// <summary>The variables on the stack entry.</summary>
         public SingleCILVariable[] Variables;
 
-        /// <summary>
-        /// Gets the command entry at a specified index.
-        /// </summary>
+        /// <summary>Gets the command entry at a specified index.</summary>
         /// <param name="index">The specified index.</param>
         /// <returns>The command entry, or null.</returns>
         public CommandEntry At(int index)
@@ -78,14 +60,10 @@ namespace FreneticScript.CommandSystem
             return Entries[index];
         }
 
-        /// <summary>
-        /// Setters for variables by ID.
-        /// </summary>
+        /// <summary>Setters for variables by ID.</summary>
         public Action<CompiledCommandRunnable, TemplateObject>[] VariableSetters;
 
-        /// <summary>
-        /// Gets a setter action, constructed on-demand.
-        /// </summary>
+        /// <summary>Gets a setter action, constructed on-demand.</summary>
         /// <param name="variable">The variable ID.</param>
         /// <returns>The setter.</returns>
         public Action<CompiledCommandRunnable, TemplateObject> GetSetter(int variable)
@@ -97,9 +75,7 @@ namespace FreneticScript.CommandSystem
             return VariableSetters[variable];
         }
 
-        /// <summary>
-        /// Run this command stack.
-        /// </summary>
+        /// <summary>Run this command stack.</summary>
         /// <param name="queue">The queue to run under.</param>
         /// <param name="runnable">The runnable to run.</param>
         /// <returns>Whether to continue looping.</returns>
@@ -187,9 +163,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Handles an error as appropriate to the situation, in the current queue, from the current command.
-        /// </summary>
+        /// <summary>Handles an error as appropriate to the situation, in the current queue, from the current command.</summary>
         /// <param name="queue">The associated queue.</param>
         /// <param name="entry">The command entry that errored.</param>
         /// <param name="message">The error message.</param>
@@ -246,14 +220,10 @@ namespace FreneticScript.CommandSystem
         }
     }
 
-    /// <summary>
-    /// Holds a <see cref="TemplateObject"/>.
-    /// </summary>
+    /// <summary>Holds a <see cref="TemplateObject"/>.</summary>
     public class ObjectHolder // TODO: Remove!
     {
-        /// <summary>
-        /// The held object.
-        /// </summary>
+        /// <summary>The held object.</summary>
         public TemplateObject Internal;
     }
 }

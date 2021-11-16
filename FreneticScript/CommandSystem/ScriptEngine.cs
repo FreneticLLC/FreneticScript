@@ -19,14 +19,10 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// Handles all FreneticScript systems. The entry point to FreneticScript.
-    /// </summary>
+    /// <summary>Handles all FreneticScript systems. The entry point to FreneticScript.</summary>
     public class ScriptEngine
     {
-        /// <summary>
-        /// The default file extension for script files. Set to "frs", indicating filenames of the format "myscript.frs".
-        /// </summary>
+        /// <summary>The default file extension for script files. Set to "frs", indicating filenames of the format "myscript.frs".</summary>
         public const string DEFAULT_FILE_EXTENSION = "frs";
 
         /// <summary>
@@ -51,44 +47,28 @@ namespace FreneticScript.CommandSystem
         // "literal_argument" as input, or you can fill in the required argument there, but not both.
         // -->
 
-        /// <summary>
-        /// A full dictionary of all registered commands.
-        /// </summary>
+        /// <summary>A full dictionary of all registered commands.</summary>
         public Dictionary<string, AbstractCommand> RegisteredCommands;
 
-        /// <summary>
-        /// The current file extension for script files, by default set to the value of <see cref="DEFAULT_FILE_EXTENSION"/>.
-        /// </summary>
+        /// <summary>The current file extension for script files, by default set to the value of <see cref="DEFAULT_FILE_EXTENSION"/>.</summary>
         public string FileExtension = DEFAULT_FILE_EXTENSION;
 
-        /// <summary>
-        /// The current folder name for scripts files, relative to the program working directory. By default set to the value of <see cref="DEFAULT_SCRIPTS_FOLDER"/>.
-        /// </summary>
+        /// <summary>The current folder name for scripts files, relative to the program working directory. By default set to the value of <see cref="DEFAULT_SCRIPTS_FOLDER"/>.</summary>
         public string ScriptsFolder = DEFAULT_SCRIPTS_FOLDER;
 
-        /// <summary>
-        /// A full list of all registered commands.
-        /// </summary>
+        /// <summary>A full list of all registered commands.</summary>
         public List<AbstractCommand> RegisteredCommandList;
 
-        /// <summary>
-        /// All command queues currently running.
-        /// </summary>
+        /// <summary>All command queues currently running.</summary>
         public List<CommandQueue> Queues;
 
-        /// <summary>
-        /// A simple tag data instance.
-        /// </summary>
+        /// <summary>A simple tag data instance.</summary>
         public TagData SimpleTagData;
 
-        /// <summary>
-        /// The tag handling system.
-        /// </summary>
+        /// <summary>The tag handling system.</summary>
         public TagHandler TagSystem;
 
-        /// <summary>
-        /// The available tag types on the connected <see cref="TagSystem"/>.
-        /// </summary>
+        /// <summary>The available tag types on the connected <see cref="TagSystem"/>.</summary>
         public TagTypes TagTypes
         {
             get
@@ -97,53 +77,35 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// The script engine context.
-        /// </summary>
+        /// <summary>The script engine context.</summary>
         public ScriptEngineContext Context;
 
-        /// <summary>
-        /// The AbstractCommand for the invalid command-command.
-        /// </summary>
+        /// <summary>The AbstractCommand for the invalid command-command.</summary>
         public DebugOutputInvalidCommand DebugInvalidCommand;
 
-        /// <summary>
-        /// The AbstractCommand for the var-set command.
-        /// </summary>
+        /// <summary>The AbstractCommand for the var-set command.</summary>
         public DebugVarSetCommand DebugVarSetCommand;
-        
-        /// <summary>
-        /// All functions this command system has loaded.
-        /// </summary>
+
+        /// <summary>All functions this command system has loaded.</summary>
         public Dictionary<string, CommandScript> Functions;
 
-        /// <summary>
-        /// All script events this command system is aware of.
-        /// </summary>
+        /// <summary>All script events this command system is aware of.</summary>
         public Dictionary<string, ScriptEvent> Events;
 
-        /// <summary>
-        /// All known identifiers for the 'once' block command.
-        /// </summary>
+        /// <summary>All known identifiers for the 'once' block command.</summary>
         public HashSet<string> OnceBlocks = new HashSet<string>();
-        
-        /// <summary>
-        /// A random number generator.
-        /// </summary>
+
+        /// <summary>A random number generator.</summary>
         public Random random = new Random();
 
-        /// <summary>
-        /// Constructs a <see cref="ScriptEngine"/>.
-        /// </summary>
+        /// <summary>Constructs a <see cref="ScriptEngine"/>.</summary>
         public ScriptEngine()
         {
             SimpleTagData = TagData.GenerateSimpleErrorTagData();
             SimpleTagData.TagSystem = TagSystem;
         }
 
-        /// <summary>
-        /// Reloads the entire command system.
-        /// </summary>
+        /// <summary>Reloads the entire command system.</summary>
         public void Reload()
         {
             OnceBlocks.Clear();
@@ -192,9 +154,7 @@ namespace FreneticScript.CommandSystem
             //Variables = queue.LowestVariables;
         }
 
-        /// <summary>
-        /// Gets a script file saved in the command system by name, or creates one from file.
-        /// </summary>
+        /// <summary>Gets a script file saved in the command system by name, or creates one from file.</summary>
         /// <param name="script">The name of the script.</param>
         /// <param name="status">A status output.</param>
         /// <returns>A script, or null if there's no match.</returns>
@@ -203,9 +163,7 @@ namespace FreneticScript.CommandSystem
             return CommandScript.GetByFileName(script, this, out status);
         }
 
-        /// <summary>
-        /// Gets a function saved in the command system by name.
-        /// </summary>
+        /// <summary>Gets a function saved in the command system by name.</summary>
         /// <param name="script">The name of the script.</param>
         /// <returns>A script, or null if there's no match.</returns>
         public CommandScript GetFunction(string script)
@@ -220,9 +178,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Loads all scripts from the scripts folder.
-        /// </summary>
+        /// <summary>Loads all scripts from the scripts folder.</summary>
         public void LoadScriptsFolder()
         {
             foreach (string scriptFileName in Context.ListFiles(ScriptsFolder, FileExtension, true))
@@ -243,14 +199,10 @@ namespace FreneticScript.CommandSystem
             RunPrecalculated();
         }
 
-        /// <summary>
-        /// The prefix string for script preprocessor labels. Set to "///".
-        /// </summary>
+        /// <summary>The prefix string for script preprocessor labels. Set to "///".</summary>
         public const string PREPROCESSOR_PREFIX = "///";
 
-        /// <summary>
-        /// Precalculates a script file to potentially be run.
-        /// </summary>
+        /// <summary>Precalculates a script file to potentially be run.</summary>
         /// <param name="name">The name of the script.</param>
         /// <param name="scriptText">The script to run.</param>
         public void PrecalcScript(string name, string scriptText)
@@ -307,9 +259,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Runs any precalculated scripts.
-        /// </summary>
+        /// <summary>Runs any precalculated scripts.</summary>
         public void RunPrecalculated()
         {
             ScriptsToRun.Sort((one, two) => (one.Key.CompareTo(two.Key)));
@@ -323,14 +273,10 @@ namespace FreneticScript.CommandSystem
             ScriptsToRun.Clear();
         }
 
-        /// <summary>
-        /// Scripts loaded in for precalculation that will be ran by <see cref="RunPrecalculated"/> when next called.
-        /// </summary>
+        /// <summary>Scripts loaded in for precalculation that will be ran by <see cref="RunPrecalculated"/> when next called.</summary>
         public List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
 
-        /// <summary>
-        /// A function to invoke when output is generated.
-        /// </summary>
+        /// <summary>A function to invoke when output is generated.</summary>
         public delegate void OutputFunction(string message, MessageType type);
 
         /// <summary>
@@ -357,10 +303,8 @@ namespace FreneticScript.CommandSystem
             queue.Outputsystem = outputter;
             queue.Execute();
         }
-        
-        /// <summary>
-        /// Adds a command to the registered command list.
-        /// </summary>
+
+        /// <summary>Adds a command to the registered command list.</summary>
         /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
@@ -390,18 +334,14 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Registers a script event to the system.
-        /// </summary>
+        /// <summary>Registers a script event to the system.</summary>
         /// <param name="newevent">The event to register.</param>
         public void RegisterEvent(ScriptEvent newevent)
         {
             Events.Add(newevent.Name, newevent);
         }
 
-        /// <summary>
-        /// Prepares the command system, registering all base commands.
-        /// </summary>
+        /// <summary>Prepares the command system, registering all base commands.</summary>
         public void Init()
         {
             RegisteredCommands = new Dictionary<string, AbstractCommand>(30);
@@ -458,33 +398,23 @@ namespace FreneticScript.CommandSystem
             RegisterEvent(new ScriptRanPostScriptEvent(this));
         }
 
-        /// <summary>
-        /// Final preparation for the command system, after all data has been registered.
-        /// </summary>
+        /// <summary>Final preparation for the command system, after all data has been registered.</summary>
         public void PostInit()
         {
             TagSystem.PostInit();
             LoadScriptsFolder();
         }
 
-        /// <summary>
-        /// The registered <see cref="RunfileCommand"/> instance.
-        /// </summary>
+        /// <summary>The registered <see cref="RunfileCommand"/> instance.</summary>
         public RunfileCommand TheRunFileCommand;
 
-        /// <summary>
-        /// The registered <see cref="RequireCommand"/> instance.
-        /// </summary>
+        /// <summary>The registered <see cref="RequireCommand"/> instance.</summary>
         public RequireCommand TheRequireCommand;
 
-        /// <summary>
-        /// The registered <see cref="ErrorCommand"/> instance.
-        /// </summary>
+        /// <summary>The registered <see cref="ErrorCommand"/> instance.</summary>
         public ErrorCommand TheErrorCommand;
 
-        /// <summary>
-        /// Advances any running command queues.
-        /// </summary>
+        /// <summary>Advances any running command queues.</summary>
         /// <param name="Delta">The time passed this tick.</param>
         public void Tick(double Delta)
         {

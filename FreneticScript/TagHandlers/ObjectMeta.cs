@@ -15,45 +15,29 @@ using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// Represents tag object type meta.
-    /// </summary>
+    /// <summary>Represents tag object type meta.</summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class ObjectMeta : ScriptMetaAttribute
     {
-        /// <summary>
-        /// The name of the tag type.
-        /// </summary>
+        /// <summary>The name of the tag type.</summary>
         public string Name;
-        
-        /// <summary>
-        /// The internal tag type.
-        /// </summary>
+
+        /// <summary>The internal tag type.</summary>
         public TagType ActualType;
 
-        /// <summary>
-        /// The name of the sub-type of this type.
-        /// </summary>
+        /// <summary>The name of the sub-type of this type.</summary>
         public string SubTypeName;
 
-        /// <summary>
-        /// The internal sub-type of this type.
-        /// </summary>
+        /// <summary>The internal sub-type of this type.</summary>
         public TagType ActualSubType;
-        
-        /// <summary>
-        /// A description of this tag type.
-        /// </summary>
+
+        /// <summary>A description of this tag type.</summary>
         public string Description;
 
-        /// <summary>
-        /// Whether to use the raw internal type where possible (instead of the full tag object type).
-        /// </summary>
+        /// <summary>Whether to use the raw internal type where possible (instead of the full tag object type).</summary>
         public bool RawInternal;
-        
-        /// <summary>
-        /// Prepares the object meta.
-        /// </summary>
+
+        /// <summary>Prepares the object meta.</summary>
         /// <param name="tags">The tag parser.</param>
         public void Ready(TagHandler tags)
         {

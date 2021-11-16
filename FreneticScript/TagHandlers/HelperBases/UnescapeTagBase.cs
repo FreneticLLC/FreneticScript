@@ -13,9 +13,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// Unescapes questionable text input.
-    /// </summary>
+    /// <summary>Unescapes questionable text input.</summary>
     public class UnescapeTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -25,14 +23,10 @@ namespace FreneticScript.TagHandlers.HelperBases
         // @Returns an unescaped textual copy of the input escaped text.
         // -->
 
-        /// <summary>
-        /// All standard unescape codes.
-        /// </summary>
+        /// <summary>All standard unescape codes.</summary>
         public static readonly Dictionary<string, char> Unescapes = EscapeTagBase.Escapes.SwapKeyValue();
 
-        /// <summary>
-        /// Unescapes a string.
-        /// </summary>
+        /// <summary>Unescapes a string.</summary>
         /// <param name="input">The escaped string.</param>
         /// <returns>The unescaped string.</returns>
         public static string Unescape(string input)
@@ -63,18 +57,14 @@ namespace FreneticScript.TagHandlers.HelperBases
             return unescaped.ToString();
         }
 
-        /// <summary>
-        /// Construct the UnescapeTagBase - for internal use only.
-        /// </summary>
+        /// <summary>Construct the UnescapeTagBase - for internal use only.</summary>
         public UnescapeTagBase()
         {
             Name = "unescape";
             ResultTypeString = TextTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the 'unescape' tag.
-        /// </summary>
+        /// <summary>Handles the 'unescape' tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public static TextTag HandleOne(TagData data)
         {

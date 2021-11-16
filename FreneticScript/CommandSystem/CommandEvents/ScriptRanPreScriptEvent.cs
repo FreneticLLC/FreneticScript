@@ -26,23 +26,17 @@ namespace FreneticScript.CommandSystem.CommandEvents
     // This event can be used to control other scripts running on the system.
     // @Var script_name TextTag returns the name of the script about to be ran.
     // -->
-    /// <summary>
-    /// ScriptRanPreEvent, called by the run command.
-    /// </summary>
+    /// <summary>ScriptRanPreEvent, called by the run command.</summary>
     public class ScriptRanPreScriptEvent : ScriptEvent
     {
-        /// <summary>
-        /// Constructs the ScriptRan script event.
-        /// </summary>
+        /// <summary>Constructs the ScriptRan script event.</summary>
         /// <param name="system">The relevant command system.</param>
         public ScriptRanPreScriptEvent(ScriptEngine system)
             : base(system, "scriptranpreevent", true)
         {
         }
 
-        /// <summary>
-        /// Register a specific priority with the underlying event.
-        /// </summary>
+        /// <summary>Register a specific priority with the underlying event.</summary>
         /// <param name="prio">The priority.</param>
         public override void RegisterPriority(double prio)
         {
@@ -53,18 +47,14 @@ namespace FreneticScript.CommandSystem.CommandEvents
             }
         }
 
-        /// <summary>
-        /// Deregister a specific priority with the underlying event.
-        /// </summary>
+        /// <summary>Deregister a specific priority with the underlying event.</summary>
         /// <param name="prio">The priority.</param>
         public override void DeregisterPriority(double prio)
         {
             Engine.TheRunFileCommand.OnScriptRanPreEvent.RemoveBySource(new PrioritySourceObject(this, prio));
         }
 
-        /// <summary>
-        /// Runs the script event with the given input.
-        /// </summary>
+        /// <summary>Runs the script event with the given input.</summary>
         /// <param name="oevt">The details of the script to be ran.</param>
         /// <returns>The event details after firing.</returns>
         public void Run(ScriptRanPreEventArgs oevt)
@@ -74,14 +64,10 @@ namespace FreneticScript.CommandSystem.CommandEvents
             evt.CallByPriority(oevt.Priority);
         }
 
-        /// <summary>
-        /// The name of the script being ran.
-        /// </summary>
+        /// <summary>The name of the script being ran.</summary>
         public TextTag ScriptName;
 
-        /// <summary>
-        /// Get all variables according the script event's current values.
-        /// </summary>
+        /// <summary>Get all variables according the script event's current values.</summary>
         public override Dictionary<string, TemplateObject> GetVariables()
         {
             Dictionary<string, TemplateObject> vars = base.GetVariables();

@@ -13,14 +13,10 @@ using FreneticScript.TagHandlers;
 namespace FreneticScript.CommandSystem.CommonCmds
 {
     // TODO: Meta!
-    /// <summary>
-    /// A command to interact with the system garbage collector.
-    /// </summary>
+    /// <summary>A command to interact with the system garbage collector.</summary>
     public class CleanmemCommand: AbstractCommand
     {
-        /// <summary>
-        /// Constructs the command.
-        /// </summary>
+        /// <summary>Constructs the command.</summary>
         public CleanmemCommand()
         {
             Name = "cleanmem";
@@ -29,9 +25,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Asyncable = true;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

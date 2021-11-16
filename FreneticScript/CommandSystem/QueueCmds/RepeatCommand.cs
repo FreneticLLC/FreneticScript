@@ -25,9 +25,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public int Total;
     }
 
-    /// <summary>
-    /// The repeat command.
-    /// </summary>
+    /// <summary>The repeat command.</summary>
     public class RepeatCommand : AbstractCommand
     {
         // <--[command]
@@ -79,9 +77,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // @Var repeat_total IntegerTag returns what iteration (numeric) the repeat is aiming for, and will end on if not stopped early.
         // -->
 
-        /// <summary>
-        /// Constructs the repeat command.
-        /// </summary>
+        /// <summary>Constructs the repeat command.</summary>
         public RepeatCommand()
         {
             Name = "repeat";
@@ -95,44 +91,28 @@ namespace FreneticScript.CommandSystem.QueueCmds
             SaveMode = CommandSaveMode.MUST_SPECIFY;
         }
 
-        /// <summary>
-        /// Represents the <see cref="TryRepeatCIL(CommandQueue, CommandEntry, IntegerTag)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryRepeatCIL(CommandQueue, CommandEntry, IntegerTag)"/> method.</summary>
         public static MethodInfo TryRepeatCILMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatCIL));
 
-        /// <summary>
-        /// Represents the <see cref="TryRepeatCILNoDebug(CommandQueue, int, IntegerTag)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryRepeatCILNoDebug(CommandQueue, int, IntegerTag)"/> method.</summary>
         public static MethodInfo TryRepeatCILMethodNoDebug = typeof(RepeatCommand).GetMethod(nameof(TryRepeatCILNoDebug));
 
-        /// <summary>
-        /// Represents the <see cref="TryRepeatNumberedCIL(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryRepeatNumberedCIL(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo TryRepeatNumberedCILMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatNumberedCIL));
 
-        /// <summary>
-        /// Represents the <see cref="TryRepeatNumberedCIL_NoDebug(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="TryRepeatNumberedCIL_NoDebug(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo TryRepeatNumberedCIL_NoDebugMethod = typeof(RepeatCommand).GetMethod(nameof(TryRepeatNumberedCIL_NoDebug));
 
-        /// <summary>
-        /// Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugStopMethod = typeof(RepeatCommand).GetMethod(nameof(DebugStop));
 
-        /// <summary>
-        /// Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="DebugNext(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugNextMethod = typeof(RepeatCommand).GetMethod(nameof(DebugNext));
 
-        /// <summary>
-        /// Represents the <see cref="CreateIndexObject"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="CreateIndexObject"/> method.</summary>
         public static MethodInfo CreateIndexObjectMethod = typeof(RepeatCommand).GetMethod(nameof(CreateIndexObject));
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -218,9 +198,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -246,9 +224,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.AddVariable(sn, type);
         }
 
-        /// <summary>
-        /// Shows debug for a repeat 'stop' command.
-        /// </summary>
+        /// <summary>Shows debug for a repeat 'stop' command.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -260,9 +236,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Shows debug for a repeat 'next' command.
-        /// </summary>
+        /// <summary>Shows debug for a repeat 'next' command.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -274,9 +248,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the callback part of the repeat command, without debug output.
-        /// </summary>
+        /// <summary>Executes the callback part of the repeat command, without debug output.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry_ind">Entry to be executed.</param>
         /// <param name="integer">Repeat Index holder.</param>
@@ -287,9 +259,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return (integer.Internal = ++dat.Index) <= dat.Total;
         }
 
-        /// <summary>
-        /// Executes the callback part of the repeat command.
-        /// </summary>
+        /// <summary>Executes the callback part of the repeat command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         /// <param name="integer">Repeat Index holder.</param>
@@ -312,9 +282,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return false;
         }
 
-        /// <summary>
-        /// Executes the numbered input part of the repeat command, without debug.
-        /// </summary>
+        /// <summary>Executes the numbered input part of the repeat command, without debug.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static bool TryRepeatNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry)
@@ -328,9 +296,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return true;
         }
 
-        /// <summary>
-        /// Executes the numbered input part of the repeat command.
-        /// </summary>
+        /// <summary>Executes the numbered input part of the repeat command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static bool TryRepeatNumberedCIL(CommandQueue queue, CommandEntry entry)
@@ -352,18 +318,14 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return true;
         }
 
-        /// <summary>
-        /// Creates a repeat index object.
-        /// </summary>
+        /// <summary>Creates a repeat index object.</summary>
         /// <returns>The index object.</returns>
         public static IntegerTag CreateIndexObject()
         {
             return new IntegerTag(1);
         }
-        
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

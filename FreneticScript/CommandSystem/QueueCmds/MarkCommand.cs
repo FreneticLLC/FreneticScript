@@ -14,9 +14,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Mark command.
-    /// </summary>
+    /// <summary>The Mark command.</summary>
     public class MarkCommand : AbstractCommand
     {
         // <--[command]
@@ -42,9 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // TODO: More examples!
         // -->
 
-        /// <summary>
-        /// Constructs the mark command.
-        /// </summary>
+        /// <summary>Constructs the mark command.</summary>
         public MarkCommand()
         {
             Name = "mark";
@@ -60,9 +56,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

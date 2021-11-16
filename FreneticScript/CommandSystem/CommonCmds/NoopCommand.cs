@@ -13,16 +13,12 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// The NoOp command: does nothing!
-    /// </summary>
+    /// <summary>The NoOp command: does nothing!</summary>
     public class NoopCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Construct the noop command.
-        /// </summary>
+        /// <summary>Construct the noop command.</summary>
         public NoopCommand()
         {
             Name = "noop";
@@ -34,9 +30,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             MaximumArguments = -1;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

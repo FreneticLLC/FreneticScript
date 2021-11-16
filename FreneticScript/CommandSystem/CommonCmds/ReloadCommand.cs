@@ -14,16 +14,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// The Reload command: reloads the system.
-    /// </summary>
+    /// <summary>The Reload command: reloads the system.</summary>
     public class ReloadCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Constructs the reload command.
-        /// </summary>
+        /// <summary>Constructs the reload command.</summary>
         public ReloadCommand()
         {
             Name = "reload";
@@ -33,9 +29,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             MaximumArguments = 0;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

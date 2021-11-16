@@ -22,14 +22,10 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// Represents a series of commands, not currently being processed.
-    /// </summary>
+    /// <summary>Represents a series of commands, not currently being processed.</summary>
     public class CommandScript
     {
-        /// <summary>
-        /// Creates a script by file name.
-        /// </summary>
+        /// <summary>Creates a script by file name.</summary>
         /// <param name="scriptName">The name of the script file to execute.</param>
         /// <param name="system">The command system to get the script for.</param>
         /// <param name="status">A status output.</param>
@@ -64,69 +60,43 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// The name of the script.
-        /// </summary>
+        /// <summary>The name of the script.</summary>
         public string Name;
 
-        /// <summary>
-        /// Standard type name: Function.
-        /// </summary>
+        /// <summary>Standard type name: Function.</summary>
         public const string TYPE_NAME_FUNCTION = "Function";
 
-        /// <summary>
-        /// Standard type name: File.
-        /// </summary>
+        /// <summary>Standard type name: File.</summary>
         public const string TYPE_NAME_FILE = "File";
 
-        /// <summary>
-        /// Standard type name: Event.
-        /// </summary>
+        /// <summary>Standard type name: Event.</summary>
         public const string TYPE_NAME_EVENT = "Event";
 
-        /// <summary>
-        /// Standard type name: Anonymous.
-        /// </summary>
+        /// <summary>Standard type name: Anonymous.</summary>
         public const string TYPE_NAME_ANONYMOUS = "Anonymous";
 
-        /// <summary>
-        /// The backing command system.
-        /// </summary>
+        /// <summary>The backing command system.</summary>
         public ScriptEngine System;
 
-        /// <summary>
-        /// The name of the type of script. Function, File, Event, and Anonymous are common.
-        /// </summary>
+        /// <summary>The name of the type of script. Function, File, Event, and Anonymous are common.</summary>
         public string TypeName;
 
-        /// <summary>
-        /// Whether this script is an anonymous script.
-        /// </summary>
+        /// <summary>Whether this script is an anonymous script.</summary>
         public bool IsAnonymous;
 
-        /// <summary>
-        /// The full original construction string, if the script is anonymous (use <see cref="IsAnonymous"/>).
-        /// </summary>
+        /// <summary>The full original construction string, if the script is anonymous (use <see cref="IsAnonymous"/>).</summary>
         public string AnonymousString;
-        
-        /// <summary>
-        /// The default debugmode for this script (until set otherwise by the debug command).
-        /// </summary>
+
+        /// <summary>The default debugmode for this script (until set otherwise by the debug command).</summary>
         public DebugMode Debug = DebugMode.FULL;
 
-        /// <summary>
-        /// A compiled command structure set created by this script.
-        /// </summary>
+        /// <summary>A compiled command structure set created by this script.</summary>
         public CompiledCommandStackEntry Compiled;
 
-        /// <summary>
-        /// An array of command entries on this script.
-        /// </summary>
+        /// <summary>An array of command entries on this script.</summary>
         public CommandEntry[] CommandArray;
 
-        /// <summary>
-        /// Constructs a new command script.
-        /// </summary>
+        /// <summary>Constructs a new command script.</summary>
         /// <param name="_name">The name of the script.</param>
         /// <param name="_typeName">The name of the script type.</param>
         /// <param name="_commands">All commands in the script.</param>
@@ -149,10 +119,8 @@ namespace FreneticScript.CommandSystem
             }
             Compiled = ScriptCompiler.Compile(this);
         }
-        
-        /// <summary>
-        /// Creates a new queue for this script.
-        /// </summary>
+
+        /// <summary>Creates a new queue for this script.</summary>
         /// <param name="system">The command system to make the queue in.</param>
         /// <returns>The created queue.</returns>
         public CommandQueue ToQueue(ScriptEngine system)
@@ -162,17 +130,13 @@ namespace FreneticScript.CommandSystem
             return queue;
         }
 
-        /// <summary>
-        /// Returns the name of the script.
-        /// </summary>
+        /// <summary>Returns the name of the script.</summary>
         public override string ToString()
         {
             return Name;
         }
 
-        /// <summary>
-        /// Gets the full command string that represents this script.
-        /// </summary>
+        /// <summary>Gets the full command string that represents this script.</summary>
         /// <returns>The full command string.</returns>
         public string FullString()
         {

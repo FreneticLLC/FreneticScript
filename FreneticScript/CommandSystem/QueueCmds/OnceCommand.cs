@@ -14,9 +14,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Once command.
-    /// </summary>
+    /// <summary>The Once command.</summary>
     public class OnceCommand : AbstractCommand
     {
         // <--[command]
@@ -50,9 +48,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // once MyScript quiet { echo "This won't show!"; }
         // -->
 
-        /// <summary>
-        /// Constructs the once command.
-        /// </summary>
+        /// <summary>Constructs the once command.</summary>
         public OnceCommand()
         {
             Name = "once";
@@ -85,9 +81,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

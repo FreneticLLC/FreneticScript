@@ -36,14 +36,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
     // TODO: Remove? Make compatible with CIL update somehow?
 
-    /// <summary>
-    /// The Inject command.
-    /// </summary>
+    /// <summary>The Inject command.</summary>
     public class InjectCommand : AbstractCommand
     {
-        /// <summary>
-        /// Constructs the inject command.
-        /// </summary>
+        /// <summary>Constructs the inject command.</summary>
         public InjectCommand()
         {
             Name = "inject";
@@ -60,9 +56,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
 
         // TODO: Does this (inject command) have any reason to exist in the modern structure?
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

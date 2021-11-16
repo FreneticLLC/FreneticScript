@@ -14,49 +14,31 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// Represents the specific type of a tag.
-    /// </summary>
+    /// <summary>Represents the specific type of a tag.</summary>
     public class TagType
     {
-        /// <summary>
-        /// The name of this tag type, lowercase.
-        /// </summary>
+        /// <summary>The name of this tag type, lowercase.</summary>
         public string TypeName;
 
-        /// <summary>
-        /// The name of the type upon which this tag type is based.
-        /// </summary>
+        /// <summary>The name of the type upon which this tag type is based.</summary>
         public string SubTypeName;
 
-        /// <summary>
-        /// The raw C# / .NET type of the tag type.
-        /// </summary>
+        /// <summary>The raw C# / .NET type of the tag type.</summary>
         public Type RawType;
 
-        /// <summary>
-        /// The type upon which this tag type is based.
-        /// </summary>
+        /// <summary>The type upon which this tag type is based.</summary>
         public TagType SubType;
 
-        /// <summary>
-        /// The meta for this tag object type.
-        /// </summary>
+        /// <summary>The meta for this tag object type.</summary>
         public ObjectMeta Meta;
 
-        /// <summary>
-        /// The raw internal type (if set to use a raw internal type, otherwise null).
-        /// </summary>
+        /// <summary>The raw internal type (if set to use a raw internal type, otherwise null).</summary>
         public Type RawInternalType;
 
-        /// <summary>
-        /// The raw internal data field (if set to use a raw internal type, otherwise null).
-        /// </summary>
+        /// <summary>The raw internal data field (if set to use a raw internal type, otherwise null).</summary>
         public FieldInfo RawInternalField;
 
-        /// <summary>
-        /// The raw internal type based object constructor (if set to use a raw internal type, otherwise null).
-        /// </summary>
+        /// <summary>The raw internal type based object constructor (if set to use a raw internal type, otherwise null).</summary>
         public ConstructorInfo RawInternalConstructor;
 
         /// <summary>
@@ -71,14 +53,10 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public Func<TemplateObject, TagData, TemplateObject> TypeGetter;
 
-        /// <summary>
-        /// The tag sub-handler for all possible tags.
-        /// </summary>
+        /// <summary>The tag sub-handler for all possible tags.</summary>
         public Dictionary<string, TagSubHandler> SubHandlers;
 
-        /// <summary>
-        /// Contains a mapping of tag names to their helper data. Set automatically based on raw type.
-        /// </summary>
+        /// <summary>Contains a mapping of tag names to their helper data. Set automatically based on raw type.</summary>
         public Dictionary<string, TagHelpInfo> TagHelpers;
 
         /// <summary>
@@ -88,54 +66,34 @@ namespace FreneticScript.TagHandlers
         /// </summary>
         public Func<TemplateObject, TemplateObject> GetNextTypeDown;
 
-        /// <summary>
-        /// The tag form of this TagType.
-        /// </summary>
+        /// <summary>The tag form of this TagType.</summary>
         public TagTypeTag TagForm;
 
-        /// <summary>
-        /// The add operation for this type, if any.
-        /// </summary>
+        /// <summary>The add operation for this type, if any.</summary>
         public ObjectOperationAttribute Operation_Add;
 
-        /// <summary>
-        /// The subtract operation for this type, if any.
-        /// </summary>
+        /// <summary>The subtract operation for this type, if any.</summary>
         public ObjectOperationAttribute Operation_Subtract;
 
-        /// <summary>
-        /// The multiply operation for this type, if any.
-        /// </summary>
+        /// <summary>The multiply operation for this type, if any.</summary>
         public ObjectOperationAttribute Operation_Multiply;
 
-        /// <summary>
-        /// The divide operation for this type, if any.
-        /// </summary>
+        /// <summary>The divide operation for this type, if any.</summary>
         public ObjectOperationAttribute Operation_Divide;
 
-        /// <summary>
-        /// The get-sub-settable operation for this type, if any.
-        /// </summary>
+        /// <summary>The get-sub-settable operation for this type, if any.</summary>
         public ObjectOperationAttribute Operation_GetSubSettable;
 
-        /// <summary>
-        /// The set operation for this type, if any.
-        /// </summary>
+        /// <summary>The set operation for this type, if any.</summary>
         public ObjectOperationAttribute Operation_Set;
 
-        /// <summary>
-        /// An array of operations.
-        /// </summary>
+        /// <summary>An array of operations.</summary>
         public ObjectOperationAttribute[] Operations = new ObjectOperationAttribute[4];
 
-        /// <summary>
-        /// The backing script engine.
-        /// </summary>
+        /// <summary>The backing script engine.</summary>
         public ScriptEngine Engine;
 
-        /// <summary>
-        /// Builds the <see cref="Operations"/> field.
-        /// </summary>
+        /// <summary>Builds the <see cref="Operations"/> field.</summary>
         public void BuildOperations()
         {
             Operations[(int)ObjectOperation.ADD] = Operation_Add;
@@ -144,9 +102,7 @@ namespace FreneticScript.TagHandlers
             Operations[(int)ObjectOperation.DIVIDE] = Operation_Divide;
         }
 
-        /// <summary>
-        /// Constructs the <see cref="TagType"/>.
-        /// </summary>
+        /// <summary>Constructs the <see cref="TagType"/>.</summary>
         public TagType()
         {
             TagForm = new TagTypeTag(this);

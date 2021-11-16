@@ -11,9 +11,7 @@ using System.Text;
 
 namespace FreneticScript
 {
-    /// <summary>
-    /// Holds an array, managing it both like a list and like a queue depending on need.
-    /// </summary>
+    /// <summary>Holds an array, managing it both like a list and like a queue depending on need.</summary>
     public class ListQueue<T>
     {
         // TODO: Move this class elsewhere (FrenUtil?) or delete
@@ -31,9 +29,7 @@ namespace FreneticScript
         /// </summary>
         public int Head;
 
-        /// <summary>
-        /// The true length of the array, not counting things before the head or after the end.
-        /// </summary>
+        /// <summary>The true length of the array, not counting things before the head or after the end.</summary>
         public int Length;
 
         /// <summary>
@@ -41,10 +37,8 @@ namespace FreneticScript
         /// Defaults to 500.
         /// </summary>
         public int Max = 500;
-        
-        /// <summary>
-        /// Access a member of the <see cref="ListQueue{T}"/>
-        /// </summary>
+
+        /// <summary>Access a member of the <see cref="ListQueue{T}"/></summary>
         /// <param name="index">The position in the public side of the list to read from.</param>
         /// <returns>The read object.</returns>
         public T this[int index]
@@ -67,9 +61,7 @@ namespace FreneticScript
             }
         }
 
-        /// <summary>
-        /// Initializes the <see cref="ListQueue{T}"/> with specified initial entries.
-        /// </summary>
+        /// <summary>Initializes the <see cref="ListQueue{T}"/> with specified initial entries.</summary>
         /// <param name="entries">.</param>
         public ListQueue(IList<T> entries)
         {
@@ -83,9 +75,7 @@ namespace FreneticScript
             Length = entries.Count;
         }
 
-        /// <summary>
-        /// Initializes the <see cref="ListQueue{T}"/> with a specified capacity.
-        /// </summary>
+        /// <summary>Initializes the <see cref="ListQueue{T}"/> with a specified capacity.</summary>
         /// <param name="capacity">The number of items to expect to hold, is non-definite.</param>
         public ListQueue(int capacity = 100)
         {
@@ -93,10 +83,8 @@ namespace FreneticScript
             Head = 0;
             Length = 0;
         }
-        
-        /// <summary>
-        /// Returns the item at head of the queue, without removing it, if it has one.
-        /// </summary>
+
+        /// <summary>Returns the item at head of the queue, without removing it, if it has one.</summary>
         /// <returns>The item found.</returns>
         public T Peek()
         {

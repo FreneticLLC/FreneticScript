@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// Handles the 'save' tag base.
-    /// </summary>
+    /// <summary>Handles the 'save' tag base.</summary>
     public class SaveTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -24,18 +22,14 @@ namespace FreneticScript.TagHandlers.HelperBases
         // @Returns the saved copy of a tag input.
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public SaveTagBase()
         {
             Name = "save";
             ResultTypeString = TextTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         public static TextTag HandleOne(TagData data)

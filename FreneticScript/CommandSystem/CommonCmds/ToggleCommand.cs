@@ -14,16 +14,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// The Toggle command.
-    /// </summary>
+    /// <summary>The Toggle command.</summary>
     public class ToggleCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Constructs the toggle command.
-        /// </summary>
+        /// <summary>Constructs the toggle command.</summary>
         public ToggleCommand()
         {
             Name = "toggle";
@@ -38,9 +34,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

@@ -14,23 +14,17 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommandEvents
 {
-    /// <summary>
-    /// ScriptRanPreEvent, called by the run command.
-    /// </summary>
+    /// <summary>ScriptRanPreEvent, called by the run command.</summary>
     public class ScriptRanScriptEvent : ScriptEvent
     {
-        /// <summary>
-        /// Constructs the ScriptRan script event.
-        /// </summary>
+        /// <summary>Constructs the ScriptRan script event.</summary>
         /// <param name="system">The relevant command system.</param>
         public ScriptRanScriptEvent(ScriptEngine system)
             : base(system, "scriptranevent", true)
         {
         }
 
-        /// <summary>
-        /// Register a specific priority with the underlying event.
-        /// </summary>
+        /// <summary>Register a specific priority with the underlying event.</summary>
         /// <param name="prio">The priority.</param>
         public override void RegisterPriority(double prio)
         {
@@ -41,18 +35,14 @@ namespace FreneticScript.CommandSystem.CommandEvents
             }
         }
 
-        /// <summary>
-        /// Deregister a specific priority with the underlying event.
-        /// </summary>
+        /// <summary>Deregister a specific priority with the underlying event.</summary>
         /// <param name="prio">The priority.</param>
         public override void DeregisterPriority(double prio)
         {
             Engine.TheRunFileCommand.OnScriptRanEvent.RemoveBySource(new PrioritySourceObject(this, prio));
         }
 
-        /// <summary>
-        /// Runs the script event with the given input.
-        /// </summary>
+        /// <summary>Runs the script event with the given input.</summary>
         /// <param name="oevt">The details of the script to be ran.</param>
         /// <returns>The event details after firing.</returns>
         public void Run(ScriptRanEventArgs oevt)
@@ -62,14 +52,10 @@ namespace FreneticScript.CommandSystem.CommandEvents
             evt.CallByPriority(oevt.Priority);
         }
 
-        /// <summary>
-        /// The script being ran.
-        /// </summary>
+        /// <summary>The script being ran.</summary>
         public CommandScript ScriptRan;
 
-        /// <summary>
-        /// Get all variables according the script event's current values.
-        /// </summary>
+        /// <summary>Get all variables according the script event's current values.</summary>
         public override Dictionary<string, TemplateObject> GetVariables()
         {
             Dictionary<string, TemplateObject> vars = base.GetVariables();

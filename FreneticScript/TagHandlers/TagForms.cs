@@ -13,36 +13,24 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// The form of an <see cref="IntegerTag"/>.
-    /// </summary>
+    /// <summary>The form of an <see cref="IntegerTag"/>.</summary>
     public interface IIntegerTagForm
     {
-        /// <summary>
-        /// The integer value of this <see cref="IntegerTag"/>-like object.
-        /// </summary>
+        /// <summary>The integer value of this <see cref="IntegerTag"/>-like object.</summary>
         long IntegerForm { get; }
     }
 
-    /// <summary>
-    /// The form of a <see cref="NumberTag"/>.
-    /// </summary>
+    /// <summary>The form of a <see cref="NumberTag"/>.</summary>
     public interface INumberTagForm
     {
-        /// <summary>
-        /// The number value of this <see cref="NumberTag"/>-like object.
-        /// </summary>
+        /// <summary>The number value of this <see cref="NumberTag"/>-like object.</summary>
         double NumberForm { get; }
     }
 
-    /// <summary>
-    /// The form of a <see cref="ListTag"/>.
-    /// </summary>
+    /// <summary>The form of a <see cref="ListTag"/>.</summary>
     public interface IListTagForm
     {
-        /// <summary>
-        /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.
-        /// </summary>
+        /// <summary>The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.</summary>
         ListTag ListForm { get; }
     }
 }

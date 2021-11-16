@@ -18,9 +18,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Else command.
-    /// </summary>
+    /// <summary>The Else command.</summary>
     public class ElseCommand: AbstractCommand
     {
         // <--[command]
@@ -51,9 +49,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // TODO: More examples!
         // -->
 
-        /// <summary>
-        /// Constructs the else command.
-        /// </summary>
+        /// <summary>Constructs the else command.</summary>
         public ElseCommand()
         {
             Name = "else";
@@ -81,14 +77,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Represents the "TryIfCIL(queue, entry)" method.
-        /// </summary>
+        /// <summary>Represents the "TryIfCIL(queue, entry)" method.</summary>
         public static MethodInfo TryIfCILMethod = typeof(ElseCommand).GetMethod("TryIfCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -129,9 +121,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
         }
 
-        /// <summary>
-        /// Executes the command via CIL.
-        /// </summary>
+        /// <summary>Executes the command via CIL.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static bool TryIfCIL(CommandQueue queue, CommandEntry entry)
@@ -167,9 +157,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return success;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

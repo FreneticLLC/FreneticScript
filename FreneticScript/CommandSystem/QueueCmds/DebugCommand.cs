@@ -17,9 +17,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Debug command.
-    /// </summary>
+    /// <summary>The Debug command.</summary>
     public class DebugCommand : AbstractCommand
     {
         // <--[command]
@@ -46,9 +44,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // debug minimal;
         // -->
 
-        /// <summary>
-        /// Constructs the debug command.
-        /// </summary>
+        /// <summary>Constructs the debug command.</summary>
         public DebugCommand()
         {
             Name = "debug";
@@ -63,7 +59,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 Verify
             };
         }
-        
+
         void Verify(ArgumentValidation validator)
         {
             string low = validator.ObjectValue.ToString().ToLowerFast();
@@ -77,9 +73,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public override void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -96,9 +90,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -113,14 +105,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// A reference to <see cref="DebugOutput(CommandQueue, CommandEntry)"/>.
-        /// </summary>
+        /// <summary>A reference to <see cref="DebugOutput(CommandQueue, CommandEntry)"/>.</summary>
         public static MethodInfo Method_DebugOutput = typeof(DebugCommand).GetMethod(nameof(DebugOutput));
 
-        /// <summary>
-        /// Helper to output debug message informing of debug mode change.
-        /// </summary>
+        /// <summary>Helper to output debug message informing of debug mode change.</summary>
         /// <param name="queue">The relevant queue.</param>
         /// <param name="entry">The relevant entry.</param>
         public static void DebugOutput(CommandQueue queue, CommandEntry entry)
@@ -131,9 +119,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

@@ -18,71 +18,45 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Helper class to compile arguments.
-    /// </summary>
+    /// <summary>Helper class to compile arguments.</summary>
     public static class ArgumentCompiler
     {
-        /// <summary>
-        /// The <see cref="Object.ToString"/> method.
-        /// </summary>
+        /// <summary>The <see cref="Object.ToString"/> method.</summary>
         public static MethodInfo Object_ToString = typeof(object).GetMethod(nameof(Object.ToString), BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
 
-        /// <summary>
-        /// The <see cref="StringBuilder(int)"/> constructor.
-        /// </summary>
+        /// <summary>The <see cref="StringBuilder(int)"/> constructor.</summary>
         public static ConstructorInfo StringBuilder_CTOR = typeof(StringBuilder).GetConstructor(new Type[] { typeof(int) });
 
-        /// <summary>
-        /// The <see cref="StringBuilder.Append(string)"/> method.
-        /// </summary>
+        /// <summary>The <see cref="StringBuilder.Append(string)"/> method.</summary>
         public static MethodInfo StringBuilder_Append = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
 
-        /// <summary>
-        /// The <see cref="StringBuilder.ToString()"/> method.
-        /// </summary>
+        /// <summary>The <see cref="StringBuilder.ToString()"/> method.</summary>
         public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
 
-        /// <summary>
-        /// The <see cref="TextTag(string)"/> constructor.
-        /// </summary>
+        /// <summary>The <see cref="TextTag(string)"/> constructor.</summary>
         public static ConstructorInfo TextTag_CTOR = typeof(TextTag).GetConstructor(new Type[] { typeof(string) });
 
-        /// <summary>
-        /// The <see cref="Argument.Bits"/> field.
-        /// </summary>
+        /// <summary>The <see cref="Argument.Bits"/> field.</summary>
         public static FieldInfo Argument_Bits = typeof(Argument).GetField(nameof(Argument.Bits));
-        
-        /// <summary>
-        /// The <see cref="Argument.Parse(Action{string}, CompiledCommandRunnable)"/> method.
-        /// </summary>
+
+        /// <summary>The <see cref="Argument.Parse(Action{string}, CompiledCommandRunnable)"/> method.</summary>
         public static MethodInfo Argument_Parse = typeof(Argument).GetMethod(nameof(Argument.Parse));
 
-        /// <summary>
-        /// The <see cref="ArgumentBit.Parse(Action{string}, CompiledCommandRunnable)"/> method.
-        /// </summary>
+        /// <summary>The <see cref="ArgumentBit.Parse(Action{string}, CompiledCommandRunnable)"/> method.</summary>
         public static MethodInfo ArgumentBit_Parse = typeof(ArgumentBit).GetMethod(nameof(ArgumentBit.Parse));
 
-        /// <summary>
-        /// The <see cref="TextTag.EMPTY"/> field.
-        /// </summary>
+        /// <summary>The <see cref="TextTag.EMPTY"/> field.</summary>
         public static FieldInfo TextTag_Empty = typeof(TextTag).GetField(nameof(TextTag.EMPTY));
 
-        /// <summary>
-        /// The <see cref="TextArgumentBit.InputValue"/> field.
-        /// </summary>
+        /// <summary>The <see cref="TextArgumentBit.InputValue"/> field.</summary>
         public static FieldInfo TextArgumentBit_InputValue = typeof(TextArgumentBit).GetField(nameof(TextArgumentBit.InputValue));
 
         private static long IDINCR = 0;
 
-        /// <summary>
-        /// All valid duplicator calls known. Null values indicate that there is known to not be a duplicator.
-        /// </summary>
+        /// <summary>All valid duplicator calls known. Null values indicate that there is known to not be a duplicator.</summary>
         public static Dictionary<Type, MethodInfo> DuplicatorCalls = new Dictionary<Type, MethodInfo>(128);
 
-        /// <summary>
-        /// Gets the resultant type of this argument.
-        /// </summary>
+        /// <summary>Gets the resultant type of this argument.</summary>
         /// <param name="argument">The argument.</param>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
@@ -100,9 +74,7 @@ namespace FreneticScript.ScriptSystems
 
         private static readonly Type[] ParseMethodParams = new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) };
 
-        /// <summary>
-        /// Compiles the argument.
-        /// </summary>
+        /// <summary>Compiles the argument.</summary>
         /// <param name="argument">The argument.</param>
         /// <param name="entry">The relative stack entry.</param>
         /// <param name="values">Relevant CIL adaptation values object.</param>

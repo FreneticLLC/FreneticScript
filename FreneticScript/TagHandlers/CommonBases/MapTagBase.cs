@@ -19,9 +19,7 @@ namespace FreneticScript.TagHandlers.CommonBases
     // TODO: Explain better!
     // -->
 
-    /// <summary>
-    /// Handles the 'map' tag base.
-    /// </summary>
+    /// <summary>Handles the 'map' tag base.</summary>
     public class MapTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -32,18 +30,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // <@link explanation maps>What are maps?<@/link>
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public MapTagBase()
         {
             Name = "map";
             ResultTypeString = MapTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         public static MapTag HandleOne(TagData data)

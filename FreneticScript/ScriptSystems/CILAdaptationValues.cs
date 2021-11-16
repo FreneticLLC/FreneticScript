@@ -19,34 +19,22 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Represents one CIL adapter variable.
-    /// </summary>
+    /// <summary>Represents one CIL adapter variable.</summary>
     public class SingleCILVariable
     {
-        /// <summary>
-        /// The index of the local variable.
-        /// </summary>
+        /// <summary>The index of the local variable.</summary>
         public int Index;
 
-        /// <summary>
-        /// The name of the variable.
-        /// </summary>
+        /// <summary>The name of the variable.</summary>
         public string Name;
 
-        /// <summary>
-        /// The type of the variable.
-        /// </summary>
+        /// <summary>The type of the variable.</summary>
         public TagReturnType Type;
 
-        /// <summary>
-        /// The field that holds this variable's value.
-        /// </summary>
+        /// <summary>The field that holds this variable's value.</summary>
         public FieldInfo Field;
 
-        /// <summary>
-        /// Constructs a single CIL adapter variable.
-        /// </summary>
+        /// <summary>Constructs a single CIL adapter variable.</summary>
         /// <param name="_index">The variable index.</param>
         /// <param name="_name">The variable name.</param>
         /// <param name="_type">The variable type.</param>
@@ -60,79 +48,51 @@ namespace FreneticScript.ScriptSystems
         }
     }
 
-    /// <summary>
-    /// Holds all data needed for CIL adaptation.
-    /// </summary>
+    /// <summary>Holds all data needed for CIL adaptation.</summary>
     public class CILAdaptationValues
     {
-        /// <summary>
-        /// The compiled CSE involved.
-        /// </summary>
+        /// <summary>The compiled CSE involved.</summary>
         public CompiledCommandStackEntry Entry;
 
-        /// <summary>
-        /// The compiling script.
-        /// </summary>
+        /// <summary>The compiling script.</summary>
         public CommandScript Script;
 
-        /// <summary>
-        /// The debug mode currently in use.
-        /// </summary>
+        /// <summary>The debug mode currently in use.</summary>
         public DebugMode DBMode;
 
-        /// <summary>
-        /// Gets the command at the index.
-        /// </summary>
+        /// <summary>Gets the command at the index.</summary>
         /// <param name="index">The index value.</param>
         /// <returns>The command.</returns>
         public CommandEntry CommandAt(int index)
         {
             return Entry.Entries[index];
         }
-        
-        /// <summary>
-        /// Represents the <see cref="CommandEntry.Command"/> field.
-        /// </summary>
+
+        /// <summary>Represents the <see cref="CommandEntry.Command"/> field.</summary>
         public static readonly FieldInfo Entry_CommandField = typeof(CommandEntry).GetField(nameof(CommandEntry.Command));
-        
-        /// <summary>
-        /// Represents the <see cref="CommandEntry.Arguments"/> field.
-        /// </summary>
+
+        /// <summary>Represents the <see cref="CommandEntry.Arguments"/> field.</summary>
         public static readonly FieldInfo Entry_ArgumentsField = typeof(CommandEntry).GetField(nameof(CommandEntry.Arguments));
-        
-        /// <summary>
-        /// Represents the <see cref="CommandQueue.Error"/> field.
-        /// </summary>
+
+        /// <summary>Represents the <see cref="CommandQueue.Error"/> field.</summary>
         public static readonly FieldInfo Queue_Error = typeof(CommandQueue).GetField(nameof(CommandQueue.Error));
 
-        /// <summary>
-        /// The type of the class <see cref="CommandEntry"/> class.
-        /// </summary>
+        /// <summary>The type of the class <see cref="CommandEntry"/> class.</summary>
         public static readonly Type CommandEntryType = typeof(CommandEntry);
-        
-        /// <summary>
-        /// The IL code generator.
-        /// </summary>
+
+        /// <summary>The IL code generator.</summary>
         public ILGeneratorTracker ILGen;
 
-        /// <summary>
-        /// The method being constructed.
-        /// </summary>
+        /// <summary>The method being constructed.</summary>
         public MethodBuilder Method;
 
-        /// <summary>
-        /// The type being constructed.
-        /// </summary>
+        /// <summary>The type being constructed.</summary>
         public TypeBuilder Type;
 
-        /// <summary>
-        /// The trackers list (if tracking CIL output).
-        /// </summary>
+        /// <summary>The trackers list (if tracking CIL output).</summary>
         public List<ILGeneratorTracker> Trackers;
 
-        /// <summary>
-        /// Returns the data of a variable by its location ID.
-        /// </summary>
+        /// <summary>Returns the data of a variable by its location ID.</summary>
         /// <param name="varId">The variable location ID.</param>
         /// <returns>The variable data.</returns>
         public SingleCILVariable LocalVariableData(int varId)
@@ -144,9 +104,7 @@ namespace FreneticScript.ScriptSystems
             return Variables[varId];
         }
 
-        /// <summary>
-        /// Returns the return-type of a variable by its location ID.
-        /// </summary>
+        /// <summary>Returns the return-type of a variable by its location ID.</summary>
         /// <param name="varId">The variable location ID.</param>
         /// <returns>The return-type of the tag.</returns>
         public TagReturnType LocalVariableType(int varId)
@@ -189,26 +147,20 @@ namespace FreneticScript.ScriptSystems
             return -1;
         }
 
-        /// <summary>
-        /// Pushes a new set of variables, to start a scope.
-        /// </summary>
+        /// <summary>Pushes a new set of variables, to start a scope.</summary>
         public void PushVarSet()
         {
             LVarIDs.Push(CLVariables.Count);
             CLVariables.Add(new List<SingleCILVariable>());
         }
 
-        /// <summary>
-        /// Pops the newest set of variables, to end a scope.
-        /// </summary>
+        /// <summary>Pops the newest set of variables, to end a scope.</summary>
         public void PopVarSet()
         {
             LVarIDs.Pop();
         }
 
-        /// <summary>
-        /// Creates a var-lookup dictionary for the current stack location.
-        /// </summary>
+        /// <summary>Creates a var-lookup dictionary for the current stack location.</summary>
         /// <returns>The var-lookup dictionary.</returns>
         public Dictionary<string, SingleCILVariable> CreateVarLookup()
         {
@@ -223,9 +175,7 @@ namespace FreneticScript.ScriptSystems
             return varlookup;
         }
 
-        /// <summary>
-        /// Adds a variable at the highest scope.
-        /// </summary>
+        /// <summary>Adds a variable at the highest scope.</summary>
         /// <param name="var">The variable name.</param>
         /// <param name="type">The variable value.</param>
         /// <returns>The added variable's location.</returns>
@@ -248,73 +198,51 @@ namespace FreneticScript.ScriptSystems
             return id;
         }
 
-        /// <summary>
-        /// A list of all variables.
-        /// </summary>
+        /// <summary>A list of all variables.</summary>
         public List<SingleCILVariable> Variables = new List<SingleCILVariable>();
 
-        /// <summary>
-        /// All known CIL Variable data sets.
-        /// </summary>
+        /// <summary>All known CIL Variable data sets.</summary>
         public List<List<SingleCILVariable>> CLVariables = new List<List<SingleCILVariable>>();
 
-        /// <summary>
-        /// The current stack of LVarIDs.
-        /// </summary>
+        /// <summary>The current stack of LVarIDs.</summary>
         public Stack<int> LVarIDs = new Stack<int>();
 
-        /// <summary>
-        /// Fields for arguments, if generated.
-        /// </summary>
+        /// <summary>Fields for arguments, if generated.</summary>
         public FieldInfo[][] ArgumentFields;
 
-        /// <summary>
-        /// The current CIL Var ID.
-        /// </summary>
+        /// <summary>The current CIL Var ID.</summary>
         public int CLVarID = 0;
 
-        /// <summary>
-        /// Fields storing each command entry.
-        /// </summary>
+        /// <summary>Fields storing each command entry.</summary>
         public FieldInfo[] EntryFields;
 
-        /// <summary>
-        /// Load the entry onto the stack.
-        /// </summary>
+        /// <summary>Load the entry onto the stack.</summary>
         public void LoadEntry(int entry)
         {
             LoadRunnable();
             ILGen.Emit(OpCodes.Ldfld, EntryFields[entry]);
         }
 
-        /// <summary>
-        /// Load the queue variable onto the stack.
-        /// </summary>
+        /// <summary>Load the queue variable onto the stack.</summary>
         public void LoadQueue()
         {
             ILGen.Emit(OpCodes.Ldarg_1);
         }
 
-        /// <summary>
-        /// Loads a tag data object appropriate to the queue. Can trigger some logic to run.
-        /// </summary>
+        /// <summary>Loads a tag data object appropriate to the queue. Can trigger some logic to run.</summary>
         public void LoadTagData()
         {
             LoadQueue();
             ILGen.Emit(OpCodes.Call, CommandQueue.COMMANDQUEUE_GETTAGDATA);
         }
-        
-        /// <summary>
-        /// Loads the linked command runnable.
-        /// </summary>
+
+        /// <summary>Loads the linked command runnable.</summary>
         public void LoadRunnable()
         {
             ILGen.Emit(OpCodes.Ldarg_0);
         }
 
-        /// <summary>
-        /// Marks the command as the correct entry. Should be called with every command!
-        /// </summary>
+        /// <summary>Marks the command as the correct entry. Should be called with every command!</summary>
         /// <param name="entry">The entry location.</param>
         public void MarkCommand(int entry)
         {
@@ -331,9 +259,7 @@ namespace FreneticScript.ScriptSystems
             ILGen.Emit(OpCodes.Stfld, CompiledCommandRunnable.IndexField);
         }
 
-        /// <summary>
-        /// Loads the command, the entry, and the queue, for calling an execution function.
-        /// </summary>
+        /// <summary>Loads the command, the entry, and the queue, for calling an execution function.</summary>
         /// <param name="entry">The entry location.</param>
         public void PrepareExecutionCall(int entry)
         {
@@ -342,18 +268,14 @@ namespace FreneticScript.ScriptSystems
             LoadEntry(entry);
         }
 
-        /// <summary>
-        /// Call the "Execute(queue, entry)" method with appropriate parameters.
-        /// </summary>
+        /// <summary>Call the "Execute(queue, entry)" method with appropriate parameters.</summary>
         public void CallExecute(int entry, AbstractCommand cmd)
         {
             PrepareExecutionCall(entry);
             ILGen.Emit(OpCodes.Call, cmd.ExecuteMethod);
         }
 
-        /// <summary>
-        /// Makes a call to load the argument at the specified index in the specified entry.
-        /// </summary>
+        /// <summary>Makes a call to load the argument at the specified index in the specified entry.</summary>
         /// <param name="entry">The entry.</param>
         /// <param name="argument">The argument index.</param>
         public void LoadArgumentObject(int entry, int argument)
@@ -376,9 +298,7 @@ namespace FreneticScript.ScriptSystems
             ILGen.Emit(OpCodes.Call, arg.RawParseMethod ?? arg.CompiledParseMethod, 2);
         }
 
-        /// <summary>
-        /// Loads the local variable at the given index.
-        /// </summary>
+        /// <summary>Loads the local variable at the given index.</summary>
         /// <param name="index">The local variable index.</param>
         public void LoadLocalVariable(int index)
         {
@@ -386,9 +306,7 @@ namespace FreneticScript.ScriptSystems
             ILGen.Emit(OpCodes.Ldfld, LocalVariableData(index).Field);
         }
 
-        /// <summary>
-        /// Emits logic that ensures the argument is of the given type, converting if needed.
-        /// </summary>
+        /// <summary>Emits logic that ensures the argument is of the given type, converting if needed.</summary>
         /// <param name="currentType">The current object type.</param>
         /// <param name="requiredType">The type it needs to be.</param>
         public void EnsureType(TagReturnType currentType, TagReturnType requiredType)
@@ -416,9 +334,7 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// Emits logic that ensures the argument is of the given type, converting if needed.
-        /// </summary>
+        /// <summary>Emits logic that ensures the argument is of the given type, converting if needed.</summary>
         /// <param name="arg">The argument.</param>
         /// <param name="requiredType">The type it needs to be.</param>
         public void EnsureType(Argument arg, TagReturnType requiredType)

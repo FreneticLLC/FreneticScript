@@ -17,48 +17,36 @@ using FreneticScript.TagHandlers.HelperBases;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a Function as a tag.
-    /// </summary>
+    /// <summary>Represents a Function as a tag.</summary>
     [ObjectMeta(Name = FunctionTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Command System", Description = "Represents a function.")]
     public class FunctionTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Function;
         }
 
-        /// <summary>
-        /// The represented function.
-        /// </summary>
+        /// <summary>The represented function.</summary>
         public CommandScript Internal;
 
-        /// <summary>
-        /// Constructs a new FunctionTag.
-        /// </summary>
+        /// <summary>Constructs a new FunctionTag.</summary>
         /// <param name="script">The CommandScript to base this FunctionTag off of.</param>
         public FunctionTag(CommandScript script)
         {
             Internal = script;
         }
 
-        /// <summary>
-        /// Returns a FunctionTag for the given text.
-        /// </summary>
+        /// <summary>Returns a FunctionTag for the given text.</summary>
         /// <param name="data">The data.</param>
         /// <param name="input">The input text.</param>
         /// <returns>A TagTypeTag.</returns>
@@ -110,10 +98,8 @@ namespace FreneticScript.TagHandlers.Objects
             }
             throw data.Error($"Unknown Function type '{TextStyle.Separate}{type}{TextStyle.Base}'.");
         }
-        
-        /// <summary>
-        /// Creates a FunctionTag for the given input data.
-        /// </summary>
+
+        /// <summary>Creates a FunctionTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The input object.</param>
         /// <returns>A valid FunctionTag.</returns>
@@ -127,9 +113,7 @@ namespace FreneticScript.TagHandlers.Objects
             };
         }
 
-        /// <summary>
-        /// The FunctionTag type.
-        /// </summary>
+        /// <summary>The FunctionTag type.</summary>
         public const string TYPE = "function";
 
         #pragma warning disable 1591
@@ -150,9 +134,7 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
-        /// <summary>
-        /// Gets a simple name for this function.
-        /// </summary>
+        /// <summary>Gets a simple name for this function.</summary>
         /// <returns>The name.</returns>
         public string Name()
         {
@@ -166,9 +148,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// Returns the function data.
-        /// </summary>
+        /// <summary>Returns the function data.</summary>
         /// <returns>The function.</returns>
         public override string ToString()
         {
@@ -182,9 +162,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {

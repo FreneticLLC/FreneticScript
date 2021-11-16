@@ -14,44 +14,32 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a true or false as a usable tag.
-    /// </summary>
+    /// <summary>Represents a true or false as a usable tag.</summary>
     [ObjectMeta(Name = BooleanTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a 'true' or 'false'.")]
     public class BooleanTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Boolean;
         }
 
-        /// <summary>
-        /// The boolean this tag represents.
-        /// </summary>
+        /// <summary>The boolean this tag represents.</summary>
         public bool Internal;
 
-        /// <summary>
-        /// A true value.
-        /// </summary>
+        /// <summary>A true value.</summary>
         public static readonly BooleanTag TRUE = new BooleanTag(true);
 
-        /// <summary>
-        /// A false value.
-        /// </summary>
+        /// <summary>A false value.</summary>
         public static readonly BooleanTag FALSE = new BooleanTag(false);
 
         /// <summary>
@@ -65,9 +53,7 @@ namespace FreneticScript.TagHandlers.Objects
             return val ? TRUE : FALSE;
         }
 
-        /// <summary>
-        /// Helper validator to validate an argument as a boolean tag.
-        /// </summary>
+        /// <summary>Helper validator to validate an argument as a boolean tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
@@ -147,9 +133,7 @@ namespace FreneticScript.TagHandlers.Objects
             return CreateFor(input, dat);
         }
 
-        /// <summary>
-        /// Tries to return a valid boolean, or null.
-        /// </summary>
+        /// <summary>Tries to return a valid boolean, or null.</summary>
         /// <param name="input">The input that is potentially a boolean.</param>
         /// <returns>A boolean, or null.</returns>
         public static BooleanTag TryFor(string input)
@@ -166,9 +150,7 @@ namespace FreneticScript.TagHandlers.Objects
             return null;
         }
 
-        /// <summary>
-        /// Tries to return a valid boolean, or null.
-        /// </summary>
+        /// <summary>Tries to return a valid boolean, or null.</summary>
         /// <param name="input">The input that is potentially a boolean.</param>
         /// <returns>A boolean, or null.</returns>
         public static BooleanTag TryFor(TemplateObject input)
@@ -194,14 +176,10 @@ namespace FreneticScript.TagHandlers.Objects
             Internal = _val;
         }
 
-        /// <summary>
-        /// The BooleanTag type.
-        /// </summary>
+        /// <summary>The BooleanTag type.</summary>
         public const string TYPE = "boolean";
 
-        /// <summary>
-        /// Creates a BooleanTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a BooleanTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid boolean tag.</returns>
@@ -267,10 +245,8 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-        
-        /// <summary>
-        /// Returns the a string representation of the boolean internally stored by this boolean tag. IE, this returns "true" or "false".
-        /// </summary>
+
+        /// <summary>Returns the a string representation of the boolean internally stored by this boolean tag. IE, this returns "true" or "false".</summary>
         /// <returns>A string representation of the boolean.</returns>
         public override string ToString()
         {

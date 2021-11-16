@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.CommonBases
 {
-    /// <summary>
-    /// Returns CVar information.
-    /// </summary>
+    /// <summary>Returns CVar information.</summary>
     public class CVarTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -25,18 +23,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // <@link explanation cvars>What are CVars?<@/link>
         // -->
 
-        /// <summary>
-        /// Construct the CVarTags - for internal use only.
-        /// </summary>
+        /// <summary>Construct the CVarTags - for internal use only.</summary>
         public CVarTagBase()
         {
             Name = "cvar";
             ResultTypeString = CVarTag.TYPE;
         }
-        
-        /// <summary>
-        /// Handles a 'cvar' tag.
-        /// </summary>
+
+        /// <summary>Handles a 'cvar' tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public static CVarTag HandleOne(TagData data)
         {

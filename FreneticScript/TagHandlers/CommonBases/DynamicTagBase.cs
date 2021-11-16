@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.CommonBases
 {
-    /// <summary>
-    /// Handles the 'dynamic' tag base.
-    /// </summary>
+    /// <summary>Handles the 'dynamic' tag base.</summary>
     public class DynamicTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -24,18 +22,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // @Returns the input data as a DynamicTag.
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public DynamicTagBase()
         {
             Name = "dynamic";
             ResultTypeString = DynamicTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         public static DynamicTag HandleOne(TagData data)

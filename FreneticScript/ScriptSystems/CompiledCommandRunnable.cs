@@ -15,50 +15,32 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Abstract class for compiled runnables.
-    /// </summary>
+    /// <summary>Abstract class for compiled runnables.</summary>
     public abstract class CompiledCommandRunnable
     {
-        /// <summary>
-        /// This class's <see cref="Run(CommandQueue)"/> method.
-        /// </summary>
+        /// <summary>This class's <see cref="Run(CommandQueue)"/> method.</summary>
         public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue) });
 
-        /// <summary>
-        /// This class's <see cref="Entry"/> field.
-        /// </summary>
+        /// <summary>This class's <see cref="Entry"/> field.</summary>
         public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(Entry));
-        
-        /// <summary>
-        /// Represents the <see cref="Index"/> field.
-        /// </summary>
+
+        /// <summary>Represents the <see cref="Index"/> field.</summary>
         public static readonly FieldInfo IndexField = typeof(CompiledCommandRunnable).GetField(nameof(Index));
 
-        /// <summary>
-        /// Runs the runnable.
-        /// </summary>
+        /// <summary>Runs the runnable.</summary>
         /// <param name="queue">The queue to run on.</param>
         public abstract void Run(CommandQueue queue);
-        
-        /// <summary>
-        /// How much debug information this portion of the stack should show.
-        /// </summary>
+
+        /// <summary>How much debug information this portion of the stack should show.</summary>
         public DebugMode Debug;
 
-        /// <summary>
-        /// Run this when the runnable STOPs.
-        /// </summary>
+        /// <summary>Run this when the runnable STOPs.</summary>
         public Action Callback;
 
-        /// <summary>
-        /// The index of the currently running command.
-        /// </summary>
+        /// <summary>The index of the currently running command.</summary>
         public int Index;
 
-        /// <summary>
-        /// Gets the current command entry, or null.
-        /// </summary>
+        /// <summary>Gets the current command entry, or null.</summary>
         public CommandEntry CurrentCommandEntry
         {
             get
@@ -67,24 +49,16 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// All entry data available in this currently running section.
-        /// </summary>
+        /// <summary>All entry data available in this currently running section.</summary>
         public AbstractCommandEntryData[] EntryData;
 
-        /// <summary>
-        /// The base stack entry.
-        /// </summary>
+        /// <summary>The base stack entry.</summary>
         public readonly CompiledCommandStackEntry Entry;
 
-        /// <summary>
-        /// The current queue, or null.
-        /// </summary>
+        /// <summary>The current queue, or null.</summary>
         public CommandQueue CurrentQueue = null;
 
-        /// <summary>
-        /// Duplicates the runnable object.
-        /// </summary>
+        /// <summary>Duplicates the runnable object.</summary>
         /// <returns>The duplicate.</returns>
         public CompiledCommandRunnable Duplicate()
         {

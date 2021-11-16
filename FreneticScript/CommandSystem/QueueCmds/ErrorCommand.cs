@@ -14,9 +14,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Error command.
-    /// </summary>
+    /// <summary>The Error command.</summary>
     public class ErrorCommand : AbstractCommand
     {
         // <--[command]
@@ -38,9 +36,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // TODO: More examples!
         // -->
 
-        /// <summary>
-        /// Constructs the error command.
-        /// </summary>
+        /// <summary>Constructs the error command.</summary>
         public ErrorCommand()
         {
             Name = "error";
@@ -57,9 +53,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

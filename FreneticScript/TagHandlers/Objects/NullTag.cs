@@ -12,16 +12,12 @@ using System.Text;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a null value as a usable tag.
-    /// </summary>
+    /// <summary>Represents a null value as a usable tag.</summary>
     [ObjectMeta(Name = NullTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents a null value.")]
     public class NullTag : TemplateObject
     {
 
-        /// <summary>
-        /// A reference to a pregenerated NullTag. As all NullTag objects are the same, this value can be used anywhere a NullTag is needed.
-        /// </summary>
+        /// <summary>A reference to a pregenerated NullTag. As all NullTag objects are the same, this value can be used anywhere a NullTag is needed.</summary>
         public static readonly NullTag NULL_VALUE = new NullTag();
 
         /// <summary>
@@ -29,18 +25,14 @@ namespace FreneticScript.TagHandlers.Objects
         /// </summary>
         public static readonly DynamicTag DYNAMIC_NULL_VALUE = new DynamicTag(NULL_VALUE);
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
@@ -55,14 +47,10 @@ namespace FreneticScript.TagHandlers.Objects
         {
         }
 
-        /// <summary>
-        /// The NullTag type.
-        /// </summary>
+        /// <summary>The NullTag type.</summary>
         public const string TYPE = "null";
 
-        /// <summary>
-        /// Creates a NullTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a NullTag for the given input data.</summary>
         /// <param name="data">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid time tag.</returns>
@@ -86,21 +74,17 @@ namespace FreneticScript.TagHandlers.Objects
         {
             return new TagTypeTag(data.TagSystem.Types.Type_Null);
         }
-        
+
 #pragma warning restore 1591
-        
-        /// <summary>
-        /// Returns "&amp;{NULL}".
-        /// </summary>
+
+        /// <summary>Returns "&amp;{NULL}".</summary>
         /// <returns>"&amp;{NULL}".</returns>
         public override string ToString()
         {
             return "&{NULL}";
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {

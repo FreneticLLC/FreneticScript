@@ -17,34 +17,26 @@ using FreneticScript.TagHandlers.HelperBases;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a list as a usable tag.
-    /// </summary>
+    /// <summary>Represents a list as a usable tag.</summary>
     [ObjectMeta(Name = ListTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a list of objects.")]
     public class ListTag: TemplateObject, IListTagForm
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_List;
         }
 
-        /// <summary>
-        /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.
-        /// </summary>
+        /// <summary>The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.</summary>
         public ListTag ListForm
         {
             get
@@ -53,49 +45,37 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// The list this ListTag represents.
-        /// </summary>
+        /// <summary>The list this ListTag represents.</summary>
         public List<TemplateObject> Internal;
 
-        /// <summary>
-        /// Constructs a new list tag.
-        /// </summary>
+        /// <summary>Constructs a new list tag.</summary>
         public ListTag()
         {
             Internal = new List<TemplateObject>();
         }
 
-        /// <summary>
-        /// Helper validator to validate an argument as a list tag.
-        /// </summary>
+        /// <summary>Helper validator to validate an argument as a list tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
             validator.ObjectValue = CreateFor(validator.ObjectValue);
         }
 
-        /// <summary>
-        /// Constructs a list tag from a list of entries.
-        /// </summary>
+        /// <summary>Constructs a list tag from a list of entries.</summary>
         /// <param name="entries">The entries.</param>
         public ListTag(List<TemplateObject> entries)
         {
             Internal = new List<TemplateObject>(entries);
         }
 
-        /// <summary>
-        /// Constructs a list tag from a list of entries.
-        /// </summary>
+        /// <summary>Constructs a list tag from a list of entries.</summary>
         /// <param name="capacity">The number of expected entries.</param>
         public ListTag(int capacity)
         {
             Internal = new List<TemplateObject>(capacity);
         }
 
-        /// <summary>
-        /// Constructs a list tag from a list of textual entries.
-        /// </summary>
+        /// <summary>Constructs a list tag from a list of textual entries.</summary>
         /// <param name="entries">The textual entries.</param>
         public ListTag(List<string> entries)
         {
@@ -106,9 +86,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// Constructs a list tag from text input.
-        /// </summary>
+        /// <summary>Constructs a list tag from text input.</summary>
         /// <param name="list">The text input.</param>
         /// <returns>A valid list.</returns>
         public static ListTag For(string list)
@@ -128,9 +106,7 @@ namespace FreneticScript.TagHandlers.Objects
             return tlist;
         }
 
-        /// <summary>
-        /// Constructs a list tag from saved text input.
-        /// </summary>
+        /// <summary>Constructs a list tag from saved text input.</summary>
         /// <param name="list">The saved text input.</param>
         /// <param name="data">The tag data.</param>
         /// <returns>A valid list.</returns>
@@ -149,10 +125,8 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return tlist;
         }
-        
-        /// <summary>
-        /// Creates a ListTag for the given input data.
-        /// </summary>
+
+        /// <summary>Creates a ListTag for the given input data.</summary>
         /// <param name="input">The text input.</param>
         /// <returns>A valid list tag.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -168,9 +142,7 @@ namespace FreneticScript.TagHandlers.Objects
             };
         }
 
-        /// <summary>
-        /// Creates a ListTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a ListTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid list tag.</returns>
@@ -180,9 +152,7 @@ namespace FreneticScript.TagHandlers.Objects
             return CreateFor(input);
         }
 
-        /// <summary>
-        /// The ListTag type.
-        /// </summary>
+        /// <summary>The ListTag type.</summary>
         public const string TYPE = "list";
 
 #pragma warning disable 1591
@@ -237,7 +207,7 @@ namespace FreneticScript.TagHandlers.Objects
             return newlist;
         }
 
-        [TagMeta(TagType = TYPE, Name = "filter", Group = "List Attributes", ReturnType = ListTag.TYPE, 
+        [TagMeta(TagType = TYPE, Name = "filter", Group = "List Attributes", ReturnType = ListTag.TYPE,
             Returns = "The list modified such that each entry is only included if the input modifier would return true for it.",
             Examples = new string[] { "'one|two|three|' .filter[true] returns 'one|two|three|'.", "'1|2|3|' .filter[<{[filter_value].equals[2]}>] returns '2|'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -257,7 +227,7 @@ namespace FreneticScript.TagHandlers.Objects
             return newlist;
         }
 
-        [TagMeta(TagType = TYPE, Name = "parse", Group = "List Attributes", ReturnType = ListTag.TYPE, 
+        [TagMeta(TagType = TYPE, Name = "parse", Group = "List Attributes", ReturnType = ListTag.TYPE,
             Returns = "list modified such that each entry is modified to be what the input modifier would return for it.",
             Examples = new string[] { "'one|two|three|' .parse[<{[parse_value].to_upper}>] returns 'ONE|TWO|THREE|'." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -341,7 +311,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "range", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "The specified set of entries in the list.",
-            Examples = new string[] { "'one|two|three|four|' .range[2|3] returns 'two|three|'.", "'one|two|three|' .range[2|2] returns 'two|'." }, 
+            Examples = new string[] { "'one|two|three|four|' .range[2|3] returns 'two|three|'.", "'one|two|three|' .range[2|2] returns 'two|'." },
             Others = new String[] { "Note that indices are one-based." })]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag Tag_Range(ListTag obj, TagData data)
@@ -400,7 +370,7 @@ namespace FreneticScript.TagHandlers.Objects
             return newlist;
         }
 
-        [TagMeta(TagType = TYPE, Name = "insert", Group = "List Attributes", ReturnType = ListTag.TYPE, 
+        [TagMeta(TagType = TYPE, Name = "insert", Group = "List Attributes", ReturnType = ListTag.TYPE,
             Returns = "A list with the input list added after an index specified as the first item in the list (index is not included in the final list).",
             Examples = new string[] { "'one|two|three|' .insert[1|a|b|] returns 'one|a|b|two|three|'." },
             Others = new String[] { "Note that indices are one-based.", "Specify 0 as the index to insert at the beginning." })]
@@ -441,10 +411,8 @@ namespace FreneticScript.TagHandlers.Objects
         // TODO: Sort, styled like filter/parse tags
 
 #pragma warning restore 1591
-            
-        /// <summary>
-        /// Converts the ListTag to a list of strings.
-        /// </summary>
+
+        /// <summary>Converts the ListTag to a list of strings.</summary>
         /// <returns>A list of strings.</returns>
         public List<string> ToStringList()
         {
@@ -456,9 +424,7 @@ namespace FreneticScript.TagHandlers.Objects
             return list;
         }
 
-        /// <summary>
-        /// Converts the list tag to a savable string.
-        /// </summary>
+        /// <summary>Converts the list tag to a savable string.</summary>
         /// <returns>A typed string representation of the list.</returns>
         public override string GetSavableString()
         {
@@ -472,9 +438,7 @@ namespace FreneticScript.TagHandlers.Objects
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Converts the list tag to a string.
-        /// </summary>
+        /// <summary>Converts the list tag to a string.</summary>
         /// <returns>A string representation of the list.</returns>
         public override string ToString()
         {
@@ -486,9 +450,7 @@ namespace FreneticScript.TagHandlers.Objects
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {
@@ -500,9 +462,7 @@ namespace FreneticScript.TagHandlers.Objects
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Renders the list as a comma-separated string (no escaping).
-        /// </summary>
+        /// <summary>Renders the list as a comma-separated string (no escaping).</summary>
         public string ToCSString()
         {
             StringBuilder sb = new StringBuilder();
@@ -517,9 +477,7 @@ namespace FreneticScript.TagHandlers.Objects
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Renders the list as a space-separated string (no escaping).
-        /// </summary>
+        /// <summary>Renders the list as a space-separated string (no escaping).</summary>
         public string ToSpaceString()
         {
             StringBuilder sb = new StringBuilder();
@@ -534,9 +492,7 @@ namespace FreneticScript.TagHandlers.Objects
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Renders the list as an unseparated string (no escaping).
-        /// </summary>
+        /// <summary>Renders the list as an unseparated string (no escaping).</summary>
         public string ToFlatString()
         {
             StringBuilder sb = new StringBuilder();
@@ -547,9 +503,7 @@ namespace FreneticScript.TagHandlers.Objects
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Renders the list as a comma-separated string with 'and' and similar constructs.
-        /// </summary>
+        /// <summary>Renders the list as a comma-separated string with 'and' and similar constructs.</summary>
         public string Formatted()
         {
             if (Internal.Count == 2)

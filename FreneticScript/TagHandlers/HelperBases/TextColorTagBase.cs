@@ -13,9 +13,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// Returns the various default colors within the tag system.
-    /// </summary>
+    /// <summary>Returns the various default colors within the tag system.</summary>
     public class TextColorTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -26,9 +24,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         // @Other TODO: Link full rundown of text colors.
         // -->
 
-        /// <summary>
-        /// Construct the TextColorTagBase - for internal use only.
-        /// </summary>
+        /// <summary>Construct the TextColorTagBase - for internal use only.</summary>
         public TextColorTagBase()
         {
             Name = "text_color";
@@ -42,14 +38,10 @@ namespace FreneticScript.TagHandlers.HelperBases
             Colors.Add("base", () => TextStyle.Base);
         }
 
-        /// <summary>
-        /// All colors known by this tag.
-        /// </summary>
+        /// <summary>All colors known by this tag.</summary>
         public Dictionary<string, Func<string>> Colors = new Dictionary<string, Func<string>>();
 
-        /// <summary>
-        /// Handles a 'color' tag.
-        /// </summary>
+        /// <summary>Handles a 'color' tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public TextTag HandleOneObjective(TagData data)
         {

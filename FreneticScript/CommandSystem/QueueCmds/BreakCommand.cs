@@ -51,14 +51,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // TODO: More examples!
     // -->
 
-    /// <summary>
-    /// The Break command.
-    /// </summary>
+    /// <summary>The Break command.</summary>
     public class BreakCommand : AbstractCommand
     {
-        /// <summary>
-        /// Constructs the breaks command.
-        /// </summary>
+        /// <summary>Constructs the breaks command.</summary>
         public BreakCommand()
         {
             Name = "break";
@@ -75,9 +71,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             // TODO: Compile the break command!
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

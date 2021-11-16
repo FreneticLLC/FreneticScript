@@ -14,17 +14,13 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Try command.
-    /// </summary>
+    /// <summary>The Try command.</summary>
     public class TryCommand : AbstractCommand
     {
         // TODO: Meta!
         // @Block always
 
-        /// <summary>
-        /// Constructs the try command.
-        /// </summary>
+        /// <summary>Constructs the try command.</summary>
         public TryCommand()
         {
             Name = "try";
@@ -35,10 +31,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MinimumArguments = 0;
             MaximumArguments = 0;
         }
-        
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

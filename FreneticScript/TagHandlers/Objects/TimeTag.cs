@@ -14,42 +14,32 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a date-time as a usable tag.
-    /// </summary>
+    /// <summary>Represents a date-time as a usable tag.</summary>
     [ObjectMeta(Name = TimeTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a point in time.",
         Others = new string[] { "Representation format is YYYY/MM/DD hh:mm:ss:tttt UTC+OO:oo ... ':tttt' is optional, all else is required."})]
     public class TimeTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Time;
         }
 
-        /// <summary>
-        /// The DateTime this TimeTag represents.
-        /// </summary>
+        /// <summary>The DateTime this TimeTag represents.</summary>
         public DateTimeOffset Internal;
 
         // TODO: DurationTag, to represent spans of time.
 
-        /// <summary>
-        /// Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)
-        /// </summary>
+        /// <summary>Get a time tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case!)</summary>
         /// <param name="input">The input text to create a time from.</param>
         /// <returns>The time tag, or null.</returns>
         public static TimeTag For(string input)
@@ -61,24 +51,18 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return new TimeTag(dt.Value);
         }
-        
-        /// <summary>
-        /// Constructs a time tag.
-        /// </summary>
+
+        /// <summary>Constructs a time tag.</summary>
         /// <param name="_time">The internal date-time to use.</param>
         public TimeTag(DateTimeOffset _time)
         {
             Internal = _time;
         }
 
-        /// <summary>
-        /// The TimeTag type.
-        /// </summary>
+        /// <summary>The TimeTag type.</summary>
         public const string TYPE = "time";
 
-        /// <summary>
-        /// Creates a SystemTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a SystemTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid time tag.</returns>
@@ -210,9 +194,7 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
-        /// <summary>
-        /// Returns the a string representation of the date-time internally stored by this time tag.
-        /// </summary>
+        /// <summary>Returns the a string representation of the date-time internally stored by this time tag.</summary>
         /// <returns>A string representation of the date-time.</returns>
         public override string ToString()
         {

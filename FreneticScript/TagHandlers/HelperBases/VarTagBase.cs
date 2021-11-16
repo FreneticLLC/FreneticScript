@@ -26,9 +26,7 @@ namespace FreneticScript.TagHandlers.HelperBases
     // TODO: Explain better!
     // -->
 
-    /// <summary>
-    /// Handles the 'var' tag base.
-    /// </summary>
+    /// <summary>Handles the 'var' tag base.</summary>
     public class VarTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -39,17 +37,13 @@ namespace FreneticScript.TagHandlers.HelperBases
         // <@link explanation Queue Variables>What are queue variables?<@/link>
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public VarTagBase()
         {
             Name = "var";
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         public static TemplateObject HandleOne(TagData data)
@@ -57,9 +51,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             throw new NotImplementedException("Var tag MUST be compiled!");
         }
 
-        /// <summary>
-        /// Adapts the var tag base for compiling.
-        /// </summary>
+        /// <summary>Adapts the var tag base for compiling.</summary>
         /// <param name="ccse">The compiled CSE.</param>
         /// <param name="tab">The TagArgumentBit.</param>
         /// <param name="i">The command index.</param>

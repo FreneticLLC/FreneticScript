@@ -13,40 +13,30 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents an integer number as a usable tag.
-    /// </summary>
+    /// <summary>Represents an integer number as a usable tag.</summary>
     [ObjectMeta(Name = IntegerTag.TYPE, SubTypeName = NumberTag.TYPE, RawInternal = true, Group = "Mathematics", Description = "Represents an integer.",
         Others = new string[] { "Note that the number is internally stored as a 64-bit signed integer (a 'long')." })]
     public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Integer;
         }
 
-        /// <summary>
-        /// The integer this IntegerTag represents.
-        /// </summary>
+        /// <summary>The integer this IntegerTag represents.</summary>
         public long Internal;
 
-        /// <summary>
-        /// The integer value of this IntegerTag-like object.
-        /// </summary>
+        /// <summary>The integer value of this IntegerTag-like object.</summary>
         public long IntegerForm
         {
             get
@@ -55,9 +45,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// The number value of this NumberTag-like object.
-        /// </summary>
+        /// <summary>The number value of this NumberTag-like object.</summary>
         public double NumberForm
         {
             get
@@ -65,10 +53,8 @@ namespace FreneticScript.TagHandlers.Objects
                 return Internal;
             }
         }
-        
-        /// <summary>
-        /// Helper validator to validate an argument as an integer tag.
-        /// </summary>
+
+        /// <summary>Helper validator to validate an argument as an integer tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
@@ -138,9 +124,7 @@ namespace FreneticScript.TagHandlers.Objects
             return input as IntegerTag ?? For(dat, input.ToString());
         }
 
-        /// <summary>
-        /// Tries to return a valid integer, or null.
-        /// </summary>
+        /// <summary>Tries to return a valid integer, or null.</summary>
         /// <param name="input">The input that is potentially an integer.</param>
         /// <returns>An integer, or null.</returns>
         public static IntegerTag TryFor(string input)
@@ -152,9 +136,7 @@ namespace FreneticScript.TagHandlers.Objects
             return null;
         }
 
-        /// <summary>
-        /// Tries to return a valid integer, or null.
-        /// </summary>
+        /// <summary>Tries to return a valid integer, or null.</summary>
         /// <param name="input">The input that is potentially an integer.</param>
         /// <returns>An integer, or null.</returns>
         public static IntegerTag TryFor(TemplateObject input)
@@ -170,23 +152,17 @@ namespace FreneticScript.TagHandlers.Objects
             return TryFor(input.ToString());
         }
 
-        /// <summary>
-        /// Constructs an integer tag.
-        /// </summary>
+        /// <summary>Constructs an integer tag.</summary>
         /// <param name="_val">The internal integer to use.</param>
         public IntegerTag(long _val)
         {
             Internal = _val;
         }
 
-        /// <summary>
-        /// The IntegerTag type.
-        /// </summary>
+        /// <summary>The IntegerTag type.</summary>
         public const string TYPE = "integer";
 
-        /// <summary>
-        /// Creates an IntegerTag for the given input data.
-        /// </summary>
+        /// <summary>Creates an IntegerTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid integer tag.</returns>
@@ -210,9 +186,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// Creates an IntegerTag for the given input data.
-        /// </summary>
+        /// <summary>Creates an IntegerTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid integer tag.</returns>
@@ -392,19 +366,15 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-        
-        /// <summary>
-        /// Returns the a string representation of the integer internally stored by this integer tag. EG, could return "0", or "1", or...
-        /// </summary>
+
+        /// <summary>Returns the a string representation of the integer internally stored by this integer tag. EG, could return "0", or "1", or...</summary>
         /// <returns>A string representation of the integer.</returns>
         public override string ToString()
         {
             return Internal.ToString();
         }
 
-        /// <summary>
-        /// Adds a value to the object.
-        /// </summary>
+        /// <summary>Adds a value to the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to add.</param>
         [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
@@ -413,9 +383,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag(first.Internal + val.Internal);
         }
 
-        /// <summary>
-        /// Subtracts a value from the object.
-        /// </summary>
+        /// <summary>Subtracts a value from the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to subtract.</param>
         [ObjectOperationAttribute(ObjectOperation.SUBTRACT, Input = TYPE)]
@@ -424,9 +392,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag(first.Internal - val.Internal);
         }
 
-        /// <summary>
-        /// Multiplies the object by a value.
-        /// </summary>
+        /// <summary>Multiplies the object by a value.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to multiply by.</param>
         [ObjectOperationAttribute(ObjectOperation.MULTIPLY, Input = TYPE)]
@@ -435,9 +401,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new IntegerTag(first.Internal * val.Internal);
         }
 
-        /// <summary>
-        /// Divides the object by a value.
-        /// </summary>
+        /// <summary>Divides the object by a value.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to divide by.</param>
         [ObjectOperationAttribute(ObjectOperation.DIVIDE, Input = TYPE)]

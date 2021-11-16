@@ -14,49 +14,31 @@ using FreneticScript.CommandSystem.Arguments;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// Part of a tag.
-    /// </summary>
+    /// <summary>Part of a tag.</summary>
     public class TagBit
     {
-        /// <summary>
-        /// The 'Handler' field.
-        /// </summary>
+        /// <summary>The 'Handler' field.</summary>
         public static FieldInfo Field_Handler = typeof(TagBit).GetField(nameof(TagBit.Handler));
 
-        /// <summary>
-        /// The 'TagHandler' field.
-        /// </summary>
+        /// <summary>The 'TagHandler' field.</summary>
         public static FieldInfo Field_TagHandler = typeof(TagBit).GetField(nameof(TagBit.TagHandler));
 
-        /// <summary>
-        /// The main portion of the tag.
-        /// </summary>
+        /// <summary>The main portion of the tag.</summary>
         public string Key = null;
 
-        /// <summary>
-        /// The [Modifier] portion of a tag.
-        /// </summary>
+        /// <summary>The [Modifier] portion of a tag.</summary>
         public Argument Variable = null;
 
-        /// <summary>
-        /// The original input. (For use with compiled data).
-        /// </summary>
+        /// <summary>The original input. (For use with compiled data).</summary>
         public string OriginalInput;
 
-        /// <summary>
-        /// The handler that could handle this tag, if any is available.
-        /// </summary>
+        /// <summary>The handler that could handle this tag, if any is available.</summary>
         public TagSubHandler Handler = null;
 
-        /// <summary>
-        /// The help info that could handle this tag, if any is available.
-        /// </summary>
+        /// <summary>The help info that could handle this tag, if any is available.</summary>
         public TagHelpInfo TagHandler = null;
 
-        /// <summary>
-        /// Returns the tag bit as tag input text.
-        /// </summary>
+        /// <summary>Returns the tag bit as tag input text.</summary>
         /// <returns>The tag input text.</returns>
         public override string ToString()
         {

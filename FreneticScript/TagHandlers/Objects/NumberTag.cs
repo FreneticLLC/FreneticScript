@@ -13,40 +13,30 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a number as a usable tag.
-    /// </summary>
+    /// <summary>Represents a number as a usable tag.</summary>
     [ObjectMeta(Name = NumberTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a number.",
         Others = new string[] { "Note that the number is internally stored as a 64-bit signed floating point number (a 'double')." })]
     public class NumberTag : TemplateObject, INumberTagForm
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Number;
         }
 
-        /// <summary>
-        /// The number this NumberTag represents.
-        /// </summary>
+        /// <summary>The number this NumberTag represents.</summary>
         public double Internal;
 
-        /// <summary>
-        /// The number value of this NumberTag-like object.
-        /// </summary>
+        /// <summary>The number value of this NumberTag-like object.</summary>
         public double NumberForm
         {
             get
@@ -55,9 +45,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// Helper validator to validate an argument as a number tag.
-        /// </summary>
+        /// <summary>Helper validator to validate an argument as a number tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
@@ -129,9 +117,7 @@ namespace FreneticScript.TagHandlers.Objects
             return input as NumberTag ?? For(dat, input.ToString());
         }
 
-        /// <summary>
-        /// Tries to return a valid number, or null.
-        /// </summary>
+        /// <summary>Tries to return a valid number, or null.</summary>
         /// <param name="input">The input that is potentially a number.</param>
         /// <returns>A number, or null.</returns>
         public static NumberTag TryFor(string input)
@@ -143,9 +129,7 @@ namespace FreneticScript.TagHandlers.Objects
             return null;
         }
 
-        /// <summary>
-        /// Tries to return a valid number, or null.
-        /// </summary>
+        /// <summary>Tries to return a valid number, or null.</summary>
         /// <param name="input">The input that is potentially a number.</param>
         /// <returns>A number, or null.</returns>
         public static NumberTag TryFor(TemplateObject input)
@@ -161,18 +145,14 @@ namespace FreneticScript.TagHandlers.Objects
             return TryFor(input.ToString());
         }
 
-        /// <summary>
-        /// Constructs a number tag.
-        /// </summary>
+        /// <summary>Constructs a number tag.</summary>
         /// <param name="_val">The internal number to use.</param>
         public NumberTag(double _val)
         {
             Internal = _val;
         }
 
-        /// <summary>
-        /// Constructs a number tag for a given integer tag.
-        /// </summary>
+        /// <summary>Constructs a number tag for a given integer tag.</summary>
         /// <param name="obj">The integer tag object.</param>
         /// <returns>The number tag result.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -181,9 +161,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag((obj as IntegerTag).Internal);
         }
 
-        /// <summary>
-        /// Creates a NumberTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a NumberTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid number tag.</returns>
@@ -200,9 +178,7 @@ namespace FreneticScript.TagHandlers.Objects
             };
         }
 
-        /// <summary>
-        /// The NumberTag type.
-        /// </summary>
+        /// <summary>The NumberTag type.</summary>
         public const string TYPE = "number";
 
 #pragma warning disable 1591
@@ -549,18 +525,14 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
-        /// <summary>
-        /// Returns the a string representation of the number internally stored by this number tag. EG, could return "0", or "1", or "-1.005", or...
-        /// </summary>
+        /// <summary>Returns the a string representation of the number internally stored by this number tag. EG, could return "0", or "1", or "-1.005", or...</summary>
         /// <returns>A string representation of the number.</returns>
         public override string ToString()
         {
             return Internal.ToString();
         }
 
-        /// <summary>
-        /// Adds a value to the object.
-        /// </summary>
+        /// <summary>Adds a value to the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to add.</param>
         [ObjectOperationAttribute(ObjectOperation.ADD, Input = TYPE)]
@@ -569,9 +541,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag(first.Internal + val.Internal);
         }
 
-        /// <summary>
-        /// Subtracts a value from the object.
-        /// </summary>
+        /// <summary>Subtracts a value from the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to subtract.</param>
         [ObjectOperationAttribute(ObjectOperation.SUBTRACT, Input = TYPE)]
@@ -580,9 +550,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag(first.Internal - val.Internal);
         }
 
-        /// <summary>
-        /// Multiplies the object by a value.
-        /// </summary>
+        /// <summary>Multiplies the object by a value.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to multiply by.</param>
         [ObjectOperationAttribute(ObjectOperation.MULTIPLY, Input = TYPE)]
@@ -591,9 +559,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new NumberTag(first.Internal * val.Internal);
         }
 
-        /// <summary>
-        /// Divides the object by a value.
-        /// </summary>
+        /// <summary>Divides the object by a value.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to divide by.</param>
         [ObjectOperationAttribute(ObjectOperation.DIVIDE, Input = TYPE)]

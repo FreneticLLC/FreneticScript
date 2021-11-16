@@ -19,9 +19,7 @@ namespace FreneticScript.TagHandlers.CommonBases
     // TODO: Explain better!
     // -->
 
-    /// <summary>
-    /// Handles the 'list' tag base.
-    /// </summary>
+    /// <summary>Handles the 'list' tag base.</summary>
     public class ListTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -32,18 +30,14 @@ namespace FreneticScript.TagHandlers.CommonBases
         // <@link explanation lists>What are lists?<@/link>
         // -->
 
-        /// <summary>
-        /// Constructs the tag base data.
-        /// </summary>
+        /// <summary>Constructs the tag base data.</summary>
         public ListTagBase()
         {
             Name = "list";
             ResultTypeString = ListTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the base input for a tag.
-        /// </summary>
+        /// <summary>Handles the base input for a tag.</summary>
         /// <param name="data">The tag data.</param>
         /// <returns>The correct object.</returns>
         public static ListTag HandleOne(TagData data)

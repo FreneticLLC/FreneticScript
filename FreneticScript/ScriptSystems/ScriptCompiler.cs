@@ -23,16 +23,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Helper class to compile scripts.
-    /// </summary>
+    /// <summary>Helper class to compile scripts.</summary>
     public static class ScriptCompiler
     {
         private static readonly Type[] RUN_METHOD_PARAMETERS = new Type[] { typeof(CommandQueue) };
 
-        /// <summary>
-        /// Compiles a command script.
-        /// </summary>
+        /// <summary>Compiles a command script.</summary>
         /// <param name="script">The command script to compile.</param>
         /// <returns>The compiled result.</returns>
         public static CompiledCommandStackEntry Compile(CommandScript script)
@@ -271,9 +267,7 @@ namespace FreneticScript.ScriptSystems
 
         private static readonly Type[] SETTER_ACTION_PARAMS = new Type[] { typeof(CompiledCommandRunnable), typeof(TemplateObject) };
 
-        /// <summary>
-        /// Creates a variable setter for the given variable.
-        /// </summary>
+        /// <summary>Creates a variable setter for the given variable.</summary>
         /// <param name="variable">The variable.</param>
         /// <returns>The setter action.</returns>
         public static Action<CompiledCommandRunnable, TemplateObject> CreateVariableSetter(SingleCILVariable variable)
@@ -294,14 +288,10 @@ namespace FreneticScript.ScriptSystems
             return genMethod.CreateDelegate(typeof(Action<CompiledCommandRunnable, TemplateObject>)) as Action<CompiledCommandRunnable, TemplateObject>;
         }
 
-        /// <summary>
-        /// Matcher for usable script name characters.
-        /// </summary>
+        /// <summary>Matcher for usable script name characters.</summary>
         public static AsciiMatcher NameTrimMatcher = new AsciiMatcher((c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 
-        /// <summary>
-        /// Throws a tag failure exception.
-        /// </summary>
+        /// <summary>Throws a tag failure exception.</summary>
         /// <param name="entry">Relevant command entry.</param>
         /// <param name="argumentNote">Note for the argument, like: "in named argument 'fail'."</param>
         /// <param name="tab">Relevant tag.</param>
@@ -318,10 +308,8 @@ namespace FreneticScript.ScriptSystems
         }
 
         private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData), typeof(CompiledCommandRunnable), typeof(Action<string>) };
-        
-        /// <summary>
-        /// Generates tag CIL.
-        /// </summary>
+
+        /// <summary>Generates tag CIL.</summary>
         /// <param name="typeBuild_c">The type to contain this tag.</param>
         /// <param name="ccse">The CCSE available.</param>
         /// <param name="tab">The tag data.</param>
@@ -581,9 +569,7 @@ namespace FreneticScript.ScriptSystems
             toClean.Add(tab);
         }
 
-        /// <summary>
-        /// Emits logic that ensures the argument is of the given type, converting if needed.
-        /// </summary>
+        /// <summary>Emits logic that ensures the argument is of the given type, converting if needed.</summary>
         /// <param name="ilgen">The IL generator.</param>
         /// <param name="currentType">The current object type.</param>
         /// <param name="requiredType">The type it needs to be.</param>
@@ -612,19 +598,13 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// The <see cref="MethodImplAttribute(MethodImplOptions)"/> constructor.
-        /// </summary>
+        /// <summary>The <see cref="MethodImplAttribute(MethodImplOptions)"/> constructor.</summary>
         public static readonly ConstructorInfo Ctor_MethodImplAttribute_Options = typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) });
 
-        /// <summary>
-        /// A reusable input object array that contains <see cref="MethodImplOptions.AggressiveInlining"/>.
-        /// </summary>
+        /// <summary>A reusable input object array that contains <see cref="MethodImplOptions.AggressiveInlining"/>.</summary>
         public static readonly object[] Input_Params_AggrInline = new object[] { MethodImplOptions.AggressiveInlining };
-        
-        /// <summary>
-        /// Generates a dynamically callable method for a tag.
-        /// </summary>
+
+        /// <summary>Generates a dynamically callable method for a tag.</summary>
         /// <param name="method">The tag method.</param>
         /// <param name="meta">The tag method.</param>
         /// <param name="system">The relevant script engine.</param>
@@ -678,26 +658,20 @@ namespace FreneticScript.ScriptSystems
                 throw new Exception("Failed to compile tag: '" + method.DeclaringType + "." + method.Name + "' (tag: '" + meta.TagType + "." + meta.Name + "'), because: " + ex.Message, ex);
             }
         }
-        
+
         /// <summary>
         /// The method <see cref="Func{TagData, TemplateObject, TemplateObject}.Invoke(TagData, TemplateObject)"/> with typeparams <see cref="TagData"/>, <see cref="TemplateObject"/>, <see cref="TemplateObject"/>.
         /// </summary>
         public static readonly MethodInfo Method_Func_TD_TO_TO_Invoke = typeof(Func<TagData, TemplateObject, TemplateObject>).GetMethod(nameof(Func<TagData, TemplateObject, TemplateObject>.Invoke));
 
-        /// <summary>
-        /// Incrementing ID value for method compilation.
-        /// </summary>
+        /// <summary>Incrementing ID value for method compilation.</summary>
         public static long IDINCR = 0;
     }
 
-    /// <summary>
-    /// Represents a tag type returned from a tag method.
-    /// </summary>
+    /// <summary>Represents a tag type returned from a tag method.</summary>
     public struct TagReturnType
     {
-        /// <summary>
-        /// Constructs a <see cref="TagReturnType"/> instance.
-        /// </summary>
+        /// <summary>Constructs a <see cref="TagReturnType"/> instance.</summary>
         /// <param name="_type">The returned tag type.</param>
         /// <param name="_isRaw">Whether the type is raw.</param>
         public TagReturnType(TagType _type, bool _isRaw = false)
@@ -706,14 +680,10 @@ namespace FreneticScript.ScriptSystems
             IsRaw = _isRaw;
         }
 
-        /// <summary>
-        /// The returned tag type.
-        /// </summary>
+        /// <summary>The returned tag type.</summary>
         public TagType Type;
 
-        /// <summary>
-        /// Whether the type is raw.
-        /// </summary>
+        /// <summary>Whether the type is raw.</summary>
         public bool IsRaw;
     }
 }

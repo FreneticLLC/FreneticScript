@@ -17,77 +17,49 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// The base for a command.
-    /// </summary>
+    /// <summary>The base for a command.</summary>
     public abstract class AbstractCommand
     {
-        /// <summary>
-        /// Represents the "Execute(CommandQueue, CommandEntry)" method for this command.
-        /// </summary>
+        /// <summary>Represents the "Execute(CommandQueue, CommandEntry)" method for this command.</summary>
         public MethodInfo ExecuteMethod = null;
 
-        /// <summary>
-        /// Initializes the abstract command.
-        /// </summary>
+        /// <summary>Initializes the abstract command.</summary>
         public AbstractCommand()
         {
             ExecuteMethod = GetType().GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
         }
 
-        /// <summary>
-        /// The name of the command.
-        /// </summary>
+        /// <summary>The name of the command.</summary>
         public string Name = "NAME:UNSET";
 
-        /// <summary>
-        /// The system that owns this command.
-        /// </summary>
+        /// <summary>The system that owns this command.</summary>
         public ScriptEngine Engine;
 
-        /// <summary>
-        /// A short explanation of the arguments of the command.
-        /// </summary>
+        /// <summary>A short explanation of the arguments of the command.</summary>
         public string Arguments = "ARGUMENTS:UNSET";
 
-        /// <summary>
-        /// A short explanation of what the command does.
-        /// </summary>
+        /// <summary>A short explanation of what the command does.</summary>
         public string Description = "DESCRIPTION:UNSET";
 
-        /// <summary>
-        /// In what way the command saves. Also set <see cref="DefaultSaveName"/> if relevant.
-        /// </summary>
+        /// <summary>In what way the command saves. Also set <see cref="DefaultSaveName"/> if relevant.</summary>
         public CommandSaveMode SaveMode = CommandSaveMode.NO_SAVE;
 
-        /// <summary>
-        /// The name of the tag type to save as. By default is set to <see cref="DynamicTag.TYPE"/>.
-        /// </summary>
+        /// <summary>The name of the tag type to save as. By default is set to <see cref="DynamicTag.TYPE"/>.</summary>
         public string SaveType = DynamicTag.TYPE;
 
-        /// <summary>
-        /// The default save name, if <see cref="SaveMode"/> is set to <see cref="CommandSaveMode.DEFAULT_NAME"/>.
-        /// </summary>
+        /// <summary>The default save name, if <see cref="SaveMode"/> is set to <see cref="CommandSaveMode.DEFAULT_NAME"/>.</summary>
         public string DefaultSaveName = null;
 
-        /// <summary>
-        /// Whether the command is for debugging purposes.
-        /// </summary>
+        /// <summary>Whether the command is for debugging purposes.</summary>
         public bool IsDebug = false;
 
-        /// <summary>
-        /// Whether the 'break' command can be used on this command.
-        /// </summary>
+        /// <summary>Whether the 'break' command can be used on this command.</summary>
         public bool IsBreakable = false;
 
-        /// <summary>
-        /// Whether the command is part of a script's flow rather than for normal client use.
-        /// </summary>
+        /// <summary>Whether the command is part of a script's flow rather than for normal client use.</summary>
         public bool IsFlow = false;
 
-        /// <summary>
-        /// Whether the command can be &amp;waited on.
-        /// </summary>
+        /// <summary>Whether the command can be &amp;waited on.</summary>
         public bool Waitable = false;
 
         /// <summary>
@@ -96,24 +68,16 @@ namespace FreneticScript.CommandSystem
         /// </summary>
         public bool Asyncable = false;
 
-        /// <summary>
-        /// How many arguments the command can have minimum.
-        /// </summary>
+        /// <summary>How many arguments the command can have minimum.</summary>
         public int MinimumArguments = 0;
 
-        /// <summary>
-        /// How many arguments the command can have maximum.
-        /// </summary>
+        /// <summary>How many arguments the command can have maximum.</summary>
         public int MaximumArguments = 100;
 
-        /// <summary>
-        /// The expected object type getters for a command, for validation reasons.
-        /// </summary>
+        /// <summary>The expected object type getters for a command, for validation reasons.</summary>
         public Action<ArgumentValidation>[] ObjectTypes = null;
-        
-        /// <summary>
-        /// Tests if the CommandEntry is valid for this command at pre-process time.
-        /// </summary>
+
+        /// <summary>Tests if the CommandEntry is valid for this command at pre-process time.</summary>
         /// <param name="entry">The entry to test</param>
         /// <returns>An error message (with tags), or null for none.</returns>
         public virtual string TestForValidity(CommandEntry entry)
@@ -160,10 +124,8 @@ namespace FreneticScript.CommandSystem
             }
             return null;
         }
-        
-        /// <summary>
-        /// Gets the follower (callback) entry for an entry.
-        /// </summary>
+
+        /// <summary>Gets the follower (callback) entry for an entry.</summary>
         /// <param name="entry">The entry.</param>
         public static CommandEntry GetFollower(CommandEntry entry)
         {
@@ -171,9 +133,7 @@ namespace FreneticScript.CommandSystem
                 entry.Name, CommandPrefix.CALLBACK, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public virtual void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -181,9 +141,7 @@ namespace FreneticScript.CommandSystem
             values.CallExecute(entry, this);
         }
 
-        /// <summary>
-        /// Prepares to adapt a command entry to CIL.
-        /// </summary>
+        /// <summary>Prepares to adapt a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         public virtual void PreAdaptToCIL(CILAdaptationValues values, int entry)
@@ -200,9 +158,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Pre-Adapt helper for save targets.
-        /// </summary>
+        /// <summary>Pre-Adapt helper for save targets.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The relevant entry ID.</param>
         /// <param name="canPreExist">Whether the variable is allowed to already exist.</param>
@@ -253,9 +209,7 @@ namespace FreneticScript.CommandSystem
             return cent.VarLoc(sn);
         }
 
-        /// <summary>
-        /// Adjust list of commands that are formed by an inner block.
-        /// </summary>
+        /// <summary>Adjust list of commands that are formed by an inner block.</summary>
         /// <param name="entry">The producing entry.</param>
         /// <param name="input">The block of commands.</param>
         /// <param name="fblock">The final block to add to the entry.</param>
@@ -263,10 +217,8 @@ namespace FreneticScript.CommandSystem
         {
             input.Add(GetFollower(entry));
         }
-        
-        /// <summary>
-        /// Displays the usage information on a command to the console.
-        /// </summary>
+
+        /// <summary>Displays the usage information on a command to the console.</summary>
         /// <param name="queue">The associated queue.</param>
         /// <param name="entry">The CommandEntry data to show usage help to.</param>
         /// <param name="doError">Whether to end with an error.</param>
@@ -293,29 +245,19 @@ namespace FreneticScript.CommandSystem
         }
     }
 
-    /// <summary>
-    /// Helper class for argument validation.
-    /// </summary>
+    /// <summary>Helper class for argument validation.</summary>
     public class ArgumentValidation
     {
-        /// <summary>
-        /// The argument value to validate or replace.
-        /// </summary>
+        /// <summary>The argument value to validate or replace.</summary>
         public TemplateObject ObjectValue;
-        
-        /// <summary>
-        /// The command entry being validated.
-        /// </summary>
+
+        /// <summary>The command entry being validated.</summary>
         public CommandEntry Entry;
 
-        /// <summary>
-        /// An error result, if any.
-        /// </summary>
+        /// <summary>An error result, if any.</summary>
         public string ErrorResult = null;
 
-        /// <summary>
-        /// An error action helper method, for when an error action is needed.
-        /// </summary>
+        /// <summary>An error action helper method, for when an error action is needed.</summary>
         /// <param name="s">The error message.</param>
         public void ErrorAction(string s)
         {

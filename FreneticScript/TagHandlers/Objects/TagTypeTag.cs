@@ -14,39 +14,29 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a TagType, as a tag.
-    /// </summary>
+    /// <summary>Represents a TagType, as a tag.</summary>
     [ObjectMeta(Name = TagTypeTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents the type of a tag.")]
     public class TagTypeTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_TagType;
         }
 
-        /// <summary>
-        /// The represented tag type.
-        /// </summary>
+        /// <summary>The represented tag type.</summary>
         public TagType Internal;
 
-        /// <summary>
-        /// Constructs a new TagTypeTag.
-        /// </summary>
+        /// <summary>Constructs a new TagTypeTag.</summary>
         /// <param name="type">The TagType to base this TagTypeTag off of.</param>
         public TagTypeTag(TagType type)
         {
@@ -54,9 +44,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 
-        /// <summary>
-        /// Helper validator to validate an argument as a tag-type tag.
-        /// </summary>
+        /// <summary>Helper validator to validate an argument as a tag-type tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
@@ -71,9 +59,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// Returns a TagTypeTag for the given text.
-        /// </summary>
+        /// <summary>Returns a TagTypeTag for the given text.</summary>
         /// <param name="data">The data.</param>
         /// <param name="input">The input text.</param>
         /// <returns>A TagTypeTag.</returns>
@@ -87,9 +73,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new TagTypeTag(data.TagSystem.Types.Type_Null);
         }
 
-        /// <summary>
-        /// Creates a TagTypeTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a TagTypeTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid TagTypeTag.</returns>
@@ -103,14 +87,10 @@ namespace FreneticScript.TagHandlers.Objects
             };
         }
 
-        /// <summary>
-        /// The TagTypeTag type.
-        /// </summary>
+        /// <summary>The TagTypeTag type.</summary>
         public const string TYPE = "tagtype";
 
-        /// <summary>
-        /// Returns the input object as a TagTypeTag.
-        /// </summary>
+        /// <summary>Returns the input object as a TagTypeTag.</summary>
         /// <param name="data">The data.</param>
         /// <param name="input">The input object.</param>
         /// <returns>A TagTypeTag, or null.</returns>
@@ -144,10 +124,8 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-        
-        /// <summary>
-        /// Returns the name of the tag type.
-        /// </summary>
+
+        /// <summary>Returns the name of the tag type.</summary>
         /// <returns>The name.</returns>
         public override string ToString()
         {

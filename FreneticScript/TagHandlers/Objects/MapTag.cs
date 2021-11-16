@@ -17,34 +17,26 @@ using FreneticScript.TagHandlers.HelperBases;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a relationship between textual names and object data.
-    /// </summary>
+    /// <summary>Represents a relationship between textual names and object data.</summary>
     [ObjectMeta(Name = MapTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Structural", Description = "Represents a relationship between textual names and object data.")]
     public class MapTag : TemplateObject, IListTagForm
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Map;
         }
 
-        /// <summary>
-        /// The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.
-        /// </summary>
+        /// <summary>The <see cref="ListTag"/> value of this <see cref="ListTag"/>-like object.</summary>
         public ListTag ListForm
         {
             get
@@ -58,11 +50,9 @@ namespace FreneticScript.TagHandlers.Objects
             }
         }
 
-        /// <summary>
-        /// The internal dictionary that this MapTag represents.
-        /// </summary>
+        /// <summary>The internal dictionary that this MapTag represents.</summary>
         public Dictionary<string, TemplateObject> Internal;
-        
+
         /// <summary>
         /// Constructs a MapTag from existing data.
         /// NOTE: This expects all keys to be lowercase!
@@ -72,27 +62,21 @@ namespace FreneticScript.TagHandlers.Objects
         {
             Internal = new Dictionary<string, TemplateObject>(toUse);
         }
-        
-        /// <summary>
-        /// Constructs a MapTag without existing data.
-        /// </summary>
+
+        /// <summary>Constructs a MapTag without existing data.</summary>
         public MapTag()
         {
             Internal = new Dictionary<string, TemplateObject>();
         }
 
-        /// <summary>
-        /// Constructs a MapTag without existing data.
-        /// </summary>
+        /// <summary>Constructs a MapTag without existing data.</summary>
         /// <param name="capacity">The number of expected entries.</param>
         public MapTag(int capacity)
         {
             Internal = new Dictionary<string, TemplateObject>(capacity);
         }
 
-        /// <summary>
-        /// Helper validator to validate an argument as a map tag.
-        /// </summary>
+        /// <summary>Helper validator to validate an argument as a map tag.</summary>
         /// <param name="validator">The validation helper.</param>
         public static void Validator(ArgumentValidation validator)
         {
@@ -163,9 +147,7 @@ namespace FreneticScript.TagHandlers.Objects
             };
         }
 
-        /// <summary>
-        /// Creates a MapTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a MapTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid map tag.</returns>
@@ -174,9 +156,7 @@ namespace FreneticScript.TagHandlers.Objects
             return For(input);
         }
 
-        /// <summary>
-        /// The MapTag type.
-        /// </summary>
+        /// <summary>The MapTag type.</summary>
         public const string TYPE = "map";
 
 #pragma warning disable 1591
@@ -222,7 +202,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         [TagMeta(TagType = TYPE, Name = "contains", Group = "Map Entries", ReturnType = BooleanTag.TYPE, Modifier = TextTag.TYPE,
-            Returns = "Whether the map contains an entry with the specified key.", 
+            Returns = "Whether the map contains an entry with the specified key.",
             Examples = new string[] { "'one:a|two:b' .contains[one] returns 'true'.", "'one:a|two:b' .contains[three] returns 'false'."})]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BooleanTag Tag_Contains(MapTag obj, TextTag modifier)
@@ -263,9 +243,7 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
-        /// <summary>
-        /// Gets a savable string representation of this map.
-        /// </summary>
+        /// <summary>Gets a savable string representation of this map.</summary>
         /// <returns>The typed string representation.</returns>
         public override string GetSavableString()
         {
@@ -279,9 +257,7 @@ namespace FreneticScript.TagHandlers.Objects
             return toret.ToString().Substring(0, toret.Length - 1);
         }
 
-        /// <summary>
-        /// Gets a string representation of this map.
-        /// </summary>
+        /// <summary>Gets a string representation of this map.</summary>
         /// <returns>The string representation.</returns>
         public override string ToString()
         {
@@ -297,9 +273,7 @@ namespace FreneticScript.TagHandlers.Objects
             return toret.ToString().Substring(0, toret.Length - 1);
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {
@@ -317,9 +291,7 @@ namespace FreneticScript.TagHandlers.Objects
             return toret.ToString().Substring(0, toret.Length - 3);
         }
 
-        /// <summary>
-        /// Gets the sub-settable object, or null if none.
-        /// </summary>
+        /// <summary>Gets the sub-settable object, or null if none.</summary>
         /// <param name="tag">The map tag.</param>
         /// <param name="name">The sub-settable object name.</param>
         /// <returns>The sub-settable object, or null.</returns>
@@ -329,9 +301,7 @@ namespace FreneticScript.TagHandlers.Objects
             return tag.Internal.TryGetValue(name.ToLowerFast(), out TemplateObject value) ? value : null;
         }
 
-        /// <summary>
-        /// Sets a sub-object by name.
-        /// </summary>
+        /// <summary>Sets a sub-object by name.</summary>
         /// <param name="tag">The map tag.</param>
         /// <param name="value">The value to insert.</param>
         /// <param name="name">The sub-object name to insert.</param>

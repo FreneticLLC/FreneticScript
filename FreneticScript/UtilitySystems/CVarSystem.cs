@@ -13,24 +13,16 @@ using FreneticScript.CommandSystem;
 
 namespace FreneticScript
 {
-    /// <summary>
-    /// A system for handling user controllable data variables.
-    /// </summary>
+    /// <summary>A system for handling user controllable data variables.</summary>
     public class CVarSystem
     {
-        /// <summary>
-        /// A list of all existent CVars.
-        /// </summary>
+        /// <summary>A list of all existent CVars.</summary>
         public List<CVar> CVarList;
 
-        /// <summary>
-        /// A full map of all existent CVars.
-        /// </summary>
+        /// <summary>A full map of all existent CVars.</summary>
         public Dictionary<string, CVar> CVars;
 
-        /// <summary>
-        /// The client/server outputter to use.
-        /// </summary>
+        /// <summary>The client/server outputter to use.</summary>
         public ScriptEngineContext Output;
 
         /// <summary>
@@ -38,10 +30,8 @@ namespace FreneticScript
         /// This variable is so implementations can save CVars to file only when needed.
         /// </summary>
         public bool Modified = false;
-        
-        /// <summary>
-        /// Constructs the CVar system.
-        /// </summary>
+
+        /// <summary>Constructs the CVar system.</summary>
         /// <param name="_output">The outputter to use.</param>
         public CVarSystem(ScriptEngineContext _output)
         {
@@ -51,9 +41,7 @@ namespace FreneticScript
             Output.CVarSys = this;
         }
 
-        /// <summary>
-        /// Registers a new CVar.
-        /// </summary>
+        /// <summary>Registers a new CVar.</summary>
         /// <param name="CVar">The name of the CVar.</param>
         /// <param name="value">The default value.</param>
         /// <param name="flags">The flags to set on this CVar.</param>
@@ -70,9 +58,7 @@ namespace FreneticScript
             return cvar;
         }
 
-        /// <summary>
-        /// Sets the value of an existing CVar, or generates a new one.
-        /// </summary>
+        /// <summary>Sets the value of an existing CVar, or generates a new one.</summary>
         /// <param name="CVar">The name of the CVar.</param>
         /// <param name="value">The value to set it to.</param>
         /// <param name="force">Whether to force a server send.</param>
@@ -92,9 +78,7 @@ namespace FreneticScript
             return gotten;
         }
 
-        /// <summary>
-        /// Gets an existing CVar, or generates a new one with a specific default value.
-        /// </summary>
+        /// <summary>Gets an existing CVar, or generates a new one with a specific default value.</summary>
         /// <param name="CVar">The name of the CVar.</param>
         /// <param name="value">The default value if it doesn't exist.</param>
         /// <returns>The found CVar.</returns>
@@ -108,9 +92,7 @@ namespace FreneticScript
             return gotten;
         }
 
-        /// <summary>
-        /// Gets the CVar that matches a specified name.
-        /// </summary>
+        /// <summary>Gets the CVar that matches a specified name.</summary>
         /// <param name="CVar">The name of the CVar.</param>
         /// <returns>The found CVar, or null if none.</returns>
         public CVar Get(string CVar)

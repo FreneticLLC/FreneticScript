@@ -14,14 +14,10 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// The abstract base for a tag object.
-    /// </summary>
+    /// <summary>The abstract base for a tag object.</summary>
     public abstract class TemplateObject
     {
-        /// <summary>
-        /// Returns the input as-is, for use with Object Types.
-        /// </summary>
+        /// <summary>Returns the input as-is, for use with Object Types.</summary>
         /// <param name="obj">The object input.</param>
         /// <returns>The object input.</returns>
         public static TemplateObject Basic_For(TemplateObject obj)
@@ -29,38 +25,28 @@ namespace FreneticScript.TagHandlers
             return obj;
         }
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public abstract string GetTagTypeName();
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public virtual TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.TypeForName(GetTagTypeName());
         }
 
-        /// <summary>
-        /// The symbol that connects a type to it's savable data.
-        /// </summary>
+        /// <summary>The symbol that connects a type to it's savable data.</summary>
         public const string SAVE_MARK = "@";
 
-        /// <summary>
-        /// Gets the savable string for this instance, including any relevant type information.
-        /// </summary>
+        /// <summary>Gets the savable string for this instance, including any relevant type information.</summary>
         /// <returns>The save string.</returns>
         public virtual string GetSavableString()
         {
             return GetTagTypeName() + SAVE_MARK + ToString();
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public virtual string GetDebugString()
         {

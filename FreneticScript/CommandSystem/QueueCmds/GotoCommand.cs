@@ -16,9 +16,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Goto command.
-    /// </summary>
+    /// <summary>The Goto command.</summary>
     public class GotoCommand : AbstractCommand
     {
         // <--[command]
@@ -44,9 +42,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // TODO: More examples!
         // -->
 
-        /// <summary>
-        /// Constructs the goto command.
-        /// </summary>
+        /// <summary>Constructs the goto command.</summary>
         public GotoCommand()
         {
             Name = "goto";
@@ -62,9 +58,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -84,9 +78,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             throw new Exception("GOTO command invalid: no matching mark!");
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

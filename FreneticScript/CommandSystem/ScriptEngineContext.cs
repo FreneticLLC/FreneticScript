@@ -12,35 +12,25 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// An abstract class for the script engine to interface properly with the context it is running in.
-    /// </summary>
+    /// <summary>An abstract class for the script engine to interface properly with the context it is running in.</summary>
     public abstract class ScriptEngineContext
     {
-        /// <summary>
-        /// Get an event helper for this context.
-        /// </summary>
+        /// <summary>Get an event helper for this context.</summary>
         /// <returns>The event helper.</returns>
         public abstract FreneticEventHelper GetEventHelper();
 
-        /// <summary>
-        /// Writes a line of text to the console or text window. Used for informational output.
-        /// </summary>
+        /// <summary>Writes a line of text to the console or text window. Used for informational output.</summary>
         /// <param name="text">The line of text.</param>
         public abstract void WriteLine(string text);
 
-        /// <summary>
-        /// Used to output a failure message.
-        /// </summary>
+        /// <summary>Used to output a failure message.</summary>
         /// <param name="text">The text to output.</param>
         public virtual void BadOutput(string text)
         {
             WriteLine(TextStyle.Outbad + "[Bad] " + text);
         }
 
-        /// <summary>
-        /// Used to output a success message.
-        /// </summary>
+        /// <summary>Used to output a success message.</summary>
         /// <param name="text">The text to output.</param>
         public virtual void GoodOutput(string text)
         {
@@ -59,9 +49,7 @@ namespace FreneticScript.CommandSystem
             throw new NotImplementedException("Unknown command: " + basecommand);
         }
 
-        /// <summary>
-        /// The CVar System used by this context.
-        /// </summary>
+        /// <summary>The CVar System used by this context.</summary>
         public CVarSystem CVarSys;
 
         /// <summary>
@@ -102,26 +90,18 @@ namespace FreneticScript.CommandSystem
         /// <returns>A list of file names.</returns>
         public abstract string[] ListFiles(string path, string extension, bool deep);
 
-        /// <summary>
-        /// Called when the system is reloaded, to delete any temporary script-related data.
-        /// </summary>
+        /// <summary>Called when the system is reloaded, to delete any temporary script-related data.</summary>
         public abstract void Reload();
 
-        /// <summary>
-        /// Called when the system has finished reloading.
-        /// </summary>
+        /// <summary>Called when the system has finished reloading.</summary>
         public virtual void PostReload()
         {
         }
 
-        /// <summary>
-        /// Whether the game is still setting up currently. (Used by the InitOnly CVar system).
-        /// </summary>
+        /// <summary>Whether the game is still setting up currently. (Used by the InitOnly CVar system).</summary>
         public bool Initializing = false;
 
-        /// <summary>
-        /// Whether the system should error when an invalid command is detected.
-        /// </summary>
+        /// <summary>Whether the system should error when an invalid command is detected.</summary>
         public virtual bool ShouldErrorOnInvalidCommand()
         {
             return true;

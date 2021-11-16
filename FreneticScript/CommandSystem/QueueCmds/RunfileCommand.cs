@@ -15,17 +15,13 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// A command to allow running scripts from the script folder.
-    /// </summary>
+    /// <summary>A command to allow running scripts from the script folder.</summary>
     public class RunfileCommand : AbstractCommand
     {
         // TODO: Meta!
         // @Waitable
 
-        /// <summary>
-        /// Constructs the run command.
-        /// </summary>
+        /// <summary>Constructs the run command.</summary>
         public RunfileCommand(FreneticEventHelper eventHelper)
         {
             Name = "runfile";
@@ -73,9 +69,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         public FreneticEvent<ScriptRanPostEventArgs> OnScriptRanPostEvent ;
 
-        /// <summary>
-        /// Executes the run command.
-        /// </summary>
+        /// <summary>Executes the run command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">The command details to be ran.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
@@ -152,7 +146,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 queue.HandleError(entry, "Cannot run script '" + TextStyle.Separate + fname + TextStyle.Base + "': " + status + "!");
                 if (entry.WaitFor && queue.WaitingOn == entry)
-                { 
+                {
                     queue.WaitingOn = null;
                 }
             }
@@ -160,24 +154,16 @@ namespace FreneticScript.CommandSystem.QueueCmds
     }
 
 
-    /// <summary>
-    /// A mini-class used for the callback for &amp;waitable commands.
-    /// </summary>
+    /// <summary>A mini-class used for the callback for &amp;waitable commands.</summary>
     public class EntryFinisher
     {
-        /// <summary>
-        /// The entry being waited on.
-        /// </summary>
+        /// <summary>The entry being waited on.</summary>
         public CommandEntry Entry;
 
-        /// <summary>
-        /// The relevant queue.
-        /// </summary>
+        /// <summary>The relevant queue.</summary>
         public CommandQueue Queue;
 
-        /// <summary>
-        /// Add this function as a callback to complete entry.
-        /// </summary>
+        /// <summary>Add this function as a callback to complete entry.</summary>
         public void Complete(object sender, CommandQueueEventArgs args)
         {
             if (Queue.WaitingOn == Entry)
@@ -187,25 +173,17 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
     }
 
-    /// <summary>
-    /// Fires when a a script is going to be ran, cancellable.
-    /// </summary>
+    /// <summary>Fires when a a script is going to be ran, cancellable.</summary>
     public class ScriptRanPreEventArgs: FreneticEventArgs
     {
-        /// <summary>
-        /// The name of the script requested to be run.
-        /// </summary>
+        /// <summary>The name of the script requested to be run.</summary>
         public string ScriptName;
 
-        /// <summary>
-        /// Whether the script should be prevented from running.
-        /// </summary>
+        /// <summary>Whether the script should be prevented from running.</summary>
         public bool Cancelled = false;
     }
 
-    /// <summary>
-    /// Fires when a a script is about to be ran, cancellable.
-    /// </summary>
+    /// <summary>Fires when a a script is about to be ran, cancellable.</summary>
     public class ScriptRanEventArgs : FreneticEventArgs
     {
         /// <summary>
@@ -214,15 +192,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// </summary>
         public CommandScript Script;
 
-        /// <summary>
-        /// Whether the script should be prevented from running.
-        /// </summary>
+        /// <summary>Whether the script should be prevented from running.</summary>
         public bool Cancelled = false;
     }
-    
-    /// <summary>
-    /// Fires when a a script has been ran, monitor-only.
-    /// </summary>
+
+    /// <summary>Fires when a a script has been ran, monitor-only.</summary>
     public class ScriptRanPostEventArgs : FreneticEventArgs
     {
         /// <summary>

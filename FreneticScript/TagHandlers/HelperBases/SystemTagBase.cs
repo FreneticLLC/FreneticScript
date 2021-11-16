@@ -13,9 +13,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// System tags.
-    /// </summary>
+    /// <summary>System tags.</summary>
     public class SystemTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -25,56 +23,42 @@ namespace FreneticScript.TagHandlers.HelperBases
         // @Returns a generic utility class full of specific helpful system-related tags.
         // -->
 
-        /// <summary>
-        /// Constructs the system tags.
-        /// </summary>
+        /// <summary>Constructs the system tags.</summary>
         public SystemTagBase()
         {
             Name = "system";
             ResultTypeString = SystemTag.TYPE;
         }
 
-        /// <summary>
-        /// Parse any direct tag input values.
-        /// </summary>
+        /// <summary>Parse any direct tag input values.</summary>
         /// <param name="data">The input tag data.</param>
         public static SystemTag HandleOne(TagData data)
         {
             return SystemTag.Instance;
         }
 
-        /// <summary>
-        /// Helper for system-related tags.
-        /// </summary>
+        /// <summary>Helper for system-related tags.</summary>
         [ObjectMeta(Name = SystemTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Utilities", Description = "Holds system-related helped tags.")]
         public class SystemTag : TemplateObject
         {
-            /// <summary>
-            /// A reference SystemTag instance.
-            /// </summary>
+            /// <summary>A reference SystemTag instance.</summary>
             public static readonly SystemTag Instance = new SystemTag();
 
-            /// <summary>
-            /// Return the type name of this tag.
-            /// </summary>
+            /// <summary>Return the type name of this tag.</summary>
             /// <returns>The tag type name.</returns>
             public override string GetTagTypeName()
             {
                 return TYPE;
             }
 
-            /// <summary>
-            /// Return the type of this tag.
-            /// </summary>
+            /// <summary>Return the type of this tag.</summary>
             /// <returns>The tag type.</returns>
             public override TagType GetTagType(TagTypes tagTypeSet)
             {
                 return tagTypeSet.Type_System;
             }
 
-            /// <summary>
-            /// Gets a system tag. Shouldn't be used.
-            /// </summary>
+            /// <summary>Gets a system tag. Shouldn't be used.</summary>
             /// <param name="data">The data.</param>
             /// <param name="input">The input.</param>
             public static SystemTag For(TagData data, string input)
@@ -88,9 +72,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                 return Instance;
             }
 
-            /// <summary>
-            /// Gets a system tag. Shouldn't be used.
-            /// </summary>
+            /// <summary>Gets a system tag. Shouldn't be used.</summary>
             /// <param name="data">The data.</param>
             /// <param name="input">The input.</param>
             public static SystemTag For(TemplateObject input, TagData data)
@@ -98,9 +80,7 @@ namespace FreneticScript.TagHandlers.HelperBases
                 return input is SystemTag tag ? tag : For(data, input.ToString());
             }
 
-            /// <summary>
-            /// Creates a SystemTag for the given input data.
-            /// </summary>
+            /// <summary>Creates a SystemTag for the given input data.</summary>
             /// <param name="dat">The tag data.</param>
             /// <param name="input">The text input.</param>
             /// <returns>A valid SystemTag.</returns>
@@ -114,14 +94,10 @@ namespace FreneticScript.TagHandlers.HelperBases
                 };
             }
 
-            /// <summary>
-            /// The SystemTag type.
-            /// </summary>
+            /// <summary>The SystemTag type.</summary>
             public const string TYPE = "systemtagbase";
 
-            /// <summary>
-            /// Creates a SystemTag for the given input data.
-            /// </summary>
+            /// <summary>Creates a SystemTag for the given input data.</summary>
             /// <param name="data">The tag data.</param>
             /// <param name="text">The text input.</param>
             /// <returns>A valid system tag.</returns>
@@ -219,10 +195,8 @@ namespace FreneticScript.TagHandlers.HelperBases
             }
 
 #pragma warning restore 1591
-            
-            /// <summary>
-            /// Returns "System".
-            /// </summary>
+
+            /// <summary>Returns "System".</summary>
             public override string ToString()
             {
                 return "System";

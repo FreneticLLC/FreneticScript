@@ -48,15 +48,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
     // @Example
     // TODO: More examples!
     // -->
-    
-    /// <summary>
-    /// The Call command.
-    /// </summary>
+
+    /// <summary>The Call command.</summary>
     public class CallCommand : AbstractCommand
     {
-        /// <summary>
-        /// Constructs the call command.
-        /// </summary>
+        /// <summary>Constructs the call command.</summary>
         public CallCommand()
         {
             Name = "call";
@@ -67,9 +63,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 1;
         }
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -78,9 +72,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Ret);
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

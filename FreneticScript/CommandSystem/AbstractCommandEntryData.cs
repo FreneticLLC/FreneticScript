@@ -11,9 +11,7 @@ using System.Text;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// The data held by a command.
-    /// </summary>
+    /// <summary>The data held by a command.</summary>
     public abstract class AbstractCommandEntryData
     {
     }

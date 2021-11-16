@@ -14,39 +14,29 @@ using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents binary data.
-    /// </summary>
+    /// <summary>Represents binary data.</summary>
     [ObjectMeta(Name = BinaryTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents binary data.", Others = new string[] { "Text form is little-endian hexadecimal." })]
     public class BinaryTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
             return tagTypeSet.Type_Binary;
         }
 
-        /// <summary>
-        /// The binary data this tag represents.
-        /// </summary>
+        /// <summary>The binary data this tag represents.</summary>
         public byte[] Internal;
 
-        /// <summary>
-        /// Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
-        /// </summary>
+        /// <summary>Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).</summary>
         /// <param name="dat">The TagData used to construct this BinaryTag.</param>
         /// <param name="input">The input text to create binary data from.</param>
         /// <returns>The binary tag.</returns>
@@ -85,9 +75,7 @@ namespace FreneticScript.TagHandlers.Objects
             return (char)((val < 10) ? ('0' + val) : ('A' + (val - 10)));
         }
 
-        /// <summary>
-        /// Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).
-        /// </summary>
+        /// <summary>Get a binary tag relevant to the specified input, erroring on the command system if invalid input is given (Returns null in that case).</summary>
         /// <param name="dat">The TagData used to construct this BinaryTag.</param>
         /// <param name="input">The input to create or get binary data from.</param>
         /// <returns>The binary tag.</returns>
@@ -96,23 +84,17 @@ namespace FreneticScript.TagHandlers.Objects
             return input as BinaryTag ?? For(dat, input.ToString());
         }
 
-        /// <summary>
-        /// Constructs a binary tag.
-        /// </summary>
+        /// <summary>Constructs a binary tag.</summary>
         /// <param name="_val">The internal binary data to use.</param>
         public BinaryTag(byte[] _val)
         {
             Internal = _val.ToArray();
         }
 
-        /// <summary>
-        /// The BinaryTag type.
-        /// </summary>
+        /// <summary>The BinaryTag type.</summary>
         public const string TYPE = "binary";
 
-        /// <summary>
-        /// Creates a BinaryTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a BinaryTag for the given input data.</summary>
         /// <param name="dat">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid binary tag.</returns>
@@ -283,7 +265,7 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
 #pragma warning restore 1591
-        
+
         /// <summary>
         /// Returns the a string representation of the binary data internally stored by this binary tag.
         /// This returns in little-endian hexadecimal format.
@@ -304,9 +286,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new string(res);
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {

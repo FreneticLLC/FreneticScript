@@ -23,38 +23,26 @@ using FreneticUtilities.FreneticExtensions;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Tracks generated IL.
-    /// </summary>
+    /// <summary>Tracks generated IL.</summary>
     public class ILGeneratorTracker
     {
-        /// <summary>
-        /// Internal generator.
-        /// </summary>
+        /// <summary>Internal generator.</summary>
         public ILGenerator Internal;
 
-        /// <summary>
-        /// The backing system.
-        /// </summary>
+        /// <summary>The backing system.</summary>
         public ScriptEngine System;
 
-        /// <summary>
-        /// All codes generated. Only has a value when compiled in DEBUG mode.
-        /// </summary>
+        /// <summary>All codes generated. Only has a value when compiled in DEBUG mode.</summary>
         public List<KeyValuePair<string, object>> Codes
 #if DEBUG
                 = new List<KeyValuePair<string, object>>()
 #endif
                 ;
 
-        /// <summary>
-        /// Stack size tracker, for validation.
-        /// </summary>
+        /// <summary>Stack size tracker, for validation.</summary>
         public int StackSize = 0;
 
-        /// <summary>
-        /// Gives a warning if stack size is not the exact correct size.
-        /// </summary>
+        /// <summary>Gives a warning if stack size is not the exact correct size.</summary>
         /// <param name="situation">The current place in the code that requires a validation.</param>
         /// <param name="expected">The expected stack size.</param>
         [Conditional("VALIDATE")]
@@ -69,9 +57,7 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// Gives a warning if stack size is not at least the given size.
-        /// </summary>
+        /// <summary>Gives a warning if stack size is not at least the given size.</summary>
         /// <param name="situation">The current place in the code that requires a validation.</param>
         /// <param name="expected">The expected minimum stack size.</param>
         [Conditional("VALIDATE")]
@@ -86,9 +72,7 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// Gives a warning if stack size is not at most the given size.
-        /// </summary>
+        /// <summary>Gives a warning if stack size is not at most the given size.</summary>
         /// <param name="situation">The current place in the code that requires a validation.</param>
         /// <param name="expected">The expected maxium stack size.</param>
         [Conditional("VALIDATE")]
@@ -103,9 +87,7 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// Creates a string of all the generated CIL code.
-        /// </summary>
+        /// <summary>Creates a string of all the generated CIL code.</summary>
         /// <returns>Generated CIL code string.</returns>
         public string Stringify()
         {
@@ -144,9 +126,7 @@ namespace FreneticScript.ScriptSystems
             Validator(code, val);
         }
 
-        /// <summary>
-        /// Validation call for stack size wrangling.
-        /// </summary>
+        /// <summary>Validation call for stack size wrangling.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="val">The object value.</param>
         /// <param name="altParams">The number of parameters if GetParameters() is not stable.</param>
@@ -257,9 +237,7 @@ namespace FreneticScript.ScriptSystems
             ValidateStackSizeIsAtLeast("post opcode " + code, 0);
         }
 
-        /// <summary>
-        /// Defines a label.
-        /// </summary>
+        /// <summary>Defines a label.</summary>
         /// <returns>The label.</returns>
         public Label DefineLabel()
         {
@@ -287,9 +265,7 @@ namespace FreneticScript.ScriptSystems
             return toRet;
         }
 
-        /// <summary>
-        /// Changes the stack size.
-        /// </summary>
+        /// <summary>Changes the stack size.</summary>
         /// <param name="amount">The amount to change by.</param>
         [Conditional("VALIDATE")]
         public void StackSizeChange(int amount)
@@ -298,9 +274,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(OpCodes.Nop, "<stack size move: " + amount + ", now: " + StackSize + ">", "minor");
         }
 
-        /// <summary>
-        /// Starts a catch block for a specific exception type.
-        /// </summary>
+        /// <summary>Starts a catch block for a specific exception type.</summary>
         public void BeginCatchBlock(Type exType)
         {
             Internal.BeginCatchBlock(exType);
@@ -309,9 +283,7 @@ namespace FreneticScript.ScriptSystems
             StackSizeChange(1);
         }
 
-        /// <summary>
-        /// Begins a finally block.
-        /// </summary>
+        /// <summary>Begins a finally block.</summary>
         public void BeginFinallyBlock()
         {
             Internal.BeginFinallyBlock();
@@ -319,9 +291,7 @@ namespace FreneticScript.ScriptSystems
             ValidateStackSizeIs("Beginning finally block", 0);
         }
 
-        /// <summary>
-        /// Ends an exception block.
-        /// </summary>
+        /// <summary>Ends an exception block.</summary>
         public void EndExceptionBlock()
         {
             Internal.EndExceptionBlock();
@@ -329,9 +299,7 @@ namespace FreneticScript.ScriptSystems
             ValidateStackSizeIs("Ending exception block", 0);
         }
 
-        /// <summary>
-        /// Marks a label.
-        /// </summary>
+        /// <summary>Marks a label.</summary>
         /// <param name="label">The label.</param>
         public void MarkLabel(Label label)
         {
@@ -339,9 +307,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(OpCodes.Nop, label.GetHashCode(), "<MarkLabel>");
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         public void Emit(OpCode code)
         {
@@ -349,9 +315,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, null);
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         public void Emit(OpCode code, FieldInfo dat)
@@ -360,9 +324,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, dat.Name + " <" + dat.FieldType.Name + ">");
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="t">The associated data.</param>
         public void Emit(OpCode code, Type t)
@@ -371,9 +333,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, t);
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         /// <param name="altParams">The number of parameters, if GetParameters is not stable.</param>
@@ -384,9 +344,7 @@ namespace FreneticScript.ScriptSystems
             Validator(code, dat, altParams);
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         public void Emit(OpCode code, Label[] dat)
@@ -395,9 +353,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, dat);
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         /// <param name="altParams">The number of parameters, if GetParameters is not stable.</param>
@@ -408,9 +364,7 @@ namespace FreneticScript.ScriptSystems
             Validator(code, dat, altParams);
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         public void Emit(OpCode code, Label dat)
@@ -419,9 +373,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, dat.GetHashCode());
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         public void Emit(OpCode code, string dat)
@@ -430,9 +382,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, dat);
         }
 
-        /// <summary>
-        /// Emits an operation.
-        /// </summary>
+        /// <summary>Emits an operation.</summary>
         /// <param name="code">The operation code.</param>
         /// <param name="dat">The associated data.</param>
         public void Emit(OpCode code, int dat)
@@ -441,9 +391,7 @@ namespace FreneticScript.ScriptSystems
             AddCode(code, dat);
         }
 
-        /// <summary>
-        /// Declares a local.
-        /// </summary>
+        /// <summary>Declares a local.</summary>
         /// <param name="t">The type.</param>
         public int DeclareLocal(Type t)
         {
@@ -452,9 +400,7 @@ namespace FreneticScript.ScriptSystems
             return x;
         }
 
-        /// <summary>
-        /// Adds a comment to the developer debug of the IL output.
-        /// </summary>
+        /// <summary>Adds a comment to the developer debug of the IL output.</summary>
         /// <param name="str">The comment text.</param>
         public void Comment(string str)
         {

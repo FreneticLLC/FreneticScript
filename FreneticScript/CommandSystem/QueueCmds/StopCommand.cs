@@ -18,14 +18,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
 {
     // TODO: Meta!
 
-    /// <summary>
-    /// The Stop command.
-    /// </summary>
+    /// <summary>The Stop command.</summary>
     public class StopCommand : AbstractCommand
     {
-        /// <summary>
-        /// Constructs the stop command.
-        /// </summary>
+        /// <summary>Constructs the stop command.</summary>
         public StopCommand()
         {
             Name = "stop";
@@ -37,14 +33,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = 0;
         }
 
-        /// <summary>
-        /// Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.
-        /// </summary>
+        /// <summary>Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.</summary>
         public static MethodInfo DebugStopMethod = typeof(StopCommand).GetMethod(nameof(DebugStop));
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -60,9 +52,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.AdaptedILPoints.Length - 1]);
         }
 
-        /// <summary>
-        /// Shows debug for a stop command.
-        /// </summary>
+        /// <summary>Shows debug for a stop command.</summary>
         /// <param name="queue">The command queue.</param>
         /// <param name="entry">The command entry.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -74,9 +64,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             }
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

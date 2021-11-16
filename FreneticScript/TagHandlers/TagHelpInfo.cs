@@ -15,29 +15,19 @@ using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// Helps represent a tag.
-    /// </summary>
+    /// <summary>Helps represent a tag.</summary>
     public class TagHelpInfo
     {
-        /// <summary>
-        /// The tag meta data.
-        /// </summary>
+        /// <summary>The tag meta data.</summary>
         public TagMeta Meta;
 
-        /// <summary>
-        /// The relevant method.
-        /// </summary>
+        /// <summary>The relevant method.</summary>
         public MethodInfo Method;
 
-        /// <summary>
-        /// A helper function to directly run the tag from basic input.
-        /// </summary>
+        /// <summary>A helper function to directly run the tag from basic input.</summary>
         public Func<TemplateObject, TagData, TemplateObject> RunTagLive;
-        
-        /// <summary>
-        /// Constructs the TagHelpInfo.
-        /// </summary>
+
+        /// <summary>Constructs the TagHelpInfo.</summary>
         /// <param name="_method">The method to construct from.</param>
         public TagHelpInfo(MethodInfo _method)
         {

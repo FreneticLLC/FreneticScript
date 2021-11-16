@@ -12,22 +12,16 @@ using System.Text;
 
 namespace FreneticScript.CommandSystem
 {
-    /// <summary>
-    /// Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.
-    /// </summary>
+    /// <summary>Represents an exception induced by a script error. Should be ignored/re-thrown to let the error propogate up to the script level.</summary>
     [Serializable]
     public class ErrorInducedException: Exception
     {
-        /// <summary>
-        /// Constructs a plain error induced exception.
-        /// </summary>
+        /// <summary>Constructs a plain error induced exception.</summary>
         public ErrorInducedException()
         {
         }
-        
-        /// <summary>
-        /// Constructs an error induced exception with a message and inner exception.
-        /// </summary>
+
+        /// <summary>Constructs an error induced exception with a message and inner exception.</summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner exception.</param>
         public ErrorInducedException(string message, Exception inner) :
@@ -35,9 +29,7 @@ namespace FreneticScript.CommandSystem
         {
         }
 
-        /// <summary>
-        /// Constructs an error induced exception with a message.
-        /// </summary>
+        /// <summary>Constructs an error induced exception with a message.</summary>
         /// <param name="message">The message.</param>
         public ErrorInducedException(string message) :
             base(message)
@@ -52,16 +44,12 @@ namespace FreneticScript.CommandSystem
     [Serializable]
     public class TagErrorInducedException : ErrorInducedException
     {
-        /// <summary>
-        /// Constructs a plain tag error induced exception.
-        /// </summary>
+        /// <summary>Constructs a plain tag error induced exception.</summary>
         public TagErrorInducedException()
         {
         }
-        
-        /// <summary>
-        /// Constructs a tag error induced exception with a message and inner exception.
-        /// </summary>
+
+        /// <summary>Constructs a tag error induced exception with a message and inner exception.</summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner exception.</param>
         public TagErrorInducedException(string message, Exception inner) :
@@ -69,18 +57,14 @@ namespace FreneticScript.CommandSystem
         {
         }
 
-        /// <summary>
-        /// Constructs a tag error induced exception with a message.
-        /// </summary>
+        /// <summary>Constructs a tag error induced exception with a message.</summary>
         /// <param name="message">The message.</param>
         public TagErrorInducedException(string message) :
             base(message)
         {
         }
 
-        /// <summary>
-        /// Serializable system.
-        /// </summary>
+        /// <summary>Serializable system.</summary>
         /// <param name="info">Serialization information.</param>
         /// <param name="context">Serialization streaming context.</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -89,14 +73,10 @@ namespace FreneticScript.CommandSystem
             base.GetObjectData(info, context);
         }
 
-        /// <summary>
-        /// Relevant sub-tag index.
-        /// </summary>
+        /// <summary>Relevant sub-tag index.</summary>
         public int SubTagIndex;
 
-        /// <summary>
-        /// Constructs a tag error induced exception with a message.
-        /// </summary>
+        /// <summary>Constructs a tag error induced exception with a message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="tagIndex">The relevant sub-tag index.</param>
         public TagErrorInducedException(string message, int tagIndex) :

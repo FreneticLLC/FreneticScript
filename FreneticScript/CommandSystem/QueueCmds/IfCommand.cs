@@ -23,9 +23,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public int Result;
     }
 
-    /// <summary>
-    /// The if command.
-    /// </summary>
+    /// <summary>The if command.</summary>
     public class IfCommand: AbstractCommand
     {
         // <--[command]
@@ -52,9 +50,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // // TODO: More examples!
         // -->
 
-        /// <summary>
-        /// Construct the if commnad.
-        /// </summary>
+        /// <summary>Construct the if commnad.</summary>
         public IfCommand()
         {
             Name = "if";
@@ -66,14 +62,10 @@ namespace FreneticScript.CommandSystem.QueueCmds
             MaximumArguments = -1;
         }
 
-        /// <summary>
-        /// Represents the "TryIfCIL(queue, entry)" method.
-        /// </summary>
+        /// <summary>Represents the "TryIfCIL(queue, entry)" method.</summary>
         public static MethodInfo TryIfCILMethod = typeof(IfCommand).GetMethod("TryIfCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
 
-        /// <summary>
-        /// Adapts a command entry to CIL.
-        /// </summary>
+        /// <summary>Adapts a command entry to CIL.</summary>
         /// <param name="values">The adaptation-relevant values.</param>
         /// <param name="entry">The present entry ID.</param>
         public override void AdaptToCIL(CILAdaptationValues values, int entry)
@@ -110,9 +102,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             values.ILGen.Emit(OpCodes.Brfalse, values.Entry.AdaptedILPoints[cent.BlockEnd + 2]);
         }
 
-        /// <summary>
-        /// Executes the command via CIL.
-        /// </summary>
+        /// <summary>Executes the command via CIL.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static bool TryIfCIL(CommandQueue queue, CommandEntry entry)
@@ -137,9 +127,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             return success;
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
@@ -147,9 +135,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             throw new NotImplementedException("Unknown execution of IF command, invalid!");
         }
 
-        /// <summary>
-        /// Gets the boolean for a string.
-        /// </summary>
+        /// <summary>Gets the boolean for a string.</summary>
         /// <param name="error">What error method to use.</param>
         /// <param name="str">The string.</param>
         /// <returns>The boolean.</returns>
@@ -173,9 +159,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         }
 
         // TODO: better comparison system!
-        /// <summary>
-        /// Tries input IF to see if it is TRUE or FALSE.
-        /// </summary>
+        /// <summary>Tries input IF to see if it is TRUE or FALSE.</summary>
         /// <param name="queue">The command queue of relevance.</param>
         /// <param name="entry">The command entry of relevance.</param>
         /// <param name="arguments">The input arguments.</param>

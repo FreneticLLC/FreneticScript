@@ -17,9 +17,7 @@ using FreneticScript.TagHandlers.HelperBases;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Helper class to parse scripts from text.
-    /// </summary>
+    /// <summary>Helper class to parse scripts from text.</summary>
     public static class ScriptParser
     {
         /// <summary>
@@ -211,10 +209,8 @@ namespace FreneticScript.ScriptSystems
                 return null;
             }
         }
-        
-        /// <summary>
-        /// Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.
-        /// </summary>
+
+        /// <summary>Converts a list of command strings to a CommandEntry list, handling any { braced } blocks inside.</summary>
         /// <param name="name">The name of the script.</param>
         /// <param name="lines">The file line numbers for the corresponding command strings.</param>
         /// <param name="from">The command strings.</param>
@@ -470,9 +466,7 @@ namespace FreneticScript.ScriptSystems
             }
         }
 
-        /// <summary>
-        /// Create an entry that represents an error message.
-        /// </summary>
+        /// <summary>Create an entry that represents an error message.</summary>
         public static CommandEntry CreateErrorOutputEntry(string message, ScriptEngine system, string script, string tabs)
         {
             return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.TheErrorCommand,
@@ -480,9 +474,7 @@ namespace FreneticScript.ScriptSystems
 
         }
 
-        /// <summary>
-        /// Create an entry that represents invalid output.
-        /// </summary>
+        /// <summary>Create an entry that represents invalid output.</summary>
         public static CommandEntry CreateInvalidOutputEntry(string name, List<Argument> _arguments,
             ScriptEngine system, string line, CommandPrefix prefix, string script, int linen, string tabs, Dictionary<string, Argument> nameds, ScriptEngine sys)
         {

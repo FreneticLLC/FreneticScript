@@ -20,9 +20,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// The master class for parsing tags.
-    /// </summary>
+    /// <summary>The master class for parsing tags.</summary>
     public class TagHandler
     {
         // <--[definition]
@@ -34,14 +32,10 @@ namespace FreneticScript.TagHandlers
         // Which would look like: <text[the text].equals[specified text]>.
         // -->
 
-        /// <summary>
-        /// The command engine that holds this tag handler.
-        /// </summary>
+        /// <summary>The command engine that holds this tag handler.</summary>
         public ScriptEngine Engine;
 
-        /// <summary>
-        /// Escapes any tags inside a string.
-        /// </summary>
+        /// <summary>Escapes any tags inside a string.</summary>
         /// <param name="input">The string that may have tags.</param>
         /// <returns>An escaped string.</returns>
         public static string Escape(string input)
@@ -53,9 +47,7 @@ namespace FreneticScript.TagHandlers
             return input.Replace("<", "\0TAGSTART").Replace(">", "\0TAGEND");
         }
 
-        /// <summary>
-        /// Reverses any tag escaping inside a string.
-        /// </summary>
+        /// <summary>Reverses any tag escaping inside a string.</summary>
         /// <param name="input">The string that was escaped.</param>
         /// <returns>An unescaped string that may have tags.</returns>
         public static string Unescape(string input)
@@ -67,33 +59,23 @@ namespace FreneticScript.TagHandlers
             return input.Replace("\0TAGSTART", "<").Replace("\0TAGEND", ">");
         }
 
-        /// <summary>
-        /// All tag handler objects currently registered.
-        /// </summary>
+        /// <summary>All tag handler objects currently registered.</summary>
         public Dictionary<string, TemplateTagBase> Handlers = new Dictionary<string, TemplateTagBase>();
 
-        /// <summary>
-        /// The tag types handler.
-        /// </summary>
+        /// <summary>The tag types handler.</summary>
         public TagTypes Types = new TagTypes();
 
-        /// <summary>
-        /// Registers a handler object for later usage by tags.
-        /// </summary>
+        /// <summary>Registers a handler object for later usage by tags.</summary>
         /// <param name="handler">The handler object to register.</param>
         public void Register(TemplateTagBase handler)
         {
             Handlers.Add(handler.Name, handler);
         }
 
-        /// <summary>
-        /// Local variable tag base.
-        /// </summary>
+        /// <summary>Local variable tag base.</summary>
         public LvarTagBase LVar;
 
-        /// <summary>
-        /// Prepares the tag system.
-        /// </summary>
+        /// <summary>Prepares the tag system.</summary>
         public void Init(ScriptEngine _system)
         {
             Engine = _system;
@@ -125,9 +107,7 @@ namespace FreneticScript.TagHandlers
             Types.Engine = Engine;
             Types.RegisterDefaultTypes();
         }
-        /// <summary>
-        /// Set up the tag engine after all input has be registered.
-        /// </summary>
+        /// <summary>Set up the tag engine after all input has be registered.</summary>
         public void PostInit()
         {
             foreach (TagType type in Types.RegisteredTypes.Values)
@@ -379,9 +359,7 @@ namespace FreneticScript.TagHandlers
             }
         }
 
-        /// <summary>
-        /// An automatic tag for the 'or_else' system.
-        /// </summary>
+        /// <summary>An automatic tag for the 'or_else' system.</summary>
         /// <param name="data">The input tag data.</param>
         /// <param name="obj">The input object.</param>
         /// <returns>The result as described by meta documentation.</returns>
@@ -396,14 +374,10 @@ namespace FreneticScript.TagHandlers
             return new DynamicTag(obj);
         }
 
-        /// <summary>
-        /// References <see cref="AutoTag_Or_Else(TemplateObject, TagData)"/>.
-        /// </summary>
+        /// <summary>References <see cref="AutoTag_Or_Else(TemplateObject, TagData)"/>.</summary>
         public static MethodInfo AUTO_OR_ELSE = typeof(TagHandler).GetMethod(nameof(AutoTag_Or_Else));
-        
-        /// <summary>
-        /// Creates an object from saved data.
-        /// </summary>
+
+        /// <summary>Creates an object from saved data.</summary>
         /// <param name="input">The input save data.</param>
         /// <param name="data">The tag data.</param>
         /// <returns>The resultant object.</returns>
@@ -417,15 +391,11 @@ namespace FreneticScript.TagHandlers
             data.Error("Invalid save loader type (Was a tag type spelled wrong?)!");
             return NullTag.NULL_VALUE;
         }
-        
-        /// <summary>
-        /// Reference to <see cref="DebugTagHelper(TemplateObject, TagData)"/>.
-        /// </summary>
+
+        /// <summary>Reference to <see cref="DebugTagHelper(TemplateObject, TagData)"/>.</summary>
         public static MethodInfo Method_DebugTagHelper = typeof(TagHandler).GetMethod(nameof(DebugTagHelper));
 
-        /// <summary>
-        /// Helper for debugging compiled tags.
-        /// </summary>
+        /// <summary>Helper for debugging compiled tags.</summary>
         /// <param name="resultObject">The returned object.</param>
         /// <param name="data">The tag data.</param>
         /// <returns>Res, unmodified.</returns>

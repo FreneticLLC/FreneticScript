@@ -16,49 +16,33 @@ using FreneticScript.TagHandlers;
 namespace FreneticScript.CommandSystem
 {
 
-    /// <summary>
-    /// Represents an object operation method.
-    /// </summary>
+    /// <summary>Represents an object operation method.</summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class ObjectOperationAttribute : Attribute
     {
-        /// <summary>
-        /// The type of operation.
-        /// </summary>
+        /// <summary>The type of operation.</summary>
         public ObjectOperation Operation;
 
-        /// <summary>
-        /// The input tag type (if any).
-        /// </summary>
+        /// <summary>The input tag type (if any).</summary>
         public string Input;
 
-        /// <summary>
-        /// The method this is attached to.
-        /// </summary>
+        /// <summary>The method this is attached to.</summary>
         public MethodInfo Method;
 
-        /// <summary>
-        /// A function call for the method, based on objects.
-        /// </summary>
+        /// <summary>A function call for the method, based on objects.</summary>
         public Func<TemplateObject, TemplateObject, ObjectEditSource, TemplateObject> ObjectFunc;
 
-        /// <summary>
-        /// A function call for the method, using a string as input.
-        /// </summary>
+        /// <summary>A function call for the method, using a string as input.</summary>
         public Func<TemplateObject, string, ObjectEditSource, TemplateObject> StringFunc;
 
-        /// <summary>
-        /// A function call for the method, using a string-set-action setup.
-        /// </summary>
+        /// <summary>A function call for the method, using a string-set-action setup.</summary>
         public Action<TemplateObject, TemplateObject, string, ObjectEditSource> SetFunc;
 
         private static readonly Type[] GET_FUNC_PARAMS = new Type[] { typeof(TemplateObject), typeof(string), typeof(ObjectEditSource) };
         private static readonly Type[] SET_FUNC_PARAMS = new Type[] { typeof(TemplateObject), typeof(TemplateObject), typeof(string), typeof(ObjectEditSource) };
         private static readonly Type[] OBJECT_FUNC_PARAMS = new Type[] { typeof(TemplateObject), typeof(TemplateObject), typeof(ObjectEditSource) };
 
-        /// <summary>
-        /// Generate the operation function helper objects.
-        /// </summary>
+        /// <summary>Generate the operation function helper objects.</summary>
         public void GenerateFunctions()
         {
             if (Operation == ObjectOperation.GETSUBSETTABLE)
@@ -135,9 +119,7 @@ namespace FreneticScript.CommandSystem
             }
         }
 
-        /// <summary>
-        /// Constructs the object operation attribute.
-        /// </summary>
+        /// <summary>Constructs the object operation attribute.</summary>
         /// <param name="_operation">The operation type.</param>
         public ObjectOperationAttribute(ObjectOperation _operation)
         {

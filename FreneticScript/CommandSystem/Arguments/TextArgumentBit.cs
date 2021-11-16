@@ -15,14 +15,10 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.Arguments
 {
-    /// <summary>
-    /// An argument part containing only plain text.
-    /// </summary>
+    /// <summary>An argument part containing only plain text.</summary>
     public class TextArgumentBit : ArgumentBit
     {
-        /// <summary>
-        /// Constructs the argument with an input object.
-        /// </summary>
+        /// <summary>Constructs the argument with an input object.</summary>
         /// <param name="_object">The input object.</param>
         /// <param name="_engine">The backing script engine.</param>
         public TextArgumentBit(TemplateObject _object, ScriptEngine _engine)
@@ -32,9 +28,7 @@ namespace FreneticScript.CommandSystem.Arguments
             Engine = _engine;
         }
 
-        /// <summary>
-        /// Constructs the argument with an input boolean.
-        /// </summary>
+        /// <summary>Constructs the argument with an input boolean.</summary>
         /// <param name="_text">The input boolean.</param>
         /// <param name="_engine">The backing script engine.</param>
         public TextArgumentBit(bool _text, ScriptEngine _engine)
@@ -44,9 +38,7 @@ namespace FreneticScript.CommandSystem.Arguments
             Engine = _engine;
         }
 
-        /// <summary>
-        /// Constructs the argument with an input integer.
-        /// </summary>
+        /// <summary>Constructs the argument with an input integer.</summary>
         /// <param name="_text">The input integer.</param>
         /// <param name="_engine">The backing script engine.</param>
         public TextArgumentBit(long _text, ScriptEngine _engine)
@@ -56,9 +48,7 @@ namespace FreneticScript.CommandSystem.Arguments
             Engine = _engine;
         }
 
-        /// <summary>
-        /// Constructs the argument with input text.
-        /// </summary>
+        /// <summary>Constructs the argument with input text.</summary>
         /// <param name="_text">The input text.</param>
         /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
         /// <param name="perfect">Whether the argument must parse back "perfectly" (meaning, it will ToString to the exact original input).</param>
@@ -126,9 +116,7 @@ namespace FreneticScript.CommandSystem.Arguments
             ResType = TextTag.TYPE;
         }
 
-        /// <summary>
-        /// Gets the resultant type of this argument bit.
-        /// </summary>
+        /// <summary>Gets the resultant type of this argument bit.</summary>
         /// <param name="values">The relevant variable set.</param>
         /// <returns>The tag type.</returns>
         public override TagReturnType ReturnType(CILAdaptationValues values)
@@ -136,19 +124,13 @@ namespace FreneticScript.CommandSystem.Arguments
             return new TagReturnType(Engine.TagSystem.Types.RegisteredTypes[ResType], false);
         }
 
-        /// <summary>
-        /// The type resultant of this text argument bit.
-        /// </summary>
+        /// <summary>The type resultant of this text argument bit.</summary>
         public string ResType;
 
-        /// <summary>
-        /// The input text.
-        /// </summary>
+        /// <summary>The input text.</summary>
         public TemplateObject InputValue;
 
-        /// <summary>
-        /// Returns the input text.
-        /// </summary>
+        /// <summary>Returns the input text.</summary>
         /// <param name="error">What to invoke if there is an error.</param>
         /// <param name="runnable">The command runnable.</param>
         /// <returns>The parsed final text.</returns>
@@ -158,9 +140,7 @@ namespace FreneticScript.CommandSystem.Arguments
             return InputValue;
         }
 
-        /// <summary>
-        /// Returns the input text.
-        /// </summary>
+        /// <summary>Returns the input text.</summary>
         /// <returns>The input text.</returns>
         public override string ToString()
         {

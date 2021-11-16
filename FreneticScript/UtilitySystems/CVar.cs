@@ -14,14 +14,10 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript
 {
-    /// <summary>
-    /// Helper for <see cref="CVarFlag"/>.
-    /// </summary>
+    /// <summary>Helper for <see cref="CVarFlag"/>.</summary>
     public static class CVarFlagEnumExtensions
     {
-        /// <summary>
-        /// Returns whether the mainVal (as a bitflag set) has the required testVal (as a bitflag set).
-        /// </summary>
+        /// <summary>Returns whether the mainVal (as a bitflag set) has the required testVal (as a bitflag set).</summary>
         /// <param name="mainVal">The set of flags present.</param>
         /// <param name="testVal">The set of flags required.</param>
         /// <returns>Whether the flags are present as required.</returns>
@@ -31,47 +27,27 @@ namespace FreneticScript
         }
     }
 
-    /// <summary>
-    /// The various possible information flags a CVar can hold.
-    /// </summary>
+    /// <summary>The various possible information flags a CVar can hold.</summary>
     [Flags]
     public enum CVarFlag : int
     {
-        /// <summary>
-        /// No information.
-        /// </summary>
+        /// <summary>No information.</summary>
         None = 0,
-        /// <summary>
-        /// This flag cannot be edited, and exists to represent system information.
-        /// </summary>
+        /// <summary>This flag cannot be edited, and exists to represent system information.</summary>
         ReadOnly = 1,
-        /// <summary>
-        /// This flag should be treated as text.
-        /// </summary>
+        /// <summary>This flag should be treated as text.</summary>
         Textual = 1 << 1,
-        /// <summary>
-        /// This tag should be treated as a number.
-        /// </summary>
+        /// <summary>This tag should be treated as a number.</summary>
         Numeric = 1 << 2,
-        /// <summary>
-        /// This flag should be treated as true/false.
-        /// </summary>
+        /// <summary>This flag should be treated as true/false.</summary>
         Boolean = 1 << 3,
-        /// <summary>
-        /// This flag won't immediately have an effect when edited.
-        /// </summary>
+        /// <summary>This flag won't immediately have an effect when edited.</summary>
         Delayed = 1 << 4,
-        /// <summary>
-        /// This flag was made by a user.
-        /// </summary>
+        /// <summary>This flag was made by a user.</summary>
         UserMade = 1 << 5,
-        /// <summary>
-        /// This flag can only be modified during load time.
-        /// </summary>
+        /// <summary>This flag can only be modified during load time.</summary>
         InitOnly = 1 << 6,
-        /// <summary>
-        /// This flag is on a client, but controlled by the server.
-        /// </summary>
+        /// <summary>This flag is on a client, but controlled by the server.</summary>
         ServerControl = 1 << 7,
         /// <summary>
         /// This flag should not be saved across system restarts.
@@ -87,69 +63,43 @@ namespace FreneticScript
     // TODO: Explain better!
     // -->
 
-    /// <summary>
-    /// Represents a name:value pair within a complex system.
-    /// </summary>
+    /// <summary>Represents a name:value pair within a complex system.</summary>
     public class CVar
     {
-        /// <summary>
-        /// The name of the CVar.
-        /// </summary>
+        /// <summary>The name of the CVar.</summary>
         public string Name;
 
-        /// <summary>
-        /// The value of the CVar, as text.
-        /// </summary>
+        /// <summary>The value of the CVar, as text.</summary>
         public string Value;
 
-        /// <summary>
-        /// The value of the CVar, as a long.
-        /// </summary>
+        /// <summary>The value of the CVar, as a long.</summary>
         public long ValueL;
 
-        /// <summary>
-        /// The value of the CVar, as an int.
-        /// </summary>
+        /// <summary>The value of the CVar, as an int.</summary>
         public int ValueI;
 
-        /// <summary>
-        /// The value of the CVar, as a double.
-        /// </summary>
+        /// <summary>The value of the CVar, as a double.</summary>
         public double ValueD;
 
-        /// <summary>
-        /// The value of the CVar, as a float.
-        /// </summary>
+        /// <summary>The value of the CVar, as a float.</summary>
         public float ValueF;
 
-        /// <summary>
-        /// The value of the CVar, as a boolean.
-        /// </summary>
+        /// <summary>The value of the CVar, as a boolean.</summary>
         public bool ValueB;
 
-        /// <summary>
-        /// The CVar flags set.
-        /// </summary>
+        /// <summary>The CVar flags set.</summary>
         public CVarFlag Flags;
 
-        /// <summary>
-        /// The system that generated this CVar.
-        /// </summary>
+        /// <summary>The system that generated this CVar.</summary>
         public CVarSystem System;
 
-        /// <summary>
-        /// An implementor can optionally apply a description to a CVar to show in Info() and any implementor-managed code.
-        /// </summary>
+        /// <summary>An implementor can optionally apply a description to a CVar to show in Info() and any implementor-managed code.</summary>
         public string Description;
 
-        /// <summary>
-        /// Any object can be attached to a CVar to mark it for the implementing engine.
-        /// </summary>
+        /// <summary>Any object can be attached to a CVar to mark it for the implementing engine.</summary>
         public Object Tag;
 
-        /// <summary>
-        /// Construct a CVar.
-        /// </summary>
+        /// <summary>Construct a CVar.</summary>
         /// <param name="newname">The name of  the CVar.</param>
         /// <param name="newvalue">The value to set the CVar to.</param>
         /// <param name="newflags">The flags the CVar should be locked into.</param>
@@ -162,9 +112,7 @@ namespace FreneticScript
             Flags = newflags;
         }
 
-        /// <summary>
-        /// This event is called when the CVar is changed.
-        /// </summary>
+        /// <summary>This event is called when the CVar is changed.</summary>
         public EventHandler OnChanged;
 
         /// <summary>
@@ -204,9 +152,7 @@ namespace FreneticScript
             OnChanged?.Invoke(this, null);
         }
 
-        /// <summary>
-        /// Sets the CVar to a new value.
-        /// </summary>
+        /// <summary>Sets the CVar to a new value.</summary>
         /// <param name="value">The value to set the CVar to.</param>
         public void Set(bool value)
         {
@@ -243,9 +189,7 @@ namespace FreneticScript
             OnChanged?.Invoke(this, null);
         }
 
-        /// <summary>
-        /// Returns a human-readable list of flags.
-        /// </summary>
+        /// <summary>Returns a human-readable list of flags.</summary>
         /// <returns>The flag list.</returns>
         public string FlagInfo()
         {
@@ -264,9 +208,7 @@ namespace FreneticScript
             return list.Formatted();
         }
 
-        /// <summary>
-        /// Returns a human-readable colored information line from this CVar.
-        /// </summary>
+        /// <summary>Returns a human-readable colored information line from this CVar.</summary>
         /// <returns>The information.</returns>
         public string Info()
         {

@@ -19,25 +19,19 @@ using FreneticScript.ScriptSystems;
 
 namespace FreneticScript.TagHandlers.Objects
 {
-    /// <summary>
-    /// Represents a tag object of unknown type.
-    /// </summary>
+    /// <summary>Represents a tag object of unknown type.</summary>
     [ObjectMeta(Name = DynamicTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents any object, dynamically.")]
     public class DynamicTag : TemplateObject
     {
 
-        /// <summary>
-        /// Return the type name of this tag.
-        /// </summary>
+        /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
         public override string GetTagTypeName()
         {
             return TYPE;
         }
 
-        /// <summary>
-        /// Return the type of this tag.
-        /// </summary>
+        /// <summary>Return the type of this tag.</summary>
         /// <returns>The tag type.</returns>
         public override TagType GetTagType(TagTypes tagTypeSet)
         {
@@ -46,33 +40,23 @@ namespace FreneticScript.TagHandlers.Objects
 
         // TODO: Explanation of dynamics!
 
-        /// <summary>
-        /// The represented tag object.
-        /// </summary>
+        /// <summary>The represented tag object.</summary>
         public TemplateObject Internal;
 
-        /// <summary>
-        /// The field <see cref="Internal"/>.
-        /// </summary>
+        /// <summary>The field <see cref="Internal"/>.</summary>
         public static readonly FieldInfo Field_DynamicTag_Internal = typeof(DynamicTag).GetField(nameof(Internal));
-        
-        /// <summary>
-        /// Constructs a new DynamicTag.
-        /// </summary>
+
+        /// <summary>Constructs a new DynamicTag.</summary>
         /// <param name="obj">The TemplateObject to base this DynamicTag off of.</param>
         public DynamicTag(TemplateObject obj)
         {
             Internal = obj;
         }
 
-        /// <summary>
-        /// The DynamicTag type.
-        /// </summary>
+        /// <summary>The DynamicTag type.</summary>
         public const string TYPE = "dynamic";
 
-        /// <summary>
-        /// Creates a SystemTag for the given input data.
-        /// </summary>
+        /// <summary>Creates a SystemTag for the given input data.</summary>
         /// <param name="data">The tag data.</param>
         /// <param name="input">The text input.</param>
         /// <returns>A valid time tag.</returns>
@@ -153,7 +137,7 @@ namespace FreneticScript.TagHandlers.Objects
             }
             return new DynamicTag(tagHelper.RunTagLive(tagObject, data));
         }
-        
+
         public static TagReturnType TypeHelper_Tag_As(TagArgumentBit tab, int bit)
         {
             string type_name = tab.Bits[bit].Variable.ToString().ToLowerFast();
@@ -166,9 +150,7 @@ namespace FreneticScript.TagHandlers.Objects
 
 #pragma warning restore 1591
 
-        /// <summary>
-        /// Returns savable dynamic tag data.
-        /// </summary>
+        /// <summary>Returns savable dynamic tag data.</summary>
         /// <returns>The data.</returns>
         public override string GetSavableString()
         {
@@ -176,27 +158,21 @@ namespace FreneticScript.TagHandlers.Objects
             return Internal.GetSavableString();
         }
 
-        /// <summary>
-        /// Returns the dynamic tag data.
-        /// </summary>
+        /// <summary>Returns the dynamic tag data.</summary>
         /// <returns>The data.</returns>
         public override string ToString()
         {
             return Internal.ToString();
         }
 
-        /// <summary>
-        /// Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.
-        /// </summary>
+        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {
             return Internal.GetDebugString();
         }
 
-        /// <summary>
-        /// Gets the sub-settable object, or null if none.
-        /// </summary>
+        /// <summary>Gets the sub-settable object, or null if none.</summary>
         /// <param name="tag">The tag.</param>
         /// <param name="name">The sub-settable object name.</param>
         /// <param name="source">The object edit source.</param>
@@ -207,9 +183,7 @@ namespace FreneticScript.TagHandlers.Objects
             return DebugVarSetCommand.GetSubObject(tag.Internal, source.Entry, source.Queue, name);
         }
 
-        /// <summary>
-        /// Sets a sub-object by name.
-        /// </summary>
+        /// <summary>Sets a sub-object by name.</summary>
         /// <param name="tag">The tag.</param>
         /// <param name="value">The value to insert.</param>
         /// <param name="name">The sub-object name to insert.</param>
@@ -220,9 +194,7 @@ namespace FreneticScript.TagHandlers.Objects
             DebugVarSetCommand.SetSubObject(tag.Internal, value, source.Entry, source.Queue, name);
         }
 
-        /// <summary>
-        /// Adds a value to the object.
-        /// </summary>
+        /// <summary>Adds a value to the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to add.</param>
         /// <param name="source">The object edit source.</param>
@@ -232,9 +204,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.ADD));
         }
 
-        /// <summary>
-        /// Subtracts a value from the object.
-        /// </summary>
+        /// <summary>Subtracts a value from the object.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to subtract.</param>
         /// <param name="source">The object edit source.</param>
@@ -244,9 +214,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.SUBTRACT));
         }
 
-        /// <summary>
-        /// Multiplies the object by a value.
-        /// </summary>
+        /// <summary>Multiplies the object by a value.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to multiply by.</param>
         /// <param name="source">The object edit source.</param>
@@ -256,9 +224,7 @@ namespace FreneticScript.TagHandlers.Objects
             return new DynamicTag(DebugVarSetCommand.Operate(first.Internal, val.Internal, source.Entry, source.Queue, ObjectOperation.MULTIPLY));
         }
 
-        /// <summary>
-        /// Divides the object by a value.
-        /// </summary>
+        /// <summary>Divides the object by a value.</summary>
         /// <param name="first">The value on the left side of the operator.</param>
         /// <param name="val">The value to divide by.</param>
         /// <param name="source">The object edit source.</param>

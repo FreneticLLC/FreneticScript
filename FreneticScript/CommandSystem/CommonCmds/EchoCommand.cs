@@ -14,16 +14,12 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.CommonCmds
 {
-    /// <summary>
-    /// The Echo command: outputs text to the console.
-    /// </summary>
+    /// <summary>The Echo command: outputs text to the console.</summary>
     public class EchoCommand : AbstractCommand
     {
         // TODO: Meta!
 
-        /// <summary>
-        /// Constructs the echo command.
-        /// </summary>
+        /// <summary>Constructs the echo command.</summary>
         public EchoCommand()
         {
             Name = "echo";
@@ -37,9 +33,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

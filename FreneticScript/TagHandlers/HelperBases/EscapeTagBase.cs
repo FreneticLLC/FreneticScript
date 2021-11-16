@@ -12,9 +12,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers.HelperBases
 {
-    /// <summary>
-    /// Escapes questionable text input.
-    /// </summary>
+    /// <summary>Escapes questionable text input.</summary>
     public class EscapeTagBase : TemplateTagBase
     {
         // <--[tagbase]
@@ -26,9 +24,7 @@ namespace FreneticScript.TagHandlers.HelperBases
 
         // TODO: Full explanation!
 
-        /// <summary>
-        /// All standard escape codes.
-        /// </summary>
+        /// <summary>All standard escape codes.</summary>
         public static readonly Dictionary<char, string> Escapes = new Dictionary<char, string>()
         {
             { '&', "amp" },
@@ -48,9 +44,7 @@ namespace FreneticScript.TagHandlers.HelperBases
             { '\n', "newline" }
         };
 
-        /// <summary>
-        /// Escapes a string.
-        /// </summary>
+        /// <summary>Escapes a string.</summary>
         /// <param name="input">The unescaped string.</param>
         /// <returns>The escaped string.</returns>
         public static string Escape(string input)
@@ -77,18 +71,14 @@ namespace FreneticScript.TagHandlers.HelperBases
             return escaped.ToString();
         }
 
-        /// <summary>
-        /// Construct the EscapeTags - for internal use only.
-        /// </summary>
+        /// <summary>Construct the EscapeTags - for internal use only.</summary>
         public EscapeTagBase()
         {
             Name = "escape";
             ResultTypeString = TextTag.TYPE;
         }
 
-        /// <summary>
-        /// Handles the escape tag.
-        /// </summary>
+        /// <summary>Handles the escape tag.</summary>
         /// <param name="data">The data to be handled.</param>
         public static TextTag HandleOne(TagData data)
         {

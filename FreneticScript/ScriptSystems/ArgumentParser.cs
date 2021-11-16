@@ -16,14 +16,10 @@ using FreneticScript.TagHandlers;
 
 namespace FreneticScript.ScriptSystems
 {
-    /// <summary>
-    /// Helper class for parsing arguments.
-    /// </summary>
+    /// <summary>Helper class for parsing arguments.</summary>
     public static class ArgumentParser
     {
-        /// <summary>
-        /// Splits text into an Argument, for preparsing.
-        /// </summary>
+        /// <summary>Splits text into an Argument, for preparsing.</summary>
         /// <param name="system">The relevant command system.</param>
         /// <param name="input">The original text.</param>
         /// <param name="wasquoted">Whether the argument was input with "quotes".</param>

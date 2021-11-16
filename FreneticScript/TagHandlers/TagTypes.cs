@@ -16,19 +16,13 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.TagHandlers
 {
-    /// <summary>
-    /// Helper class for tag types recognized within a script system.
-    /// </summary>
+    /// <summary>Helper class for tag types recognized within a script system.</summary>
     public class TagTypes
     {
-        /// <summary>
-        /// All tag types currently registered.
-        /// </summary>
+        /// <summary>All tag types currently registered.</summary>
         public Dictionary<string, TagType> RegisteredTypes = new Dictionary<string, TagType>();
 
-        /// <summary>
-        /// Gets the type for a type name. Returns null if not found.
-        /// </summary>
+        /// <summary>Gets the type for a type name. Returns null if not found.</summary>
         /// <param name="name">The name of the type.</param>
         /// <returns>The type, or null.</returns>
         public TagType TypeForName(string name)
@@ -40,94 +34,58 @@ namespace FreneticScript.TagHandlers
             return null;
         }
 
-        /// <summary>
-        /// The backing script engine.
-        /// </summary>
+        /// <summary>The backing script engine.</summary>
         public ScriptEngine Engine;
 
-        /// <summary>
-        /// Helpers to load tags for any given type, input by name.
-        /// </summary>
+        /// <summary>Helpers to load tags for any given type, input by name.</summary>
         public Dictionary<string, Func<string, TagData, TemplateObject>> SaveCreators = new Dictionary<string, Func<string, TagData, TemplateObject>>();
 
-        /// <summary>
-        /// The Binary type.
-        /// </summary>
+        /// <summary>The Binary type.</summary>
         public TagType Type_Binary;
 
-        /// <summary>
-        /// The Boolean type.
-        /// </summary>
+        /// <summary>The Boolean type.</summary>
         public TagType Type_Boolean;
 
-        /// <summary>
-        /// The CVar  type.
-        /// </summary>
+        /// <summary>The CVar  type.</summary>
         public TagType Type_Cvar;
 
-        /// <summary>
-        /// The Dynamic type.
-        /// </summary>
+        /// <summary>The Dynamic type.</summary>
         public TagType Type_Dynamic;
 
-        /// <summary>
-        /// The Function type.
-        /// </summary>
+        /// <summary>The Function type.</summary>
         public TagType Type_Function;
 
-        /// <summary>
-        /// The Integer type.
-        /// </summary>
+        /// <summary>The Integer type.</summary>
         public TagType Type_Integer;
 
-        /// <summary>
-        /// The List type.
-        /// </summary>
+        /// <summary>The List type.</summary>
         public TagType Type_List;
 
-        /// <summary>
-        /// The Map type.
-        /// </summary>
+        /// <summary>The Map type.</summary>
         public TagType Type_Map;
 
-        /// <summary>
-        /// The Null type.
-        /// </summary>
+        /// <summary>The Null type.</summary>
         public TagType Type_Null;
 
-        /// <summary>
-        /// The Number type.
-        /// </summary>
+        /// <summary>The Number type.</summary>
         public TagType Type_Number;
 
-        /// <summary>
-        /// The System type.
-        /// </summary>
+        /// <summary>The System type.</summary>
         public TagType Type_System;
 
-        /// <summary>
-        /// The TagType type.
-        /// </summary>
+        /// <summary>The TagType type.</summary>
         public TagType Type_TagType;
 
-        /// <summary>
-        /// The TernaryPass type.
-        /// </summary>
+        /// <summary>The TernaryPass type.</summary>
         public TagType Type_TernayPass;
 
-        /// <summary>
-        /// The Text type.
-        /// </summary>
+        /// <summary>The Text type.</summary>
         public TagType Type_Text;
 
-        /// <summary>
-        /// The Time type.
-        /// </summary>
+        /// <summary>The Time type.</summary>
         public TagType Type_Time;
 
-        /// <summary>
-        /// Registers a type object for later usage by tags.
-        /// </summary>
+        /// <summary>Registers a type object for later usage by tags.</summary>
         /// <param name="type">The type object to register.</param>
         /// <param name="creator">The tag creator method (for SAVABLE data).</param>
         public void Register(TagType type, Func<string, TagData, TemplateObject> creator)
@@ -137,9 +95,7 @@ namespace FreneticScript.TagHandlers
             type.Engine = Engine;
         }
 
-        /// <summary>
-        /// Registers all the default tag types.
-        /// </summary>
+        /// <summary>Registers all the default tag types.</summary>
         public void RegisterDefaultTypes()
         {
             Register(Type_Binary = new TagType()

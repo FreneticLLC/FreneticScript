@@ -81,7 +81,7 @@ namespace FreneticScriptConsoleTester
         public override void Reload()
         {
         }
-        
+
         public override void WriteDataFile(string name, byte[] data)
         {
             throw new NotImplementedException();

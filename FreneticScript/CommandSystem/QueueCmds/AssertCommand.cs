@@ -13,9 +13,7 @@ using FreneticScript.TagHandlers.Objects;
 
 namespace FreneticScript.CommandSystem.QueueCmds
 {
-    /// <summary>
-    /// The Assert command.
-    /// </summary>
+    /// <summary>The Assert command.</summary>
     public class AssertCommand : AbstractCommand
     {
         // <--[command]
@@ -42,9 +40,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!";
         // -->
 
-        /// <summary>
-        /// Constructs the assert command.
-        /// </summary>
+        /// <summary>Constructs the assert command.</summary>
         public AssertCommand()
         {
             Name = "assert";
@@ -60,9 +56,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             };
         }
 
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
+        /// <summary>Executes the command.</summary>
         /// <param name="queue">The command queue involved.</param>
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)

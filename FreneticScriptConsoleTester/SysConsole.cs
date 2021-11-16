@@ -26,9 +26,7 @@ namespace FreneticScriptConsoleTester
 
         static readonly CancellationTokenSource ConsoleCancelToken = new CancellationTokenSource();
 
-        /// <summary>
-        /// Closes the SysConsole.
-        /// </summary>
+        /// <summary>Closes the SysConsole.</summary>
         public static void ShutDown()
         {
             lock (ConsoleLock)
@@ -47,9 +45,7 @@ namespace FreneticScriptConsoleTester
             }
         }
 
-        /// <summary>
-        /// Prepares the system console.
-        /// </summary>
+        /// <summary>Prepares the system console.</summary>
         public static void Init()
         {
             Console.BackgroundColor = ConsoleColor.Black;
@@ -101,14 +97,10 @@ namespace FreneticScriptConsoleTester
             }
         }
 
-        /// <summary>
-        /// The console title.
-        /// </summary>
+        /// <summary>The console title.</summary>
         public static string Title = "";
 
-        /// <summary>
-        /// Fixes the title of the system console to how the Client expects it.
-        /// </summary>
+        /// <summary>Fixes the title of the system console to how the Client expects it.</summary>
         public static void FixTitle()
         {
             Title = "FreneticScriptConsoleTest / " + Environment.ProcessId.ToString();
@@ -118,25 +110,19 @@ namespace FreneticScriptConsoleTester
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        /// <summary>
-        /// Hides the system console from view.
-        /// </summary>
+        /// <summary>Hides the system console from view.</summary>
         public static void HideConsole()
         {
             // TODO ShowWindow(Program.ConsoleHandle, 0);
         }
 
-        /// <summary>
-        /// Shows (un-hides) the system console.
-        /// </summary>
+        /// <summary>Shows (un-hides) the system console.</summary>
         public static void ShowConsole()
         {
             // TODO ShowWindow(Program.ConsoleHandle, 1);
         }
 
-        /// <summary>
-        /// Writes a line of colored text to the system console.
-        /// </summary>
+        /// <summary>Writes a line of colored text to the system console.</summary>
         /// <param name="text">The text to write.</param>
         public static void WriteLine(string text, string bcolor)
         {
@@ -145,9 +131,7 @@ namespace FreneticScriptConsoleTester
 
         public static EventHandler<ConsoleWrittenEventArgs> Written;
 
-        /// <summary>
-        /// Writes some colored text to the system console.
-        /// </summary>
+        /// <summary>Writes some colored text to the system console.</summary>
         /// <param name="text">The text to write.</param>
         private static void Write(string text, string bcolor)
         {
@@ -158,9 +142,7 @@ namespace FreneticScriptConsoleTester
             }
         }
 
-        /// <summary>
-        /// Used to identify if an input character is a valid color symbol (generally the character that follows a '^'), for use by RenderColoredText
-        /// </summary>
+        /// <summary>Used to identify if an input character is a valid color symbol (generally the character that follows a '^'), for use by RenderColoredText</summary>
         /// <param name="c"><paramref name="c"/>The character to check.</param>
         /// <returns>whether the character is a valid color symbol.</returns>
         public static bool IsColorSymbol(char c)
@@ -273,9 +255,7 @@ namespace FreneticScriptConsoleTester
             WriteLine("^r^7" + DateTimeToString(DateTime.Now) + " [" + bcolor + type + "^r^7] " + bcolor + message, bcolor);
         }
 
-        /// <summary>
-        /// Returns a string representation of the specified time.
-        /// </summary>
+        /// <summary>Returns a string representation of the specified time.</summary>
         /// <returns>The time as a string.</returns>
         public static string DateTimeToString(DateTime dt)
         {
@@ -296,9 +276,7 @@ namespace FreneticScriptConsoleTester
                     Pad(dt.Minute.ToString(), '0', 2) + ":" + Pad(dt.Second.ToString(), '0', 2) + " UTC" + utcoffset;
         }
 
-        /// <summary>
-        /// Pads a string to a specified length with a specified input, on a specified side.
-        /// </summary>
+        /// <summary>Pads a string to a specified length with a specified input, on a specified side.</summary>
         /// <param name="input">The original string.</param>
         /// <param name="padding">The symbol to pad with.</param>
         /// <param name="length">How far to pad it to.</param>
@@ -324,9 +302,7 @@ namespace FreneticScriptConsoleTester
 
         public static Func<bool> ShouldOutputDebug = () => true;
 
-        /// <summary>
-        /// Properly formats system console output.
-        /// </summary>
+        /// <summary>Properly formats system console output.</summary>
         /// <param name="ot">What type of output to use.</param>
         /// <param name="text">The text to output.</param>
         public static void Output(OutputType ot, string text, string bcolor = null)
@@ -371,42 +347,24 @@ namespace FreneticScriptConsoleTester
         public string BColor;
     }
 
-    /// <summary>
-    /// All possible console output types.
-    /// </summary>
+    /// <summary>All possible console output types.</summary>
     public enum OutputType : int
     {
-        /// <summary>
-        /// Do not use.
-        /// </summary>
+        /// <summary>Do not use.</summary>
         NONE = 0,
-        /// <summary>
-        /// When the client is sending information to console.
-        /// </summary>
+        /// <summary>When the client is sending information to console.</summary>
         CLIENTINFO = 1,
-        /// <summary>
-        /// During the startup sequence.
-        /// </summary>
+        /// <summary>During the startup sequence.</summary>
         INIT = 2,
-        /// <summary>
-        /// An ignorable error.
-        /// </summary>
+        /// <summary>An ignorable error.</summary>
         WARNING = 3,
-        /// <summary>
-        /// A major error.
-        /// </summary>
+        /// <summary>A major error.</summary>
         ERROR = 4,
-        /// <summary>
-        /// General information.
-        /// </summary>
+        /// <summary>General information.</summary>
         INFO = 5,
-        /// <summary>
-        /// Disable-able minor debug information.
-        /// </summary>
+        /// <summary>Disable-able minor debug information.</summary>
         DEBUG = 6,
-        /// <summary>
-        /// Good information, a positive output.
-        /// </summary>
+        /// <summary>Good information, a positive output.</summary>
         GOOD = 7,
         // TODO: More?
     }
