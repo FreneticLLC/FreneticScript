@@ -34,22 +34,22 @@ namespace FreneticScript.ScriptSystems
         public static CompiledCommandStackEntry Compile(CommandScript script)
         {
             string tname = "__script__" + IDINCR++ + "__" + NameTrimMatcher.TrimToMatches(script.Name);
-            CompiledCommandStackEntry Created = new CompiledCommandStackEntry()
+            CompiledCommandStackEntry Created = new()
             {
                 Entries = script.CommandArray,
                 Script = script,
                 AssemblyName = tname
             };
-            AssemblyName asmname = new AssemblyName(tname) { Name = tname };
+            AssemblyName asmname = new(tname) { Name = tname };
             AssemblyBuilder asmbuild = AssemblyBuilder.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
             CompiledCommandStackEntry ccse = Created;
             ccse.AdaptedILPoints = new Label[ccse.Entries.Length + 1];
             TypeBuilder typebuild_c = modbuild.DefineType(tname + "__CENTRAL", TypeAttributes.Class | TypeAttributes.Public, typeof(CompiledCommandRunnable));
             MethodBuilder methodbuild_c = typebuild_c.DefineMethod("Run", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), RUN_METHOD_PARAMETERS);
-            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = Created.System };
+            ILGeneratorTracker ilgen = new ILGeneratorTracker(methodbuild_c.GetILGenerator(), new Type[] { typebuild_c }.JoinWith(RUN_METHOD_PARAMETERS), $"Script_{tname}").ConfigureTracker(Created.System);
             ilgen.AddCode(OpCodes.Nop, tname, "--- SCRIPT ---");
-            CILAdaptationValues values = new CILAdaptationValues()
+            CILAdaptationValues values = new()
             {
                 Entry = ccse,
                 Script = script,
@@ -70,15 +70,15 @@ namespace FreneticScript.ScriptSystems
                 ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
             }
             int tagID = 0;
-            List<TagArgumentBit> toClean = new List<TagArgumentBit>();
+            List<TagArgumentBit> toClean = new();
             List<ILGeneratorTracker> ILGens
 #if SAVE
-                = new List<ILGeneratorTracker>();
+                = new();
 #else
                 = null;
 #endif
             values.Trackers = ILGens;
-            List<KeyValuePair<FieldInfo, Object>> specialFieldValues = new List<KeyValuePair<FieldInfo, object>>();
+            List<KeyValuePair<FieldInfo, Object>> specialFieldValues = new();
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
                 CommandEntry curEnt = ccse.Entries[i];
@@ -172,6 +172,7 @@ namespace FreneticScript.ScriptSystems
             ilgen.Emit(OpCodes.Switch, ccse.AdaptedILPoints);
             for (int i = 0; i < ccse.Entries.Length; i++)
             {
+                ilgen.Comment($"Begin command code section {i}: {ccse.Entries[i].CommandLine}");
                 ilgen.MarkLabel(ccse.AdaptedILPoints[i]);
                 try
                 {
@@ -187,7 +188,7 @@ namespace FreneticScript.ScriptSystems
             ilgen.Emit(OpCodes.Ret);
             typebuild_c.DefineMethodOverride(methodbuild_c, CompiledCommandRunnable.RunMethod);
             ConstructorBuilder ctor = typebuild_c.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, CONSTRUCTOR_PARAMS);
-            ILGeneratorTracker ctorilgen = new ILGeneratorTracker() { Internal = ctor.GetILGenerator(), System = ccse.System };
+            ILGeneratorTracker ctorilgen = new ILGeneratorTracker(ctor.GetILGenerator(), new Type[] { typebuild_c }.JoinWith(CONSTRUCTOR_PARAMS), tname).ConfigureTracker(ccse.System);
             ILGens?.Add(ctorilgen);
             ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'
             ctorilgen.Emit(OpCodes.Ldarg_1); // Load: CCSE
@@ -244,7 +245,7 @@ namespace FreneticScript.ScriptSystems
             runnable.EntryData = new AbstractCommandEntryData[Created.Entries.Length];
             runnable.Debug = script.Debug;
 #if SAVE
-            StringBuilder outp = new StringBuilder();
+            StringBuilder outp = new();
             for (int i = 0; i < ilgen.Codes.Count; i++)
             {
                 outp.Append(ilgen.Codes[i].Key + ": " + ilgen.Codes[i].Value?.ToString()?.Replace("\n", "\\n")?.Replace("\r", "\\r") + "\n");
@@ -272,8 +273,8 @@ namespace FreneticScript.ScriptSystems
         /// <returns>The setter action.</returns>
         public static Action<CompiledCommandRunnable, TemplateObject> CreateVariableSetter(SingleCILVariable variable)
         {
-            DynamicMethod genMethod = new DynamicMethod("script_" + variable.Field.DeclaringType.Name + "_var_" + variable.Index + "_setter", typeof(void), SETTER_ACTION_PARAMS);
-            ILGeneratorTracker ILGen = new ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = variable.Type.Type.Engine };
+            DynamicMethod genMethod = new("script_" + variable.Field.DeclaringType.Name + "_var_" + variable.Index + "_setter", typeof(void), SETTER_ACTION_PARAMS);
+            ILGeneratorTracker ILGen = new ILGeneratorTracker(genMethod.GetILGenerator(), SETTER_ACTION_PARAMS, genMethod.Name).ConfigureTracker(variable.Type.Type.Engine);
             ILGen.Emit(OpCodes.Ldarg_0); // Load argument: runnable
             ILGen.Emit(OpCodes.Castclass, variable.Field.DeclaringType); // Jank patch for type misinterpretation in CILL validator
             ILGen.Emit(OpCodes.Ldarg_1); // Load argument: input variable value
@@ -289,7 +290,7 @@ namespace FreneticScript.ScriptSystems
         }
 
         /// <summary>Matcher for usable script name characters.</summary>
-        public static AsciiMatcher NameTrimMatcher = new AsciiMatcher((c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
+        public static AsciiMatcher NameTrimMatcher = new(AsciiMatcher.BothCaseLetters);
 
         /// <summary>Throws a tag failure exception.</summary>
         /// <param name="entry">Relevant command entry.</param>
@@ -327,7 +328,7 @@ namespace FreneticScript.ScriptSystems
         {
             int id = tID;
             // Build a list of sub-arguments (within the tag) that may need to be compiled
-            List<Argument> altArgs = new List<Argument>();
+            List<Argument> altArgs = new();
             for (int sub = 0; sub < tab.Bits.Length; sub++)
             {
                 if (tab.Bits[sub].Variable != null)
@@ -456,7 +457,7 @@ namespace FreneticScript.ScriptSystems
                 string.Join("_", tab.Bits.Select((bit) => NameTrimMatcher.TrimToMatches(bit.Key)));
             Type methodReturnType = finalReturnType.IsRaw ? finalReturnType.Type.RawInternalType : typeof(TemplateObject);
             MethodBuilder methodbuild_c = typeBuild_c.DefineMethod(methodName, MethodAttributes.Public | MethodAttributes.Static, methodReturnType, TYPES_TAGPARSE_PARAMS);
-            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = commandEntry.System };
+            ILGeneratorTracker ilgen = new ILGeneratorTracker(methodbuild_c.GetILGenerator(), TYPES_TAGPARSE_PARAMS, methodName).ConfigureTracker(commandEntry.System);
             ilgen.AddCode(OpCodes.Nop, methodName, "--- TAGPARSE ---");
             trackers?.Add(ilgen);
             if (!tab.Start.AdaptToCIL(ilgen, tab, values))
@@ -604,6 +605,9 @@ namespace FreneticScript.ScriptSystems
         /// <summary>A reusable input object array that contains <see cref="MethodImplOptions.AggressiveInlining"/>.</summary>
         public static readonly object[] Input_Params_AggrInline = new object[] { MethodImplOptions.AggressiveInlining };
 
+        /// <summary>Type parameter array for <see cref="GenerateTagMethodCallable(MethodInfo, TagMeta, ScriptEngine)"/>.</summary>
+        public static readonly Type[] TAG_PARSE_METHOD_PARAMS = new Type[] { typeof(TemplateObject), typeof(TagData) };
+
         /// <summary>Generates a dynamically callable method for a tag.</summary>
         /// <param name="method">The tag method.</param>
         /// <param name="meta">The tag method.</param>
@@ -617,8 +621,8 @@ namespace FreneticScript.ScriptSystems
             }
             try
             {
-                DynamicMethod genMethod = new DynamicMethod("tag_parse_for_" + method.DeclaringType.Name + "_" + method.Name, typeof(TemplateObject), new Type[] { typeof(TemplateObject), typeof(TagData) });
-                ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = genMethod.GetILGenerator(), System = system };
+                DynamicMethod genMethod = new("tag_parse_for_" + method.DeclaringType.Name + "_" + method.Name, typeof(TemplateObject), TAG_PARSE_METHOD_PARAMS);
+                ILGeneratorTracker ilgen = new ILGeneratorTracker(genMethod.GetILGenerator(), TAG_PARSE_METHOD_PARAMS, genMethod.Name).ConfigureTracker(system);
                 ilgen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject.
                 ilgen.Emit(OpCodes.Castclass, method.GetParameters()[0].ParameterType); // Convert it to the correct type
                 if (meta.ModifierType.Type != null)
@@ -643,7 +647,7 @@ namespace FreneticScript.ScriptSystems
                 }
                 ilgen.Emit(OpCodes.Ret); // Return.
 #if SAVE
-                StringBuilder outp = new StringBuilder();
+                StringBuilder outp = new();
                 for (int i = 0; i < ilgen.Codes.Count; i++)
                 {
                     outp.Append(ilgen.Codes[i].Key + ": " + ilgen.Codes[i].Value + "\n");

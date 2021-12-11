@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using FreneticUtilities.FreneticToolkit;
+using FreneticScript.CommandSystem;
 
 namespace FreneticScript
 {
@@ -32,6 +34,16 @@ namespace FreneticScript
         {
             // No nulls!
             return input.Replace('\0', ' ');
+        }
+
+        /// <summary>Configures the <see cref="ILGeneratorTracker"/> for FS output handling.</summary>
+        public static ILGeneratorTracker ConfigureTracker(this ILGeneratorTracker tracker, ScriptEngine engine)
+        {
+            tracker.BaseCode = TextStyle.Base;
+            tracker.EmphasizeCode = TextStyle.Separate;
+            tracker.MinorCode = TextStyle.Minor;
+            tracker.Error = engine.Context.BadOutput;
+            return tracker;
         }
     }
 }

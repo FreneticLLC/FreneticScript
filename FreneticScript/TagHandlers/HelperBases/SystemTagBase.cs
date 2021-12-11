@@ -42,7 +42,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         public class SystemTag : TemplateObject
         {
             /// <summary>A reference SystemTag instance.</summary>
-            public static readonly SystemTag Instance = new SystemTag();
+            public static readonly SystemTag Instance = new();
 
             /// <summary>Return the type name of this tag.</summary>
             /// <returns>The tag type name.</returns>

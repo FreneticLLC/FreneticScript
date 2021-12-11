@@ -80,7 +80,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     values.ILGen.Emit(OpCodes.Call, Method_GetSubObject);
                 }
                 values.LoadArgumentObject(entry, 2);
-                values.ILGen.Emit(OpCodes.Ldstr, split[split.Length - 1]);
+                values.ILGen.Emit(OpCodes.Ldstr, split[^1]);
                 values.LoadEntry(entry);
                 values.LoadQueue();
                 values.ILGen.Emit(OpCodes.Ldc_I4, (int)operationType);

@@ -89,13 +89,13 @@ namespace FreneticScript.CommandSystem.QueueCmds
             {
                 string type_name = cent.Arguments[4].ToString().ToLowerFast();
                 TagType specifiedType = cent.System.TagSystem.Types.RegisteredTypes[type_name];
-                TagReturnType specifiedReturnType = new TagReturnType(specifiedType, specifiedType.Meta.RawInternal);
+                TagReturnType specifiedReturnType = new(specifiedType, specifiedType.Meta.RawInternal);
                 values.EnsureType(returnType, specifiedReturnType); // Ensure the correct object type.
                 returnType = specifiedReturnType;
             }
             else
             {
-                TagReturnType specifiedReturnType = new TagReturnType(returnType.Type, returnType.Type.Meta.RawInternal);
+                TagReturnType specifiedReturnType = new(returnType.Type, returnType.Type.Meta.RawInternal);
                 values.EnsureType(returnType, specifiedReturnType); // Ensure the correct object type.
                 returnType = specifiedReturnType;
             }

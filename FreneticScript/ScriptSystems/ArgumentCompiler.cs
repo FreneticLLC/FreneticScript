@@ -11,6 +11,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticToolkit;
+using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
@@ -54,7 +56,7 @@ namespace FreneticScript.ScriptSystems
         private static long IDINCR = 0;
 
         /// <summary>All valid duplicator calls known. Null values indicate that there is known to not be a duplicator.</summary>
-        public static Dictionary<Type, MethodInfo> DuplicatorCalls = new Dictionary<Type, MethodInfo>(128);
+        public static Dictionary<Type, MethodInfo> DuplicatorCalls = new(128);
 
         /// <summary>Gets the resultant type of this argument.</summary>
         /// <param name="argument">The argument.</param>
@@ -81,7 +83,7 @@ namespace FreneticScript.ScriptSystems
         public static ILGeneratorTracker Compile(Argument argument, CompiledCommandStackEntry entry, CILAdaptationValues values)
         {
             string tname = entry.AssemblyName + "_argument_" + IDINCR++;
-            AssemblyName asmname = new AssemblyName(tname) { Name = tname };
+            AssemblyName asmname = new(tname) { Name = tname };
             AssemblyBuilder asmbuild = AssemblyBuilder.DefineDynamicAssembly(asmname, AssemblyBuilderAccess.RunAndCollect);
             TagReturnType finalReturnType = ReturnType(argument, values);
             ModuleBuilder modbuild = asmbuild.DefineDynamicModule(tname);
@@ -95,7 +97,7 @@ namespace FreneticScript.ScriptSystems
             {
                 methodbuild_c = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual, typeof(TemplateObject), ParseMethodParams);
             }
-            ILGeneratorTracker ilgen = new ILGeneratorTracker() { Internal = methodbuild_c.GetILGenerator(), System = entry.System };
+            ILGeneratorTracker ilgen = new ILGeneratorTracker(methodbuild_c.GetILGenerator(), new Type[] { typebuild_c }.JoinWith(ParseMethodParams), tname).ConfigureTracker(entry.System);
             ilgen.AddCode(OpCodes.Nop, tname, "--- ARGUMENT PARSE ---");
             Type[] fieldTypes = new Type[argument.Bits.Length];
             FieldInfo[] bitFields = new FieldInfo[argument.Bits.Length];
@@ -132,8 +134,8 @@ namespace FreneticScript.ScriptSystems
                 int object_result_loc = 1;
                 if (argument.Bits[0] is TagArgumentBit)
                 {
-                    tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)); // Declare variable of type TagArgumentBit as local-0
-                    object_result_loc = ilgen.DeclareLocal(finalReturnType.IsRaw ? finalReturnType.Type.RawInternalType : typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
+                    tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)).LocalIndex; // Declare variable of type TagArgumentBit as local-0
+                    object_result_loc = ilgen.DeclareLocal(finalReturnType.IsRaw ? finalReturnType.Type.RawInternalType : typeof(TemplateObject)).LocalIndex; // Declare variable of type TemplateObject as local-1
                 }
                 ilgen.Emit(OpCodes.Ldarg_0); // Load the argument object
                 ilgen.Emit(OpCodes.Ldfld, bitFields[0]); // Load the only argument bit
@@ -155,7 +157,7 @@ namespace FreneticScript.ScriptSystems
             }
             else // Complex argument input
             {
-                int result_string_loc = ilgen.DeclareLocal(typeof(StringBuilder)); // Declare variable of type StringBuilder as local-0
+                int result_string_loc = ilgen.DeclareLocal(typeof(StringBuilder)).LocalIndex; // Declare variable of type StringBuilder as local-0
                 bool hasTag = false;
                 for (int i = 0; i < argument.Bits.Length; i++)
                 {
@@ -165,11 +167,11 @@ namespace FreneticScript.ScriptSystems
                         break;
                     }
                 }
-                int object_result_loc = ilgen.DeclareLocal(typeof(TemplateObject)); // Declare variable of type TemplateObject as local-1
+                int object_result_loc = ilgen.DeclareLocal(typeof(TemplateObject)).LocalIndex; // Declare variable of type TemplateObject as local-1
                 int tab_tracker_loc = 0;
                 if (hasTag)
                 {
-                    tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)); // Declare variable of type TagArgumentBit as local-2
+                    tab_tracker_loc = ilgen.DeclareLocal(typeof(TagArgumentBit)).LocalIndex; // Declare variable of type TagArgumentBit as local-2
                 }
                 int cx = 2;
                 for (int i = 0; i < argument.Bits.Length; i++)
@@ -181,7 +183,7 @@ namespace FreneticScript.ScriptSystems
                 ilgen.Emit(OpCodes.Stloc, result_string_loc); // Store the stringbuilder to a local variable
                 for (int i = 0; i < argument.Bits.Length; i++)
                 {
-                    if (!(argument.Bits[i] is TagArgumentBit))
+                    if (argument.Bits[i] is not TagArgumentBit)
                     {
                         ilgen.Emit(OpCodes.Ldloc, result_string_loc); // Load the local variable containing the string builder
                     }
@@ -218,7 +220,7 @@ namespace FreneticScript.ScriptSystems
             {
                 argument.RawParseMethod = methodbuild_c;
                 methodbuild_parse_override = typebuild_c.DefineMethod("Parse", MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual, typeof(TemplateObject), ParseMethodParams);
-                ILGeneratorTracker ilgen_parse = new ILGeneratorTracker() { Internal = methodbuild_parse_override.GetILGenerator(), System = entry.System };
+                ILGeneratorTracker ilgen_parse = new ILGeneratorTracker(methodbuild_parse_override.GetILGenerator(), new Type[] { typebuild_c }.JoinWith(ParseMethodParams), tname + "_parse").ConfigureTracker(entry.System);
                 ilgen_parse.AddCode(OpCodes.Nop, tname, "--- ARGUMENT nonraw PARSE ---");
                 ilgen_parse.Emit(OpCodes.Ldarg_0); // Load arg: this
                 ilgen_parse.Emit(OpCodes.Ldarg_1); // Load arg: Error
@@ -230,7 +232,7 @@ namespace FreneticScript.ScriptSystems
             }
             typebuild_c.DefineMethodOverride(methodbuild_parse_override, Argument_Parse);
             ConstructorBuilder ctor = typebuild_c.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, fieldTypes);
-            ILGeneratorTracker ctorilgen = new ILGeneratorTracker() { Internal = ctor.GetILGenerator(), System = entry.System };
+            ILGeneratorTracker ctorilgen = new ILGeneratorTracker(ctor.GetILGenerator(), new Type[] { typebuild_c }.JoinWith(fieldTypes), tname).ConfigureTracker(entry.System);
             for (int i = 0; i < argument.Bits.Length; i++)
             {
                 ctorilgen.Emit(OpCodes.Ldarg_0); // Load 'this'

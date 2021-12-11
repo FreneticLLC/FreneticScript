@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
+using FreneticUtilities.FreneticToolkit;
 using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.CommonBases;
@@ -122,7 +123,7 @@ namespace FreneticScript.CommandSystem.Arguments
                 }
                 return Start.ResultType;
             }
-            return Bits[Bits.Length - 1].TagHandler.Meta.ReturnTypeResult;
+            return Bits[^1].TagHandler.Meta.ReturnTypeResult;
         }
 
         /// <summary>The tag to fall back on if this tag fails.</summary>
@@ -163,7 +164,7 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>Tag input text.</returns>
         public string HighlightString(int index, string highlight)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Bits.Length; i++)
             {
                 if (i == index)
@@ -173,7 +174,7 @@ namespace FreneticScript.CommandSystem.Arguments
                 sb.Append(Bits[i].ToString());
                 if (i + 1 < Bits.Length)
                 {
-                    sb.Append(".");
+                    sb.Append('.');
                 }
             }
             return sb.ToString();
@@ -183,17 +184,17 @@ namespace FreneticScript.CommandSystem.Arguments
         /// <returns>Tag input text.</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<");
+            StringBuilder sb = new();
+            sb.Append('<');
             for (int i = 0; i < Bits.Length; i++)
             {
                 sb.Append(Bits[i].ToString());
                 if (i + 1 < Bits.Length)
                 {
-                    sb.Append(".");
+                    sb.Append('.');
                 }
             }
-            sb.Append(">");
+            sb.Append('>');
             return sb.ToString();
         }
     }

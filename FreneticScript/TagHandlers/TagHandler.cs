@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.ScriptSystems;
@@ -60,10 +61,10 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>All tag handler objects currently registered.</summary>
-        public Dictionary<string, TemplateTagBase> Handlers = new Dictionary<string, TemplateTagBase>();
+        public Dictionary<string, TemplateTagBase> Handlers = new();
 
         /// <summary>The tag types handler.</summary>
-        public TagTypes Types = new TagTypes();
+        public TagTypes Types = new();
 
         /// <summary>Registers a handler object for later usage by tags.</summary>
         /// <param name="handler">The handler object to register.</param>
@@ -174,7 +175,7 @@ namespace FreneticScript.TagHandlers
                                 TagMeta tm = method.GetCustomAttribute<TagMeta>();
                                 if (tm != null)
                                 {
-                                    TagHelpInfo thi = new TagHelpInfo(method);
+                                    TagHelpInfo thi = new(method);
                                     thi.Meta.Ready(this);
                                     if (thi.Meta.SpecialCompiler)
                                     {
@@ -296,7 +297,7 @@ namespace FreneticScript.TagHandlers
                             }
                         }
                         type.BuildOperations();
-                        TagHelpInfo auto_thi = new TagHelpInfo(AUTO_OR_ELSE);
+                        TagHelpInfo auto_thi = new(AUTO_OR_ELSE);
                         auto_thi.Meta = auto_thi.Meta.Duplicate();
                         auto_thi.Meta.ReturnTypeResult = new TagReturnType(Types.RegisteredTypes[auto_thi.Meta.ReturnType], false);
                         auto_thi.Meta.ActualType = type;

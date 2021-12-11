@@ -35,6 +35,11 @@ namespace FreneticScript.CommandSystem
             base(message)
         {
         }
+
+        /// <summary>Microsoft nonsense.</summary>
+        protected ErrorInducedException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+        }
     }
 
     /// <summary>
@@ -83,6 +88,11 @@ namespace FreneticScript.CommandSystem
             base(message)
         {
             SubTagIndex = tagIndex;
+        }
+
+        /// <summary>Microsoft nonsense.</summary>
+        protected TagErrorInducedException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
         }
     }
 }

@@ -92,7 +92,7 @@ namespace FreneticScript.CommandSystem
             }
             if (ObjectTypes != null)
             {
-                ArgumentValidation validator = new ArgumentValidation()
+                ArgumentValidation validator = new()
                 {
                     Entry = entry
                 };

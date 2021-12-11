@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using FreneticUtilities.FreneticExtensions;
+using FreneticUtilities.FreneticToolkit;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
@@ -164,7 +165,7 @@ namespace FreneticScript.ScriptSystems
         /// <returns>The var-lookup dictionary.</returns>
         public Dictionary<string, SingleCILVariable> CreateVarLookup()
         {
-            Dictionary<string, SingleCILVariable> varlookup = new Dictionary<string, SingleCILVariable>(LVarIDs.Count * 3);
+            Dictionary<string, SingleCILVariable> varlookup = new(LVarIDs.Count * 3);
             foreach (int tv in LVarIDs)
             {
                 foreach (SingleCILVariable tvt in CLVariables[tv])
@@ -192,20 +193,20 @@ namespace FreneticScript.ScriptSystems
                 rawType = type.RawType;
             }
             FieldInfo newField = Type.DefineField("_field_locVar_" + id, rawType, FieldAttributes.Public);
-            SingleCILVariable variable = new SingleCILVariable(id, var, new TagReturnType(type, type.Meta.RawInternal), newField);
+            SingleCILVariable variable = new(id, var, new TagReturnType(type, type.Meta.RawInternal), newField);
             CLVariables[LVarIDs.Peek()].Add(variable);
             Variables.Add(variable);
             return id;
         }
 
         /// <summary>A list of all variables.</summary>
-        public List<SingleCILVariable> Variables = new List<SingleCILVariable>();
+        public List<SingleCILVariable> Variables = new();
 
         /// <summary>All known CIL Variable data sets.</summary>
-        public List<List<SingleCILVariable>> CLVariables = new List<List<SingleCILVariable>>();
+        public List<List<SingleCILVariable>> CLVariables = new();
 
         /// <summary>The current stack of LVarIDs.</summary>
-        public Stack<int> LVarIDs = new Stack<int>();
+        public Stack<int> LVarIDs = new();
 
         /// <summary>Fields for arguments, if generated.</summary>
         public FieldInfo[][] ArgumentFields;
@@ -248,7 +249,7 @@ namespace FreneticScript.ScriptSystems
         {
             if (entry < Entry.Entries.Length)
             {
-                ILGen.Comment("Begin command: " + entry + ") " + Entry.Entries[entry].CommandLine);
+                ILGen.Comment("Begin standard command: " + entry + ") " + Entry.Entries[entry].CommandLine);
             }
             else
             {
