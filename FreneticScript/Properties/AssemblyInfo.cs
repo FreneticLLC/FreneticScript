@@ -20,7 +20,7 @@ using System.Text;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Frenetic LLC")]
 [assembly: AssemblyProduct("FreneticScript")]
-[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2015-2020")]
+[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2015-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
