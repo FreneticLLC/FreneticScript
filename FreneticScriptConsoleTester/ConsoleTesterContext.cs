@@ -116,6 +116,8 @@ namespace FreneticScriptConsoleTester
             public double TestNumber = 42.42;
 
             public long TestInteger = 42;
+
+            public bool TestBool = false;
         }
 
         public TestConfig TestConfigInstance = new();

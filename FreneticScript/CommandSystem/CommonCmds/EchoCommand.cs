@@ -34,11 +34,6 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// <summary>Constructs the echo command.</summary>
         public EchoCommand()
         {
-            Name = "echo";
-            Arguments = "<text to echo>";
-            Description = "Echoes any input text back to the console.";
-            MinimumArguments = 1;
-            MaximumArguments = 1;
             ObjectTypes = new Action<ArgumentValidation>[]
             {
                 TextTag.Validator

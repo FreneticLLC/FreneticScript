@@ -42,5 +42,11 @@ namespace FreneticScript
         public static string Importantinfo = "^r^3";
         /// <summary>Base coloring style, default (SysConsole) value: ^B</summary>
         public static string Base = "^B";
+
+        /// <summary>Separates the value from other text, in the format {Separate}{value}{Base}.</summary>
+        public static string SeparateVal(object value)
+        {
+            return $"{Separate}{value}{Base}";
+        }
     }
 }
