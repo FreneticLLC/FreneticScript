@@ -45,7 +45,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string configName = entry.GetArgument(queue, 0);
+            string configName = entry.GetArgument(queue, 0).ToLowerFast();
             AutoConfiguration config = queue.Engine.Context.GetConfig(configName);
             if (config is null)
             {

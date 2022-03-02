@@ -51,6 +51,7 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>Called to grab the AutoConfig object for a given config key name. Name might be "system" or "client" or etc depending on context. Return null if no such config exists.</summary>
+        /// <param name="name">The name to get a config for. Always lower case.</param>
         public abstract AutoConfiguration GetConfig(string name);
 
         /// <summary>
