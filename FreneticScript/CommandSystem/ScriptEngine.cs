@@ -308,14 +308,14 @@ namespace FreneticScript.CommandSystem
         /// <param name="command">The command to register.</param>
         public void RegisterCommand(AbstractCommand command)
         {
-            command.Name = command.Name.ToLowerFast(); // Just a quick backup in case somebody messed up.
+            command.Name = command.Meta.Name.ToLowerFast(); // Just a quick backup in case somebody messed up.
             command.Engine = this;
-            if (RegisteredCommands.ContainsKey(command.Name))
+            if (RegisteredCommands.ContainsKey(command.Meta.Name))
             {
-                Context.BadOutput("Multiply registered command: " + command.Name + "!");
+                Context.BadOutput($"Command name registered multiple times: {command.Meta.Name}!");
                 return;
             }
-            RegisteredCommands.Add(command.Name, command);
+            RegisteredCommands.Add(command.Meta.Name, command);
             RegisteredCommandList.Add(command);
         }
 

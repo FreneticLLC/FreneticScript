@@ -24,8 +24,8 @@ namespace FreneticScript.CommandSystem.CommonCmds
             Name = "noop";
             Arguments = "";
             Description = "Does nothing.";
-            IsDebug = true;
-            Asyncable = true;
+            Meta.IsDebug = true;
+            Meta.Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = -1;
         }

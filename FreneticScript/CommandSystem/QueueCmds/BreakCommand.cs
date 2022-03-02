@@ -60,8 +60,8 @@ namespace FreneticScript.CommandSystem.QueueCmds
             Name = "break";
             Arguments = "[number of layers to break]";
             Description = "Breaks out of a specified number of braced layers.";
-            IsFlow = true;
-            Asyncable = true;
+            Meta.IsFlow = true;
+            Meta.Asyncable = true;
             MinimumArguments = 0;
             MaximumArguments = 1;
             ObjectTypes = new Action<ArgumentValidation>[]
@@ -96,7 +96,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 for (int ind = runnable.Index; ind < runnable.Entry.Entries.Length; ind++)
                 {
                     CommandEntry tentry = runnable.Entry.Entries[ind];
-                    if (tentry.Command.IsBreakable && tentry.IsCallback)
+                    if (tentry.Command.Meta.IsBreakable && tentry.IsCallback)
                     {
                         runnable.Index = ind + 1;
                         goto completed;

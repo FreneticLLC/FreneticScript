@@ -40,5 +40,23 @@ namespace FreneticScript.CommandSystem
 
         /// <summary>A set of example usages for this command.</summary>
         public string[] Examples;
+
+        /// <summary>Whether the command is for debugging purposes.</summary>
+        public bool IsDebug = false;
+
+        /// <summary>Whether the 'break' command can be used on this command.</summary>
+        public bool IsBreakable = false;
+
+        /// <summary>Whether the command is part of a script's flow rather than for normal client use.</summary>
+        public bool IsFlow = false;
+
+        /// <summary>Whether the command can be &amp;waited on.</summary>
+        public bool Waitable = false;
+
+        /// <summary>
+        /// Whether the command can be run off the primary tick.
+        /// NOTE: These mostly have yet to be confirmed! They are purely theoretical!
+        /// </summary>
+        public bool Asyncable = false;
     }
 }

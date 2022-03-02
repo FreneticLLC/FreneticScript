@@ -46,7 +46,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             string mapText = expectedMap.ToString();
             return new CommandEntry("require \"" + mapText + "\" \0AUTOGENNED", 0, 0, this,
-                new Argument[] { new Argument(new TextArgumentBit(expectedMap, Engine)) }, Name, CommandPrefix.NONE, scriptName, line, "", Engine);
+                new Argument[] { new Argument(new TextArgumentBit(expectedMap, Engine)) }, Meta.Name, CommandPrefix.NONE, scriptName, line, "", Engine);
         }
 
         /// <summary>Prepares to adapt a command entry to CIL.</summary>

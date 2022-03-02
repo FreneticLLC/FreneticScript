@@ -27,19 +27,36 @@ namespace FreneticScript.CommandSystem
         public AbstractCommand()
         {
             ExecuteMethod = GetType().GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
+            Meta = GetType().GetCustomAttribute<CommandMeta>() ?? new CommandMeta();
         }
-
-        /// <summary>The name of the command.</summary>
-        public string Name = "NAME:UNSET";
 
         /// <summary>The system that owns this command.</summary>
         public ScriptEngine Engine;
 
-        /// <summary>A short explanation of the arguments of the command.</summary>
-        public string Arguments = "ARGUMENTS:UNSET"; // TODO: This data should be read from meta, not set separately.
+        /// <summary>The meta-documentation for this command.</summary>
+        public CommandMeta Meta;
 
-        /// <summary>A short explanation of what the command does.</summary>
-        public string Description = "DESCRIPTION:UNSET";
+#warning Temporary legacy command registration support until all commands have Meta.
+        /// <summary>Legacy.</summary>
+        public string Name { set { Meta.Name = value; } }
+        /// <summary>Legacy.</summary>
+        public string Arguments { set { Meta.Arguments = value; } }
+        /// <summary>Legacy.</summary>
+        public string Description { set { Meta.Description = value; } }
+        /// <summary>Legacy.</summary>
+        public int MinimumArguments { set { Meta.MinimumArgs = value; } }
+        /// <summary>Legacy.</summary>
+        public int MaximumArguments { set { Meta.MaximumArgs = value; } }
+        /// <summary>Legacy.</summary>
+        public bool Asyncable { set { Meta.Asyncable = value; } }
+        /// <summary>Legacy.</summary>
+        public bool IsFlow { set { Meta.IsFlow = value; } }
+        /// <summary>Legacy.</summary>
+        public bool IsBreakable { set { Meta.IsBreakable = value; } }
+        /// <summary>Legacy.</summary>
+        public bool Waitable { set { Meta.Waitable = value; } }
+        /// <summary>Legacy.</summary>
+        public bool IsDebug { set { Meta.IsDebug = value; } }
 
         /// <summary>In what way the command saves. Also set <see cref="DefaultSaveName"/> if relevant.</summary>
         public CommandSaveMode SaveMode = CommandSaveMode.NO_SAVE;
@@ -50,30 +67,6 @@ namespace FreneticScript.CommandSystem
         /// <summary>The default save name, if <see cref="SaveMode"/> is set to <see cref="CommandSaveMode.DEFAULT_NAME"/>.</summary>
         public string DefaultSaveName = null;
 
-        /// <summary>Whether the command is for debugging purposes.</summary>
-        public bool IsDebug = false;
-
-        /// <summary>Whether the 'break' command can be used on this command.</summary>
-        public bool IsBreakable = false;
-
-        /// <summary>Whether the command is part of a script's flow rather than for normal client use.</summary>
-        public bool IsFlow = false;
-
-        /// <summary>Whether the command can be &amp;waited on.</summary>
-        public bool Waitable = false;
-
-        /// <summary>
-        /// Whether the command can be run off the primary tick.
-        /// NOTE: These mostly have yet to be confirmed! They are purely theoretical!
-        /// </summary>
-        public bool Asyncable = false;
-
-        /// <summary>How many arguments the command can have minimum.</summary>
-        public int MinimumArguments = 0;
-
-        /// <summary>How many arguments the command can have maximum.</summary>
-        public int MaximumArguments = 100;
-
         /// <summary>The expected object type getters for a command, for validation reasons.</summary>
         public Action<ArgumentValidation>[] ObjectTypes = null;
 
@@ -82,13 +75,13 @@ namespace FreneticScript.CommandSystem
         /// <returns>An error message (with tags), or null for none.</returns>
         public virtual string TestForValidity(CommandEntry entry)
         {
-            if (entry.Arguments.Length < MinimumArguments)
+            if (entry.Arguments.Length < Meta.MinimumArgs)
             {
-                return "Not enough arguments. Expected at least: " + MinimumArguments + ". Usage: " + Arguments + ", found only: " + entry.AllOriginalArguments();
+                return "Not enough arguments. Expected at least: " + Meta.MinimumArgs + ". Usage: " + Meta.Arguments + ", found only: " + entry.AllOriginalArguments();
             }
-            if (MaximumArguments != -1 && entry.Arguments.Length > MaximumArguments)
+            if (Meta.MaximumArgs != -1 && entry.Arguments.Length > Meta.MaximumArgs)
             {
-                return "Too many arguments. Expected no more than: " + MaximumArguments + ". Usage: " + Arguments + ", found: " + entry.AllOriginalArguments();
+                return "Too many arguments. Expected no more than: " + Meta.MaximumArgs + ". Usage: " + Meta.Arguments + ", found: " + entry.AllOriginalArguments();
             }
             if (ObjectTypes != null)
             {
@@ -111,12 +104,12 @@ namespace FreneticScript.CommandSystem
                         if (validator.ErrorResult != null)
                         {
                             return "Invalid argument '" + entry.Arguments[i].ToString()
-                                + "' for command '" + entry.Command.Name + "': " + validator.ErrorResult;
+                                + "' for command '" + entry.Command.Meta.Name + "': " + validator.ErrorResult;
                         }
                         if (validator.ObjectValue == null)
                         {
                             return "Invalid argument '" + entry.Arguments[i].ToString()
-                                + "', translates to internal NULL for this command's input expectation (Command is " + entry.Command.Name + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
+                                + "', translates to internal NULL for this command's input expectation (Command is " + entry.Command.Meta.Name + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
                         }
                         ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = validator.ObjectValue;
                     }
@@ -152,7 +145,7 @@ namespace FreneticScript.CommandSystem
                 TagType saveTagType = cent.System.TagTypes.TypeForName(SaveType);
                 if (saveTagType == null)
                 {
-                    throw new ErrorInducedException("Command '" + Name + "' specifies a non-existent save tag type '" + SaveType + "'.");
+                    throw new ErrorInducedException($"Command '{Meta.Name}' specifies a non-existent save tag type '{SaveType}'.");
                 }
                 PreAdaptSaveMode(values, entry, true, saveTagType, SaveMode != CommandSaveMode.WHEN_NAME_SPECIFIED, DefaultSaveName);
             }
@@ -175,18 +168,18 @@ namespace FreneticScript.CommandSystem
                 {
                     return;
                 }
-                throw new ErrorInducedException("Command '" + Name + "' requires a save name, but none was given.");
+                throw new ErrorInducedException($"Command '{Meta.Name}' requires a save name, but none was given.");
             }
             int preVarLoc = values.LocalVariableLocation(saveName, out TagReturnType preVarType);
             if (preVarLoc >= 0)
             {
                 if (!canPreExist)
                 {
-                    throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "')?!");
+                    throw new ErrorInducedException($"Already have a save target var (labeled '{saveName}')?!");
                 }
                 if (preVarType.Type != tagType)
                 {
-                    throw new ErrorInducedException("Already have a save target var (labeled '" + saveName + "', with type '" + preVarType.Type.TypeName + "') of wrong type (expected '" + tagType.TypeName + "').");
+                    throw new ErrorInducedException($"Already have a save target var (labeled '{saveName}', with type '{preVarType.Type.TypeName}') of wrong type (expected '{tagType.TypeName}').");
                 }
                 cent.SaveLoc = preVarLoc;
             }
@@ -231,9 +224,9 @@ namespace FreneticScript.CommandSystem
             }
             if (entry.ShouldShowGood(queue))
             {
-                entry.InfoOutput(queue, TextStyle.Separate + cmd.Name + TextStyle.Base + ": " + cmd.Description);
-                entry.InfoOutput(queue, TextStyle.Commandhelp + "Usage: /" + cmd.Name + " " + cmd.Arguments);
-                if (cmd.IsDebug)
+                entry.InfoOutput(queue, TextStyle.Separate + cmd.Meta.Name + TextStyle.Base + ": " + cmd.Meta.Description);
+                entry.InfoOutput(queue, TextStyle.Commandhelp + "Usage: /" + cmd.Meta.Name + " " + cmd.Meta.Arguments);
+                if (cmd.Meta.IsDebug)
                 {
                     entry.InfoOutput(queue, "Note: This command is intended for debugging purposes.");
                 }

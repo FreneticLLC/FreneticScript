@@ -20,6 +20,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         Short = "Throws an error if a requirement is not 'true'.",
         Updated = "2016/04/27",
         Group = "Queue",
+        IsFlow = true,
         MinimumArgs = 2, MaximumArgs = 2,
         Description = "Throws an error if a requirement is not 'true'.\n"
                     + "Effectively equivalent to: \"if !<requirement> { error <error message>; }\".\n"
@@ -36,12 +37,6 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <summary>Constructs the assert command.</summary>
         public AssertCommand()
         {
-            Name = "assert";
-            Arguments = "<requirement> <error message>";
-            Description = "Throws an error if a requirement is not 'true'.";
-            IsFlow = true;
-            MinimumArguments = 2;
-            MaximumArguments = 2;
             ObjectTypes = new Action<ArgumentValidation>[]
             {
                 BooleanTag.Validator,

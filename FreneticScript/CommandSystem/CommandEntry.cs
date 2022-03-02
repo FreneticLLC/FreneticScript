@@ -327,7 +327,7 @@ namespace FreneticScript.CommandSystem
             {
                 outputableScriptName = outputableScriptName[..8] + "+";
             }
-            string outputableCommandName = OutputableNameMatcher.TrimToMatches(Command.Name);
+            string outputableCommandName = OutputableNameMatcher.TrimToMatches(Command.Meta.Name);
             if (outputableCommandName.Length > 11)
             {
                 outputableCommandName = outputableCommandName[..10] + "+";

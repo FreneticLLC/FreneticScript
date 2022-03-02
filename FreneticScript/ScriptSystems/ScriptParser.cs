@@ -405,7 +405,7 @@ namespace FreneticScript.ScriptSystems
                     string a1 = args[1].ToString();
                     if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
                     {
-                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args.ToArray(), system.DebugVarSetCommand.Name, CommandPrefix.NONE, script, line, tabs, system);
+                        return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args.ToArray(), system.DebugVarSetCommand.Meta.Name, CommandPrefix.NONE, script, line, tabs, system);
                     }
                     else if (a1 == "^=")
                     {
@@ -444,9 +444,9 @@ namespace FreneticScript.ScriptSystems
                 CommandEntry entry;
                 if (system.RegisteredCommands.TryGetValue(BaseCommandLow, out AbstractCommand foundCommandObject))
                 {
-                    if (prefix == CommandPrefix.WAIT && !foundCommandObject.Waitable)
+                    if (prefix == CommandPrefix.WAIT && !foundCommandObject.Meta.Waitable)
                     {
-                        throw new ErrorInducedException("Cannot wait ('&') on command '" + foundCommandObject.Name + "'.");
+                        throw new ErrorInducedException($"Cannot wait ('&') on command '{foundCommandObject.Meta.Name}'.");
                     }
                     entry = new CommandEntry(command, 0, 0, foundCommandObject, args.ToArray(), BaseCommand, prefix, script, line, tabs, nameds, system);
                 }
