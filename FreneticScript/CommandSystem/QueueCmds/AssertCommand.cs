@@ -14,32 +14,25 @@ using FreneticScript.TagHandlers.Objects;
 namespace FreneticScript.CommandSystem.QueueCmds
 {
     /// <summary>The Assert command.</summary>
+    [CommandMeta(
+        Name = "assert",
+        Arguments = "<requirement> <error message>",
+        Short = "Throws an error if a requirement is not 'true'.",
+        Updated = "2016/04/27",
+        Group = "Queue",
+        MinimumArgs = 2, MaximumArgs = 2,
+        Description = "Throws an error if a requirement is not 'true'.\n"
+                    + "Effectively equivalent to: \"if !<requirement> { error <error message>; }\".\n"
+                    + "TODO: Explain more!",
+        Examples = new[]{ "// This example throws an error immediately.\n"
+                        + "assert false \"Bad!\";",
+                          "// This example never throws an error.\n"
+                        + "assert true \"Good!\";",
+                          "// This example sometimes throws an error.\n"
+                        + "assert <system.random_decimal.is_greater_than[0.5]> \"Randomness is deadly!\";"}
+        )]
     public class AssertCommand : AbstractCommand
     {
-        // <--[command]
-        // @Name assert
-        // @Arguments <requirement> <error message>
-        // @Short Throws an error if a requirement is not 'true'.
-        // @Updated 2016/04/27
-        // @Authors mcmonkey
-        // @Group Queue
-        // @Minimum 2
-        // @Maximum 2
-        // @Description
-        // Throws an error if a requirement is not 'true'.
-        // Effectively equivalent to: "if !<requirement> { error <error message>; }".
-        // TODO: Explain more!
-        // @Example
-        // // This example throws an error immediately.
-        // assert false "Bad!";
-        // @Example
-        // // This example never throws an error.
-        // assert true "Good!";
-        // @Example
-        // // This example sometimes throws an error.
-        // assert <{util.random_decimal.is_greater_than[0.5]}> "Randomness is deadly!";
-        // -->
-
         /// <summary>Constructs the assert command.</summary>
         public AssertCommand()
         {

@@ -36,7 +36,7 @@ namespace FreneticScript.CommandSystem
         public ScriptEngine Engine;
 
         /// <summary>A short explanation of the arguments of the command.</summary>
-        public string Arguments = "ARGUMENTS:UNSET";
+        public string Arguments = "ARGUMENTS:UNSET"; // TODO: This data should be read from meta, not set separately.
 
         /// <summary>A short explanation of what the command does.</summary>
         public string Description = "DESCRIPTION:UNSET";

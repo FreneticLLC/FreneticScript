@@ -108,10 +108,25 @@ namespace FreneticScriptConsoleTester
             return results;
         }
 
+        public class TestConfig : AutoConfiguration
+        {
+            [ConfigComment("Test comment")]
+            public string TestString = "Hello world";
+
+            public double TestNumber = 42.42;
+
+            public long TestInteger = 42;
+        }
+
+        public TestConfig TestConfigInstance = new();
+
         public override AutoConfiguration GetConfig(string name)
         {
-#warning TODO
-            throw new NotImplementedException();
+            return name switch
+            {
+                "test" => TestConfigInstance,
+                _ => null
+            };
         }
     }
 }
