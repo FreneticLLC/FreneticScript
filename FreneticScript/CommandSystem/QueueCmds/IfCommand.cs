@@ -143,7 +143,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         {
             if (str.StartsWith("!"))
             {
-                return !GetBool(error, str.Substring(1));
+                return !GetBool(error, str[1..]);
             }
             string low = str.ToLowerFast();
             if (low == "true")
@@ -185,7 +185,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 string astr = arguments[i].ToString();
                 if (astr == "(")
                 {
-                    List<Argument> subargs = new List<Argument>();
+                    List<Argument> subargs = new();
                     int count = 0;
                     bool found = false;
                     for (int x = i + 1; x < arguments.Count; x++)
@@ -203,7 +203,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                             {
                                 bool cfound = TryIf(queue, entry, subargs);
                                 arguments.RemoveRange(i, (x - i) + 1);
-                                Argument narg = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(cfound, queue.Engine) } };
+                                Argument narg = new() { Bits = new ArgumentBit[] { new TextArgumentBit(cfound, queue.Engine) } };
                                 arguments.Insert(i, narg);
                                 found = true;
                             }
@@ -242,7 +242,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 string astr = arguments[i].ToString();
                 if (astr == "||")
                 {
-                    List<Argument> beforeargs = new List<Argument>(i);
+                    List<Argument> beforeargs = new(i);
                     for (int x = 0; x < i; x++)
                     {
                         beforeargs.Add(arguments[x]);
@@ -251,7 +251,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         return true;
                     }
-                    List<Argument> afterargs = new List<Argument>(arguments.Count - i);
+                    List<Argument> afterargs = new(arguments.Count - i);
                     for (int x = i + 1; x < arguments.Count; x++)
                     {
                         afterargs.Add(arguments[x]);
@@ -260,7 +260,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 }
                 else if (astr == "&&")
                 {
-                    List<Argument> beforeargs = new List<Argument>(i);
+                    List<Argument> beforeargs = new(i);
                     for (int x = 0; x < i; x++)
                     {
                         beforeargs.Add(arguments[x]);
@@ -269,7 +269,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     {
                         return false;
                     }
-                    List<Argument> afterargs = new List<Argument>(arguments.Count - i);
+                    List<Argument> afterargs = new(arguments.Count - i);
                     for (int x = i + 1; x < arguments.Count; x++)
                     {
                         afterargs.Add(arguments[x]);

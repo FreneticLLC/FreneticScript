@@ -37,7 +37,7 @@ namespace FreneticScript.CommandSystem.CommonCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string name = entry.Arguments[0].ToString();
-            List<string> args = new List<string>(entry.Arguments.Length);
+            List<string> args = new(entry.Arguments.Length);
             for (int i = 1; i < entry.Arguments.Length; i++)
             {
                 args.Add(entry.Arguments[i].ToString());

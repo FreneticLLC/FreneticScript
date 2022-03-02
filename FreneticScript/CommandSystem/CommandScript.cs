@@ -125,7 +125,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The created queue.</returns>
         public CommandQueue ToQueue(ScriptEngine system)
         {
-            CommandQueue queue = new CommandQueue(this, system);
+            CommandQueue queue = new(this, system);
             queue.RunningStack.Push(Compiled.ReferenceCompiledRunnable.Duplicate());
             return queue;
         }
@@ -140,7 +140,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The full command string.</returns>
         public string FullString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < CommandArray.Length; i++)
             {
                 if (!CommandArray[i].CommandLine.Contains('\0'))

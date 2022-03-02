@@ -131,7 +131,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static ListTag Tag_Byte_List(BinaryTag obj, TagData data)
         {
             byte[] Internal = obj.Internal;
-            List<TemplateObject> objs = new List<TemplateObject>(Internal.Length);
+            List<TemplateObject> objs = new(Internal.Length);
             for (int i = 0; i < Internal.Length; i++)
             {
                 objs.Add(new IntegerTag(Internal[i]));

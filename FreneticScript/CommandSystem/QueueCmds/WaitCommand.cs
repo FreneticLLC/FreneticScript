@@ -51,8 +51,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <returns>The float.</returns>
         public static float StringToFloat(string input)
         {
-            float.TryParse(input, out float output);
-            return output;
+            if (float.TryParse(input, out float output))
+            {
+                return output;
+            }
+            return 0;
         }
 
         /// <summary>Executes the command.</summary>
@@ -60,15 +63,19 @@ namespace FreneticScript.CommandSystem.QueueCmds
         /// <param name="entry">Entry to be executed.</param>
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
-            string delay = entry.GetArgument(queue, 0);
-            float seconds = StringToFloat(delay);
+            NumberTag delay = NumberTag.TryFor(entry.GetArgumentObject(queue, 0));
+            if (delay is null)
+            {
+                queue.HandleError(entry, "Invalid delay value - not a number!");
+                return;
+            }
             if (queue.Delayable)
             {
                 if (entry.ShouldShowGood(queue))
                 {
-                    entry.GoodOutput(queue, "Delaying for " + TextStyle.Separate + seconds + TextStyle.Base + " seconds.");
+                    entry.GoodOutput(queue, "Delaying for " + TextStyle.Separate + delay.Internal + TextStyle.Base + " seconds.");
                 }
-                queue.Wait = seconds;
+                queue.Wait = delay.Internal;
             }
             else
             {

@@ -28,22 +28,22 @@ namespace FreneticScript.ScriptSystems
         {
             if (input.Length == 0)
             {
-                return new Argument() { Bits = new ArgumentBit[0] };
+                return new Argument() { Bits = Array.Empty<ArgumentBit>() };
             }
             int firstOpen = input.IndexOf('<');
             if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
             {
-                Argument a = new Argument() { WasQuoted = wasquoted };
+                Argument a = new() { WasQuoted = wasquoted };
                 a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted, system) };
                 return a;
             }
-            Argument arg = new Argument() { WasQuoted = wasquoted };
+            Argument arg = new() { WasQuoted = wasquoted };
             int len = input.Length;
             int blocks = 0;
             int brackets = 0;
-            StringBuilder blockbuilder = new StringBuilder();
-            StringBuilder tbuilder = new StringBuilder();
-            List<ArgumentBit> bitos = new List<ArgumentBit>();
+            StringBuilder blockbuilder = new();
+            StringBuilder tbuilder = new();
+            List<ArgumentBit> bitos = new();
             for (int i = 0; i < len; i++)
             {
                 if (input[i] == '<')
@@ -80,8 +80,8 @@ namespace FreneticScript.ScriptSystems
                             // TODO: Scrap old fallback engine, in favor of null tricks.
                             if (brack == 0 && value[fb] == '|' && fb > 0 && value[fb - 1] == '|')
                             {
-                                fallback = value.Substring(fb + 1);
-                                value = value.Substring(0, fb - 1);
+                                fallback = value[(fb + 1)..];
+                                value = value[..(fb - 1)];
                                 break;
                             }
                         }
@@ -90,15 +90,15 @@ namespace FreneticScript.ScriptSystems
                         {
                             split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                         }
-                        List<TagBit> bits = new List<TagBit>();
+                        List<TagBit> bits = new();
                         for (int x = 0; x < split.Length; x++)
                         {
-                            TagBit bit = new TagBit();
-                            if (split[x].Length > 1 && split[x].Contains('[') && split[x][split[x].Length - 1] == ']')
+                            TagBit bit = new();
+                            if (split[x].Length > 1 && split[x].Contains('[') && split[x][^1] == ']')
                             {
                                 int index = split[x].IndexOf('[');
                                 bit.Variable = SplitToArgument(system, split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
-                                split[x] = split[x].Substring(0, index).ToLowerFast();
+                                split[x] = split[x][..index].ToLowerFast();
                                 if (split[x].Length == 0)
                                 {
                                     if (x == 0)
@@ -119,7 +119,7 @@ namespace FreneticScript.ScriptSystems
                             bit.Key = split[x];
                             bits.Add(bit);
                         }
-                        TagArgumentBit tab = new TagArgumentBit(system, bits.ToArray());
+                        TagArgumentBit tab = new(system, bits.ToArray());
                         if (tab.Bits.Length > 0)
                         {
                             if (system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
@@ -156,7 +156,7 @@ namespace FreneticScript.ScriptSystems
                             }
                             else
                             {
-                                blockbuilder.Append(".");
+                                blockbuilder.Append('.');
                             }
                             break;
                         case '&':

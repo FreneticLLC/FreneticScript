@@ -30,7 +30,7 @@ namespace FreneticScript.TagHandlers
         /// <summary>Represents the HandleOne(...) method.</summary>
         public MethodInfo Method_HandleOne;
 
-        /// <summary>Represents the HandleOne(...) method.</summary>
+        /// <summary>Represents the HandleOneObjective(...) method.</summary>
         public MethodInfo Method_HandleOneObjective;
 
         /// <summary>The name of the tag base.</summary>

@@ -41,7 +41,7 @@ namespace FreneticScript.TagHandlers.Objects
         {
             get
             {
-                ListTag list = new ListTag(Internal.Count);
+                ListTag list = new(Internal.Count);
                 foreach (KeyValuePair<string, TemplateObject> pair in Internal)
                 {
                     list.Internal.Add(new TextTag(pair.Key + ":" + pair.Value));
@@ -92,7 +92,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static MapTag For(string input)
         {
             string[] dat = input.SplitFast('|');
-            MapTag map = new MapTag(dat.Length);
+            MapTag map = new(dat.Length);
             for (int i = 0; i < dat.Length; i++)
             {
                 string[] kvp = dat[i].SplitFast(':');
@@ -117,7 +117,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static MapTag CreateFromSaved(string input, TagData data)
         {
             string[] dat = input.SplitFast('|');
-            MapTag map = new MapTag();
+            MapTag map = new();
             for (int i = 0; i < dat.Length; i++)
             {
                 string[] kvp = dat[i].SplitFast(':');
@@ -196,7 +196,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag Tag_Values(MapTag obj, TagData data)
         {
-            ListTag list = new ListTag();
+            ListTag list = new();
             list.Internal.AddRange(obj.Internal.Values);
             return list;
         }
@@ -247,14 +247,14 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The typed string representation.</returns>
         public override string GetSavableString()
         {
-            StringBuilder toret = new StringBuilder(Internal.Count * 50 + 10);
+            StringBuilder toret = new(Internal.Count * 50 + 10);
             toret.Append(TYPE);
             toret.Append(SAVE_MARK);
             foreach (KeyValuePair<string, TemplateObject> entry in Internal)
             {
-                toret.Append(EscapeTagBase.Escape(entry.Key)).Append(":").Append(EscapeTagBase.Escape(entry.Value.GetSavableString())).Append("|");
+                toret.Append(EscapeTagBase.Escape(entry.Key)).Append(':').Append(EscapeTagBase.Escape(entry.Value.GetSavableString())).Append('|');
             }
-            return toret.ToString().Substring(0, toret.Length - 1);
+            return toret.ToString()[..(toret.Length - 1)];
         }
 
         /// <summary>Gets a string representation of this map.</summary>
@@ -265,12 +265,12 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return "";
             }
-            StringBuilder toret = new StringBuilder(Internal.Count * 100);
+            StringBuilder toret = new(Internal.Count * 100);
             foreach (KeyValuePair<string, TemplateObject> entry in Internal)
             {
-                toret.Append(EscapeTagBase.Escape(entry.Key)).Append(":").Append(EscapeTagBase.Escape(entry.Value.ToString())).Append("|");
+                toret.Append(EscapeTagBase.Escape(entry.Key)).Append(':').Append(EscapeTagBase.Escape(entry.Value.ToString())).Append('|');
             }
-            return toret.ToString().Substring(0, toret.Length - 1);
+            return toret.ToString()[..(toret.Length - 1)];
         }
 
         /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
@@ -281,14 +281,14 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return "";
             }
-            StringBuilder toret = new StringBuilder(Internal.Count * 100);
+            StringBuilder toret = new(Internal.Count * 100);
             foreach (KeyValuePair<string, TemplateObject> entry in Internal)
             {
                 toret.Append(TextStyle.Separate).Append(entry.Key)
                     .Append(TextStyle.Minor).Append(": ").Append(TextStyle.Separate)
                     .Append(entry.Value.GetDebugString()).Append(TextStyle.Minor).Append(" | ");
             }
-            return toret.ToString().Substring(0, toret.Length - 3);
+            return toret.ToString()[..(toret.Length - 3)];
         }
 
         /// <summary>Gets the sub-settable object, or null if none.</summary>

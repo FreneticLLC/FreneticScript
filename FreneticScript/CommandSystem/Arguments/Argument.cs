@@ -34,7 +34,7 @@ namespace FreneticScript.CommandSystem.Arguments
         }
 
         /// <summary>Empty argument bit array.</summary>
-        public static readonly ArgumentBit[] EMPTY_BITS = new ArgumentBit[0];
+        public static readonly ArgumentBit[] EMPTY_BITS = Array.Empty<ArgumentBit>();
 
         /// <summary>The parts that build up the argument.</summary>
         public ArgumentBit[] Bits = EMPTY_BITS;
@@ -72,7 +72,7 @@ namespace FreneticScript.CommandSystem.Arguments
             {
                 return Bits[0].ToString();
             }
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Bits.Length; i++)
             {
                 sb.Append(Bits[i].ToString());

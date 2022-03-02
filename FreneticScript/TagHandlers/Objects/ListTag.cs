@@ -92,7 +92,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static ListTag For(string list)
         {
             string[] baselist = list.SplitFast('|');
-            ListTag tlist = new ListTag();
+            ListTag tlist = new();
             for (int i = 0; i < baselist.Length; i++)
             {
                 if (i == baselist.Length - 1 && baselist[i].Length == 0)
@@ -100,7 +100,7 @@ namespace FreneticScript.TagHandlers.Objects
                     break;
                 }
                 string dat = UnescapeTagBase.Unescape(baselist[i]);
-                TextArgumentBit tab = new TextArgumentBit(dat, false, true, null);
+                TextArgumentBit tab = new(dat, false, true, null);
                 tlist.Internal.Add(tab.InputValue);
             }
             return tlist;
@@ -113,7 +113,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static ListTag CreateFromSaved(string list, TagData data)
         {
             string[] baselist = list.SplitFast('|');
-            ListTag tlist = new ListTag();
+            ListTag tlist = new();
             for (int i = 0; i < baselist.Length; i++)
             {
                 if (i == baselist.Length - 1 && baselist[i].Length == 0)
@@ -202,7 +202,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag Tag_Reversed(ListTag obj, TagData data)
         {
-            ListTag newlist = new ListTag(obj.Internal);
+            ListTag newlist = new(obj.Internal);
             newlist.Internal.Reverse();
             return newlist;
         }
@@ -214,7 +214,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static ListTag Tag_Filter(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
-            ListTag newlist = new ListTag();
+            ListTag newlist = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 // TODO: Restore: vars["filter_value"] = new ObjectHolder() { Internal = ListEntries[i] };
@@ -234,7 +234,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static ListTag Tag_Parse(ListTag obj, TagData data)
         {
             List<TemplateObject> Internal = obj.Internal;
-            ListTag newlist = new ListTag();
+            ListTag newlist = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 // TODO: Restore: vars["parse_value"] = new ObjectHolder() { Internal = ListEntries[i] };
@@ -282,7 +282,7 @@ namespace FreneticScript.TagHandlers.Objects
                 data.Error("Read 'last' tag on empty list!");
                 return null;
             }
-            return new DynamicTag(Internal[Internal.Count - 1]);
+            return new DynamicTag(Internal[^1]);
         }
 
         [TagMeta(TagType = TYPE, Name = "get", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A specified entry in the list.",
@@ -352,7 +352,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return new ListTag();
             }
-            List<TemplateObject> Entries = new List<TemplateObject>();
+            List<TemplateObject> Entries = new();
             for (int i = number; i <= number2; i++)
             {
                 Entries.Add(Internal[i]);
@@ -365,7 +365,7 @@ namespace FreneticScript.TagHandlers.Objects
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ListTag Tag_Include(ListTag obj, ListTag modifier)
         {
-            ListTag newlist = new ListTag(obj.Internal);
+            ListTag newlist = new(obj.Internal);
             newlist.Internal.AddRange(modifier.Internal);
             return newlist;
         }
@@ -383,14 +383,14 @@ namespace FreneticScript.TagHandlers.Objects
                 data.Error("Empty list to insert (need to specify at least the insertion index value)!");
                 return null;
             }
-            IntegerTag index = IntegerTag.For(modif.Internal[0], data);
+            int index = (int)IntegerTag.For(modif.Internal[0], data).Internal;
             modif.Internal.RemoveAt(0);
-            ListTag newlist = new ListTag(obj.Internal);
-            if (index.Internal > newlist.Internal.Count)
+            ListTag newlist = new(obj.Internal);
+            if (index > newlist.Internal.Count)
             {
-                index.Internal = newlist.Internal.Count;
+                index = newlist.Internal.Count;
             }
-            newlist.Internal.InsertRange((int)index.Internal, modif.Internal);
+            newlist.Internal.InsertRange(index, modif.Internal);
             return newlist;
         }
 
@@ -416,7 +416,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A list of strings.</returns>
         public List<string> ToStringList()
         {
-            List<string> list = new List<string>(Internal.Count);
+            List<string> list = new(Internal.Count);
             for (int i = 0; i < Internal.Count; i++)
             {
                 list.Add(Internal[i].ToString());
@@ -428,12 +428,12 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A typed string representation of the list.</returns>
         public override string GetSavableString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(TYPE);
             sb.Append(SAVE_MARK);
             for (int i = 0; i < Internal.Count; i++)
             {
-                sb.Append(EscapeTagBase.Escape(Internal[i].GetSavableString())).Append("|");
+                sb.Append(EscapeTagBase.Escape(Internal[i].GetSavableString())).Append('|');
             }
             return sb.ToString();
         }
@@ -442,10 +442,10 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>A string representation of the list.</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Internal.Count; i++)
             {
-                sb.Append(EscapeTagBase.Escape(Internal[i].ToString())).Append("|");
+                sb.Append(EscapeTagBase.Escape(Internal[i].ToString())).Append('|');
             }
             return sb.ToString();
         }
@@ -454,7 +454,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <returns>The debug-friendly string.</returns>
         public override string GetDebugString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 sb.Append(TextStyle.Separate).Append(Internal[i].GetDebugString()).Append(TextStyle.Minor).Append(" | ");
@@ -465,7 +465,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>Renders the list as a comma-separated string (no escaping).</summary>
         public string ToCSString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 sb.Append(Internal[i].ToString());
@@ -480,13 +480,13 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>Renders the list as a space-separated string (no escaping).</summary>
         public string ToSpaceString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 sb.Append(Internal[i].ToString());
                 if (i + 1 < Internal.Count)
                 {
-                    sb.Append(" ");
+                    sb.Append(' ');
                 }
             }
             return sb.ToString();
@@ -495,7 +495,7 @@ namespace FreneticScript.TagHandlers.Objects
         /// <summary>Renders the list as an unseparated string (no escaping).</summary>
         public string ToFlatString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 sb.Append(Internal[i].ToString());
@@ -510,7 +510,7 @@ namespace FreneticScript.TagHandlers.Objects
             {
                 return (Internal[0] + " and " + Internal[1]);
             }
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Internal.Count; i++)
             {
                 sb.Append(Internal[i].ToString());

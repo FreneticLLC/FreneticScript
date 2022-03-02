@@ -47,7 +47,7 @@ namespace FreneticScriptConsoleTester
             }
         }
 
-        public ConsoleTesterEventHelper Helper = new ConsoleTesterEventHelper();
+        public ConsoleTesterEventHelper Helper = new();
 
         public override FreneticEventHelper GetEventHelper()
         {
@@ -69,7 +69,7 @@ namespace FreneticScriptConsoleTester
             throw new NotImplementedException();
         }
 
-        string Clean(string inp)
+        public static string Clean(string inp)
         {
             return inp.Replace("..", "/").Replace('\\', '/');
         }
@@ -98,7 +98,7 @@ namespace FreneticScriptConsoleTester
             path = Clean(path);
             if (!Directory.Exists(path))
             {
-                return new string[0];
+                return Array.Empty<string>();
             }
             string[] results = Directory.GetFiles(path, extension == null ? "*.*" : "*." + extension , deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
             for (int i = 0; i < results.Length; i++)

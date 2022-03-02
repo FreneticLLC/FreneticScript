@@ -34,13 +34,13 @@ namespace FreneticScript.TagHandlers.Objects
         }
 
         /// <summary>The boolean this tag represents.</summary>
-        public bool Internal;
+        public readonly bool Internal;
 
         /// <summary>A true value.</summary>
-        public static readonly BooleanTag TRUE = new BooleanTag(true);
+        public static readonly BooleanTag TRUE = new(true);
 
         /// <summary>A false value.</summary>
-        public static readonly BooleanTag FALSE = new BooleanTag(false);
+        public static readonly BooleanTag FALSE = new(false);
 
         /// <summary>
         /// Gets a boolean tag for the input bool value.

@@ -156,7 +156,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>Tag input text.</returns>
         public string HighlightString(int index, string highlight)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < Bits.Length; i++)
             {
                 if (i == index)

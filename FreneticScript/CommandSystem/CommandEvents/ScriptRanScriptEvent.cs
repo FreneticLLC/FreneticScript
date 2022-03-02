@@ -28,7 +28,7 @@ namespace FreneticScript.CommandSystem.CommandEvents
         /// <param name="prio">The priority.</param>
         public override void RegisterPriority(double prio)
         {
-            PrioritySourceObject source = new PrioritySourceObject(this, prio);
+            PrioritySourceObject source = new(this, prio);
             if (!Engine.TheRunFileCommand.OnScriptRanEvent.IsHandledBySource(source))
             {
                 Engine.TheRunFileCommand.OnScriptRanEvent.AddEvent(Run, source, prio);

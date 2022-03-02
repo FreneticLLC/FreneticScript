@@ -16,7 +16,7 @@ namespace FreneticScriptConsoleTester
 {
     public class SysConsole
     {
-        volatile static List<KeyValuePair<string, string>> Waiting = new List<KeyValuePair<string, string>>();
+        volatile static List<KeyValuePair<string, string>> Waiting = new();
 
         static Object ConsoleLock;
 
@@ -24,7 +24,7 @@ namespace FreneticScriptConsoleTester
 
         static Thread ConsoleOutputThread;
 
-        static readonly CancellationTokenSource ConsoleCancelToken = new CancellationTokenSource();
+        static readonly CancellationTokenSource ConsoleCancelToken = new();
 
         /// <summary>Closes the SysConsole.</summary>
         public static void ShutDown()
@@ -167,7 +167,7 @@ namespace FreneticScriptConsoleTester
         {
             text = text.Replace("^B", bcolor);
             Console.SetCursorPosition(0, Console.CursorTop);
-            StringBuilder outme = new StringBuilder();
+            StringBuilder outme = new();
             for (int i = 0; i < text.Length; i++)
             {
                 if (text[i] == '^' && i + 1 < text.Length && IsColorSymbol(text[i + 1]))
@@ -285,7 +285,7 @@ namespace FreneticScriptConsoleTester
         public static string Pad(string input, char padding, int length, bool left = true)
         {
             int targetlength = length - input.Length;
-            StringBuilder pad = new StringBuilder(targetlength <= 0 ? 1 : targetlength);
+            StringBuilder pad = new(targetlength <= 0 ? 1 : targetlength);
             for (int i = 0; i < targetlength; i++)
             {
                 pad.Append(padding);

@@ -22,7 +22,7 @@ namespace FreneticScript.CommandSystem
     public class CommandQueue
     {
         /// <summary>The current stack of all command execution data.</summary>
-        public Stack<CompiledCommandRunnable> RunningStack = new Stack<CompiledCommandRunnable>();
+        public Stack<CompiledCommandRunnable> RunningStack = new();
 
         /// <summary>Represents the <see cref="CommandQueue.CurrentRunnable"/> field.</summary>
         public static FieldInfo COMMANDQUEUE_CURRENTRUNNABLE = typeof(CommandQueue).GetField(nameof(CurrentRunnable));

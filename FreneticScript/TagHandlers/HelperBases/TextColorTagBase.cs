@@ -39,7 +39,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         }
 
         /// <summary>All colors known by this tag.</summary>
-        public Dictionary<string, Func<string>> Colors = new Dictionary<string, Func<string>>();
+        public Dictionary<string, Func<string>> Colors = new();
 
         /// <summary>Handles a 'color' tag.</summary>
         /// <param name="data">The data to be handled.</param>

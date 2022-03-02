@@ -37,7 +37,7 @@ namespace FreneticScript.TagHandlers
         }
 
         /// <summary>The symbol that connects a type to it's savable data.</summary>
-        public const string SAVE_MARK = "@";
+        public const char SAVE_MARK = '@';
 
         /// <summary>Gets the savable string for this instance, including any relevant type information.</summary>
         /// <returns>The save string.</returns>

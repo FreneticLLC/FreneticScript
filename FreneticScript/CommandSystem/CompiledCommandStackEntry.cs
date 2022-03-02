@@ -131,7 +131,7 @@ namespace FreneticScript.CommandSystem
                         {
                             throw;
                         }
-                        if (!(ex2 is ErrorInducedException))
+                        if (ex2 is not ErrorInducedException)
                         {
                             string message = ex2.ToString();
                             if (runnable.Debug <= DebugMode.MINIMAL)
@@ -169,7 +169,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="message">The error message.</param>
         public void HandleError(CommandQueue queue, CommandEntry entry, string message)
         {
-            StringBuilder stacktrace = new StringBuilder();
+            StringBuilder stacktrace = new();
             stacktrace.Append("ERROR: " + message + "\n    in script '" + entry.ScriptName + "' at line " + (entry.ScriptLine + 1)
                 + ": (" + entry.Name + ")\n");
             queue.WaitingOn = null;
@@ -207,7 +207,7 @@ namespace FreneticScript.CommandSystem
                     break;
                 }
             }
-            message = stacktrace.ToString().Substring(0, stacktrace.Length - 1);
+            message = stacktrace.ToString()[..(stacktrace.Length - 1)];
             if (dbmode <= DebugMode.MINIMAL)
             {
                 queue.Engine.Context.BadOutput(message);

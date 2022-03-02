@@ -35,13 +35,13 @@ namespace FreneticScript.ScriptSystems
             try
             {
                 commands = commands.Replace("\r\n", "\n").Replace('\r', '\n');
-                List<string> CommandList = new List<string>();
-                List<int> Lines = new List<int>();
+                List<string> CommandList = new();
+                List<int> Lines = new();
                 bool quoted = false;
                 bool qtype = false;
                 int line = currentLine;
                 int anons = 0;
-                StringBuilder commandConstruct = new StringBuilder(256);
+                StringBuilder commandConstruct = new(256);
                 for (int i = 0; i < commands.Length; i++)
                 {
                     // One-Line Comments
@@ -54,7 +54,7 @@ namespace FreneticScript.ScriptSystems
                         }
                         if (x < commands.Length)
                         {
-                            commands = commands.Substring(0, i) + commands[x..];
+                            commands = commands[..i] + commands[x..];
                             i--;
                             continue;
                         }
@@ -76,7 +76,7 @@ namespace FreneticScript.ScriptSystems
                         }
                         if (x + 1 < commands.Length)
                         {
-                            commands = commands.Substring(0, i) + commands[(x + 1)..];
+                            commands = commands[..i] + commands[(x + 1)..];
                         }
                         else
                         {
@@ -222,7 +222,7 @@ namespace FreneticScript.ScriptSystems
         /// <returns>A list of entries with blocks separated.</returns>
         public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, ScriptEngine system, string tabs, int indexStart, out bool had_error)
         {
-            List<CommandEntry> outEntryList = new List<CommandEntry>();
+            List<CommandEntry> outEntryList = new();
             List<string> fromArgsHelper = null;
             List<int> lineArgsHelper = null;
             int blocks = 0;
@@ -270,7 +270,7 @@ namespace FreneticScript.ScriptSystems
                             cent.BlockStart = indexStart;
                             indexStart += block.Count;
                             cent.BlockEnd = indexStart - 1;
-                            List<CommandEntry> blockToInject = new List<CommandEntry>(block);
+                            List<CommandEntry> blockToInject = new(block);
                             int bc = block.Count;
                             if (cent.Command != null)
                             {
@@ -352,7 +352,7 @@ namespace FreneticScript.ScriptSystems
                     command = command[1..];
                 }
                 command = command.Replace('\0', ' ');
-                List<Argument> args = new List<Argument>();
+                List<Argument> args = new();
                 int start = 0;
                 bool quoted = false;
                 bool qtype = false;
@@ -373,7 +373,7 @@ namespace FreneticScript.ScriptSystems
                     }
                     else if (command[i] == '\n' && !quoted)
                     {
-                        command = (i + 1 < command.Length) ? command.Substring(0, i) + command[(i + 1)..] : command.Substring(0, i);
+                        command = (i + 1 < command.Length) ? command[..i] + command[(i + 1)..] : command[..i];
                     }
                     else if (!quoted && command[i] == ' ')
                     {
@@ -399,7 +399,7 @@ namespace FreneticScript.ScriptSystems
                 {
                     return null;
                 }
-                Dictionary<string, Argument> nameds = new Dictionary<string, Argument>();
+                Dictionary<string, Argument> nameds = new();
                 if (args.Count >= 3 && !args[1].WasQuoted)
                 {
                     string a1 = args[1].ToString();

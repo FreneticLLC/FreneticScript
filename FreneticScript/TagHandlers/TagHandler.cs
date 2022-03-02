@@ -383,7 +383,7 @@ namespace FreneticScript.TagHandlers
         /// <returns>The resultant object.</returns>
         public TemplateObject ParseFromSaved(string input, TagData data)
         {
-            string[] dat = input.SplitFast(TemplateObject.SAVE_MARK[0], 1);
+            string[] dat = input.SplitFast(TemplateObject.SAVE_MARK, 1);
             if (Types.SaveCreators.TryGetValue(dat[0], out Func<string, TagData, TemplateObject> creator))
             {
                 return creator(dat[1], data);

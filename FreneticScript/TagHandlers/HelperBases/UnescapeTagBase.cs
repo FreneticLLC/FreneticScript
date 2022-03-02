@@ -31,7 +31,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <returns>The unescaped string.</returns>
         public static string Unescape(string input)
         {
-            StringBuilder unescaped = new StringBuilder(input.Length);
+            StringBuilder unescaped = new(input.Length);
             for (int i = 0; i < input.Length; i++)
             {
                 if (input[i] == '&')

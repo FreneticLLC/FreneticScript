@@ -25,7 +25,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         // TODO: Full explanation!
 
         /// <summary>All standard escape codes.</summary>
-        public static readonly Dictionary<char, string> Escapes = new Dictionary<char, string>()
+        public static readonly Dictionary<char, string> Escapes = new()
         {
             { '&', "amp" },
             { '|', "pipe" },
@@ -49,7 +49,7 @@ namespace FreneticScript.TagHandlers.HelperBases
         /// <returns>The escaped string.</returns>
         public static string Escape(string input)
         {
-            StringBuilder escaped = new StringBuilder(input.Length);
+            StringBuilder escaped = new(input.Length);
             for (int i = 0; i < input.Length; i++)
             {
                 if ((input[i] >= 'a' && input[i] <= 'z')

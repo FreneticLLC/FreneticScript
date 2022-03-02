@@ -93,10 +93,10 @@ namespace FreneticScript.CommandSystem
         public Dictionary<string, ScriptEvent> Events;
 
         /// <summary>All known identifiers for the 'once' block command.</summary>
-        public HashSet<string> OnceBlocks = new HashSet<string>();
+        public HashSet<string> OnceBlocks = new();
 
         /// <summary>A random number generator.</summary>
-        public Random random = new Random();
+        public Random random = new();
 
         /// <summary>Constructs a <see cref="ScriptEngine"/>.</summary>
         public ScriptEngine()
@@ -274,7 +274,7 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>Scripts loaded in for precalculation that will be ran by <see cref="RunPrecalculated"/> when next called.</summary>
-        public List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new List<KeyValuePair<int, List<CommandScript>>>();
+        public List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new();
 
         /// <summary>A function to invoke when output is generated.</summary>
         public delegate void OutputFunction(string message, MessageType type);

@@ -167,7 +167,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 for (int i = entry - 1; i >= 0; i--)
                 {
                     CommandEntry nextEntry = values.Entry.Entries[i];
-                    if (!(nextEntry.Command is FunctionCommand))
+                    if (nextEntry.Command is not FunctionCommand)
                     {
                         continue;
                     }

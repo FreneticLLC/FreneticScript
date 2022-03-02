@@ -104,14 +104,14 @@ namespace FreneticScript.CommandSystem
             public int Index;
 
             /// <summary>The scripts contained in the set.</summary>
-            public List<KeyValuePair<ScriptIndex, CommandScript>> Scripts = new List<KeyValuePair<ScriptIndex, CommandScript>>();
+            public List<KeyValuePair<ScriptIndex, CommandScript>> Scripts = new();
         }
 
         /// <summary>All scripts that handle this event.</summary>
-        public List<ScriptSet> Handlers = new List<ScriptSet>();
+        public List<ScriptSet> Handlers = new();
 
         /// <summary>A map of all handler names to handler script indices.</summary>
-        public Dictionary<string, ScriptIndex> HandlerNames = new Dictionary<string, ScriptIndex>();
+        public Dictionary<string, ScriptIndex> HandlerNames = new();
 
         /// <summary>Register a specific priority with the underlying event.</summary>
         /// <param name="prio">The priority.</param>
@@ -165,7 +165,7 @@ namespace FreneticScript.CommandSystem
             set = new ScriptSet();
             Handlers.Add(set);
             buildset:
-            ScriptIndex indexObject = new ScriptIndex() { SetObject = set, SetIndex = set.Scripts.Count };
+            ScriptIndex indexObject = new() { SetObject = set, SetIndex = set.Scripts.Count };
             HandlerNames.Add(name, indexObject);
             set.Scripts.Add(new KeyValuePair<ScriptIndex, CommandScript>(indexObject, script));
             if (Handlers.Count == 1)
@@ -290,7 +290,7 @@ namespace FreneticScript.CommandSystem
                 {
                     // TODO: Handle cancelling stuff here?
                     // IE, don't fire if cancelled and we don't want to fire?
-                    Dictionary<string, TemplateObject> Variables = new Dictionary<string, TemplateObject>()
+                    Dictionary<string, TemplateObject> Variables = new()
                         {
                             {  "context", new MapTag(GetVariables()) }
                         };
@@ -346,7 +346,7 @@ namespace FreneticScript.CommandSystem
         /// <summary>Get all variables according the script event's current values.</summary>
         public virtual Dictionary<string, TemplateObject> GetVariables()
         {
-            Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>()
+            Dictionary<string, TemplateObject> vars = new()
             {
                 { "cancelled", new TextTag(Cancelled ? "true": "false") }
             };

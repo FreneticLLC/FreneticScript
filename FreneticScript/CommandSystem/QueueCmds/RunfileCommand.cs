@@ -75,7 +75,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
         public static void Execute(CommandQueue queue, CommandEntry entry)
         {
             string fname = entry.GetArgument(queue, 0).ToLowerFast();
-            ScriptRanPreEventArgs args = new ScriptRanPreEventArgs() { ScriptName = fname };
+            ScriptRanPreEventArgs args = new() { ScriptName = fname };
             RunfileCommand rcmd = entry.Command as RunfileCommand;
             if (rcmd.OnScriptRanPreEvent != null)
             {
@@ -93,7 +93,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
             CommandScript script = queue.Engine.GetScriptFile(args.ScriptName, out string status);
             if (script != null)
             {
-                ScriptRanEventArgs args2 = new ScriptRanEventArgs() { Script = script };
+                ScriptRanEventArgs args2 = new() { Script = script };
                 if (rcmd.OnScriptRanEvent != null)
                 {
                     rcmd.OnScriptRanEvent.Fire(args2);
@@ -121,7 +121,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     entry.GoodOutput(queue, "Running '" + TextStyle.Separate + fname + TextStyle.Base + "'...");
                 }
-                Dictionary<string, TemplateObject> vars = new Dictionary<string, TemplateObject>();
+                Dictionary<string, TemplateObject> vars = new();
                 queue.Engine.ExecuteScript(script, ref vars, out CommandQueue nqueue);
                 if (entry.WaitFor && queue.WaitingOn == entry)
                 {
@@ -131,11 +131,11 @@ namespace FreneticScript.CommandSystem.QueueCmds
                     }
                     else
                     {
-                        EntryFinisher fin = new EntryFinisher() { Entry = entry, Queue = queue };
+                        EntryFinisher fin = new() { Entry = entry, Queue = queue };
                         nqueue.Complete += fin.Complete;
                     }
                 }
-                ScriptRanPostEventArgs args4 = new ScriptRanPostEventArgs() { Script = script };
+                ScriptRanPostEventArgs args4 = new() { Script = script };
                 if (rcmd.OnScriptRanPostEvent != null)
                 {
                     rcmd.OnScriptRanPostEvent.Fire(args4);

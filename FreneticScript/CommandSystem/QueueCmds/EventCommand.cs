@@ -182,12 +182,12 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 {
                     priority = NumberTag.For(entry.GetArgumentObject(queue, 3), queue.Error).Internal;
                 }
-                List<CommandEntry> entries = new List<CommandEntry>(entry.InnerCommandBlock.Length + 2);
-                MapTag expectedContext = new MapTag();
+                List<CommandEntry> entries = new(entry.InnerCommandBlock.Length + 2);
+                MapTag expectedContext = new();
                 expectedContext.Internal.Add("context", entry.System.TagTypes.Type_Map.TagForm);
                 entries.Add(entry.System.TheRequireCommand.GenerateEntry(expectedContext, entry.ScriptName, entry.ScriptLine));
                 entries.AddRange(entry.InnerCommandBlock);
-                CommandScript script = new CommandScript(theEvent.Name + "__handler__" + name,
+                CommandScript script = new(theEvent.Name + "__handler__" + name,
                     CommandScript.TYPE_NAME_EVENT, entries.ToArray(), entry.System, entry.BlockStart, DebugMode.MINIMAL);
                 theEvent.RegisterEventHandler(priority, script, name);
                 entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name + "" + TextStyle.Base

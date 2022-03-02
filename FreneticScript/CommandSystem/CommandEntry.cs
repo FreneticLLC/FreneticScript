@@ -273,7 +273,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The combined string.</returns>
         public string AllArguments(CommandQueue queue, int index = 0)
         {
-            StringBuilder result = new StringBuilder(CommandLine.Length);
+            StringBuilder result = new(CommandLine.Length);
             for (int i = index; i < Arguments.Length; i++)
             {
                 result.Append(GetArgument(queue, i));
@@ -290,7 +290,7 @@ namespace FreneticScript.CommandSystem
         /// <returns>The combined string.</returns>
         public string AllOriginalArguments(int index = 0)
         {
-            StringBuilder result = new StringBuilder(CommandLine.Length);
+            StringBuilder result = new(CommandLine.Length);
             for (int i = index; i < Arguments.Length; i++)
             {
                 result.Append(Arguments[i]);
@@ -315,8 +315,7 @@ namespace FreneticScript.CommandSystem
         }
 
         /// <summary>A helpful matcher to output short simple names.</summary>
-        public static AsciiMatcher OutputableNameMatcher = new AsciiMatcher(
-            (c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
+        public static AsciiMatcher OutputableNameMatcher = new(AsciiMatcher.BothCaseLetters + AsciiMatcher.Digits);
 
         /// <summary>Generates the output prefix for debug output.</summary>
         /// <param name="queue">The queue.</param>
@@ -326,12 +325,12 @@ namespace FreneticScript.CommandSystem
             string outputableScriptName = OutputableNameMatcher.TrimToMatches(ScriptName);
             if (outputableScriptName.Length > 9)
             {
-                outputableScriptName = outputableScriptName.Substring(0, 8) + "+";
+                outputableScriptName = outputableScriptName[..8] + "+";
             }
             string outputableCommandName = OutputableNameMatcher.TrimToMatches(Command.Name);
             if (outputableCommandName.Length > 11)
             {
-                outputableCommandName = outputableCommandName.Substring(0, 10) + "+";
+                outputableCommandName = outputableCommandName[..10] + "+";
             }
             return TextStyle.Minor + "[Q:" + TextStyle.Separate + queue.ID
                 + TextStyle.Minor + ",S:" + TextStyle.Separate + outputableScriptName

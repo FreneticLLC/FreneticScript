@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FreneticScript;
 using FreneticScript.CommandSystem;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScriptConsoleTester
 {
@@ -20,9 +21,9 @@ namespace FreneticScriptConsoleTester
     {
         public static ScriptEngine Engine;
 
-        public static Object Locker = new Object();
+        public static LockObject Locker = new();
 
-        public static ConcurrentQueue<Action> SyncTasks = new ConcurrentQueue<Action>();
+        public static ConcurrentQueue<Action> SyncTasks = new();
 
         static void Main(string[] args)
         {

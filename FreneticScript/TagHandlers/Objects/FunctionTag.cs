@@ -83,7 +83,7 @@ namespace FreneticScript.TagHandlers.Objects
                 }
                 script.TypeName = CommandScript.TYPE_NAME_ANONYMOUS;
                 script.IsAnonymous = true;
-                script.AnonymousString = input.Substring("anon|".Length);
+                script.AnonymousString = input["anon|".Length..];
                 return new FunctionTag(script);
             }
             else if (type == "named")

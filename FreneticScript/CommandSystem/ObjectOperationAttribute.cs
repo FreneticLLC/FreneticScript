@@ -48,7 +48,7 @@ namespace FreneticScript.CommandSystem
             if (Operation == ObjectOperation.GETSUBSETTABLE)
             {
                 ParameterInfo[] methodParams = Method.GetParameters();
-                DynamicMethod genMethod = new DynamicMethod("operation_" + Operation + "_callable_tag_" + Method.DeclaringType.Name + "_" + Method.Name,
+                DynamicMethod genMethod = new("operation_" + Operation + "_callable_tag_" + Method.DeclaringType.Name + "_" + Method.Name,
                     typeof(TemplateObject), GET_FUNC_PARAMS);
                 ILGenerator opILGen = genMethod.GetILGenerator();
                 opILGen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject.
@@ -69,7 +69,7 @@ namespace FreneticScript.CommandSystem
             else if (Operation == ObjectOperation.SET)
             {
                 ParameterInfo[] methodParams = Method.GetParameters();
-                DynamicMethod genMethod = new DynamicMethod("operation_" + Operation + "_callable_tag_" + Method.DeclaringType.Name + "_" + Method.Name,
+                DynamicMethod genMethod = new("operation_" + Operation + "_callable_tag_" + Method.DeclaringType.Name + "_" + Method.Name,
                     typeof(void), SET_FUNC_PARAMS);
                 ILGenerator opILGen = genMethod.GetILGenerator();
                 opILGen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject 1.
@@ -95,7 +95,7 @@ namespace FreneticScript.CommandSystem
             else
             {
                 ParameterInfo[] methodParams = Method.GetParameters();
-                DynamicMethod genMethod = new DynamicMethod("operation_" + Operation + "_callable_tag_" + Method.DeclaringType.Name + "_" + Method.Name,
+                DynamicMethod genMethod = new("operation_" + Operation + "_callable_tag_" + Method.DeclaringType.Name + "_" + Method.Name,
                     typeof(TemplateObject), OBJECT_FUNC_PARAMS);
                 ILGenerator opILGen = genMethod.GetILGenerator();
                 opILGen.Emit(OpCodes.Ldarg_0); // Load argument: TemplateObject 1.

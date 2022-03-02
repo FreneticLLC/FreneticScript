@@ -37,22 +37,10 @@ namespace FreneticScript.TagHandlers.Objects
         public long Internal;
 
         /// <summary>The integer value of this IntegerTag-like object.</summary>
-        public long IntegerForm
-        {
-            get
-            {
-                return Internal;
-            }
-        }
+        public long IntegerForm => Internal;
 
         /// <summary>The number value of this NumberTag-like object.</summary>
-        public double NumberForm
-        {
-            get
-            {
-                return Internal;
-            }
-        }
+        public double NumberForm => Internal;
 
         /// <summary>Helper validator to validate an argument as an integer tag.</summary>
         /// <param name="validator">The validation helper.</param>

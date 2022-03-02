@@ -136,7 +136,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 ((IfCommandData)entry.GetData(queue)).Result = 1;
                 return true;
             }
-            List<Argument> args = new List<Argument>(entry.Arguments);
+            List<Argument> args = new(entry.Arguments);
             args.RemoveAt(0);
             bool success = IfCommand.TryIf(queue, entry, args);
             if (success)

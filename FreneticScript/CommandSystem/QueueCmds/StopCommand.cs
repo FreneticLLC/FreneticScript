@@ -49,7 +49,7 @@ namespace FreneticScript.CommandSystem.QueueCmds
                 values.LoadEntry(entry);
                 values.ILGen.Emit(OpCodes.Call, DebugStopMethod);
             }
-            values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[values.Entry.AdaptedILPoints.Length - 1]);
+            values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[^1]);
         }
 
         /// <summary>Shows debug for a stop command.</summary>

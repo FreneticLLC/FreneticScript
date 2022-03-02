@@ -20,7 +20,7 @@ namespace FreneticScript.TagHandlers.Objects
     public class TextTag : TemplateObject
     {
         /// <summary>An empty text tag.</summary>
-        public static readonly TextTag EMPTY = new TextTag("");
+        public static readonly TextTag EMPTY = new("");
 
         /// <summary>Return the type name of this tag.</summary>
         /// <returns>The tag type name.</returns>
@@ -160,7 +160,7 @@ namespace FreneticScript.TagHandlers.Objects
         public static ListTag Tag_To_List_Of_Characters(TextTag obj, TagData data)
         {
             string text = obj.Internal;
-            List<TemplateObject> list = new List<TemplateObject>(text.Length);
+            List<TemplateObject> list = new(text.Length);
             for (int i = 0; i < text.Length; i++)
             {
                 list.Add(new TextTag(text[i].ToString()));

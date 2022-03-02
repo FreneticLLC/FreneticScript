@@ -15,8 +15,8 @@ namespace FreneticScript.TagHandlers
     /// <summary>Represents a tag's handler, within the tag type.</summary>
     public class TagSubHandler
     {
-        /// <summary>The 'Handle' field.</summary>
-        public static FieldInfo Field_Handle = typeof(TagSubHandler).GetField("Handle");
+        /// <summary>The <see cref="Handle"/> field.</summary>
+        public static FieldInfo Field_Handle = typeof(TagSubHandler).GetField(nameof(Handle));
 
         /// <summary>This function should take the input and output the result of the tag handling.</summary>
         public Func<TagData, TemplateObject, TemplateObject> Handle;
