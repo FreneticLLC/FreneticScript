@@ -313,7 +313,7 @@ namespace FreneticScript.ScriptSystems
                     string msg = outEntryList[i].Command.TestForValidity(outEntryList[i]);
                     if (msg != null)
                     {
-                        string fullmsg = $"FAILED TO COMPILE SCRIPT '{name}': (line {outEntryList[i].ScriptLine}): {msg}";
+                        string fullmsg = $"FAILED TO COMPILE SCRIPT '{TextStyle.SeparateVal(name)}': (line {TextStyle.SeparateVal(outEntryList[i].ScriptLine)}): for command {TextStyle.SeparateVal(outEntryList[i].Name)} {msg}";
                         system.Context.BadOutput(fullmsg);
                         had_error = true;
                         outEntryList.Clear();

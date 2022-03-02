@@ -77,11 +77,11 @@ namespace FreneticScript.CommandSystem
         {
             if (entry.Arguments.Length < Meta.MinimumArgs)
             {
-                return "Not enough arguments. Expected at least: " + Meta.MinimumArgs + ". Usage: " + Meta.Arguments + ", found only: " + entry.AllOriginalArguments();
+                return $"Not enough arguments. Expected at least: {TextStyle.SeparateVal(Meta.MinimumArgs)}. Usage: {TextStyle.SeparateVal(Meta.Arguments)}, found only: {TextStyle.SeparateVal(entry.AllOriginalArguments())}";
             }
             if (Meta.MaximumArgs != -1 && entry.Arguments.Length > Meta.MaximumArgs)
             {
-                return "Too many arguments. Expected no more than: " + Meta.MaximumArgs + ". Usage: " + Meta.Arguments + ", found: " + entry.AllOriginalArguments();
+                return $"Too many arguments. Expected no more than: {TextStyle.SeparateVal(Meta.MaximumArgs)}. Usage: {TextStyle.SeparateVal(Meta.Arguments)}, found: {TextStyle.SeparateVal(entry.AllOriginalArguments())}";
             }
             if (ObjectTypes != null)
             {
@@ -103,13 +103,12 @@ namespace FreneticScript.CommandSystem
                         ObjectTypes[i].Invoke(validator);
                         if (validator.ErrorResult != null)
                         {
-                            return "Invalid argument '" + entry.Arguments[i].ToString()
-                                + "' for command '" + entry.Command.Meta.Name + "': " + validator.ErrorResult;
+                            return $"Invalid argument '{TextStyle.SeparateVal(entry.Arguments[i].ToString())}' for command '{TextStyle.SeparateVal(entry.Command.Meta.Name)}': " + validator.ErrorResult;
                         }
                         if (validator.ObjectValue == null)
                         {
-                            return "Invalid argument '" + entry.Arguments[i].ToString()
-                                + "', translates to internal NULL for this command's input expectation (Command is " + entry.Command.Meta.Name + "). (Dev note: expectation is " + ObjectTypes[i].Method.Name + ")";
+                            return $"Invalid argument '{TextStyle.SeparateVal(entry.Arguments[i].ToString())}', translates to internal NULL for this command's input expectation "
+                                + $"(Command is {TextStyle.SeparateVal(entry.Command.Meta.Name)}). (Dev note: expectation is {TextStyle.SeparateVal(ObjectTypes[i].Method.Name)})";
                         }
                         ((TextArgumentBit)entry.Arguments[i].Bits[0]).InputValue = validator.ObjectValue;
                     }
@@ -145,7 +144,7 @@ namespace FreneticScript.CommandSystem
                 TagType saveTagType = cent.System.TagTypes.TypeForName(SaveType);
                 if (saveTagType == null)
                 {
-                    throw new ErrorInducedException($"Command '{Meta.Name}' specifies a non-existent save tag type '{SaveType}'.");
+                    throw new ErrorInducedException($"Command '{TextStyle.SeparateVal(Meta.Name)}' specifies a non-existent save tag type '{TextStyle.SeparateVal(SaveType)}'.");
                 }
                 PreAdaptSaveMode(values, entry, true, saveTagType, SaveMode != CommandSaveMode.WHEN_NAME_SPECIFIED, DefaultSaveName);
             }
@@ -175,11 +174,12 @@ namespace FreneticScript.CommandSystem
             {
                 if (!canPreExist)
                 {
-                    throw new ErrorInducedException($"Already have a save target var (labeled '{saveName}')?!");
+                    throw new ErrorInducedException($"Already have a save target var (labeled '{TextStyle.SeparateVal(saveName)}')?!");
                 }
                 if (preVarType.Type != tagType)
                 {
-                    throw new ErrorInducedException($"Already have a save target var (labeled '{saveName}', with type '{preVarType.Type.TypeName}') of wrong type (expected '{tagType.TypeName}').");
+                    throw new ErrorInducedException($"Already have a save target var (labeled '{TextStyle.SeparateVal(saveName)}', with type "
+                        + $"'{TextStyle.SeparateVal(preVarType.Type.TypeName)}') of wrong type (expected '{TextStyle.SeparateVal(tagType.TypeName)}').");
                 }
                 cent.SaveLoc = preVarLoc;
             }
