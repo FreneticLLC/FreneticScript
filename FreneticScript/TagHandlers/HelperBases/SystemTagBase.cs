@@ -63,12 +63,6 @@ namespace FreneticScript.TagHandlers.HelperBases
             /// <param name="input">The input.</param>
             public static SystemTag For(TagData data, string input)
             {
-                CVar tcv = data.TagSystem.Engine.Context.CVarSys.Get(input);
-                if (tcv == null)
-                {
-                    data.Error("Invalid CVar specified!");
-                    return null;
-                }
                 return Instance;
             }
 

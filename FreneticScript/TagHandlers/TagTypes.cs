@@ -46,9 +46,6 @@ namespace FreneticScript.TagHandlers
         /// <summary>The Boolean type.</summary>
         public TagType Type_Boolean;
 
-        /// <summary>The CVar  type.</summary>
-        public TagType Type_Cvar;
-
         /// <summary>The Dynamic type.</summary>
         public TagType Type_Dynamic;
 
@@ -116,15 +113,6 @@ namespace FreneticScript.TagHandlers
                 SubHandlers = null,
                 RawType = typeof(BooleanTag)
             }, (inp, dat) => BooleanTag.For(dat, inp));
-            Register(Type_Cvar = new TagType()
-            {
-                TypeName = CVarTag.TYPE,
-                SubTypeName = TextTag.TYPE,
-                TypeGetter = CVarTag.For,
-                GetNextTypeDown = TextTag.For,
-                SubHandlers = null,
-                RawType = typeof(CVarTag)
-            }, (inp, dat) => CVarTag.For(dat, inp));
             Register(Type_Dynamic = new TagType()
             {
                 TypeName = DynamicTag.TYPE,

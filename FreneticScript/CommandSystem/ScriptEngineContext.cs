@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FreneticUtilities.FreneticDataSyntax;
 using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem
@@ -49,8 +50,8 @@ namespace FreneticScript.CommandSystem
             throw new NotImplementedException("Unknown command: " + basecommand);
         }
 
-        /// <summary>The CVar System used by this context.</summary>
-        public CVarSystem CVarSys;
+        /// <summary>Called to grab the AutoConfig object for a given config key name. Name might be "system" or "client" or etc depending on context. Return null if no such config exists.</summary>
+        public abstract AutoConfiguration GetConfig(string name);
 
         /// <summary>
         /// Used to read a text file, generally a script.

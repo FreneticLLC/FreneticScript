@@ -83,7 +83,6 @@ namespace FreneticScript.TagHandlers
             // Common Object Bases
             Register(new BinaryTagBase());
             Register(new BooleanTagBase());
-            Register(new CVarTagBase());
             Register(new DynamicTagBase());
             Register(new FunctionTagBase());
             Register(new IntegerTagBase());

@@ -14,6 +14,7 @@ using FreneticUtilities.FreneticToolkit;
 using FreneticScript;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
+using FreneticUtilities.FreneticDataSyntax;
 
 namespace FreneticScriptConsoleTester
 {
@@ -105,6 +106,12 @@ namespace FreneticScriptConsoleTester
                 results[i] = results[i].Replace('\\', '/').Replace(Environment.CurrentDirectory.Replace('\\', '/'), "");
             }
             return results;
+        }
+
+        public override AutoConfiguration GetConfig(string name)
+        {
+#warning TODO
+            throw new NotImplementedException();
         }
     }
 }

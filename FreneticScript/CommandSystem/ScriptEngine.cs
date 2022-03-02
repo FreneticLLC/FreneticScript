@@ -384,13 +384,10 @@ namespace FreneticScript.CommandSystem
 
             // Common Commands
             RegisterCommand(new CleanmemCommand());
-            RegisterCommand(new CvarinfoCommand());
             RegisterCommand(new EchoCommand());
             RegisterCommand(new HelpCommand());
             RegisterCommand(new NoopCommand());
             RegisterCommand(new ReloadCommand());
-            RegisterCommand(new SetCommand());
-            RegisterCommand(new ToggleCommand());
 
             // Command-Related Events
             RegisterEvent(new ScriptRanPreScriptEvent(this));

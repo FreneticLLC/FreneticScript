@@ -31,7 +31,6 @@ namespace FreneticScriptConsoleTester
             Engine.Init();
             // Register things here!
             Engine.PostInit();
-            CVarSystem cs = new CVarSystem(Engine.Context);
             Task.Factory.StartNew(() =>
             {
                 while (true)
