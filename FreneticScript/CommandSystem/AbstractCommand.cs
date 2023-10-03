@@ -141,11 +141,7 @@ namespace FreneticScript.CommandSystem
             if (SaveMode != CommandSaveMode.NO_SAVE)
             {
                 CommandEntry cent = values.CommandAt(entry);
-                TagType saveTagType = cent.System.TagTypes.TypeForName(SaveType);
-                if (saveTagType == null)
-                {
-                    throw new ErrorInducedException($"Command '{TextStyle.SeparateVal(Meta.Name)}' specifies a non-existent save tag type '{TextStyle.SeparateVal(SaveType)}'.");
-                }
+                TagType saveTagType = cent.System.TagTypes.TypeForName(SaveType) ?? throw new ErrorInducedException($"Command '{TextStyle.SeparateVal(Meta.Name)}' specifies a non-existent save tag type '{TextStyle.SeparateVal(SaveType)}'.");
                 PreAdaptSaveMode(values, entry, true, saveTagType, SaveMode != CommandSaveMode.WHEN_NAME_SPECIFIED, DefaultSaveName);
             }
         }
@@ -218,10 +214,7 @@ namespace FreneticScript.CommandSystem
         /// <param name="cmd">The command to show help for - if unspecified, will get from the entry.</param>
         public static void ShowUsage(CommandQueue queue, CommandEntry entry, bool doError = true, AbstractCommand cmd = null)
         {
-            if (cmd == null)
-            {
-                cmd = entry.Command;
-            }
+            cmd ??= entry.Command;
             if (entry.ShouldShowGood(queue))
             {
                 entry.InfoOutput(queue, TextStyle.Separate + cmd.Meta.Name + TextStyle.Base + ": " + cmd.Meta.Description);
