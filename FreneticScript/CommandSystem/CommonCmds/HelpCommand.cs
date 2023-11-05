@@ -11,39 +11,38 @@ using System.Text;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds;
+
+/// <summary>The Help command: shows help information on commands.</summary>
+public class HelpCommand : AbstractCommand
 {
-    /// <summary>The Help command: shows help information on commands.</summary>
-    public class HelpCommand : AbstractCommand
+    // TODO: Meta!
+
+    /// <summary>Constructs the help command.</summary>
+    public HelpCommand()
     {
-        // TODO: Meta!
-
-        /// <summary>Constructs the help command.</summary>
-        public HelpCommand()
+        Name = "help";
+        Description = "Shows help information on any command.";
+        Arguments = "<command name>";
+        MinimumArguments = 1;
+        MaximumArguments = 1;
+        ObjectTypes = new Action<ArgumentValidation>[]
         {
-            Name = "help";
-            Description = "Shows help information on any command.";
-            Arguments = "<command name>";
-            MinimumArguments = 1;
-            MaximumArguments = 1;
-            ObjectTypes = new Action<ArgumentValidation>[]
-            {
-                TextTag.Validator
-            };
-        }
+            TextTag.Validator
+        };
+    }
 
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
+        string cmd = entry.GetArgument(queue, 0);
+        if (!entry.Command.Engine.RegisteredCommands.TryGetValue(cmd, out AbstractCommand acmd))
         {
-            string cmd = entry.GetArgument(queue, 0);
-            if (!entry.Command.Engine.RegisteredCommands.TryGetValue(cmd, out AbstractCommand acmd))
-            {
-                queue.HandleError(entry, "Unrecognized command name!");
-                return;
-            }
-            ShowUsage(queue, entry, false, acmd);
+            queue.HandleError(entry, "Unrecognized command name!");
+            return;
         }
+        ShowUsage(queue, entry, false, acmd);
     }
 }

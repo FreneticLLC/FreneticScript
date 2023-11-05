@@ -14,170 +14,169 @@ using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 
-namespace FreneticScript.ScriptSystems
+namespace FreneticScript.ScriptSystems;
+
+/// <summary>Helper class for parsing arguments.</summary>
+public static class ArgumentParser
 {
-    /// <summary>Helper class for parsing arguments.</summary>
-    public static class ArgumentParser
+    /// <summary>Splits text into an Argument, for preparsing.</summary>
+    /// <param name="system">The relevant command system.</param>
+    /// <param name="input">The original text.</param>
+    /// <param name="wasquoted">Whether the argument was input with "quotes".</param>
+    /// <returns>The parsed Argument.</returns>
+    public static Argument SplitToArgument(ScriptEngine system, string input, bool wasquoted)
     {
-        /// <summary>Splits text into an Argument, for preparsing.</summary>
-        /// <param name="system">The relevant command system.</param>
-        /// <param name="input">The original text.</param>
-        /// <param name="wasquoted">Whether the argument was input with "quotes".</param>
-        /// <returns>The parsed Argument.</returns>
-        public static Argument SplitToArgument(ScriptEngine system, string input, bool wasquoted)
+        if (input.Length == 0)
         {
-            if (input.Length == 0)
+            return new Argument() { Bits = Array.Empty<ArgumentBit>() };
+        }
+        int firstOpen = input.IndexOf('<');
+        if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
+        {
+            Argument a = new() { WasQuoted = wasquoted };
+            a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted, system) };
+            return a;
+        }
+        Argument arg = new() { WasQuoted = wasquoted };
+        int len = input.Length;
+        int blocks = 0;
+        int brackets = 0;
+        StringBuilder blockbuilder = new();
+        StringBuilder tbuilder = new();
+        List<ArgumentBit> bitos = new();
+        for (int i = 0; i < len; i++)
+        {
+            if (input[i] == '<')
             {
-                return new Argument() { Bits = Array.Empty<ArgumentBit>() };
-            }
-            int firstOpen = input.IndexOf('<');
-            if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
-            {
-                Argument a = new() { WasQuoted = wasquoted };
-                a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted, system) };
-                return a;
-            }
-            Argument arg = new() { WasQuoted = wasquoted };
-            int len = input.Length;
-            int blocks = 0;
-            int brackets = 0;
-            StringBuilder blockbuilder = new();
-            StringBuilder tbuilder = new();
-            List<ArgumentBit> bitos = new();
-            for (int i = 0; i < len; i++)
-            {
-                if (input[i] == '<')
+                blocks++;
+                if (blocks == 1)
                 {
-                    blocks++;
-                    if (blocks == 1)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
-                else if (input[i] == '>')
+            }
+            else if (input[i] == '>')
+            {
+                blocks--;
+                if (blocks == 0)
                 {
-                    blocks--;
-                    if (blocks == 0)
+                    if (tbuilder.Length > 0)
                     {
-                        if (tbuilder.Length > 0)
+                        bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
+                        tbuilder = new StringBuilder();
+                    }
+                    string value = blockbuilder.ToString();
+                    string fallback = null;
+                    int brack = 0;
+                    for (int fb = 0; fb < value.Length; fb++)
+                    {
+                        if (value[fb] == '[')
                         {
-                            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
-                            tbuilder = new StringBuilder();
+                            brack++;
                         }
-                        string value = blockbuilder.ToString();
-                        string fallback = null;
-                        int brack = 0;
-                        for (int fb = 0; fb < value.Length; fb++)
+                        if (value[fb] == ']')
                         {
-                            if (value[fb] == '[')
-                            {
-                                brack++;
-                            }
-                            if (value[fb] == ']')
-                            {
-                                brack--;
-                            }
-                            // TODO: Scrap old fallback engine, in favor of null tricks.
-                            if (brack == 0 && value[fb] == '|' && fb > 0 && value[fb - 1] == '|')
-                            {
-                                fallback = value[(fb + 1)..];
-                                value = value[..(fb - 1)];
-                                break;
-                            }
+                            brack--;
                         }
-                        string[] split = value.SplitFast('.');
-                        for (int s = 0; s < split.Length; s++)
+                        // TODO: Scrap old fallback engine, in favor of null tricks.
+                        if (brack == 0 && value[fb] == '|' && fb > 0 && value[fb - 1] == '|')
                         {
-                            split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
+                            fallback = value[(fb + 1)..];
+                            value = value[..(fb - 1)];
+                            break;
                         }
-                        List<TagBit> bits = new();
-                        for (int x = 0; x < split.Length; x++)
+                    }
+                    string[] split = value.SplitFast('.');
+                    for (int s = 0; s < split.Length; s++)
+                    {
+                        split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
+                    }
+                    List<TagBit> bits = new();
+                    for (int x = 0; x < split.Length; x++)
+                    {
+                        TagBit bit = new();
+                        if (split[x].Length > 1 && split[x].Contains('[') && split[x][^1] == ']')
                         {
-                            TagBit bit = new();
-                            if (split[x].Length > 1 && split[x].Contains('[') && split[x][^1] == ']')
+                            int index = split[x].IndexOf('[');
+                            bit.Variable = SplitToArgument(system, split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
+                            split[x] = split[x][..index].ToLowerFast();
+                            if (split[x].Length == 0)
                             {
-                                int index = split[x].IndexOf('[');
-                                bit.Variable = SplitToArgument(system, split[x].Substring(index + 1, split[x].Length - (index + 2)), wasquoted);
-                                split[x] = split[x][..index].ToLowerFast();
-                                if (split[x].Length == 0)
+                                if (x == 0)
                                 {
-                                    if (x == 0)
-                                    {
-                                        split[x] = "var";
-                                    }
-                                    else
-                                    {
-                                        split[x] = "get";
-                                    }
+                                    split[x] = "var";
+                                }
+                                else
+                                {
+                                    split[x] = "get";
                                 }
                             }
-                            else
-                            {
-                                split[x] = split[x].ToLowerFast();
-                                bit.Variable = new Argument();
-                            }
-                            bit.Key = split[x];
-                            bits.Add(bit);
                         }
-                        TagArgumentBit tab = new(system, bits.ToArray());
-                        if (tab.Bits.Length > 0)
+                        else
                         {
-                            if (system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
-                            {
-                                tab.Start = start;
-                            }
-                            else
-                            {
-                                tab.Start = null;
-                            }
+                            split[x] = split[x].ToLowerFast();
+                            bit.Variable = new Argument();
                         }
-                        tab.Fallback = fallback == null ? null : SplitToArgument(system, fallback, false);
-                        bitos.Add(tab);
-                        blockbuilder = new StringBuilder();
-                        continue;
+                        bit.Key = split[x];
+                        bits.Add(bit);
                     }
-                }
-                else if (blocks == 1 && input[i] == '[')
-                {
-                    brackets++;
-                }
-                else if (blocks == 1 && input[i] == ']')
-                {
-                    brackets--;
-                }
-                if (blocks > 0)
-                {
-                    switch (input[i])
+                    TagArgumentBit tab = new(system, bits.ToArray());
+                    if (tab.Bits.Length > 0)
                     {
-                        case '.':
-                            if (blocks > 1 || brackets > 0)
-                            {
-                                blockbuilder.Append("&dot");
-                            }
-                            else
-                            {
-                                blockbuilder.Append('.');
-                            }
-                            break;
-                        case '&':
-                            blockbuilder.Append("&amp");
-                            break;
-                        default:
-                            blockbuilder.Append(input[i]);
-                            break;
+                        if (system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
+                        {
+                            tab.Start = start;
+                        }
+                        else
+                        {
+                            tab.Start = null;
+                        }
                     }
-                }
-                else
-                {
-                    tbuilder.Append(input[i]);
+                    tab.Fallback = fallback == null ? null : SplitToArgument(system, fallback, false);
+                    bitos.Add(tab);
+                    blockbuilder = new StringBuilder();
+                    continue;
                 }
             }
-            if (tbuilder.Length > 0)
+            else if (blocks == 1 && input[i] == '[')
             {
-                bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
+                brackets++;
             }
-            arg.Bits = bitos.ToArray();
-            return arg;
+            else if (blocks == 1 && input[i] == ']')
+            {
+                brackets--;
+            }
+            if (blocks > 0)
+            {
+                switch (input[i])
+                {
+                    case '.':
+                        if (blocks > 1 || brackets > 0)
+                        {
+                            blockbuilder.Append("&dot");
+                        }
+                        else
+                        {
+                            blockbuilder.Append('.');
+                        }
+                        break;
+                    case '&':
+                        blockbuilder.Append("&amp");
+                        break;
+                    default:
+                        blockbuilder.Append(input[i]);
+                        break;
+                }
+            }
+            else
+            {
+                tbuilder.Append(input[i]);
+            }
         }
+        if (tbuilder.Length > 0)
+        {
+            bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
+        }
+        arg.Bits = bitos.ToArray();
+        return arg;
     }
 }

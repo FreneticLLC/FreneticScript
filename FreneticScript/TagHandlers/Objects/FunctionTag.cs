@@ -15,158 +15,145 @@ using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers.CommonBases;
 using FreneticScript.TagHandlers.HelperBases;
 
-namespace FreneticScript.TagHandlers.Objects
+namespace FreneticScript.TagHandlers.Objects;
+
+/// <summary>Represents a Function as a tag.</summary>
+[ObjectMeta(Name = FunctionTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Command System", Description = "Represents a function.")]
+public class FunctionTag : TemplateObject
 {
-    /// <summary>Represents a Function as a tag.</summary>
-    [ObjectMeta(Name = FunctionTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Command System", Description = "Represents a function.")]
-    public class FunctionTag : TemplateObject
+
+    /// <summary>Return the type name of this tag.</summary>
+    /// <returns>The tag type name.</returns>
+    public override string GetTagTypeName()
     {
+        return TYPE;
+    }
 
-        /// <summary>Return the type name of this tag.</summary>
-        /// <returns>The tag type name.</returns>
-        public override string GetTagTypeName()
+    /// <summary>Return the type of this tag.</summary>
+    /// <returns>The tag type.</returns>
+    public override TagType GetTagType(TagTypes tagTypeSet)
+    {
+        return tagTypeSet.Type_Function;
+    }
+
+    /// <summary>The represented function.</summary>
+    public CommandScript Internal;
+
+    /// <summary>Constructs a new FunctionTag.</summary>
+    /// <param name="script">The CommandScript to base this FunctionTag off of.</param>
+    public FunctionTag(CommandScript script)
+    {
+        Internal = script;
+    }
+
+    /// <summary>Returns a FunctionTag for the given text.</summary>
+    /// <param name="data">The data.</param>
+    /// <param name="input">The input text.</param>
+    /// <returns>A TagTypeTag.</returns>
+    public static FunctionTag For(TagData data, string input)
+    {
+        if (!input.Contains('|'))
         {
-            return TYPE;
+            CommandScript script = data.Engine.GetFunction(input) ?? throw data.Error($"Unknown script name '{TextStyle.Separate}{input}{TextStyle.Base}'.");
+            return new FunctionTag(script);
         }
-
-        /// <summary>Return the type of this tag.</summary>
-        /// <returns>The tag type.</returns>
-        public override TagType GetTagType(TagTypes tagTypeSet)
+        ListTag list = ListTag.For(input);
+        if (list.Internal.Count < 2)
         {
-            return tagTypeSet.Type_Function;
+            throw data.Error("Cannot construct FunctionTag with empty input.");
         }
-
-        /// <summary>The represented function.</summary>
-        public CommandScript Internal;
-
-        /// <summary>Constructs a new FunctionTag.</summary>
-        /// <param name="script">The CommandScript to base this FunctionTag off of.</param>
-        public FunctionTag(CommandScript script)
+        string type = list.Internal[0].ToString();
+        if (type == "anon")
         {
-            Internal = script;
-        }
-
-        /// <summary>Returns a FunctionTag for the given text.</summary>
-        /// <param name="data">The data.</param>
-        /// <param name="input">The input text.</param>
-        /// <returns>A TagTypeTag.</returns>
-        public static FunctionTag For(TagData data, string input)
-        {
-            if (!input.Contains('|'))
+            if (list.Internal.Count < 4)
             {
-                CommandScript script = data.Engine.GetFunction(input);
-                if (script == null)
-                {
-                    throw data.Error($"Unknown script name '{TextStyle.Separate}{input}{TextStyle.Base}'.");
-                }
-                return new FunctionTag(script);
+                throw data.Error("Cannot construct FunctionTag without start line, name, and commandlist input.");
             }
-            ListTag list = ListTag.For(input);
-            if (list.Internal.Count < 2)
-            {
-                throw data.Error("Cannot construct FunctionTag with empty input.");
-            }
-            string type = list.Internal[0].ToString();
-            if (type == "anon")
-            {
-                if (list.Internal.Count < 4)
-                {
-                    throw data.Error("Cannot construct FunctionTag without start line, name, and commandlist input.");
-                }
-                string name = list.Internal[1].ToString();
-                int startLine = (int)IntegerTag.For(list.Internal[2], data).Internal;
-                string commands = list.Internal[3].ToString();
-                CommandScript script = ScriptParser.SeparateCommands(name, commands, data.Engine, startLine, data.DBMode);
-                if (script == null)
-                {
-                    throw data.Error("Anonymous function failed to generate.");
-                }
-                script.TypeName = CommandScript.TYPE_NAME_ANONYMOUS;
-                script.IsAnonymous = true;
-                script.AnonymousString = input["anon|".Length..];
-                return new FunctionTag(script);
-            }
-            else if (type == "named")
-            {
-                string scriptName = list.Internal[1].ToString();
-                CommandScript script = data.Engine.GetFunction(scriptName);
-                if (script == null)
-                {
-                    throw data.Error($"Unknown script name '{TextStyle.Separate}{scriptName}{TextStyle.Base}'.");
-                }
-                return new FunctionTag(script);
-            }
-            throw data.Error($"Unknown Function type '{TextStyle.Separate}{type}{TextStyle.Base}'.");
+            string name = list.Internal[1].ToString();
+            int startLine = (int)IntegerTag.For(list.Internal[2], data).Internal;
+            string commands = list.Internal[3].ToString();
+            CommandScript script = ScriptParser.SeparateCommands(name, commands, data.Engine, startLine, data.DBMode) ?? throw data.Error("Anonymous function failed to generate.");
+            script.TypeName = CommandScript.TYPE_NAME_ANONYMOUS;
+            script.IsAnonymous = true;
+            script.AnonymousString = input["anon|".Length..];
+            return new FunctionTag(script);
         }
-
-        /// <summary>Creates a FunctionTag for the given input data.</summary>
-        /// <param name="dat">The tag data.</param>
-        /// <param name="input">The input object.</param>
-        /// <returns>A valid FunctionTag.</returns>
-        public static FunctionTag CreateFor(TemplateObject input, TagData dat)
+        else if (type == "named")
         {
-            return input switch
-            {
-                FunctionTag ftag => ftag,
-                DynamicTag dtag => CreateFor(dtag.Internal, dat),
-                _ => For(dat, input.ToString()),
-            };
+            string scriptName = list.Internal[1].ToString();
+            CommandScript script = data.Engine.GetFunction(scriptName) ?? throw data.Error($"Unknown script name '{TextStyle.Separate}{scriptName}{TextStyle.Base}'.");
+            return new FunctionTag(script);
         }
+        throw data.Error($"Unknown Function type '{TextStyle.Separate}{type}{TextStyle.Base}'.");
+    }
 
-        /// <summary>The FunctionTag type.</summary>
-        public const string TYPE = "function";
-
-        #pragma warning disable 1591
-
-        [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FunctionTag Tag_Duplicate(FunctionTag obj, TagData data)
+    /// <summary>Creates a FunctionTag for the given input data.</summary>
+    /// <param name="dat">The tag data.</param>
+    /// <param name="input">The input object.</param>
+    /// <returns>A valid FunctionTag.</returns>
+    public static FunctionTag CreateFor(TemplateObject input, TagData dat)
+    {
+        return input switch
         {
-            return new FunctionTag(obj.Internal);
-        }
+            FunctionTag ftag => ftag,
+            DynamicTag dtag => CreateFor(dtag.Internal, dat),
+            _ => For(dat, input.ToString()),
+        };
+    }
 
-        [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (FunctionTag).")]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TagTypeTag Tag_Type(FunctionTag obj, TagData data)
-        {
-            return new TagTypeTag(data.TagSystem.Types.Type_Function);
-        }
+    /// <summary>The FunctionTag type.</summary>
+    public const string TYPE = "function";
+
+    #pragma warning disable 1591
+
+    [TagMeta(TagType = TYPE, Name = "duplicate", Group = "Tag System", ReturnType = TYPE, Returns = "A perfect duplicate of this object.")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static FunctionTag Tag_Duplicate(FunctionTag obj, TagData data)
+    {
+        return new FunctionTag(obj.Internal);
+    }
+
+    [TagMeta(TagType = TYPE, Name = "type", Group = "Tag System", ReturnType = TagTypeTag.TYPE, Returns = "The type of this object (FunctionTag).")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TagTypeTag Tag_Type(FunctionTag obj, TagData data)
+    {
+        return new TagTypeTag(data.TagSystem.Types.Type_Function);
+    }
 
 #pragma warning restore 1591
 
-        /// <summary>Gets a simple name for this function.</summary>
-        /// <returns>The name.</returns>
-        public string Name()
+    /// <summary>Gets a simple name for this function.</summary>
+    /// <returns>The name.</returns>
+    public string Name()
+    {
+        if (Internal.IsAnonymous)
         {
-            if (Internal.IsAnonymous)
-            {
-                return "anonymous:" + Internal.Name;
-            }
-            else
-            {
-                return Internal.Name;
-            }
+            return "anonymous:" + Internal.Name;
         }
+        else
+        {
+            return Internal.Name;
+        }
+    }
 
-        /// <summary>Returns the function data.</summary>
-        /// <returns>The function.</returns>
-        public override string ToString()
+    /// <summary>Returns the function data.</summary>
+    /// <returns>The function.</returns>
+    public override string ToString()
+    {
+        if (Internal.IsAnonymous)
         {
-            if (Internal.IsAnonymous)
-            {
-                return "anon|" + Internal.AnonymousString;
-            }
-            else
-            {
-                return "named|" + EscapeTagBase.Escape(Internal.Name);
-            }
+            return "anon|" + Internal.AnonymousString;
         }
+        else
+        {
+            return "named|" + EscapeTagBase.Escape(Internal.Name);
+        }
+    }
 
-        /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
-        /// <returns>The debug-friendly string.</returns>
-        public override string GetDebugString()
-        {
-            return TextStyle.Minor + Internal.TypeName + "|" + TextStyle.Separate + Internal.Name;
-        }
+    /// <summary>Gets a "clean" text form of an object for simpler output to debug logs, may have added colors or other details.</summary>
+    /// <returns>The debug-friendly string.</returns>
+    public override string GetDebugString()
+    {
+        return TextStyle.Minor + Internal.TypeName + "|" + TextStyle.Separate + Internal.Name;
     }
 }

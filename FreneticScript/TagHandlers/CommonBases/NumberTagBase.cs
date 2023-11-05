@@ -10,31 +10,30 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+/// <summary>Handles the 'number' tag base.</summary>
+public class NumberTagBase : TemplateTagBase
 {
-    /// <summary>Handles the 'number' tag base.</summary>
-    public class NumberTagBase : TemplateTagBase
+    // <--[tagbase]
+    // @Base number[<NumberTag>]
+    // @Group Common Base Types
+    // @ReturnType NumberTag
+    // @Returns the input number as a NumberTag.
+    // -->
+
+    /// <summary>Constructs the tag base.</summary>
+    public NumberTagBase()
     {
-        // <--[tagbase]
-        // @Base number[<NumberTag>]
-        // @Group Common Base Types
-        // @ReturnType NumberTag
-        // @Returns the input number as a NumberTag.
-        // -->
+        Name = "number";
+        ResultTypeString = NumberTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base.</summary>
-        public NumberTagBase()
-        {
-            Name = "number";
-            ResultTypeString = NumberTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static NumberTag HandleOne(TagData data)
-        {
-            return NumberTag.For(data.GetModifierObjectCurrent(), data);
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static NumberTag HandleOne(TagData data)
+    {
+        return NumberTag.For(data.GetModifierObjectCurrent(), data);
     }
 }

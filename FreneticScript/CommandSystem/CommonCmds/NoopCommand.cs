@@ -11,30 +11,29 @@ using System.Text;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 
-namespace FreneticScript.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds;
+
+/// <summary>The NoOp command: does nothing!</summary>
+public class NoopCommand : AbstractCommand
 {
-    /// <summary>The NoOp command: does nothing!</summary>
-    public class NoopCommand : AbstractCommand
+    // TODO: Meta!
+
+    /// <summary>Construct the noop command.</summary>
+    public NoopCommand()
     {
-        // TODO: Meta!
+        Name = "noop";
+        Arguments = "";
+        Description = "Does nothing.";
+        Meta.IsDebug = true;
+        Meta.Asyncable = true;
+        MinimumArguments = 0;
+        MaximumArguments = -1;
+    }
 
-        /// <summary>Construct the noop command.</summary>
-        public NoopCommand()
-        {
-            Name = "noop";
-            Arguments = "";
-            Description = "Does nothing.";
-            Meta.IsDebug = true;
-            Meta.Asyncable = true;
-            MinimumArguments = 0;
-            MaximumArguments = -1;
-        }
-
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
-        {
-        }
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
     }
 }

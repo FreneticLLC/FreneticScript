@@ -13,58 +13,57 @@ using System.Text;
 using System.Threading.Tasks;
 using FreneticScript.CommandSystem;
 
-namespace FreneticScript.ScriptSystems
+namespace FreneticScript.ScriptSystems;
+
+/// <summary>Abstract class for compiled runnables.</summary>
+public abstract class CompiledCommandRunnable
 {
-    /// <summary>Abstract class for compiled runnables.</summary>
-    public abstract class CompiledCommandRunnable
+    /// <summary>This class's <see cref="Run(CommandQueue)"/> method.</summary>
+    public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue) });
+
+    /// <summary>This class's <see cref="Entry"/> field.</summary>
+    public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(Entry));
+
+    /// <summary>Represents the <see cref="Index"/> field.</summary>
+    public static readonly FieldInfo IndexField = typeof(CompiledCommandRunnable).GetField(nameof(Index));
+
+    /// <summary>Runs the runnable.</summary>
+    /// <param name="queue">The queue to run on.</param>
+    public abstract void Run(CommandQueue queue);
+
+    /// <summary>How much debug information this portion of the stack should show.</summary>
+    public DebugMode Debug;
+
+    /// <summary>Run this when the runnable STOPs.</summary>
+    public Action Callback;
+
+    /// <summary>The index of the currently running command.</summary>
+    public int Index;
+
+    /// <summary>Gets the current command entry, or null.</summary>
+    public CommandEntry CurrentCommandEntry
     {
-        /// <summary>This class's <see cref="Run(CommandQueue)"/> method.</summary>
-        public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue) });
-
-        /// <summary>This class's <see cref="Entry"/> field.</summary>
-        public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(Entry));
-
-        /// <summary>Represents the <see cref="Index"/> field.</summary>
-        public static readonly FieldInfo IndexField = typeof(CompiledCommandRunnable).GetField(nameof(Index));
-
-        /// <summary>Runs the runnable.</summary>
-        /// <param name="queue">The queue to run on.</param>
-        public abstract void Run(CommandQueue queue);
-
-        /// <summary>How much debug information this portion of the stack should show.</summary>
-        public DebugMode Debug;
-
-        /// <summary>Run this when the runnable STOPs.</summary>
-        public Action Callback;
-
-        /// <summary>The index of the currently running command.</summary>
-        public int Index;
-
-        /// <summary>Gets the current command entry, or null.</summary>
-        public CommandEntry CurrentCommandEntry
+        get
         {
-            get
-            {
-                return Entry.At(Index);
-            }
+            return Entry.At(Index);
         }
+    }
 
-        /// <summary>All entry data available in this currently running section.</summary>
-        public AbstractCommandEntryData[] EntryData;
+    /// <summary>All entry data available in this currently running section.</summary>
+    public AbstractCommandEntryData[] EntryData;
 
-        /// <summary>The base stack entry.</summary>
-        public readonly CompiledCommandStackEntry Entry;
+    /// <summary>The base stack entry.</summary>
+    public readonly CompiledCommandStackEntry Entry;
 
-        /// <summary>The current queue, or null.</summary>
-        public CommandQueue CurrentQueue = null;
+    /// <summary>The current queue, or null.</summary>
+    public CommandQueue CurrentQueue = null;
 
-        /// <summary>Duplicates the runnable object.</summary>
-        /// <returns>The duplicate.</returns>
-        public CompiledCommandRunnable Duplicate()
-        {
-            CompiledCommandRunnable newCopy = MemberwiseClone() as CompiledCommandRunnable;
-            newCopy.EntryData = new AbstractCommandEntryData[EntryData.Length];
-            return newCopy;
-        }
+    /// <summary>Duplicates the runnable object.</summary>
+    /// <returns>The duplicate.</returns>
+    public CompiledCommandRunnable Duplicate()
+    {
+        CompiledCommandRunnable newCopy = MemberwiseClone() as CompiledCommandRunnable;
+        newCopy.EntryData = new AbstractCommandEntryData[EntryData.Length];
+        return newCopy;
     }
 }

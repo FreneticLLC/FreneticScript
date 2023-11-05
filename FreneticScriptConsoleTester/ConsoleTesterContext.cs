@@ -16,119 +16,118 @@ using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticUtilities.FreneticDataSyntax;
 
-namespace FreneticScriptConsoleTester
+namespace FreneticScriptConsoleTester;
+
+public class ConsoleTesterContext : ScriptEngineContext
 {
-    public class ConsoleTesterContext : ScriptEngineContext
+    public class ConsoleTesterEventHelper : FreneticEventHelper
     {
-        public class ConsoleTesterEventHelper : FreneticEventHelper
+        public override void ScheduleSync(Action act)
         {
-            public override void ScheduleSync(Action act)
+            Program.SyncTasks.Enqueue(act);
+        }
+
+        public override void ScheduleSync(Action act, double delay)
+        {
+            if (delay <= 0)
             {
-                Program.SyncTasks.Enqueue(act);
+                ScheduleSync(act);
+                return;
             }
-
-            public override void ScheduleSync(Action act, double delay)
+            Task.Factory.StartNew(() =>
             {
-                if (delay <= 0)
-                {
-                    ScheduleSync(act);
-                    return;
-                }
-                Task.Factory.StartNew(() =>
-                {
-                    Task.Delay((int)(delay * 1000)).Wait();
-                    ScheduleSync(act);
-                });
-            }
-
-            public override void StartAsync(Action act)
-            {
-                Task.Factory.StartNew(act);
-            }
+                Task.Delay((int)(delay * 1000)).Wait();
+                ScheduleSync(act);
+            });
         }
 
-        public ConsoleTesterEventHelper Helper = new();
-
-        public override FreneticEventHelper GetEventHelper()
+        public override void StartAsync(Action act)
         {
-            return Helper;
+            Task.Factory.StartNew(act);
         }
+    }
 
-        public override void BadOutput(string text)
+    public ConsoleTesterEventHelper Helper = new();
+
+    public override FreneticEventHelper GetEventHelper()
+    {
+        return Helper;
+    }
+
+    public override void BadOutput(string text)
+    {
+        SysConsole.Output(OutputType.WARNING, TagHandler.Unescape(text));
+    }
+
+    public override void GoodOutput(string text)
+    {
+        SysConsole.Output(OutputType.GOOD, TagHandler.Unescape(text));
+    }
+
+    public override byte[] ReadDataFile(string name)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static string Clean(string inp)
+    {
+        return inp.Replace("..", "/").Replace('\\', '/');
+    }
+
+    public override string ReadTextFile(string name)
+    {
+        return File.ReadAllText(Clean(name));
+    }
+
+    public override void Reload()
+    {
+    }
+
+    public override void WriteDataFile(string name, byte[] data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void WriteLine(string text)
+    {
+        SysConsole.Output(OutputType.INFO, TagHandler.Unescape(text));
+    }
+
+    public override string[] ListFiles(string path, string extension, bool deep)
+    {
+        path = Clean(path);
+        if (!Directory.Exists(path))
         {
-            SysConsole.Output(OutputType.WARNING, TagHandler.Unescape(text));
+            return Array.Empty<string>();
         }
-
-        public override void GoodOutput(string text)
+        string[] results = Directory.GetFiles(path, extension == null ? "*.*" : "*." + extension , deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+        for (int i = 0; i < results.Length; i++)
         {
-            SysConsole.Output(OutputType.GOOD, TagHandler.Unescape(text));
+            results[i] = results[i].Replace('\\', '/').Replace(Environment.CurrentDirectory.Replace('\\', '/'), "");
         }
+        return results;
+    }
 
-        public override byte[] ReadDataFile(string name)
+    public class TestConfig : AutoConfiguration
+    {
+        [ConfigComment("Test comment")]
+        public string TestString = "Hello world";
+
+        public double TestNumber = 42.42;
+
+        public long TestInteger = 42;
+
+        public bool TestBool = false;
+    }
+
+    public TestConfig TestConfigInstance = new();
+
+    public override AutoConfiguration GetConfig(string name)
+    {
+        return name switch
         {
-            throw new NotImplementedException();
-        }
-
-        public static string Clean(string inp)
-        {
-            return inp.Replace("..", "/").Replace('\\', '/');
-        }
-
-        public override string ReadTextFile(string name)
-        {
-            return File.ReadAllText(Clean(name));
-        }
-
-        public override void Reload()
-        {
-        }
-
-        public override void WriteDataFile(string name, byte[] data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void WriteLine(string text)
-        {
-            SysConsole.Output(OutputType.INFO, TagHandler.Unescape(text));
-        }
-
-        public override string[] ListFiles(string path, string extension, bool deep)
-        {
-            path = Clean(path);
-            if (!Directory.Exists(path))
-            {
-                return Array.Empty<string>();
-            }
-            string[] results = Directory.GetFiles(path, extension == null ? "*.*" : "*." + extension , deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-            for (int i = 0; i < results.Length; i++)
-            {
-                results[i] = results[i].Replace('\\', '/').Replace(Environment.CurrentDirectory.Replace('\\', '/'), "");
-            }
-            return results;
-        }
-
-        public class TestConfig : AutoConfiguration
-        {
-            [ConfigComment("Test comment")]
-            public string TestString = "Hello world";
-
-            public double TestNumber = 42.42;
-
-            public long TestInteger = 42;
-
-            public bool TestBool = false;
-        }
-
-        public TestConfig TestConfigInstance = new();
-
-        public override AutoConfiguration GetConfig(string name)
-        {
-            return name switch
-            {
-                "test" => TestConfigInstance,
-                _ => null
-            };
-        }
+            "test" => TestConfigInstance,
+            _ => null
+        };
     }
 }

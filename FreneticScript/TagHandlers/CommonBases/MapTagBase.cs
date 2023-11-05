@@ -10,39 +10,38 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+// <--[explanation]
+// @Name Maps
+// @Description
+// A map is a relationship between textual names and object values.
+// TODO: Explain better!
+// -->
+
+/// <summary>Handles the 'map' tag base.</summary>
+public class MapTagBase : TemplateTagBase
 {
-    // <--[explanation]
-    // @Name Maps
-    // @Description
-    // A map is a relationship between textual names and object values.
-    // TODO: Explain better!
+    // <--[tagbase]
+    // @Base map[<MapTag>]
+    // @Group Mathematics
+    // @ReturnType MapTag
+    // @Returns the specified input as a map.
+    // <@link explanation maps>What are maps?<@/link>
     // -->
 
-    /// <summary>Handles the 'map' tag base.</summary>
-    public class MapTagBase : TemplateTagBase
+    /// <summary>Constructs the tag base data.</summary>
+    public MapTagBase()
     {
-        // <--[tagbase]
-        // @Base map[<MapTag>]
-        // @Group Mathematics
-        // @ReturnType MapTag
-        // @Returns the specified input as a map.
-        // <@link explanation maps>What are maps?<@/link>
-        // -->
+        Name = "map";
+        ResultTypeString = MapTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base data.</summary>
-        public MapTagBase()
-        {
-            Name = "map";
-            ResultTypeString = MapTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static MapTag HandleOne(TagData data)
-        {
-            return MapTag.CreateFor(data.GetModifierObjectCurrent(), data);
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static MapTag HandleOne(TagData data)
+    {
+        return MapTag.CreateFor(data.GetModifierObjectCurrent(), data);
     }
 }

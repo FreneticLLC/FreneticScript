@@ -14,73 +14,72 @@ using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds;
+
+/// <summary>The Wait command.</summary>
+public class WaitCommand : AbstractCommand
 {
-    /// <summary>The Wait command.</summary>
-    public class WaitCommand : AbstractCommand
+    // TODO: Meta!
+
+    /// <summary>Constructs the wait command.</summary>
+    public WaitCommand()
     {
-        // TODO: Meta!
-
-        /// <summary>Constructs the wait command.</summary>
-        public WaitCommand()
+        Name = "wait";
+        Arguments = "<time to wait in seconds>";
+        Description = "Delays the current command queue a specified amount of time.";
+        IsFlow = true;
+        Asyncable = true;
+        MinimumArguments = 1;
+        MaximumArguments = 1;
+        ObjectTypes = new Action<ArgumentValidation>[]
         {
-            Name = "wait";
-            Arguments = "<time to wait in seconds>";
-            Description = "Delays the current command queue a specified amount of time.";
-            IsFlow = true;
-            Asyncable = true;
-            MinimumArguments = 1;
-            MaximumArguments = 1;
-            ObjectTypes = new Action<ArgumentValidation>[]
-            {
-                NumberTag.Validator
-            };
+            NumberTag.Validator
+        };
+    }
+
+    /// <summary>Adapts a command entry to CIL.</summary>
+    /// <param name="values">The adaptation-relevant values.</param>
+    /// <param name="entry">The present entry ID.</param>
+    public override void AdaptToCIL(CILAdaptationValues values, int entry)
+    {
+        base.AdaptToCIL(values, entry);
+        values.ILGen.Emit(OpCodes.Ret);
+    }
+
+    /// <summary>Converts a string to a float.</summary>
+    /// <param name="input">The input string.</param>
+    /// <returns>The float.</returns>
+    public static float StringToFloat(string input)
+    {
+        if (float.TryParse(input, out float output))
+        {
+            return output;
         }
+        return 0;
+    }
 
-        /// <summary>Adapts a command entry to CIL.</summary>
-        /// <param name="values">The adaptation-relevant values.</param>
-        /// <param name="entry">The present entry ID.</param>
-        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
+        NumberTag delay = NumberTag.TryFor(entry.GetArgumentObject(queue, 0));
+        if (delay is null)
         {
-            base.AdaptToCIL(values, entry);
-            values.ILGen.Emit(OpCodes.Ret);
+            queue.HandleError(entry, "Invalid delay value - not a number!");
+            return;
         }
-
-        /// <summary>Converts a string to a float.</summary>
-        /// <param name="input">The input string.</param>
-        /// <returns>The float.</returns>
-        public static float StringToFloat(string input)
+        if (queue.Delayable)
         {
-            if (float.TryParse(input, out float output))
+            if (entry.ShouldShowGood(queue))
             {
-                return output;
+                entry.GoodOutput(queue, "Delaying for " + TextStyle.Separate + delay.Internal + TextStyle.Base + " seconds.");
             }
-            return 0;
+            queue.Wait = delay.Internal;
         }
-
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
+        else
         {
-            NumberTag delay = NumberTag.TryFor(entry.GetArgumentObject(queue, 0));
-            if (delay is null)
-            {
-                queue.HandleError(entry, "Invalid delay value - not a number!");
-                return;
-            }
-            if (queue.Delayable)
-            {
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Delaying for " + TextStyle.Separate + delay.Internal + TextStyle.Base + " seconds.");
-                }
-                queue.Wait = delay.Internal;
-            }
-            else
-            {
-                queue.HandleError(entry, "Cannot delay, inside an instant queue!");
-            }
+            queue.HandleError(entry, "Cannot delay, inside an instant queue!");
         }
     }
 }

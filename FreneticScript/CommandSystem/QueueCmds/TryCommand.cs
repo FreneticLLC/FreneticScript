@@ -12,44 +12,43 @@ using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds;
+
+/// <summary>The Try command.</summary>
+public class TryCommand : AbstractCommand
 {
-    /// <summary>The Try command.</summary>
-    public class TryCommand : AbstractCommand
+    // TODO: Meta!
+    // @Block always
+
+    /// <summary>Constructs the try command.</summary>
+    public TryCommand()
     {
-        // TODO: Meta!
-        // @Block always
+        Name = "try";
+        Arguments = "";
+        Description = "Executes the following block of commands and exits forcefully if there is an error.";
+        IsFlow = true;
+        Asyncable = true;
+        MinimumArguments = 0;
+        MaximumArguments = 0;
+    }
 
-        /// <summary>Constructs the try command.</summary>
-        public TryCommand()
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
+        if (entry.IsCallback)
         {
-            Name = "try";
-            Arguments = "";
-            Description = "Executes the following block of commands and exits forcefully if there is an error.";
-            IsFlow = true;
-            Asyncable = true;
-            MinimumArguments = 0;
-            MaximumArguments = 0;
-        }
-
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
-        {
-            if (entry.IsCallback)
+            if (entry.ShouldShowGood(queue))
             {
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Block completed successfully!");
-                }
+                entry.GoodOutput(queue, "Block completed successfully!");
             }
-            else
+        }
+        else
+        {
+            if (entry.ShouldShowGood(queue))
             {
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Trying block...");
-                }
+                entry.GoodOutput(queue, "Trying block...");
             }
         }
     }

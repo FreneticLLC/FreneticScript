@@ -12,37 +12,36 @@ using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.CommandSystem.CommonCmds
+namespace FreneticScript.CommandSystem.CommonCmds;
+
+/// <summary>The Reload command: reloads the system.</summary>
+public class ReloadCommand : AbstractCommand
 {
-    /// <summary>The Reload command: reloads the system.</summary>
-    public class ReloadCommand : AbstractCommand
+    // TODO: Meta!
+
+    /// <summary>Constructs the reload command.</summary>
+    public ReloadCommand()
     {
-        // TODO: Meta!
+        Name = "reload";
+        Arguments = "";
+        Description = "Reloads the command engine.";
+        MinimumArguments = 0;
+        MaximumArguments = 0;
+    }
 
-        /// <summary>Constructs the reload command.</summary>
-        public ReloadCommand()
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
+        if (entry.ShouldShowGood(queue))
         {
-            Name = "reload";
-            Arguments = "";
-            Description = "Reloads the command engine.";
-            MinimumArguments = 0;
-            MaximumArguments = 0;
+            entry.GoodOutput(queue, "Reloading...");
         }
-
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
+        queue.Engine.Reload();
+        if (entry.ShouldShowGood(queue))
         {
-            if (entry.ShouldShowGood(queue))
-            {
-                entry.GoodOutput(queue, "Reloading...");
-            }
-            queue.Engine.Reload();
-            if (entry.ShouldShowGood(queue))
-            {
-                entry.GoodOutput(queue, "Reloaded!");
-            }
+            entry.GoodOutput(queue, "Reloaded!");
         }
     }
 }

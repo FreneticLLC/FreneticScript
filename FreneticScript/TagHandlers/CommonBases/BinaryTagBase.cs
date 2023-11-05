@@ -10,31 +10,30 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+/// <summary>Handles the 'binary' tag base.</summary>
+public class BinaryTagBase : TemplateTagBase
 {
-    /// <summary>Handles the 'binary' tag base.</summary>
-    public class BinaryTagBase : TemplateTagBase
+    // <--[tagbase]
+    // @Base binary[<BinaryTag>]
+    // @Group Common Base Types
+    // @ReturnType BinaryTag
+    // @Returns the input data as a BinaryTag.
+    // -->
+
+    /// <summary>Constructs the tag base data.</summary>
+    public BinaryTagBase()
     {
-        // <--[tagbase]
-        // @Base binary[<BinaryTag>]
-        // @Group Common Base Types
-        // @ReturnType BinaryTag
-        // @Returns the input data as a BinaryTag.
-        // -->
+        Name = "binary";
+        ResultTypeString = BinaryTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base data.</summary>
-        public BinaryTagBase()
-        {
-            Name = "binary";
-            ResultTypeString = BinaryTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static BinaryTag HandleOne(TagData data)
-        {
-            return BinaryTag.CreateFor(data.GetModifierObjectCurrent(), data);
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static BinaryTag HandleOne(TagData data)
+    {
+        return BinaryTag.CreateFor(data.GetModifierObjectCurrent(), data);
     }
 }

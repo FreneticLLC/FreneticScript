@@ -10,39 +10,38 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+// <--[explanation]
+// @Name Lists
+// @Description
+// A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
+// TODO: Explain better!
+// -->
+
+/// <summary>Handles the 'list' tag base.</summary>
+public class ListTagBase : TemplateTagBase
 {
-    // <--[explanation]
-    // @Name Lists
-    // @Description
-    // A list is a type of tag that contains multiple <@link explanation text tags>Text Tags<@/link>.
-    // TODO: Explain better!
+    // <--[tagbase]
+    // @Base list[<ListTag>]
+    // @Group Mathematics
+    // @ReturnType ListTag
+    // @Returns the specified input as a list.
+    // <@link explanation lists>What are lists?<@/link>
     // -->
 
-    /// <summary>Handles the 'list' tag base.</summary>
-    public class ListTagBase : TemplateTagBase
+    /// <summary>Constructs the tag base data.</summary>
+    public ListTagBase()
     {
-        // <--[tagbase]
-        // @Base list[<ListTag>]
-        // @Group Mathematics
-        // @ReturnType ListTag
-        // @Returns the specified input as a list.
-        // <@link explanation lists>What are lists?<@/link>
-        // -->
+        Name = "list";
+        ResultTypeString = ListTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base data.</summary>
-        public ListTagBase()
-        {
-            Name = "list";
-            ResultTypeString = ListTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static ListTag HandleOne(TagData data)
-        {
-            return ListTag.CreateFor(data.GetModifierObjectCurrent());
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static ListTag HandleOne(TagData data)
+    {
+        return ListTag.CreateFor(data.GetModifierObjectCurrent());
     }
 }

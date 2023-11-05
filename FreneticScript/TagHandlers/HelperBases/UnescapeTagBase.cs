@@ -11,64 +11,63 @@ using System.Text;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.HelperBases
+namespace FreneticScript.TagHandlers.HelperBases;
+
+/// <summary>Unescapes questionable text input.</summary>
+public class UnescapeTagBase : TemplateTagBase
 {
-    /// <summary>Unescapes questionable text input.</summary>
-    public class UnescapeTagBase : TemplateTagBase
+    // <--[tagbase]
+    // @Base unescape[<TextTag>]
+    // @Group Mathematics
+    // @ReturnType TextTag
+    // @Returns an unescaped textual copy of the input escaped text.
+    // -->
+
+    /// <summary>All standard unescape codes.</summary>
+    public static readonly Dictionary<string, char> Unescapes = EscapeTagBase.Escapes.SwapKeyValue();
+
+    /// <summary>Unescapes a string.</summary>
+    /// <param name="input">The escaped string.</param>
+    /// <returns>The unescaped string.</returns>
+    public static string Unescape(string input)
     {
-        // <--[tagbase]
-        // @Base unescape[<TextTag>]
-        // @Group Mathematics
-        // @ReturnType TextTag
-        // @Returns an unescaped textual copy of the input escaped text.
-        // -->
-
-        /// <summary>All standard unescape codes.</summary>
-        public static readonly Dictionary<string, char> Unescapes = EscapeTagBase.Escapes.SwapKeyValue();
-
-        /// <summary>Unescapes a string.</summary>
-        /// <param name="input">The escaped string.</param>
-        /// <returns>The unescaped string.</returns>
-        public static string Unescape(string input)
+        StringBuilder unescaped = new(input.Length);
+        for (int i = 0; i < input.Length; i++)
         {
-            StringBuilder unescaped = new(input.Length);
-            for (int i = 0; i < input.Length; i++)
+            if (input[i] == '&')
             {
-                if (input[i] == '&')
+                int x;
+                for (x = i; x < input.Length; x++)
                 {
-                    int x;
-                    for (x = i; x < input.Length; x++)
+                    if (input[x] == ',')
                     {
-                        if (input[x] == ',')
-                        {
-                            break;
-                        }
-                    }
-                    string key = input.Substring(i + 1, x - i - 1);
-                    if (Unescapes.TryGetValue(key, out char code))
-                    {
-                        unescaped.Append(code);
-                        i = x;
-                        continue;
+                        break;
                     }
                 }
-                unescaped.Append(input[i]);
+                string key = input.Substring(i + 1, x - i - 1);
+                if (Unescapes.TryGetValue(key, out char code))
+                {
+                    unescaped.Append(code);
+                    i = x;
+                    continue;
+                }
             }
-            return unescaped.ToString();
+            unescaped.Append(input[i]);
         }
+        return unescaped.ToString();
+    }
 
-        /// <summary>Construct the UnescapeTagBase - for internal use only.</summary>
-        public UnescapeTagBase()
-        {
-            Name = "unescape";
-            ResultTypeString = TextTag.TYPE;
-        }
+    /// <summary>Construct the UnescapeTagBase - for internal use only.</summary>
+    public UnescapeTagBase()
+    {
+        Name = "unescape";
+        ResultTypeString = TextTag.TYPE;
+    }
 
-        /// <summary>Handles the 'unescape' tag.</summary>
-        /// <param name="data">The data to be handled.</param>
-        public static TextTag HandleOne(TagData data)
-        {
-            return new TextTag(Unescape(data.GetModifierCurrent()));
-        }
+    /// <summary>Handles the 'unescape' tag.</summary>
+    /// <param name="data">The data to be handled.</param>
+    public static TextTag HandleOne(TagData data)
+    {
+        return new TextTag(Unescape(data.GetModifierCurrent()));
     }
 }

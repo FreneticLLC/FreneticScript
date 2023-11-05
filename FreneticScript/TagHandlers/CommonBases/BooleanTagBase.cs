@@ -10,30 +10,29 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+/// <summary>Gets a boolean tag.</summary>
+public class BooleanTagBase : TemplateTagBase
 {
-    /// <summary>Gets a boolean tag.</summary>
-    public class BooleanTagBase : TemplateTagBase
+    // <--[tagbase]
+    // @Base boolean[<BooleanTag>]
+    // @Group Common Base Types
+    // @ReturnType BooleanTag
+    // @Returns the input boolean as a BooleanTag.
+    // -->
+
+    /// <summary>Constructs the BooleanTagBase - for internal use only.</summary>
+    public BooleanTagBase()
     {
-        // <--[tagbase]
-        // @Base boolean[<BooleanTag>]
-        // @Group Common Base Types
-        // @ReturnType BooleanTag
-        // @Returns the input boolean as a BooleanTag.
-        // -->
+        Name = "boolean";
+        ResultTypeString = BooleanTag.TYPE;
+    }
 
-        /// <summary>Constructs the BooleanTagBase - for internal use only.</summary>
-        public BooleanTagBase()
-        {
-            Name = "boolean";
-            ResultTypeString = BooleanTag.TYPE;
-        }
-
-        /// <summary>Handles the 'boolean' tag.</summary>
-        /// <param name="data">The data to be handled.</param>
-        public static BooleanTag HandleOne(TagData data)
-        {
-            return BooleanTag.For(data.GetModifierObjectCurrent(), data);
-        }
+    /// <summary>Handles the 'boolean' tag.</summary>
+    /// <param name="data">The data to be handled.</param>
+    public static BooleanTag HandleOne(TagData data)
+    {
+        return BooleanTag.For(data.GetModifierObjectCurrent(), data);
     }
 }

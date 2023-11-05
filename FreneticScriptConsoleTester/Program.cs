@@ -15,50 +15,49 @@ using FreneticScript;
 using FreneticScript.CommandSystem;
 using FreneticUtilities.FreneticToolkit;
 
-namespace FreneticScriptConsoleTester
+namespace FreneticScriptConsoleTester;
+
+class Program
 {
-    class Program
+    public static ScriptEngine Engine;
+
+    public static LockObject Locker = new();
+
+    public static ConcurrentQueue<Action> SyncTasks = new();
+
+    static void Main(string[] args)
     {
-        public static ScriptEngine Engine;
-
-        public static LockObject Locker = new();
-
-        public static ConcurrentQueue<Action> SyncTasks = new();
-
-        static void Main(string[] args)
+        SysConsole.Init();
+        Engine = new ScriptEngine() { Context = new ConsoleTesterContext() };
+        Engine.Init();
+        // Register things here!
+        Engine.PostInit();
+        Task.Factory.StartNew(() =>
         {
-            SysConsole.Init();
-            Engine = new ScriptEngine() { Context = new ConsoleTesterContext() };
-            Engine.Init();
-            // Register things here!
-            Engine.PostInit();
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(50);
-                    lock (Locker)
-                    {
-                        Engine.Tick(0.05);
-                        while (SyncTasks.TryDequeue(out Action a))
-                        {
-                            a();
-                        }
-                    }
-                }
-            });
             while (true)
             {
-                string cmd = Console.ReadLine();
-                if (cmd == "quit")
-                {
-                    Environment.Exit(0);
-                    return;
-                }
+                Thread.Sleep(50);
                 lock (Locker)
                 {
-                    Engine.ExecuteCommands(cmd, null);
+                    Engine.Tick(0.05);
+                    while (SyncTasks.TryDequeue(out Action a))
+                    {
+                        a();
+                    }
                 }
+            }
+        });
+        while (true)
+        {
+            string cmd = Console.ReadLine();
+            if (cmd == "quit")
+            {
+                Environment.Exit(0);
+                return;
+            }
+            lock (Locker)
+            {
+                Engine.ExecuteCommands(cmd, null);
             }
         }
     }

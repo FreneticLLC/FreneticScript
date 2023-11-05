@@ -10,31 +10,30 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+/// <summary>Handles the 'function' tag base.</summary>
+public class FunctionTagBase : TemplateTagBase
 {
-    /// <summary>Handles the 'function' tag base.</summary>
-    public class FunctionTagBase : TemplateTagBase
+    // <--[tagbase]
+    // @Base function[<FunctionTag>]
+    // @Group Common Base Types
+    // @ReturnType FunctionTag
+    // @Returns the input object as a FunctionTag.
+    // -->
+
+    /// <summary>Constructs the tag base.</summary>
+    public FunctionTagBase()
     {
-        // <--[tagbase]
-        // @Base function[<FunctionTag>]
-        // @Group Common Base Types
-        // @ReturnType FunctionTag
-        // @Returns the input object as a FunctionTag.
-        // -->
+        Name = "function";
+        ResultTypeString = FunctionTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base.</summary>
-        public FunctionTagBase()
-        {
-            Name = "function";
-            ResultTypeString = FunctionTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static FunctionTag HandleOne(TagData data)
-        {
-            return FunctionTag.CreateFor(data.GetModifierObjectCurrent(), data);
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static FunctionTag HandleOne(TagData data)
+    {
+        return FunctionTag.CreateFor(data.GetModifierObjectCurrent(), data);
     }
 }

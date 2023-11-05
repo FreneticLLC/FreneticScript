@@ -12,111 +12,110 @@ using FreneticUtilities.FreneticExtensions;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds;
+
+/// <summary>The Once command.</summary>
+public class OnceCommand : AbstractCommand
 {
-    /// <summary>The Once command.</summary>
-    public class OnceCommand : AbstractCommand
+    // <--[command]
+    // @Name once
+    // @Arguments <identifer> ['error'/'warning'/'quiet']
+    // @Short Runs a block precisely once per reload.
+    // @Updated 2016/04/27
+    // @Authors mcmonkey
+    // @Group Queue
+    // @Block Always
+    // @Minimum 2
+    // @Maximum 2
+    // @Description
+    // Runs a block precisely once per reload.
+    // Optionally specify how to react when ran more than once: with an error, with a warning, or just quietly not running it again.
+    // Default reaction is error.
+    // TODO: Explain more!
+    // @Example
+    // // This example runs once.
+    // once MyScript
+    // {
+    //     echo "Hi!";
+    // }
+    // @Example
+    // // This example throws an error.
+    // once MyScript { echo "hi!"; }
+    // once MyScript { echo "This won't show!"; }
+    // @Example
+    // // This example echos "hi!" once.
+    // once MyScript { echo "hi!"; }
+    // once MyScript quiet { echo "This won't show!"; }
+    // -->
+
+    /// <summary>Constructs the once command.</summary>
+    public OnceCommand()
     {
-        // <--[command]
-        // @Name once
-        // @Arguments <identifer> ['error'/'warning'/'quiet']
-        // @Short Runs a block precisely once per reload.
-        // @Updated 2016/04/27
-        // @Authors mcmonkey
-        // @Group Queue
-        // @Block Always
-        // @Minimum 2
-        // @Maximum 2
-        // @Description
-        // Runs a block precisely once per reload.
-        // Optionally specify how to react when ran more than once: with an error, with a warning, or just quietly not running it again.
-        // Default reaction is error.
-        // TODO: Explain more!
-        // @Example
-        // // This example runs once.
-        // once MyScript
-        // {
-        //     echo "Hi!";
-        // }
-        // @Example
-        // // This example throws an error.
-        // once MyScript { echo "hi!"; }
-        // once MyScript { echo "This won't show!"; }
-        // @Example
-        // // This example echos "hi!" once.
-        // once MyScript { echo "hi!"; }
-        // once MyScript quiet { echo "This won't show!"; }
-        // -->
-
-        /// <summary>Constructs the once command.</summary>
-        public OnceCommand()
+        Name = "once";
+        Arguments = "<identifer> ['error'/'warning'/'quiet']";
+        Description = "Runs a block precisely once per reload.";
+        MinimumArguments = 1;
+        MaximumArguments = 2;
+        ObjectTypes = new Action<ArgumentValidation>[]
         {
-            Name = "once";
-            Arguments = "<identifer> ['error'/'warning'/'quiet']";
-            Description = "Runs a block precisely once per reload.";
-            MinimumArguments = 1;
-            MaximumArguments = 2;
-            ObjectTypes = new Action<ArgumentValidation>[]
-            {
-                Lower,
-                TestValidity
-            };
+            Lower,
+            TestValidity
+        };
+    }
+
+    void Lower(ArgumentValidation validation)
+    {
+        validation.ObjectValue = new TextTag(validation.ObjectValue.ToString().ToLowerFast());
+    }
+
+    void TestValidity(ArgumentValidation validation)
+    {
+        string low = validation.ObjectValue.ToString().ToLowerFast();
+        if (low == "error" || low == "warning" || low == "quiet")
+        {
+            validation.ObjectValue = new TextTag(low);
         }
-
-        void Lower(ArgumentValidation validation)
+        else
         {
-            validation.ObjectValue = new TextTag(validation.ObjectValue.ToString().ToLowerFast());
+            validation.ErrorResult = "Input to second argument must be 'error', 'warning', or 'quiet'.";
         }
+    }
 
-        void TestValidity(ArgumentValidation validation)
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
+        if (entry.IsCallback)
         {
-            string low = validation.ObjectValue.ToString().ToLowerFast();
-            if (low == "error" || low == "warning" || low == "quiet")
-            {
-                validation.ObjectValue = new TextTag(low);
-            }
-            else
-            {
-                validation.ErrorResult = "Input to second argument must be 'error', 'warning', or 'quiet'.";
-            }
+            return;
         }
-
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
+        string id = entry.GetArgument(queue, 0).ToLowerFast();
+        if (queue.Engine.OnceBlocks.Add(id))
         {
-            if (entry.IsCallback)
+            if (entry.ShouldShowGood(queue))
             {
-                return;
+                entry.GoodOutput(queue, "Once block has not yet ran, continuing.");
             }
-            string id = entry.GetArgument(queue, 0).ToLowerFast();
-            if (queue.Engine.OnceBlocks.Add(id))
+            return;
+        }
+        string errorMode = entry.Arguments.Length > 1 ? entry.GetArgument(queue, 1).ToLowerFast() : "error";
+        if (errorMode == "quiet")
+        {
+            if (entry.ShouldShowGood(queue))
             {
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Once block has not yet ran, continuing.");
-                }
-                return;
+                entry.GoodOutput(queue, "Once block repeated, ignoring: " + TextStyle.Separate + id);
             }
-            string errorMode = entry.Arguments.Length > 1 ? entry.GetArgument(queue, 1).ToLowerFast() : "error";
-            if (errorMode == "quiet")
-            {
-                if (entry.ShouldShowGood(queue))
-                {
-                    entry.GoodOutput(queue, "Once block repeated, ignoring: " + TextStyle.Separate + id);
-                }
-                queue.CurrentRunnable.Index = entry.BlockEnd + 1;
-            }
-            else if (errorMode == "warning")
-            {
-                entry.BadOutput(queue, "Once block repeated: " + TextStyle.Separate + id);
-                queue.CurrentRunnable.Index = entry.BlockEnd + 1;
-            }
-            else
-            {
-                queue.HandleError(entry, "Once block repeated: " + id);
-            }
+            queue.CurrentRunnable.Index = entry.BlockEnd + 1;
+        }
+        else if (errorMode == "warning")
+        {
+            entry.BadOutput(queue, "Once block repeated: " + TextStyle.Separate + id);
+            queue.CurrentRunnable.Index = entry.BlockEnd + 1;
+        }
+        else
+        {
+            queue.HandleError(entry, "Once block repeated: " + id);
         }
     }
 }

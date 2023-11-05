@@ -10,31 +10,30 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+/// <summary>Handles the 'tagtype' tag base.</summary>
+public class TagTypeBase : TemplateTagBase
 {
-    /// <summary>Handles the 'tagtype' tag base.</summary>
-    public class TagTypeBase : TemplateTagBase
+    // <--[tagbase]
+    // @Base tagtype[<BinaryTag>]
+    // @Group Common Base Types
+    // @ReturnType TagTypeTag
+    // @Returns the input data as a TagTypeTag.
+    // -->
+
+    /// <summary>Constructs the tag base data.</summary>
+    public TagTypeBase()
     {
-        // <--[tagbase]
-        // @Base tagtype[<BinaryTag>]
-        // @Group Common Base Types
-        // @ReturnType TagTypeTag
-        // @Returns the input data as a TagTypeTag.
-        // -->
+        Name = "tagtype";
+        ResultTypeString = TagTypeTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base data.</summary>
-        public TagTypeBase()
-        {
-            Name = "tagtype";
-            ResultTypeString = TagTypeTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static TagTypeTag HandleOne(TagData data)
-        {
-            return TagTypeTag.For(data.GetModifierObjectCurrent(), data);
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static TagTypeTag HandleOne(TagData data)
+    {
+        return TagTypeTag.For(data.GetModifierObjectCurrent(), data);
     }
 }

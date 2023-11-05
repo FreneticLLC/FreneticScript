@@ -14,62 +14,61 @@ using System.Text;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.ScriptSystems;
 
-namespace FreneticScript.CommandSystem.QueueCmds
+namespace FreneticScript.CommandSystem.QueueCmds;
+
+// TODO: Meta!
+
+/// <summary>The Stop command.</summary>
+public class StopCommand : AbstractCommand
 {
-    // TODO: Meta!
-
-    /// <summary>The Stop command.</summary>
-    public class StopCommand : AbstractCommand
+    /// <summary>Constructs the stop command.</summary>
+    public StopCommand()
     {
-        /// <summary>Constructs the stop command.</summary>
-        public StopCommand()
-        {
-            Name = "stop";
-            Arguments = "";
-            Description = "Immediately stops the current script.";
-            IsFlow = true;
-            Asyncable = true;
-            MinimumArguments = 0;
-            MaximumArguments = 0;
-        }
+        Name = "stop";
+        Arguments = "";
+        Description = "Immediately stops the current script.";
+        IsFlow = true;
+        Asyncable = true;
+        MinimumArguments = 0;
+        MaximumArguments = 0;
+    }
 
-        /// <summary>Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.</summary>
-        public static MethodInfo DebugStopMethod = typeof(StopCommand).GetMethod(nameof(DebugStop));
+    /// <summary>Represents the <see cref="DebugStop(CommandQueue, CommandEntry)"/> method.</summary>
+    public static MethodInfo DebugStopMethod = typeof(StopCommand).GetMethod(nameof(DebugStop));
 
-        /// <summary>Adapts a command entry to CIL.</summary>
-        /// <param name="values">The adaptation-relevant values.</param>
-        /// <param name="entry">The present entry ID.</param>
-        public override void AdaptToCIL(CILAdaptationValues values, int entry)
+    /// <summary>Adapts a command entry to CIL.</summary>
+    /// <param name="values">The adaptation-relevant values.</param>
+    /// <param name="entry">The present entry ID.</param>
+    public override void AdaptToCIL(CILAdaptationValues values, int entry)
+    {
+        CommandEntry cent = values.CommandAt(entry);
+        bool db = cent.DBMode <= DebugMode.FULL;
+        if (db)
         {
-            CommandEntry cent = values.CommandAt(entry);
-            bool db = cent.DBMode <= DebugMode.FULL;
-            if (db)
-            {
-                values.LoadQueue();
-                values.LoadEntry(entry);
-                values.ILGen.Emit(OpCodes.Call, DebugStopMethod);
-            }
-            values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[^1]);
+            values.LoadQueue();
+            values.LoadEntry(entry);
+            values.ILGen.Emit(OpCodes.Call, DebugStopMethod);
         }
+        values.ILGen.Emit(OpCodes.Br, values.Entry.AdaptedILPoints[^1]);
+    }
 
-        /// <summary>Shows debug for a stop command.</summary>
-        /// <param name="queue">The command queue.</param>
-        /// <param name="entry">The command entry.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DebugStop(CommandQueue queue, CommandEntry entry)
+    /// <summary>Shows debug for a stop command.</summary>
+    /// <param name="queue">The command queue.</param>
+    /// <param name="entry">The command entry.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void DebugStop(CommandQueue queue, CommandEntry entry)
+    {
+        if (entry.ShouldShowGood(queue))
         {
-            if (entry.ShouldShowGood(queue))
-            {
-                entry.GoodOutput(queue, "Stopping script.");
-            }
+            entry.GoodOutput(queue, "Stopping script.");
         }
+    }
 
-        /// <summary>Executes the command.</summary>
-        /// <param name="queue">The command queue involved.</param>
-        /// <param name="entry">Entry to be executed.</param>
-        public static void Execute(CommandQueue queue, CommandEntry entry)
-        {
-            queue.HandleError(entry, "Cannot Execute() a stop command, must compile!");
-        }
+    /// <summary>Executes the command.</summary>
+    /// <param name="queue">The command queue involved.</param>
+    /// <param name="entry">Entry to be executed.</param>
+    public static void Execute(CommandQueue queue, CommandEntry entry)
+    {
+        queue.HandleError(entry, "Cannot Execute() a stop command, must compile!");
     }
 }

@@ -10,40 +10,39 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.Objects;
 
-namespace FreneticScript.TagHandlers.CommonBases
+namespace FreneticScript.TagHandlers.CommonBases;
+
+// <--[explanation]
+// @Name Text Tags
+// @Description
+// TextTags are any random text, built into the tag system.
+// TODO: Explain better
+// TODO: Link tag system explanation
+// -->
+
+/// <summary>Handles the 'text' tag base.</summary>
+public class TextTagBase : TemplateTagBase
 {
-    // <--[explanation]
-    // @Name Text Tags
-    // @Description
-    // TextTags are any random text, built into the tag system.
-    // TODO: Explain better
-    // TODO: Link tag system explanation
+    // <--[tagbase]
+    // @Base text[<TextTag>]
+    // @Group Common Base Types
+    // @ReturnType TextTag
+    // @Returns the input text as a TextTag.
+    // <@link explanation Text Tags>What are text tags?<@/link>
     // -->
 
-    /// <summary>Handles the 'text' tag base.</summary>
-    public class TextTagBase : TemplateTagBase
+    /// <summary>Constructs the tag base data.</summary>
+    public TextTagBase()
     {
-        // <--[tagbase]
-        // @Base text[<TextTag>]
-        // @Group Common Base Types
-        // @ReturnType TextTag
-        // @Returns the input text as a TextTag.
-        // <@link explanation Text Tags>What are text tags?<@/link>
-        // -->
+        Name = "text";
+        ResultTypeString = TextTag.TYPE;
+    }
 
-        /// <summary>Constructs the tag base data.</summary>
-        public TextTagBase()
-        {
-            Name = "text";
-            ResultTypeString = TextTag.TYPE;
-        }
-
-        /// <summary>Handles the base input for a tag.</summary>
-        /// <param name="data">The tag data.</param>
-        /// <returns>The correct object.</returns>
-        public static TextTag HandleOne(TagData data)
-        {
-            return new TextTag(data.GetModifierCurrent());
-        }
+    /// <summary>Handles the base input for a tag.</summary>
+    /// <param name="data">The tag data.</param>
+    /// <returns>The correct object.</returns>
+    public static TextTag HandleOne(TagData data)
+    {
+        return new TextTag(data.GetModifierCurrent());
     }
 }
