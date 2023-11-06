@@ -70,7 +70,7 @@ public class ConfigToggleCommand : AbstractCommand
         field.OnChanged?.Invoke();
         if (queue.ShouldShowGood())
         {
-            queue.GoodOutput($"For config '{TextStyle.SeparateVal(configName)}', toggled '{TextStyle.SeparateVal(configKey)}' to '{TextStyle.SeparateVal(!currentValue)}'");
+            entry.GoodOutput(queue, $"For config '{TextStyle.SeparateVal(configName)}', toggled '{TextStyle.SeparateVal(configKey)}' to '{TextStyle.SeparateVal(!currentValue)}'");
         }
     }
 }

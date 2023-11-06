@@ -241,17 +241,6 @@ public class CommandQueue
         return CurrentRunnable.Debug == DebugMode.FULL;
     }
 
-    /// <summary>Used to output a success message.</summary>
-    /// <param name="text">The text to output.</param>
-    public void GoodOutput(string text)
-    {
-        if (ShouldShowGood())
-        {
-            Engine.Context.GoodOutput(text);
-            Outputsystem?.Invoke(text, MessageType.GOOD);
-        }
-    }
-
     /// <summary>Immediately stops the Command Queue by jumping to the end.</summary>
     public void Stop()
     {

@@ -126,7 +126,7 @@ public class ConfigSetCommand : AbstractCommand
         field.OnChanged?.Invoke();
         if (queue.ShouldShowGood())
         {
-            queue.GoodOutput($"For config '{TextStyle.SeparateVal(configName)}', set '{TextStyle.SeparateVal(configKey)}' to '{TextStyle.SeparateVal(rawValue)}'");
+            entry.GoodOutput(queue, $"For config '{TextStyle.SeparateVal(configName)}', set '{TextStyle.SeparateVal(configKey)}' to '{TextStyle.SeparateVal(rawValue)}'");
         }
     }
 }

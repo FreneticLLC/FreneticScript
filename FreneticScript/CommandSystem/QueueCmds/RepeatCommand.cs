@@ -312,7 +312,7 @@ public class RepeatCommand : AbstractCommand
         entry.SetData(queue, new RepeatCommandData() { Index = 1, Total = target });
         if (entry.ShouldShowGood(queue))
         {
-            entry.GoodOutput(queue, "Repeating " + TextStyle.Separate + target + TextStyle.Base + " times...");
+            entry.GoodOutput(queue, $"Repeating {TextStyle.SeparateVal(target)} times...");
         }
         return true;
     }
