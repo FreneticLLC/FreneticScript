@@ -69,15 +69,6 @@ public class TagErrorInducedException : ErrorInducedException
     {
     }
 
-    /// <summary>Serializable system.</summary>
-    /// <param name="info">Serialization information.</param>
-    /// <param name="context">Serialization streaming context.</param>
-    public override void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        info.AddValue(nameof(SubTagIndex), SubTagIndex);
-        base.GetObjectData(info, context);
-    }
-
     /// <summary>Relevant sub-tag index.</summary>
     public int SubTagIndex;
 
