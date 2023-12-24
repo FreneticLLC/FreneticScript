@@ -17,11 +17,12 @@ namespace FreneticScript.CommandSystem;
 
 
 /// <summary>Represents an object operation method.</summary>
+/// <param name="_operation">The operation type.</param>
 [AttributeUsage(AttributeTargets.Method)]
-public class ObjectOperationAttribute : Attribute
+public class ObjectOperationAttribute(ObjectOperation _operation) : Attribute
 {
     /// <summary>The type of operation.</summary>
-    public ObjectOperation Operation;
+    public ObjectOperation Operation = _operation;
 
     /// <summary>The input tag type (if any).</summary>
     public string Input;
@@ -38,9 +39,9 @@ public class ObjectOperationAttribute : Attribute
     /// <summary>A function call for the method, using a string-set-action setup.</summary>
     public Action<TemplateObject, TemplateObject, string, ObjectEditSource> SetFunc;
 
-    private static readonly Type[] GET_FUNC_PARAMS = new Type[] { typeof(TemplateObject), typeof(string), typeof(ObjectEditSource) };
-    private static readonly Type[] SET_FUNC_PARAMS = new Type[] { typeof(TemplateObject), typeof(TemplateObject), typeof(string), typeof(ObjectEditSource) };
-    private static readonly Type[] OBJECT_FUNC_PARAMS = new Type[] { typeof(TemplateObject), typeof(TemplateObject), typeof(ObjectEditSource) };
+    private static readonly Type[] GET_FUNC_PARAMS = [typeof(TemplateObject), typeof(string), typeof(ObjectEditSource)];
+    private static readonly Type[] SET_FUNC_PARAMS = [typeof(TemplateObject), typeof(TemplateObject), typeof(string), typeof(ObjectEditSource)];
+    private static readonly Type[] OBJECT_FUNC_PARAMS = [typeof(TemplateObject), typeof(TemplateObject), typeof(ObjectEditSource)];
 
     /// <summary>Generate the operation function helper objects.</summary>
     public void GenerateFunctions()
@@ -117,12 +118,5 @@ public class ObjectOperationAttribute : Attribute
             ObjectFunc = genMethod.CreateDelegate(typeof(Func<TemplateObject, TemplateObject, ObjectEditSource, TemplateObject>))
                 as Func<TemplateObject, TemplateObject, ObjectEditSource, TemplateObject>;
         }
-    }
-
-    /// <summary>Constructs the object operation attribute.</summary>
-    /// <param name="_operation">The operation type.</param>
-    public ObjectOperationAttribute(ObjectOperation _operation)
-    {
-        Operation = _operation;
     }
 }

@@ -46,11 +46,11 @@ public class ErrorCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 2;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             TextTag.Validator,
             BooleanTag.Validator
-        };
+        ];
     }
 
     /// <summary>Executes the command.</summary>

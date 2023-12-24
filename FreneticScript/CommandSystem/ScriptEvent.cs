@@ -17,19 +17,24 @@ using FreneticScript.TagHandlers.Objects;
 namespace FreneticScript.CommandSystem;
 
 /// <summary>An abstract class, implementations of this should be used to fire events within the script engine.</summary>
-public abstract class ScriptEvent
+/// <param name="_system">The command system this event exists within.</param>
+/// <param name="_name">The name of the event.</param>
+/// <param name="cancellable">Whether the event can be cancelled.</param>
+public abstract class ScriptEvent(ScriptEngine _system, string _name, bool cancellable)
 {
     /// <summary>Whether this event can be cancelled.</summary>
-    public bool Cancellable = false;
+    public bool Cancellable = cancellable;
 
     /// <summary>Helper class for being the source of a priority.</summary>
-    public class PrioritySourceObject : IEquatable<PrioritySourceObject>
+    /// <param name="_event">The relevant event.</param>
+    /// <param name="_priority">The relevant priority.</param>
+    public class PrioritySourceObject(ScriptEvent _event, double _priority) : IEquatable<PrioritySourceObject>
     {
         /// <summary>The relevant event.</summary>
-        public ScriptEvent Event;
+        public ScriptEvent Event = _event;
 
         /// <summary>The priority level.</summary>
-        public double Priority;
+        public double Priority = _priority;
 
         /// <summary>Gets a hash code for the source object.</summary>
         /// <returns>The hash code.</returns>
@@ -60,15 +65,6 @@ public abstract class ScriptEvent
                 return false;
             }
             return Event.Name == other.Event.Name && Priority == other.Priority;
-        }
-
-        /// <summary>Constructs see <see cref="PrioritySourceObject"/>.</summary>
-        /// <param name="_event">The relevant event.</param>
-        /// <param name="_priority">The relevant priority.</param>
-        public PrioritySourceObject(ScriptEvent _event, double _priority)
-        {
-            Event = _event;
-            Priority = _priority;
         }
     }
 
@@ -104,14 +100,14 @@ public abstract class ScriptEvent
         public int Index;
 
         /// <summary>The scripts contained in the set.</summary>
-        public List<KeyValuePair<ScriptIndex, CommandScript>> Scripts = new();
+        public List<KeyValuePair<ScriptIndex, CommandScript>> Scripts = [];
     }
 
     /// <summary>All scripts that handle this event.</summary>
-    public List<ScriptSet> Handlers = new();
+    public List<ScriptSet> Handlers = [];
 
     /// <summary>A map of all handler names to handler script indices.</summary>
-    public Dictionary<string, ScriptIndex> HandlerNames = new();
+    public Dictionary<string, ScriptIndex> HandlerNames = [];
 
     /// <summary>Register a specific priority with the underlying event.</summary>
     /// <param name="prio">The priority.</param>
@@ -249,24 +245,10 @@ public abstract class ScriptEvent
     }
 
     /// <summary>The command system in use.</summary>
-    public ScriptEngine Engine;
+    public ScriptEngine Engine = _system;
 
     /// <summary>Whether the script event has been cancelled.</summary>
     public bool Cancelled = false;
-
-    /// <summary>
-    /// Constructs the script event's base data.
-    /// Called only by implementing script events.
-    /// </summary>
-    /// <param name="_system">The command system this event exists within.</param>
-    /// <param name="_name">The name of the event.</param>
-    /// <param name="cancellable">Whether the event can be cancelled.</param>
-    public ScriptEvent(ScriptEngine _system, string _name, bool cancellable)
-    {
-        Engine = _system;
-        Name = _name.ToLowerFast();
-        Cancellable = cancellable;
-    }
 
     /// <summary>Update all variables from a ran script onto the event itself.</summary>
     /// <param name="vars">The vars to update.</param>
@@ -354,7 +336,7 @@ public abstract class ScriptEvent
     }
 
     /// <summary>The name of this event.</summary>
-    public readonly string Name;
+    public readonly string Name = _name.ToLowerFast();
 
     /// <summary>Create a copy of this script event, safe to run.</summary>
     /// <returns>The copy.</returns>

@@ -26,7 +26,7 @@ namespace FreneticScript.ScriptSystems;
 /// <summary>Helper class to compile scripts.</summary>
 public static class ScriptCompiler
 {
-    private static readonly Type[] RUN_METHOD_PARAMETERS = new Type[] { typeof(CommandQueue) };
+    private static readonly Type[] RUN_METHOD_PARAMETERS = [typeof(CommandQueue)];
 
     /// <summary>Compiles a command script.</summary>
     /// <param name="script">The command script to compile.</param>
@@ -70,7 +70,7 @@ public static class ScriptCompiler
             ccse.AdaptedILPoints[i] = ilgen.DefineLabel();
         }
         int tagID = 0;
-        List<TagArgumentBit> toClean = new();
+        List<TagArgumentBit> toClean = [];
         List<ILGeneratorTracker> ILGens
 #if SAVE
             = new();
@@ -78,7 +78,7 @@ public static class ScriptCompiler
             = null;
 #endif
         values.Trackers = ILGens;
-        List<KeyValuePair<FieldInfo, Object>> specialFieldValues = new();
+        List<KeyValuePair<FieldInfo, object>> specialFieldValues = [];
         for (int i = 0; i < ccse.Entries.Length; i++)
         {
             CommandEntry curEnt = ccse.Entries[i];
@@ -236,7 +236,7 @@ public static class ScriptCompiler
         }
         CompiledCommandRunnable runnable = Activator.CreateInstance(t_c, ccse, ccse.Entries, fieldValues) as CompiledCommandRunnable;
         ccse.ReferenceCompiledRunnable = runnable;
-        ccse.Variables = values.Variables.ToArray();
+        ccse.Variables = [.. values.Variables];
         foreach (SingleCILVariable variable in ccse.Variables)
         {
             variable.Field = variable.Field.DeclaringType.GetField(variable.Field.Name); // Patch runtime field issues
@@ -263,10 +263,10 @@ public static class ScriptCompiler
         return Created;
     }
 
-    private static readonly Type[] CONSTRUCTOR_PARAMS = new Type[] { typeof(CompiledCommandStackEntry), typeof(CommandEntry[]), typeof(Object[]) };
+    private static readonly Type[] CONSTRUCTOR_PARAMS = [typeof(CompiledCommandStackEntry), typeof(CommandEntry[]), typeof(Object[])];
 
 
-    private static readonly Type[] SETTER_ACTION_PARAMS = new Type[] { typeof(CompiledCommandRunnable), typeof(TemplateObject) };
+    private static readonly Type[] SETTER_ACTION_PARAMS = [typeof(CompiledCommandRunnable), typeof(TemplateObject)];
 
     /// <summary>Creates a variable setter for the given variable.</summary>
     /// <param name="variable">The variable.</param>
@@ -308,7 +308,7 @@ public static class ScriptCompiler
             + TextStyle.Base + ", error occured: " + ex.Message);
     }
 
-    private static readonly Type[] TYPES_TAGPARSE_PARAMS = new Type[] { typeof(TagData), typeof(CompiledCommandRunnable), typeof(Action<string>) };
+    private static readonly Type[] TYPES_TAGPARSE_PARAMS = [typeof(TagData), typeof(CompiledCommandRunnable), typeof(Action<string>)];
 
     /// <summary>Generates tag CIL.</summary>
     /// <param name="typeBuild_c">The type to contain this tag.</param>
@@ -328,7 +328,7 @@ public static class ScriptCompiler
     {
         int id = tID;
         // Build a list of sub-arguments (within the tag) that may need to be compiled
-        List<Argument> altArgs = new();
+        List<Argument> altArgs = [];
         for (int sub = 0; sub < tab.Bits.Length; sub++)
         {
             if (tab.Bits[sub].Variable != null)
@@ -363,7 +363,7 @@ public static class ScriptCompiler
                 firstBit.OriginalInput = firstBit.Key;
                 tab.Start = tab.TagSystem.LVar;
                 firstBit.Key = "\0lvar";
-                firstBit.Variable = new Argument() { WasQuoted = false, Bits = new ArgumentBit[] { new TextArgumentBit(startVar.Index, tab.Engine) } };
+                firstBit.Variable = new Argument() { WasQuoted = false, Bits = [new TextArgumentBit(startVar.Index, tab.Engine)] };
             }
             else
             {
@@ -387,6 +387,7 @@ public static class ScriptCompiler
         for (int x = 1; x < tab.Bits.Length; x++)
         {
             string key = tab.Bits[x].Key;
+#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
             if (!returnable.Type.TagHelpers.ContainsKey(key))
             {
                 if (returnable.Type.TagHelpers.ContainsKey("_"))
@@ -409,6 +410,7 @@ public static class ScriptCompiler
                     + TextStyle.Separate + basicType.Type.TypeName + TextStyle.Base
                     + (key.Trim().Length == 0 ? "' (stray '.' dot symbol?)!" : "' (sub-tag doesn't seem to exist)!"), x);
             }
+#pragma warning restore CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
         ready:
             TagHelpInfo tsh = returnable.Type.TagHelpers[key];
             tab.Bits[x].TagHandler = tsh;
@@ -603,10 +605,10 @@ public static class ScriptCompiler
     public static readonly ConstructorInfo Ctor_MethodImplAttribute_Options = typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) });
 
     /// <summary>A reusable input object array that contains <see cref="MethodImplOptions.AggressiveInlining"/>.</summary>
-    public static readonly object[] Input_Params_AggrInline = new object[] { MethodImplOptions.AggressiveInlining };
+    public static readonly object[] Input_Params_AggrInline = [MethodImplOptions.AggressiveInlining];
 
     /// <summary>Type parameter array for <see cref="GenerateTagMethodCallable(MethodInfo, TagMeta, ScriptEngine)"/>.</summary>
-    public static readonly Type[] TAG_PARSE_METHOD_PARAMS = new Type[] { typeof(TemplateObject), typeof(TagData) };
+    public static readonly Type[] TAG_PARSE_METHOD_PARAMS = [typeof(TemplateObject), typeof(TagData)];
 
     /// <summary>Generates a dynamically callable method for a tag.</summary>
     /// <param name="method">The tag method.</param>
@@ -673,20 +675,13 @@ public static class ScriptCompiler
 }
 
 /// <summary>Represents a tag type returned from a tag method.</summary>
-public struct TagReturnType
+/// <param name="_type">The returned tag type.</param>
+/// <param name="_isRaw">Whether the type is raw.</param>
+public struct TagReturnType(TagType _type, bool _isRaw = false)
 {
-    /// <summary>Constructs a <see cref="TagReturnType"/> instance.</summary>
-    /// <param name="_type">The returned tag type.</param>
-    /// <param name="_isRaw">Whether the type is raw.</param>
-    public TagReturnType(TagType _type, bool _isRaw = false)
-    {
-        Type = _type;
-        IsRaw = _isRaw;
-    }
-
     /// <summary>The returned tag type.</summary>
-    public TagType Type;
+    public TagType Type = _type;
 
     /// <summary>Whether the type is raw.</summary>
-    public bool IsRaw;
+    public bool IsRaw = _isRaw;
 }

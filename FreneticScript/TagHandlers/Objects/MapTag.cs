@@ -66,7 +66,7 @@ public class MapTag : TemplateObject, IListTagForm
     /// <summary>Constructs a MapTag without existing data.</summary>
     public MapTag()
     {
-        Internal = new Dictionary<string, TemplateObject>();
+        Internal = [];
     }
 
     /// <summary>Constructs a MapTag without existing data.</summary>
@@ -176,7 +176,7 @@ public class MapTag : TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "size", Group = "Map Entries", ReturnType = IntegerTag.TYPE, Returns = "The number of entries in the map.",
-        Examples = new string[] { "'one:a|two:b' .size returns '2'." })]
+        Examples = ["'one:a|two:b' .size returns '2'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Size(MapTag obj, TagData data)
     {
@@ -184,7 +184,7 @@ public class MapTag : TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "keys", Group = "Map Entries", ReturnType = ListTag.TYPE, Returns = "A list of all keys in the map.",
-        Examples = new string[] { "'one:a|two:b' .keys returns 'one|two|'." })]
+        Examples = ["'one:a|two:b' .keys returns 'one|two|'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Keys(MapTag obj, TagData data)
     {
@@ -192,7 +192,7 @@ public class MapTag : TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "values", Group = "Map Entries", ReturnType = ListTag.TYPE, Returns = "A list of all values in the map.",
-        Examples = new string[] { "'one:a|two:b' .values returns 'a|b|'." })]
+        Examples = ["'one:a|two:b' .values returns 'a|b|'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Values(MapTag obj, TagData data)
     {
@@ -203,7 +203,7 @@ public class MapTag : TemplateObject, IListTagForm
 
     [TagMeta(TagType = TYPE, Name = "contains", Group = "Map Entries", ReturnType = BooleanTag.TYPE, Modifier = TextTag.TYPE,
         Returns = "Whether the map contains an entry with the specified key.",
-        Examples = new string[] { "'one:a|two:b' .contains[one] returns 'true'.", "'one:a|two:b' .contains[three] returns 'false'."})]
+        Examples = ["'one:a|two:b' .contains[one] returns 'true'.", "'one:a|two:b' .contains[three] returns 'false'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Contains(MapTag obj, TextTag modifier)
     {
@@ -212,7 +212,7 @@ public class MapTag : TemplateObject, IListTagForm
 
     [TagMeta(TagType = TYPE, Name = "get", Group = "Map Entries", ReturnType = DynamicTag.TYPE,
         Returns = "The specified entry value in the map.",
-        Examples = new string[] { "'one:a|two:b' .get[one] returns 'a'.", "'one:a|two:b' .get[two] returns 'b'." })]
+        Examples = ["'one:a|two:b' .get[one] returns 'a'.", "'one:a|two:b' .get[two] returns 'b'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_Get(MapTag obj, TagData data)
     {
@@ -227,8 +227,8 @@ public class MapTag : TemplateObject, IListTagForm
 
     [TagMeta(TagType = TYPE, Name = "_", Group = "Map Entries", ReturnType = DynamicTag.TYPE,
         Returns = "The specified entry value in the map.",
-        Examples = new string[] { "'one:a|two:b' .one returns 'a'.", "'one:a|two:b' .two returns 'b'." },
-        Others = new string[] { "generally, use .get[<name>] instead of this." })]
+        Examples = ["'one:a|two:b' .one returns 'a'.", "'one:a|two:b' .two returns 'b'."],
+        Others = ["generally, use .get[<name>] instead of this."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_DynamicANyProcessor(MapTag obj, TagData data)
     {

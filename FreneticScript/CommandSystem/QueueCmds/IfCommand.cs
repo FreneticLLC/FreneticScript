@@ -141,7 +141,7 @@ public class IfCommand: AbstractCommand
     /// <returns>The boolean.</returns>
     public static bool GetBool(Action<string> error, string str)
     {
-        if (str.StartsWith("!"))
+        if (str.StartsWithFast('!'))
         {
             return !GetBool(error, str[1..]);
         }
@@ -185,7 +185,7 @@ public class IfCommand: AbstractCommand
             string astr = arguments[i].ToString();
             if (astr == "(")
             {
-                List<Argument> subargs = new();
+                List<Argument> subargs = [];
                 int count = 0;
                 bool found = false;
                 for (int x = i + 1; x < arguments.Count; x++)
@@ -203,7 +203,7 @@ public class IfCommand: AbstractCommand
                         {
                             bool cfound = TryIf(queue, entry, subargs);
                             arguments.RemoveRange(i, (x - i) + 1);
-                            Argument narg = new() { Bits = new ArgumentBit[] { new TextArgumentBit(cfound, queue.Engine) } };
+                            Argument narg = new() { Bits = [new TextArgumentBit(cfound, queue.Engine)] };
                             arguments.Insert(i, narg);
                             found = true;
                         }

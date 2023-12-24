@@ -16,22 +16,15 @@ using FreneticScript.ScriptSystems;
 namespace FreneticScript.TagHandlers;
 
 /// <summary>Helps represent a tag.</summary>
-public class TagHelpInfo
+/// <param name="_method">The method to construct from.</param>
+public class TagHelpInfo(MethodInfo _method)
 {
     /// <summary>The tag meta data.</summary>
-    public TagMeta Meta;
+    public TagMeta Meta = _method.GetCustomAttribute<TagMeta>();
 
     /// <summary>The relevant method.</summary>
-    public MethodInfo Method;
+    public MethodInfo Method = _method;
 
     /// <summary>A helper function to directly run the tag from basic input.</summary>
     public Func<TemplateObject, TagData, TemplateObject> RunTagLive;
-
-    /// <summary>Constructs the TagHelpInfo.</summary>
-    /// <param name="_method">The method to construct from.</param>
-    public TagHelpInfo(MethodInfo _method)
-    {
-        Method = _method;
-        Meta = _method.GetCustomAttribute<TagMeta>();
-    }
 }

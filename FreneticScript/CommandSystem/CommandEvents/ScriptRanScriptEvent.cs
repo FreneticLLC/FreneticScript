@@ -15,14 +15,9 @@ using FreneticScript.TagHandlers.Objects;
 namespace FreneticScript.CommandSystem.CommandEvents;
 
 /// <summary>ScriptRanPreEvent, called by the run command.</summary>
-public class ScriptRanScriptEvent : ScriptEvent
+/// <param name="system">The relevant command system.</param>
+public class ScriptRanScriptEvent(ScriptEngine system) : ScriptEvent(system, "scriptranevent", true)
 {
-    /// <summary>Constructs the ScriptRan script event.</summary>
-    /// <param name="system">The relevant command system.</param>
-    public ScriptRanScriptEvent(ScriptEngine system)
-        : base(system, "scriptranevent", true)
-    {
-    }
 
     /// <summary>Register a specific priority with the underlying event.</summary>
     /// <param name="prio">The priority.</param>

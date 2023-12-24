@@ -109,7 +109,7 @@ public class CommandEntry
     /// <summary>Full constructor, recommended.</summary>
     public CommandEntry(string _commandline, int bstart, int bend, AbstractCommand _command, Argument[] _arguments,
         string _name, CommandPrefix _prefix, string _script, int _line, string fairtabs, ScriptEngine sys)
-        : this(_commandline, bstart, bend, _command, _arguments, _name, _prefix, _script, _line, fairtabs, new Dictionary<string, Argument>(), sys)
+        : this(_commandline, bstart, bend, _command, _arguments, _name, _prefix, _script, _line, fairtabs, [], sys)
     {
     }
 

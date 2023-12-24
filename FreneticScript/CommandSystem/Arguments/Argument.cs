@@ -34,7 +34,7 @@ public class Argument
     }
 
     /// <summary>Empty argument bit array.</summary>
-    public static readonly ArgumentBit[] EMPTY_BITS = Array.Empty<ArgumentBit>();
+    public static readonly ArgumentBit[] EMPTY_BITS = [];
 
     /// <summary>The parts that build up the argument.</summary>
     public ArgumentBit[] Bits = EMPTY_BITS;

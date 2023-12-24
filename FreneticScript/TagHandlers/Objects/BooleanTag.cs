@@ -15,8 +15,12 @@ using FreneticScript.CommandSystem;
 namespace FreneticScript.TagHandlers.Objects;
 
 /// <summary>Represents a true or false as a usable tag.</summary>
+/// <remarks>
+/// Do not construct directly! Use <see cref="ForBool(bool)"/>.
+/// </remarks>
+/// <param name="_val">The internal boolean to use.</param>
 [ObjectMeta(Name = BooleanTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a 'true' or 'false'.")]
-public class BooleanTag : TemplateObject
+public class BooleanTag(bool _val) : TemplateObject
 {
 
     /// <summary>Return the type name of this tag.</summary>
@@ -34,7 +38,7 @@ public class BooleanTag : TemplateObject
     }
 
     /// <summary>The boolean this tag represents.</summary>
-    public readonly bool Internal;
+    public readonly bool Internal = _val;
 
     /// <summary>A true value.</summary>
     public static readonly BooleanTag TRUE = new(true);
@@ -166,16 +170,6 @@ public class BooleanTag : TemplateObject
         return TryFor(input.ToString());
     }
 
-    /// <summary>
-    /// Constructs a boolean tag.
-    /// Do not use this! Use <see cref="ForBool(bool)"/>.
-    /// </summary>
-    /// <param name="_val">The internal boolean to use.</param>
-    public BooleanTag(bool _val)
-    {
-        Internal = _val;
-    }
-
     /// <summary>The BooleanTag type.</summary>
     public const string TYPE = "boolean";
 
@@ -196,7 +190,7 @@ public class BooleanTag : TemplateObject
 #pragma warning disable 1591
 
     [TagMeta(TagType = TYPE, Name = "not", Group = "Boolean Logic", ReturnType = TYPE, Returns = "The opposite of the tag - true and false are flipped.",
-        Examples = new string[] { "'true' .not returns 'false'.", "'false' .not returns 'true'." })]
+        Examples = ["'true' .not returns 'false'.", "'false' .not returns 'true'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Not(BooleanTag obj, TagData data)
     {
@@ -205,7 +199,7 @@ public class BooleanTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "and", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
         Returns = "Whether the boolean and the specified text are both true.",
-        Examples = new string[] { "'true' .and[true] returns 'true'.", "'true' .and[false] returns 'false'.", "'false' .and[true] returns 'false'." })]
+        Examples = ["'true' .and[true] returns 'true'.", "'true' .and[false] returns 'false'.", "'false' .and[true] returns 'false'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_And(BooleanTag obj, BooleanTag modifier)
     {
@@ -214,7 +208,7 @@ public class BooleanTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "or", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
         Returns = "Whether the boolean or the specified text are true.",
-        Examples = new string[] { "'true' .or[true] returns 'true'.", "'true' .or[false] returns 'true'.", "'false' .or[false] returns 'false'." })]
+        Examples = ["'true' .or[true] returns 'true'.", "'true' .or[false] returns 'true'.", "'false' .or[false] returns 'false'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Or(BooleanTag obj, BooleanTag modifier)
     {
@@ -223,7 +217,7 @@ public class BooleanTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "xor", Group = "Boolean Logic", ReturnType = TYPE, Modifier = TYPE,
         Returns = "Whether the boolean exclusive-or the specified text are true. Meaning, exactly one of the two must be true, and the other false.",
-        Examples = new string[] { "'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'" })]
+        Examples = ["'true' .xor[true] returns 'false'.", "'true' .xor[false] returns 'true.'"])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Xor(BooleanTag obj, BooleanTag modifier)
     {

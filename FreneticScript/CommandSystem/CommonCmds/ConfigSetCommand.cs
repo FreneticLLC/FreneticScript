@@ -27,20 +27,20 @@ namespace FreneticScript.CommandSystem.CommonCmds;
     Description = "The first argument is a config name - must correspond to a config provided in the engine context.\n"
                 + "The second argument is the setting key within the config.\n"
                 + "The third argument is the new value of the key. Must be of a correct type for the setting key.\n",
-    Examples = new[]{ "// This example presumes config 'test' has key 'TestString', and sets it.\n"
-                    + "configset test TestString \"this is some text!\";"}
+    Examples = [ "// This example presumes config 'test' has key 'TestString', and sets it.\n"
+                    + "configset test TestString \"this is some text!\";"]
     )]
 public class ConfigSetCommand : AbstractCommand
 {
     /// <summary>Constructs the ConfigSet command.</summary>
     public ConfigSetCommand()
     {
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             TextTag.Validator,
             TextTag.Validator,
             null
-        };
+        ];
     }
 
     /// <summary>Converts a script object type to a specific raw type (if possible) for the ConfigSet command.</summary>

@@ -33,7 +33,7 @@ public static class ArgumentCompiler
     public static MethodInfo StringBuilder_Append = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
 
     /// <summary>The <see cref="StringBuilder.ToString()"/> method.</summary>
-    public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, Array.Empty<Type>(), null);
+    public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, [], null);
 
     /// <summary>The <see cref="TextTag(string)"/> constructor.</summary>
     public static ConstructorInfo TextTag_CTOR = typeof(TextTag).GetConstructor(new Type[] { typeof(string) });
@@ -74,7 +74,7 @@ public static class ArgumentCompiler
         }
     }
 
-    private static readonly Type[] ParseMethodParams = new Type[] { typeof(Action<string>), typeof(CompiledCommandRunnable) };
+    private static readonly Type[] ParseMethodParams = [typeof(Action<string>), typeof(CompiledCommandRunnable)];
 
     /// <summary>Compiles the argument.</summary>
     /// <param name="argument">The argument.</param>

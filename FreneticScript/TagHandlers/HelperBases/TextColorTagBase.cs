@@ -39,7 +39,7 @@ public class TextColorTagBase : TemplateTagBase
     }
 
     /// <summary>All colors known by this tag.</summary>
-    public Dictionary<string, Func<string>> Colors = new();
+    public Dictionary<string, Func<string>> Colors = [];
 
     /// <summary>Handles a 'color' tag.</summary>
     /// <param name="data">The data to be handled.</param>

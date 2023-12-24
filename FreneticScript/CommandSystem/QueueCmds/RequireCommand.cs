@@ -32,10 +32,10 @@ public class RequireCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             MapTag.Validator
-        };
+        ];
     }
 
     /// <summary>Generates a basic Require command entry.</summary>
@@ -46,7 +46,7 @@ public class RequireCommand : AbstractCommand
     {
         string mapText = expectedMap.ToString();
         return new CommandEntry("require \"" + mapText + "\" \0AUTOGENNED", 0, 0, this,
-            new Argument[] { new Argument(new TextArgumentBit(expectedMap, Engine)) }, Meta.Name, CommandPrefix.NONE, scriptName, line, "", Engine);
+            [new(new TextArgumentBit(expectedMap, Engine))], Meta.Name, CommandPrefix.NONE, scriptName, line, "", Engine);
     }
 
     /// <summary>Prepares to adapt a command entry to CIL.</summary>

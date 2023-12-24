@@ -32,10 +32,10 @@ public class RunfileCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             TextTag.Validator
-        };
+        ];
         OnScriptRanPreEvent = new FreneticEvent<ScriptRanPreEventArgs>(eventHelper);
         OnScriptRanEvent = new FreneticEvent<ScriptRanEventArgs>(eventHelper);
         OnScriptRanPostEvent = new FreneticEvent<ScriptRanPostEventArgs>(eventHelper);
@@ -115,7 +115,7 @@ public class RunfileCommand : AbstractCommand
             {
                 entry.GoodOutput(queue, "Running '" + TextStyle.Separate + fname + TextStyle.Base + "'...");
             }
-            Dictionary<string, TemplateObject> vars = new();
+            Dictionary<string, TemplateObject> vars = [];
             queue.Engine.ExecuteScript(script, ref vars, out CommandQueue nqueue);
             if (entry.WaitFor && queue.WaitingOn == entry)
             {

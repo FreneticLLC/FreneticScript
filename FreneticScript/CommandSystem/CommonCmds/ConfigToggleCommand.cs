@@ -26,19 +26,19 @@ namespace FreneticScript.CommandSystem.CommonCmds;
     MinimumArgs = 2, MaximumArgs = 2,
     Description = "The first argument is a config name - must correspond to a config provided in the engine context.\n"
                 + "The second argument is the setting key within the config. Must be a boolean type.\n",
-    Examples = new[]{ "// This example presumes config 'test' has key 'TestBoolean', and toggles it.\n"
-                    + "configtoggle test TestBoolean;"}
+    Examples = [ "// This example presumes config 'test' has key 'TestBoolean', and toggles it.\n"
+                    + "configtoggle test TestBoolean;"]
     )]
 public class ConfigToggleCommand : AbstractCommand
 {
     /// <summary>Constructs the ConfigToggle command.</summary>
     public ConfigToggleCommand()
     {
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             TextTag.Validator,
             TextTag.Validator
-        };
+        ];
     }
 
     /// <summary>Executes the command.</summary>

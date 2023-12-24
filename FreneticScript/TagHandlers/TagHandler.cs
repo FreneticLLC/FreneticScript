@@ -61,7 +61,7 @@ public class TagHandler
     }
 
     /// <summary>All tag handler objects currently registered.</summary>
-    public Dictionary<string, TemplateTagBase> Handlers = new();
+    public Dictionary<string, TemplateTagBase> Handlers = [];
 
     /// <summary>The tag types handler.</summary>
     public TagTypes Types = new();

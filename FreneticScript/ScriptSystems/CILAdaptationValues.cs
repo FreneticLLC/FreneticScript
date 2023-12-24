@@ -21,32 +21,23 @@ using FreneticScript.TagHandlers;
 namespace FreneticScript.ScriptSystems;
 
 /// <summary>Represents one CIL adapter variable.</summary>
-public class SingleCILVariable
+/// <param name="_index">The variable index.</param>
+/// <param name="_name">The variable name.</param>
+/// <param name="_type">The variable type.</param>
+/// <param name="_field">The field for this variable.</param>
+public class SingleCILVariable(int _index, string _name, TagReturnType _type, FieldInfo _field)
 {
     /// <summary>The index of the local variable.</summary>
-    public int Index;
+    public int Index = _index;
 
     /// <summary>The name of the variable.</summary>
-    public string Name;
+    public string Name = _name;
 
     /// <summary>The type of the variable.</summary>
-    public TagReturnType Type;
+    public TagReturnType Type = _type;
 
     /// <summary>The field that holds this variable's value.</summary>
-    public FieldInfo Field;
-
-    /// <summary>Constructs a single CIL adapter variable.</summary>
-    /// <param name="_index">The variable index.</param>
-    /// <param name="_name">The variable name.</param>
-    /// <param name="_type">The variable type.</param>
-    /// <param name="_field">The field for this variable.</param>
-    public SingleCILVariable(int _index, string _name, TagReturnType _type, FieldInfo _field)
-    {
-        Index = _index;
-        Name = _name;
-        Type = _type;
-        Field = _field;
-    }
+    public FieldInfo Field = _field;
 }
 
 /// <summary>Holds all data needed for CIL adaptation.</summary>
@@ -152,7 +143,7 @@ public class CILAdaptationValues
     public void PushVarSet()
     {
         LVarIDs.Push(CLVariables.Count);
-        CLVariables.Add(new List<SingleCILVariable>());
+        CLVariables.Add([]);
     }
 
     /// <summary>Pops the newest set of variables, to end a scope.</summary>
@@ -200,10 +191,10 @@ public class CILAdaptationValues
     }
 
     /// <summary>A list of all variables.</summary>
-    public List<SingleCILVariable> Variables = new();
+    public List<SingleCILVariable> Variables = [];
 
     /// <summary>All known CIL Variable data sets.</summary>
-    public List<List<SingleCILVariable>> CLVariables = new();
+    public List<List<SingleCILVariable>> CLVariables = [];
 
     /// <summary>The current stack of LVarIDs.</summary>
     public Stack<int> LVarIDs = new();

@@ -31,7 +31,7 @@ public class TagData
     /// <summary>Generates a simple error tag data instance that can be repurposed.</summary>
     public static TagData GenerateSimpleErrorTagData()
     {
-        return new TagData(null, Array.Empty<Argument>(), Array.Empty<TagBit>(), null, DebugMode.FULL, (s) => throw new ErrorInducedException("Script error occured: " + s), null, null);
+        return new TagData(null, [], [], null, DebugMode.FULL, (s) => throw new ErrorInducedException("Script error occured: " + s), null, null);
     }
 
     /// <summary>Returns a shallow duplicate of this object.</summary>

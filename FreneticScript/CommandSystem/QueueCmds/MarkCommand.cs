@@ -50,10 +50,10 @@ public class MarkCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             TextTag.Validator
-        };
+        ];
     }
 
     /// <summary>Executes the command.</summary>

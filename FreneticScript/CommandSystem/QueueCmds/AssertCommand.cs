@@ -25,23 +25,23 @@ namespace FreneticScript.CommandSystem.QueueCmds;
     Description = "Throws an error if a requirement is not 'true'.\n"
                 + "Effectively equivalent to: \"if !<requirement> { error <error message>; }\".\n"
                 + "TODO: Explain more!",
-    Examples = new[]{ "// This example throws an error immediately.\n"
+    Examples = [ "// This example throws an error immediately.\n"
                     + "assert false \"Bad!\";",
                       "// This example never throws an error.\n"
                     + "assert true \"Good!\";",
                       "// This example sometimes throws an error.\n"
-                    + "assert <system.random_decimal.is_greater_than[0.5]> \"Randomness is deadly!\";"}
+                    + "assert <system.random_decimal.is_greater_than[0.5]> \"Randomness is deadly!\";"]
     )]
 public class AssertCommand : AbstractCommand
 {
     /// <summary>Constructs the assert command.</summary>
     public AssertCommand()
     {
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             BooleanTag.Validator,
             TextTag.Validator
-        };
+        ];
     }
 
     /// <summary>Executes the command.</summary>

@@ -14,9 +14,10 @@ using FreneticScript.CommandSystem;
 namespace FreneticScript.TagHandlers.Objects;
 
 /// <summary>Represents an integer number as a usable tag.</summary>
+/// <param name="_val">The internal integer to use.</param>
 [ObjectMeta(Name = IntegerTag.TYPE, SubTypeName = NumberTag.TYPE, RawInternal = true, Group = "Mathematics", Description = "Represents an integer.",
-    Others = new string[] { "Note that the number is internally stored as a 64-bit signed integer (a 'long')." })]
-public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
+    Others = ["Note that the number is internally stored as a 64-bit signed integer (a 'long')."])]
+public class IntegerTag(long _val) : TemplateObject, IIntegerTagForm, INumberTagForm
 {
 
     /// <summary>Return the type name of this tag.</summary>
@@ -34,7 +35,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     }
 
     /// <summary>The integer this IntegerTag represents.</summary>
-    public long Internal;
+    public long Internal = _val;
 
     /// <summary>The integer value of this IntegerTag-like object.</summary>
     public long IntegerForm => Internal;
@@ -140,13 +141,6 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
         return TryFor(input.ToString());
     }
 
-    /// <summary>Constructs an integer tag.</summary>
-    /// <param name="_val">The internal integer to use.</param>
-    public IntegerTag(long _val)
-    {
-        Internal = _val;
-    }
-
     /// <summary>The IntegerTag type.</summary>
     public const string TYPE = "integer";
 
@@ -207,7 +201,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "add_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "The integer plus the specified integer.",
-        Examples = new string[] { "'1' .add_int[1] returns '2'." }, Others = new string[] { "Commonly shortened to '+'." })]
+        Examples = ["'1' .add_int[1] returns '2'."], Others = ["Commonly shortened to '+'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Add_Int(long obj, long modifier)
     {
@@ -216,7 +210,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "subtract_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "The integer minus the specified integer.",
-        Examples = new string[] { "'2' .subtract_int[1] returns '1'." }, Others = new string[] { "Commonly shortened to '-'." })]
+        Examples = ["'2' .subtract_int[1] returns '1'."], Others = ["Commonly shortened to '-'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Subtract_Int(long obj, long modifier)
     {
@@ -225,7 +219,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "multiply_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "The integer multiplied by the specified integer.",
-        Examples = new string[] { "'2' .multiply_int[2] returns '4'." }, Others = new string[] { "Commonly shortened to '*'." })]
+        Examples = ["'2' .multiply_int[2] returns '4'."], Others = ["Commonly shortened to '*'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Multiply_Int(long obj, long modifier)
     {
@@ -234,7 +228,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "divide_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "The integer divided by the specified integer.",
-        Examples = new string[] { "'4' .divide_int[2] returns '2'." }, Others = new string[] { "Commonly shortened to '/'." })]
+        Examples = ["'4' .divide_int[2] returns '2'."], Others = ["Commonly shortened to '/'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Divide_Int(long obj, long modifier)
     {
@@ -243,7 +237,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "modulo_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "The integer modulo (remainder after division) the specified integer.",
-        Examples = new string[] { "'10' .modulo_int[3] returns '1'." }, Others = new string[] { "Commonly shortened to '%'." })]
+        Examples = ["'10' .modulo_int[3] returns '1'."], Others = ["Commonly shortened to '%'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Modulo_Int(long obj, long modifier)
     {
@@ -251,7 +245,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "absolute_value_int", Group = "Mathematics", ReturnType = TYPE, Returns = "The absolute value of the integer.",
-        Examples = new string[] { "'-1' .absolute_value_int returns '1'." }, Others = new string[] { "Commonly shortened to 'abs'." })]
+        Examples = ["'-1' .absolute_value_int returns '1'."], Others = ["Commonly shortened to 'abs'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Absolute_Value_Int(long obj, TagData data)
     {
@@ -260,7 +254,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "maximum_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "Whichever is greater: the integer or the specified integer.",
-        Examples = new string[] { "'10' .maximum_int[12] returns '12'." }, Others = new string[] { "Commonly shortened to 'max'." })]
+        Examples = ["'10' .maximum_int[12] returns '12'."], Others = ["Commonly shortened to 'max'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Maximum_Int(long obj, long modifier)
     {
@@ -269,7 +263,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "minimum_int", Group = "Mathematics", ReturnType = TYPE, Modifier = TYPE,
         Returns = "Whichever is lower: the integer or the specified integer.",
-        Examples = new string[] { "'10' .minimum_int[12] returns '10'." }, Others = new string[] { "Commonly shortened to 'min'." })]
+        Examples = ["'10' .minimum_int[12] returns '10'."], Others = ["Commonly shortened to 'min'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Minimum_Int(long obj, long modifier)
     {
@@ -277,7 +271,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "to_binary", Group = "Conversion", ReturnType = BinaryTag.TYPE, Returns = "a binary representation of this integer.",
-        Examples = new string[] { "'1' .to_binary returns '1000000000000000'." })]
+        Examples = ["'1' .to_binary returns '1000000000000000'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BinaryTag Tag_To_Binary(long obj, TagData data)
     {
@@ -286,7 +280,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "is_greater_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
         Returns = "Whether the integer is greater than the specified integer.",
-        Examples = new string[] { "'1' .is_greater_than[0] returns 'true'." }, Others = new string[] { "Commonly shortened to '>'." })]
+        Examples = ["'1' .is_greater_than[0] returns 'true'."], Others = ["Commonly shortened to '>'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Is_Greater_Than(long obj, long modifier)
     {
@@ -295,7 +289,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "is_greater_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
         Returns = "Whether the integer is greater than or equal to the specified integer.",
-        Examples = new string[] { "'1' .is_greater_than_or_equal_to[0] returns 'true'." }, Others = new string[] { "Commonly shortened to '>='." })]
+        Examples = ["'1' .is_greater_than_or_equal_to[0] returns 'true'."], Others = ["Commonly shortened to '>='."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Is_Greater_Than_Or_Equal_To(long obj, long modifier)
     {
@@ -304,7 +298,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "is_less_than", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
         Returns = "Whether the integer is less than the specified integer.",
-        Examples = new string[] { "'1' .is_less_than[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '<'." })]
+        Examples = ["'1' .is_less_than[0] returns 'false'."], Others = ["Commonly shortened to '<'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Is_Less_Than(long obj, long modifier)
     {
@@ -313,7 +307,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "is_less_than_or_equal_to", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
         Returns = "Whether the integer is less than or equal to the specified integer.",
-        Examples = new string[] { "'1' .is_less_than_or_equal_to[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '<='." })]
+        Examples = ["'1' .is_less_than_or_equal_to[0] returns 'false'."], Others = ["Commonly shortened to '<='."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Is_Less_Than_Or_Equal_To(long obj, long modifier)
     {
@@ -322,7 +316,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
 
     [TagMeta(TagType = TYPE, Name = "equals", Group = "Number Comparison", ReturnType = BooleanTag.TYPE, Modifier = TYPE,
         Returns = "Whether the integer equals the specified integer.",
-        Examples = new string[] { "'1' .equals[0] returns 'false'." }, Others = new string[] { "Commonly shortened to '=='." })]
+        Examples = ["'1' .equals[0] returns 'false'."], Others = ["Commonly shortened to '=='."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static BooleanTag Tag_Equals(long obj, long modifier)
     {
@@ -330,7 +324,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "sign", Group = "Mathematics", ReturnType = TYPE, Returns = "The sign of the integer, which can be -1, 0, or 1.",
-        Examples = new string[] { "'-5' .sign returns '-1'." })]
+        Examples = ["'-5' .sign returns '-1'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_Sign(long obj, TagData data)
     {
@@ -338,7 +332,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "to_integer", Group = "Conversion", ReturnType = TYPE, Returns = "The integer parsed as an integer.",
-        Examples = new string[] { "'1' .to_integer returns '1'." })]
+        Examples = ["'1' .to_integer returns '1'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long Tag_To_Integer(long obj, TagData data)
     {
@@ -346,7 +340,7 @@ public class IntegerTag : TemplateObject, IIntegerTagForm, INumberTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "to_number", Group = "Conversion", ReturnType = NumberTag.TYPE, Returns = "The integer parsed as a number.",
-        Examples = new string[] { "'1' .to_number returns '1'." })]
+        Examples = ["'1' .to_number returns '1'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static NumberTag Tag_To_Number(long obj, TagData data)
     {

@@ -66,10 +66,10 @@ public class DelayCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             NumberTag.Validator
-        };
+        ];
     }
 
     // TODO: Compile!

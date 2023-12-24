@@ -27,14 +27,9 @@ namespace FreneticScript.CommandSystem.CommandEvents;
 // @Var script_name TextTag returns the name of the script about to be ran.
 // -->
 /// <summary>ScriptRanPreEvent, called by the run command.</summary>
-public class ScriptRanPreScriptEvent : ScriptEvent
+/// <param name="system">The relevant command system.</param>
+public class ScriptRanPreScriptEvent(ScriptEngine system) : ScriptEvent(system, "scriptranpreevent", true)
 {
-    /// <summary>Constructs the ScriptRan script event.</summary>
-    /// <param name="system">The relevant command system.</param>
-    public ScriptRanPreScriptEvent(ScriptEngine system)
-        : base(system, "scriptranpreevent", true)
-    {
-    }
 
     /// <summary>Register a specific priority with the underlying event.</summary>
     /// <param name="prio">The priority.</param>

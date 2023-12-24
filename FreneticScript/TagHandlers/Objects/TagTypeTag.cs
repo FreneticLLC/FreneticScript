@@ -15,8 +15,9 @@ using FreneticScript.CommandSystem;
 namespace FreneticScript.TagHandlers.Objects;
 
 /// <summary>Represents a TagType, as a tag.</summary>
+/// <param name="type">The TagType to base this TagTypeTag off of.</param>
 [ObjectMeta(Name = TagTypeTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents the type of a tag.")]
-public class TagTypeTag : TemplateObject
+public class TagTypeTag(TagType type) : TemplateObject
 {
 
     /// <summary>Return the type name of this tag.</summary>
@@ -34,14 +35,7 @@ public class TagTypeTag : TemplateObject
     }
 
     /// <summary>The represented tag type.</summary>
-    public TagType Internal;
-
-    /// <summary>Constructs a new TagTypeTag.</summary>
-    /// <param name="type">The TagType to base this TagTypeTag off of.</param>
-    public TagTypeTag(TagType type)
-    {
-        Internal = type;
-    }
+    public TagType Internal = type;
 
 
     /// <summary>Helper validator to validate an argument as a tag-type tag.</summary>
@@ -102,7 +96,7 @@ public class TagTypeTag : TemplateObject
     #pragma warning disable 1591
 
     [TagMeta(TagType = TYPE, Name = "for", Group = "Tag System", ReturnType = DynamicTag.TYPE, Returns = "A constructed instance of this tag type.",
-        Examples = new string[] { "'numbertag' .for[3] returns '3'." })]
+        Examples = ["'numbertag' .for[3] returns '3'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_For(TagTypeTag obj, TagData data)
     {

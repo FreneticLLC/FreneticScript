@@ -18,8 +18,9 @@ using FreneticScript.TagHandlers.HelperBases;
 namespace FreneticScript.TagHandlers.Objects;
 
 /// <summary>Represents a Function as a tag.</summary>
+/// <param name="script">The CommandScript to base this FunctionTag off of.</param>
 [ObjectMeta(Name = FunctionTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Command System", Description = "Represents a function.")]
-public class FunctionTag : TemplateObject
+public class FunctionTag(CommandScript script) : TemplateObject
 {
 
     /// <summary>Return the type name of this tag.</summary>
@@ -37,14 +38,7 @@ public class FunctionTag : TemplateObject
     }
 
     /// <summary>The represented function.</summary>
-    public CommandScript Internal;
-
-    /// <summary>Constructs a new FunctionTag.</summary>
-    /// <param name="script">The CommandScript to base this FunctionTag off of.</param>
-    public FunctionTag(CommandScript script)
-    {
-        Internal = script;
-    }
+    public CommandScript Internal = script;
 
     /// <summary>Returns a FunctionTag for the given text.</summary>
     /// <param name="data">The data.</param>

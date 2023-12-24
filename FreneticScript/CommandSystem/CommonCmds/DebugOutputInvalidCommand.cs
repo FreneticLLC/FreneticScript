@@ -42,6 +42,6 @@ public class DebugOutputInvalidCommand: AbstractCommand
         {
             args.Add(entry.Arguments[i].ToString());
         }
-        queue.Engine.Context.UnknownCommand(queue, name, args.ToArray());
+        queue.Engine.Context.UnknownCommand(queue, name, [.. args]);
     }
 }

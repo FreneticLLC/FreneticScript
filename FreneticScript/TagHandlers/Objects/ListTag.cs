@@ -51,7 +51,7 @@ public class ListTag: TemplateObject, IListTagForm
     /// <summary>Constructs a new list tag.</summary>
     public ListTag()
     {
-        Internal = new List<TemplateObject>();
+        Internal = [];
     }
 
     /// <summary>Helper validator to validate an argument as a list tag.</summary>
@@ -79,7 +79,7 @@ public class ListTag: TemplateObject, IListTagForm
     /// <param name="entries">The textual entries.</param>
     public ListTag(List<string> entries)
     {
-        Internal = new List<TemplateObject>();
+        Internal = [];
         for (int i = 0; i < entries.Count; i++)
         {
             Internal.Add(new TextTag(entries[i]));
@@ -158,7 +158,7 @@ public class ListTag: TemplateObject, IListTagForm
 #pragma warning disable 1591
 
     [TagMeta(TagType = TYPE, Name = "size", Group = "List Attributes", ReturnType = IntegerTag.TYPE, Returns = "The number of entries in the list.",
-        Examples = new string[] { "'one|two|three|' .size returns '3'." })]
+        Examples = ["'one|two|three|' .size returns '3'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Size(ListTag obj, TagData data)
     {
@@ -166,7 +166,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "comma_separated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a user-friendly comma-separated format.",
-        Examples = new string[] { "'one|two|three|' .comma_separated returns 'one, two, three'." })]
+        Examples = ["'one|two|three|' .comma_separated returns 'one, two, three'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Comma_Separated(ListTag obj, TagData data)
     {
@@ -174,7 +174,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "space_separated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a space-separated format.",
-        Examples = new string[] { "'one|two|three|' .space_separated returns 'one two three'." })]
+        Examples = ["'one|two|three|' .space_separated returns 'one two three'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Space_Separated(ListTag obj, TagData data)
     {
@@ -182,7 +182,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "unseparated", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list as an unseparated string.",
-        Examples = new string[] { "'one|two|three|' .unseparated returns 'onetwothree'." })]
+        Examples = ["'one|two|three|' .unseparated returns 'onetwothree'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Unseparated(ListTag obj, TagData data)
     {
@@ -190,7 +190,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "formatted", Group = "List Attributes", ReturnType = TextTag.TYPE, Returns = "The list in a user-friendly format.",
-        Examples = new string[] { "'one|two|three|' .formatted returns 'one, two, and three'." })]
+        Examples = ["'one|two|three|' .formatted returns 'one, two, and three'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Formatted(ListTag obj, TagData data)
     {
@@ -198,7 +198,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "reversed", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "The list entirely backwards.",
-        Examples = new string[] { "'one|two|three|' .reversed returns 'three|two|one|'." })]
+        Examples = ["'one|two|three|' .reversed returns 'three|two|one|'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Reversed(ListTag obj, TagData data)
     {
@@ -209,7 +209,7 @@ public class ListTag: TemplateObject, IListTagForm
 
     [TagMeta(TagType = TYPE, Name = "filter", Group = "List Attributes", ReturnType = ListTag.TYPE,
         Returns = "The list modified such that each entry is only included if the input modifier would return true for it.",
-        Examples = new string[] { "'one|two|three|' .filter[true] returns 'one|two|three|'.", "'1|2|3|' .filter[<{[filter_value].equals[2]}>] returns '2|'." })]
+        Examples = ["'one|two|three|' .filter[true] returns 'one|two|three|'.", "'1|2|3|' .filter[<{[filter_value].equals[2]}>] returns '2|'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Filter(ListTag obj, TagData data)
     {
@@ -229,7 +229,7 @@ public class ListTag: TemplateObject, IListTagForm
 
     [TagMeta(TagType = TYPE, Name = "parse", Group = "List Attributes", ReturnType = ListTag.TYPE,
         Returns = "list modified such that each entry is modified to be what the input modifier would return for it.",
-        Examples = new string[] { "'one|two|three|' .parse[<{[parse_value].to_upper}>] returns 'ONE|TWO|THREE|'." })]
+        Examples = ["'one|two|three|' .parse[<{[parse_value].to_upper}>] returns 'ONE|TWO|THREE|'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Parse(ListTag obj, TagData data)
     {
@@ -244,7 +244,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "first", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "The first entry in the list.",
-        Examples = new string[] { "'one|two|three|' .first.as[TextTag] returns 'one'." })]
+        Examples = ["'one|two|three|' .first.as[TextTag] returns 'one'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_First(ListTag obj, TagData data)
     {
@@ -258,7 +258,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "random", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A random entry from the list.",
-        Examples = new string[] { "'one|two|three|' .random returns 'one', 'two', or 'three'." })]
+        Examples = ["'one|two|three|' .random returns 'one', 'two', or 'three'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_Random(ListTag obj, TagData data)
     {
@@ -272,7 +272,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "last", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A last entry in the list.",
-        Examples = new string[] { "'one|two|three|' .last returns 'three'." })]
+        Examples = ["'one|two|three|' .last returns 'three'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_Last(ListTag obj, TagData data)
     {
@@ -286,7 +286,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "get", Group = "List Attributes", ReturnType = DynamicTag.TYPE, Returns = "A specified entry in the list.",
-        Examples = new string[] { "'one|two|three|' .get[2] returns 'two'." })]
+        Examples = ["'one|two|three|' .get[2] returns 'two'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DynamicTag Tag_Get(ListTag obj, TagData data)
     {
@@ -311,8 +311,8 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "range", Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "The specified set of entries in the list.",
-        Examples = new string[] { "'one|two|three|four|' .range[2|3] returns 'two|three|'.", "'one|two|three|' .range[2|2] returns 'two|'." },
-        Others = new String[] { "Note that indices are one-based." })]
+        Examples = ["'one|two|three|four|' .range[2|3] returns 'two|three|'.", "'one|two|three|' .range[2|2] returns 'two|'."],
+        Others = ["Note that indices are one-based."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Range(ListTag obj, TagData data)
     {
@@ -352,7 +352,7 @@ public class ListTag: TemplateObject, IListTagForm
         {
             return new ListTag();
         }
-        List<TemplateObject> Entries = new();
+        List<TemplateObject> Entries = [];
         for (int i = number; i <= number2; i++)
         {
             Entries.Add(Internal[i]);
@@ -361,7 +361,7 @@ public class ListTag: TemplateObject, IListTagForm
     }
 
     [TagMeta(TagType = TYPE, Name = "include", Modifier = TYPE, Group = "List Attributes", ReturnType = ListTag.TYPE, Returns = "A list with the input list added to the end.",
-        Examples = new string[] { "'one|two|three|' .include[four|five|] returns 'one|two|three|four|five|'." })]
+        Examples = ["'one|two|three|' .include[four|five|] returns 'one|two|three|four|five|'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Include(ListTag obj, ListTag modifier)
     {
@@ -372,8 +372,8 @@ public class ListTag: TemplateObject, IListTagForm
 
     [TagMeta(TagType = TYPE, Name = "insert", Group = "List Attributes", ReturnType = ListTag.TYPE,
         Returns = "A list with the input list added after an index specified as the first item in the list (index is not included in the final list).",
-        Examples = new string[] { "'one|two|three|' .insert[1|a|b|] returns 'one|a|b|two|three|'." },
-        Others = new String[] { "Note that indices are one-based.", "Specify 0 as the index to insert at the beginning." })]
+        Examples = ["'one|two|three|' .insert[1|a|b|] returns 'one|a|b|two|three|'."],
+        Others = ["Note that indices are one-based.", "Specify 0 as the index to insert at the beginning."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ListTag Tag_Insert(ListTag obj, TagData data)
     {

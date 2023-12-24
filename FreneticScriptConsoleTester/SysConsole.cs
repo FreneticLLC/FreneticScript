@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace FreneticScriptConsoleTester;
 
-public class SysConsole
+public partial class SysConsole
 {
-    volatile static List<KeyValuePair<string, string>> Waiting = new();
+    volatile static List<KeyValuePair<string, string>> Waiting = [];
 
     static Object ConsoleLock;
 
@@ -77,7 +77,7 @@ public class SysConsole
             lock (ConsoleLock)
             {
                 twaiting = Waiting;
-                Waiting = new List<KeyValuePair<string, string>>();
+                Waiting = [];
             }
             if (twaiting.Count > 0)
             {
@@ -107,8 +107,9 @@ public class SysConsole
         Console.Title = Title;
     }
 
-    [System.Runtime.InteropServices.DllImport("user32.dll")]
-    static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    [System.Runtime.InteropServices.LibraryImport("user32.dll")]
+    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    public static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     /// <summary>Hides the system console from view.</summary>
     public static void HideConsole()
@@ -315,8 +316,8 @@ public class SysConsole
             OutputNames[(int)ot] + "^r^7] " + OutputColors[(int)ot] + text, bcolor ?? OutputColors[(int)ot]);
     }
 
-    static readonly string[] OutputColors = new string[]
-    {
+    static readonly string[] OutputColors =
+    [
         "^r^7ERROR:OUTPUTTYPE=NONE?",
         "^r^7",
         "^r^2",
@@ -325,10 +326,10 @@ public class SysConsole
         "^r^7",
         "^7^&",
         "^r^2"
-    };
+    ];
 
-    static readonly string[] OutputNames = new string[]
-    {
+    static readonly string[] OutputNames =
+    [
         "NONE",
         "INFO/CLIENT",
         "INIT",
@@ -337,7 +338,7 @@ public class SysConsole
         "INFO",
         "DEBUG",
         "GOOD"
-    };
+    ];
 }
 
 public class ConsoleWrittenEventArgs : EventArgs

@@ -48,10 +48,10 @@ public class InjectCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             TextTag.Validator
-        };
+        ];
     }
 
     // TODO: Does this (inject command) have any reason to exist in the modern structure?

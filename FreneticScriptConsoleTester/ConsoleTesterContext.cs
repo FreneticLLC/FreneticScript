@@ -98,7 +98,7 @@ public class ConsoleTesterContext : ScriptEngineContext
         path = Clean(path);
         if (!Directory.Exists(path))
         {
-            return Array.Empty<string>();
+            return [];
         }
         string[] results = Directory.GetFiles(path, extension == null ? "*.*" : "*." + extension , deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         for (int i = 0; i < results.Length; i++)

@@ -64,10 +64,10 @@ public class BreakCommand : AbstractCommand
         Meta.Asyncable = true;
         MinimumArguments = 0;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             NumberTag.Validator
-        };
+        ];
         // TODO: Compile the break command!
     }
 

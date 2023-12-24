@@ -15,9 +15,10 @@ using FreneticUtilities.FreneticToolkit;
 namespace FreneticScript.TagHandlers.Objects;
 
 /// <summary>Represents a date-time as a usable tag.</summary>
+/// <param name="_time">The internal date-time to use.</param>
 [ObjectMeta(Name = TimeTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Mathematics", Description = "Represents a point in time.",
-    Others = new string[] { "Representation format is YYYY/MM/DD hh:mm:ss:tttt UTC+OO:oo ... ':tttt' is optional, all else is required."})]
-public class TimeTag : TemplateObject
+    Others = ["Representation format is YYYY/MM/DD hh:mm:ss:tttt UTC+OO:oo ... ':tttt' is optional, all else is required."])]
+public class TimeTag(DateTimeOffset _time) : TemplateObject
 {
 
     /// <summary>Return the type name of this tag.</summary>
@@ -35,7 +36,7 @@ public class TimeTag : TemplateObject
     }
 
     /// <summary>The DateTime this TimeTag represents.</summary>
-    public DateTimeOffset Internal;
+    public DateTimeOffset Internal = _time;
 
     // TODO: DurationTag, to represent spans of time.
 
@@ -50,13 +51,6 @@ public class TimeTag : TemplateObject
             return null;
         }
         return new TimeTag(dt.Value);
-    }
-
-    /// <summary>Constructs a time tag.</summary>
-    /// <param name="_time">The internal date-time to use.</param>
-    public TimeTag(DateTimeOffset _time)
-    {
-        Internal = _time;
     }
 
     /// <summary>The TimeTag type.</summary>
@@ -94,7 +88,7 @@ public class TimeTag : TemplateObject
 
     // TODO: More 'Time Parts' tags!
     [TagMeta(TagType = TYPE, Name = "total_milliseconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE, Returns = "The total number of milliseconds since Jan 1st, 0001 (UTC).",
-        Examples = new string[] { "'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns '0'." })]
+        Examples = ["'0001/01/01 00:00:00:0000 UTC+00:00' .total_milliseconds returns '0'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Total_Milliseconds(TimeTag obj, TagData data)
     {
@@ -103,7 +97,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "short_date", Group = "Time Parts", ReturnType = TextTag.TYPE,
         Returns = "The date part of the time in a short-date format.",
-        Examples = new string[] { "'2017/03/08 12:00:00:0000 UTC+00:00' .short_date returns '8/03/2017'." })]
+        Examples = ["'2017/03/08 12:00:00:0000 UTC+00:00' .short_date returns '8/03/2017'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Date(TimeTag obj, TagData data)
     {
@@ -112,7 +106,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "long_date", Group = "Time Parts", ReturnType = TextTag.TYPE,
         Returns = "The date part of the time in a long-date format.",
-        Examples = new string[] { "'2017/03/08 12:00:00:0000 UTC+00:00' .long_date returns 'Wednesday, 8 March 2017'." })]
+        Examples = ["'2017/03/08 12:00:00:0000 UTC+00:00' .long_date returns 'Wednesday, 8 March 2017'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Long_Date(TimeTag obj, TagData data)
     {
@@ -120,7 +114,7 @@ public class TimeTag : TemplateObject
     }
 
     [TagMeta(TagType = TYPE, Name = "short_time", Group = "Time Parts", ReturnType = TextTag.TYPE, Returns = "The time in a HH:MM AM/PM format.",
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .short_time returns '12:30 PM'." })]
+        Examples = ["'2017/03/08 12:30:00:0000 UTC+00:00' .short_time returns '12:30 PM'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Time(TimeTag obj, TagData data)
     {
@@ -129,7 +123,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "long_time", Group = "Time Parts", ReturnType = TextTag.TYPE,
         Returns = "The time in a HH:MM:SS AM/PM format.",
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .long_time returns '12:30:00 PM'." })]
+        Examples = ["'2017/03/08 12:30:00:0000 UTC+00:00' .long_time returns '12:30:00 PM'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TextTag Tag_Long_Time(TimeTag obj, TagData data)
     {
@@ -138,7 +132,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "year", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
         Returns = "The year represented in the time.",
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .year returns '2017'." })]
+        Examples = ["'2017/03/08 12:30:00:0000 UTC+00:00' .year returns '2017'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Year(TimeTag obj, TagData data)
     {
@@ -147,7 +141,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "month", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
         Returns = "The month of the year represented in the time.",
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .month returns '3'." })]
+        Examples = ["'2017/03/08 12:30:00:0000 UTC+00:00' .month returns '3'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Month(TimeTag obj, TagData data)
     {
@@ -156,7 +150,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "day", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
         Returns = "The day of the month represented in the time.",
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .day returns '8'." })]
+        Examples = ["'2017/03/08 12:30:00:0000 UTC+00:00' .day returns '8'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Day(TimeTag obj, TagData data)
     {
@@ -165,9 +159,9 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "hours", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
         Returns = "The number of hours represented in the time.",
-        Others = new string[] { "Note this is 24 hour." },
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .hours returns '12'." ,
-            "'2017/03/08 14:30:00:0000 UTC+00:00' .hours returns '14'." })]
+        Others = ["Note this is 24 hour."],
+        Examples = [ "'2017/03/08 12:30:00:0000 UTC+00:00' .hours returns '12'." ,
+            "'2017/03/08 14:30:00:0000 UTC+00:00' .hours returns '14'." ])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Hours(TimeTag obj, TagData data)
     {
@@ -176,7 +170,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "minutes", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
         Returns = "The number of minutes represented in the time.",
-        Examples = new string[] { "'2017/03/08 12:30:00:0000 UTC+00:00' .minutes returns '30'."})]
+        Examples = ["'2017/03/08 12:30:00:0000 UTC+00:00' .minutes returns '30'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Minutes(TimeTag obj, TagData data)
     {
@@ -185,7 +179,7 @@ public class TimeTag : TemplateObject
 
     [TagMeta(TagType = TYPE, Name = "seconds", Group = "Time Parts", ReturnType = IntegerTag.TYPE,
         Returns = "The number of seconds represented in the time.",
-        Examples = new string[] { "'2017/03/08 12:30:45:0000 UTC+00:00' .seconds returns '45'." })]
+        Examples = ["'2017/03/08 12:30:45:0000 UTC+00:00' .seconds returns '45'."])]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IntegerTag Tag_Seconds(TimeTag obj, TagData data)
     {

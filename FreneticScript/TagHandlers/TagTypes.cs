@@ -20,7 +20,7 @@ namespace FreneticScript.TagHandlers;
 public class TagTypes
 {
     /// <summary>All tag types currently registered.</summary>
-    public Dictionary<string, TagType> RegisteredTypes = new();
+    public Dictionary<string, TagType> RegisteredTypes = [];
 
     /// <summary>Gets the type for a type name. Returns null if not found.</summary>
     /// <param name="name">The name of the type.</param>
@@ -38,7 +38,7 @@ public class TagTypes
     public ScriptEngine Engine;
 
     /// <summary>Helpers to load tags for any given type, input by name.</summary>
-    public Dictionary<string, Func<string, TagData, TemplateObject>> SaveCreators = new();
+    public Dictionary<string, Func<string, TagData, TemplateObject>> SaveCreators = [];
 
     /// <summary>The Binary type.</summary>
     public TagType Type_Binary;

@@ -93,7 +93,7 @@ public class ScriptEngine
     public Dictionary<string, ScriptEvent> Events;
 
     /// <summary>All known identifiers for the 'once' block command.</summary>
-    public HashSet<string> OnceBlocks = new();
+    public HashSet<string> OnceBlocks = [];
 
     /// <summary>A random number generator.</summary>
     public Random random = new();
@@ -248,7 +248,7 @@ public class ScriptEngine
                         return;
                     }
                 }
-                ScriptsToRun.Add(new KeyValuePair<int, List<CommandScript>>(autoRunPriority, new List<CommandScript>() { builtScript }));
+                ScriptsToRun.Add(new KeyValuePair<int, List<CommandScript>>(autoRunPriority, [builtScript]));
                 return;
             }
         }
@@ -274,7 +274,7 @@ public class ScriptEngine
     }
 
     /// <summary>Scripts loaded in for precalculation that will be ran by <see cref="RunPrecalculated"/> when next called.</summary>
-    public List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = new();
+    public List<KeyValuePair<int, List<CommandScript>>> ScriptsToRun = [];
 
     /// <summary>A function to invoke when output is generated.</summary>
     public delegate void OutputFunction(string message, MessageType type);

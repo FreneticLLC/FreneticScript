@@ -12,20 +12,13 @@ using System.Text;
 namespace FreneticScript.TagHandlers;
 
 /// <summary>Holds a name:value pair.</summary>
-public class Variable
+/// <param name="_name">The name of the variable.</param>
+/// <param name="_value">SeeThe value of the variable.</param>
+public class Variable(string _name, string _value)
 {
     /// <summary>The name of the variable.</summary>
-    public string Name;
+    public string Name = _name;
 
     /// <summary>The value of the variable.</summary>
-    public string Value;
-
-    /// <summary>Constructs a variable.</summary>
-    /// <param name="_name">See Variable.Name.</param>
-    /// <param name="_value">See Variable.Value.</param>
-    public Variable(string _name, string _value)
-    {
-        Name = _name;
-        Value = _value;
-    }
+    public string Value = _value;
 }

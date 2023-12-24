@@ -59,10 +59,10 @@ public class ElseCommand: AbstractCommand
         Asyncable = true;
         MinimumArguments = 0;
         MaximumArguments = -1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             Verify
-        };
+        ];
     }
 
     void Verify(ArgumentValidation validator)

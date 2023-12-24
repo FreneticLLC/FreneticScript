@@ -56,11 +56,11 @@ public class OnceCommand : AbstractCommand
         Description = "Runs a block precisely once per reload.";
         MinimumArguments = 1;
         MaximumArguments = 2;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             Lower,
             TestValidity
-        };
+        ];
     }
 
     void Lower(ArgumentValidation validation)

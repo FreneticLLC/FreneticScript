@@ -59,13 +59,13 @@ public class EventCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 4;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             Verify1,
             TextTag.Validator,
             TextTag.Validator,
             IntegerTag.Validator
-        };
+        ];
     }
 
     // TODO: Compile
@@ -188,7 +188,7 @@ public class EventCommand : AbstractCommand
             entries.Add(entry.System.TheRequireCommand.GenerateEntry(expectedContext, entry.ScriptName, entry.ScriptLine));
             entries.AddRange(entry.InnerCommandBlock);
             CommandScript script = new(theEvent.Name + "__handler__" + name,
-                CommandScript.TYPE_NAME_EVENT, entries.ToArray(), entry.System, entry.BlockStart, DebugMode.MINIMAL);
+                CommandScript.TYPE_NAME_EVENT, [.. entries], entry.System, entry.BlockStart, DebugMode.MINIMAL);
             theEvent.RegisterEventHandler(priority, script, name);
             entry.GoodOutput(queue, "Handler '" + TextStyle.Separate + name + "" + TextStyle.Base
                 + "' defined for event '" + TextStyle.Separate + theEvent.Name + TextStyle.Base + "'.");

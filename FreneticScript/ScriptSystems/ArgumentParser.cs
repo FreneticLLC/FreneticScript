@@ -28,13 +28,16 @@ public static class ArgumentParser
     {
         if (input.Length == 0)
         {
-            return new Argument() { Bits = Array.Empty<ArgumentBit>() };
+            return new Argument() { Bits = [] };
         }
         int firstOpen = input.IndexOf('<');
         if (firstOpen < 0 || input.IndexOf('>') < firstOpen)
         {
-            Argument a = new() { WasQuoted = wasquoted };
-            a.Bits = new ArgumentBit[] { new TextArgumentBit(input, wasquoted, wasquoted, system) };
+            Argument a = new()
+            {
+                WasQuoted = wasquoted,
+                Bits = [new TextArgumentBit(input, wasquoted, wasquoted, system)]
+            };
             return a;
         }
         Argument arg = new() { WasQuoted = wasquoted };
@@ -43,7 +46,7 @@ public static class ArgumentParser
         int brackets = 0;
         StringBuilder blockbuilder = new();
         StringBuilder tbuilder = new();
-        List<ArgumentBit> bitos = new();
+        List<ArgumentBit> bitos = [];
         for (int i = 0; i < len; i++)
         {
             if (input[i] == '<')
@@ -90,7 +93,7 @@ public static class ArgumentParser
                     {
                         split[s] = split[s].Replace("&dot", ".").Replace("&amp", "&");
                     }
-                    List<TagBit> bits = new();
+                    List<TagBit> bits = [];
                     for (int x = 0; x < split.Length; x++)
                     {
                         TagBit bit = new();
@@ -119,7 +122,7 @@ public static class ArgumentParser
                         bit.Key = split[x];
                         bits.Add(bit);
                     }
-                    TagArgumentBit tab = new(system, bits.ToArray());
+                    TagArgumentBit tab = new(system, [.. bits]);
                     if (tab.Bits.Length > 0)
                     {
                         if (system.TagSystem.Handlers.TryGetValue(tab.Bits[0].Key.ToLowerFast(), out TemplateTagBase start))
@@ -176,7 +179,7 @@ public static class ArgumentParser
         {
             bitos.Add(new TextArgumentBit(tbuilder.ToString(), wasquoted, true, system));
         }
-        arg.Bits = bitos.ToArray();
+        arg.Bits = [.. bitos];
         return arg;
     }
 }

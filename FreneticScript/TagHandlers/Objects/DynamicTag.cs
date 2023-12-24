@@ -21,8 +21,9 @@ using FreneticScript.ScriptSystems;
 namespace FreneticScript.TagHandlers.Objects;
 
 /// <summary>Represents a tag object of unknown type.</summary>
+/// <param name="obj">The TemplateObject to base this DynamicTag off of.</param>
 [ObjectMeta(Name = DynamicTag.TYPE, SubTypeName = TextTag.TYPE, Group = "Tag System", Description = "Represents any object, dynamically.")]
-public class DynamicTag : TemplateObject
+public class DynamicTag(TemplateObject obj) : TemplateObject
 {
 
     /// <summary>Return the type name of this tag.</summary>
@@ -42,17 +43,10 @@ public class DynamicTag : TemplateObject
     // TODO: Explanation of dynamics!
 
     /// <summary>The represented tag object.</summary>
-    public TemplateObject Internal;
+    public TemplateObject Internal = obj;
 
     /// <summary>The field <see cref="Internal"/>.</summary>
     public static readonly FieldInfo Field_DynamicTag_Internal = typeof(DynamicTag).GetField(nameof(Internal));
-
-    /// <summary>Constructs a new DynamicTag.</summary>
-    /// <param name="obj">The TemplateObject to base this DynamicTag off of.</param>
-    public DynamicTag(TemplateObject obj)
-    {
-        Internal = obj;
-    }
 
     /// <summary>The DynamicTag type.</summary>
     public const string TYPE = "dynamic";

@@ -31,10 +31,10 @@ public class WaitCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             NumberTag.Validator
-        };
+        ];
     }
 
     /// <summary>Adapts a command entry to CIL.</summary>

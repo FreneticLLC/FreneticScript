@@ -35,8 +35,8 @@ public static class ScriptParser
         try
         {
             commands = commands.Replace("\r\n", "\n").Replace('\r', '\n');
-            List<string> CommandList = new();
-            List<int> Lines = new();
+            List<string> CommandList = [];
+            List<int> Lines = [];
             bool quoted = false;
             bool qtype = false;
             int line = currentLine;
@@ -194,7 +194,7 @@ public static class ScriptParser
                 Lines.Add(line);
                 CommandList.Add(commandConstruct.ToString().Trim());
             }
-            return new CommandScript(name, CommandScript.TYPE_NAME_FILE, CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr).ToArray(), system, 0, mode);
+            return new CommandScript(name, CommandScript.TYPE_NAME_FILE, [.. CreateBlock(name, Lines, CommandList, null, system, "", 0, out bool herr)], system, 0, mode);
         }
         catch (Exception ex)
         {
@@ -222,7 +222,7 @@ public static class ScriptParser
     /// <returns>A list of entries with blocks separated.</returns>
     public static List<CommandEntry> CreateBlock(string name, List<int> lines, List<string> from, CommandEntry entry, ScriptEngine system, string tabs, int indexStart, out bool had_error)
     {
-        List<CommandEntry> outEntryList = new();
+        List<CommandEntry> outEntryList = [];
         List<string> fromArgsHelper = null;
         List<int> lineArgsHelper = null;
         int blocks = 0;
@@ -233,8 +233,8 @@ public static class ScriptParser
                 blocks++;
                 if (blocks == 1)
                 {
-                    fromArgsHelper = new List<string>();
-                    lineArgsHelper = new List<int>();
+                    fromArgsHelper = [];
+                    lineArgsHelper = [];
                 }
                 else
                 {
@@ -272,12 +272,9 @@ public static class ScriptParser
                         cent.BlockEnd = indexStart - 1;
                         List<CommandEntry> blockToInject = new(block);
                         int bc = block.Count;
-                        if (cent.Command != null)
-                        {
-                            cent.Command.AdaptBlockFollowers(cent, blockToInject, block);
-                        }
+                        cent.Command?.AdaptBlockFollowers(cent, blockToInject, block);
                         indexStart += (blockToInject.Count - bc);
-                        cent.InnerCommandBlock = block.ToArray();
+                        cent.InnerCommandBlock = [.. block];
                         outEntryList.AddRange(blockToInject);
                     }
                 }
@@ -347,12 +344,12 @@ public static class ScriptParser
             {
                 return null;
             }
-            if (command.StartsWith("/"))
+            if (command.StartsWithFast('/'))
             {
                 command = command[1..];
             }
             command = command.Replace('\0', ' ');
-            List<Argument> args = new();
+            List<Argument> args = [];
             int start = 0;
             bool quoted = false;
             bool qtype = false;
@@ -399,25 +396,25 @@ public static class ScriptParser
             {
                 return null;
             }
-            Dictionary<string, Argument> nameds = new();
+            Dictionary<string, Argument> nameds = [];
             if (args.Count >= 3 && !args[1].WasQuoted)
             {
                 string a1 = args[1].ToString();
                 if (a1 == "=" || a1 == "+=" || a1 == "-=" || a1 == "*=" || a1 == "/=")
                 {
-                    return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, args.ToArray(), system.DebugVarSetCommand.Meta.Name, CommandPrefix.NONE, script, line, tabs, system);
+                    return new CommandEntry(command, 0, 0, system.DebugVarSetCommand, [.. args], system.DebugVarSetCommand.Meta.Name, CommandPrefix.NONE, script, line, tabs, system);
                 }
                 else if (a1 == "^=")
                 {
                     Argument varname = args[0];
                     args.RemoveRange(0, 2);
-                    nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit("\0" + varname.ToString().ToLowerFast(), true, true, system) } };
+                    nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = [new TextArgumentBit("\0" + varname.ToString().ToLowerFast(), true, true, system)] };
                 }
                 else if (args.Count >= 4 && args[0].ToString() == "var" && args[2].ToString() == "^=")
                 {
                     Argument varname = args[1];
                     args.RemoveRange(0, 3);
-                    nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(varname.ToString().ToLowerFast(), true, true, system) } };
+                    nameds[CommandEntry.SAVE_NAME_ARG_ID] = new Argument() { Bits = [new TextArgumentBit(varname.ToString().ToLowerFast(), true, true, system)] };
                 }
             }
             string BaseCommand = args[0].ToString();
@@ -448,7 +445,7 @@ public static class ScriptParser
                 {
                     throw new ErrorInducedException($"Cannot wait ('&') on command '{foundCommandObject.Meta.Name}'.");
                 }
-                entry = new CommandEntry(command, 0, 0, foundCommandObject, args.ToArray(), BaseCommand, prefix, script, line, tabs, nameds, system);
+                entry = new CommandEntry(command, 0, 0, foundCommandObject, [.. args], BaseCommand, prefix, script, line, tabs, nameds, system);
             }
             else
             {
@@ -470,7 +467,7 @@ public static class ScriptParser
     public static CommandEntry CreateErrorOutputEntry(string message, ScriptEngine system, string script, string tabs)
     {
         return new CommandEntry("error \"Script run rejected: " + message.Replace('\"', '\'') + "\"", 0, 0, system.TheErrorCommand,
-            new Argument[] { new Argument() { Bits = new ArgumentBit[] { new TextArgumentBit(message, true, true, system) } } }, "error", CommandPrefix.NONE, script, 0, tabs, system);
+            [new() { Bits = [new TextArgumentBit(message, true, true, system)] }], "error", CommandPrefix.NONE, script, 0, tabs, system);
 
     }
 
@@ -483,7 +480,7 @@ public static class ScriptParser
             throw new ErrorInducedException("Unknown command '" + name + "'!");
         }
         _arguments.Insert(0, ArgumentParser.SplitToArgument(system, name, false));
-        return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, _arguments.ToArray(), name, prefix, script, linen, tabs, nameds, sys);
+        return new CommandEntry(line, 0, 0, system.DebugInvalidCommand, [.. _arguments], name, prefix, script, linen, tabs, nameds, sys);
 
     }
 }

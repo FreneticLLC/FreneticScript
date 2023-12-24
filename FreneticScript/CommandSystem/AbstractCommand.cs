@@ -121,7 +121,7 @@ public abstract class AbstractCommand
     /// <param name="entry">The entry.</param>
     public static CommandEntry GetFollower(CommandEntry entry)
     {
-        return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, new Argument[] { new Argument() { Bits = Array.Empty<ArgumentBit>() } },
+        return new CommandEntry("CALLBACK:" + entry.Name, entry.BlockStart, entry.BlockEnd, entry.Command, [new() { Bits = [] }],
             entry.Name, CommandPrefix.CALLBACK, entry.ScriptName, entry.ScriptLine, entry.FairTabulation + "    ", entry.System);
     }
 

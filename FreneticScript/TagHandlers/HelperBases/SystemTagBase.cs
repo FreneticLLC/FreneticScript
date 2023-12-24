@@ -117,7 +117,7 @@ public class SystemTagBase : TemplateTagBase
         }
 
         [TagMeta(TagType = TYPE, Name = "current_time_utc", Group = "Utilities", ReturnType = TimeTag.TYPE, Returns = "The current system time (UTC).",
-            Others = new string[] { "Preferred for time-related calculations." })]
+            Others = ["Preferred for time-related calculations."])]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeTag Tag_Current_Time_UTC(SystemTag obj, TagData data)
         {
@@ -125,7 +125,7 @@ public class SystemTagBase : TemplateTagBase
         }
 
         [TagMeta(TagType = TYPE, Name = "current_time_local", Group = "Utilities", ReturnType = TimeTag.TYPE,
-            Returns = "The current local system time.", Others = new string[] { "Preferred for displaying the current time." })]
+            Returns = "The current local system time.", Others = ["Preferred for displaying the current time."])]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeTag Tag_Current_Time_Local(SystemTag obj, TagData data)
         {

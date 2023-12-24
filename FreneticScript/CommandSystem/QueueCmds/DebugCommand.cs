@@ -54,10 +54,10 @@ public class DebugCommand : AbstractCommand
         Asyncable = true;
         MinimumArguments = 1;
         MaximumArguments = 1;
-        ObjectTypes = new Action<ArgumentValidation>[]
-        {
+        ObjectTypes =
+        [
             Verify
-        };
+        ];
     }
 
     void Verify(ArgumentValidation validator)
