@@ -227,7 +227,7 @@ public class ScriptEngine
                     if (mode == "autorun")
                     {
                         shouldAutoRun = true;
-                        autoRunPriority = args.Length > 0 ? 0 : StringConversionHelper.StringToInt(args[1]);
+                        autoRunPriority = args.Length < 2 ? 0 : StringConversionHelper.StringToInt(args[1]);
                     }
                     continue;
                 }
