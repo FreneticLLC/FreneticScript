@@ -146,7 +146,7 @@ public class TagHandler
                             else
                             {
                                 type.RawInternalType = type.RawInternalField.FieldType;
-                                type.RawInternalConstructor = type.RawType.GetConstructor(new Type[] { type.RawInternalType });
+                                type.RawInternalConstructor = type.RawType.GetConstructor([type.RawInternalType]);
                                 if (type.RawInternalConstructor == null)
                                 {
                                     Engine.Context.BadOutput("Bad tag declaration (RawInternal set, but no constructor of the same type as the 'Internal' field): " + type.TypeName);

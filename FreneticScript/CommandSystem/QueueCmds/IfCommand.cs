@@ -63,7 +63,7 @@ public class IfCommand: AbstractCommand
     }
 
     /// <summary>Represents the "TryIfCIL(queue, entry)" method.</summary>
-    public static MethodInfo TryIfCILMethod = typeof(IfCommand).GetMethod("TryIfCIL", new Type[] { typeof(CommandQueue), typeof(CommandEntry) });
+    public static MethodInfo TryIfCILMethod = typeof(IfCommand).GetMethod("TryIfCIL", [typeof(CommandQueue), typeof(CommandEntry)]);
 
     /// <summary>Adapts a command entry to CIL.</summary>
     /// <param name="values">The adaptation-relevant values.</param>

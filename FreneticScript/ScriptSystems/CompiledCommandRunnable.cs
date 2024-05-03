@@ -19,7 +19,7 @@ namespace FreneticScript.ScriptSystems;
 public abstract class CompiledCommandRunnable
 {
     /// <summary>This class's <see cref="Run(CommandQueue)"/> method.</summary>
-    public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(CompiledCommandRunnable.Run), new Type[] { typeof(CommandQueue) });
+    public static readonly MethodInfo RunMethod = typeof(CompiledCommandRunnable).GetMethod(nameof(Run), [typeof(CommandQueue)]);
 
     /// <summary>This class's <see cref="Entry"/> field.</summary>
     public static readonly FieldInfo EntryField = typeof(CompiledCommandRunnable).GetField(nameof(Entry));

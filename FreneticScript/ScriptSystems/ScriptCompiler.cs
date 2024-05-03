@@ -602,7 +602,7 @@ public static class ScriptCompiler
     }
 
     /// <summary>The <see cref="MethodImplAttribute(MethodImplOptions)"/> constructor.</summary>
-    public static readonly ConstructorInfo Ctor_MethodImplAttribute_Options = typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) });
+    public static readonly ConstructorInfo Ctor_MethodImplAttribute_Options = typeof(MethodImplAttribute).GetConstructor([typeof(MethodImplOptions)]);
 
     /// <summary>A reusable input object array that contains <see cref="MethodImplOptions.AggressiveInlining"/>.</summary>
     public static readonly object[] Input_Params_AggrInline = [MethodImplOptions.AggressiveInlining];

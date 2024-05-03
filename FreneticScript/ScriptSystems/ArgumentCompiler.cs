@@ -27,16 +27,16 @@ public static class ArgumentCompiler
     public static MethodInfo Object_ToString = typeof(object).GetMethod(nameof(Object.ToString), BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
 
     /// <summary>The <see cref="StringBuilder(int)"/> constructor.</summary>
-    public static ConstructorInfo StringBuilder_CTOR = typeof(StringBuilder).GetConstructor(new Type[] { typeof(int) });
+    public static ConstructorInfo StringBuilder_CTOR = typeof(StringBuilder).GetConstructor([typeof(int)]);
 
     /// <summary>The <see cref="StringBuilder.Append(string)"/> method.</summary>
-    public static MethodInfo StringBuilder_Append = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
+    public static MethodInfo StringBuilder_Append = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), BindingFlags.Public | BindingFlags.Instance, null, [typeof(string)], null);
 
     /// <summary>The <see cref="StringBuilder.ToString()"/> method.</summary>
     public static MethodInfo StringBuilder_ToString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.ToString), BindingFlags.Public | BindingFlags.Instance, null, [], null);
 
     /// <summary>The <see cref="TextTag(string)"/> constructor.</summary>
-    public static ConstructorInfo TextTag_CTOR = typeof(TextTag).GetConstructor(new Type[] { typeof(string) });
+    public static ConstructorInfo TextTag_CTOR = typeof(TextTag).GetConstructor([typeof(string)]);
 
     /// <summary>The <see cref="Argument.Bits"/> field.</summary>
     public static FieldInfo Argument_Bits = typeof(Argument).GetField(nameof(Argument.Bits));
