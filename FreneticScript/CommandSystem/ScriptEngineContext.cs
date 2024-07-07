@@ -54,6 +54,10 @@ public abstract class ScriptEngineContext
     /// <param name="name">The name to get a config for. Always lower case.</param>
     public abstract AutoConfiguration GetConfig(string name);
 
+    /// <summary>Fired when the config for the given name was changed. See also <see cref="GetConfig(string)"/>.</summary>
+    /// <param name="name">The name of the config changed. Always lower case.</param>
+    public abstract void SignalDidChangeConfig(string name);
+
     /// <summary>
     /// Used to read a text file, generally a script.
     /// File format is along the lines of "mymap/myscript.frs".

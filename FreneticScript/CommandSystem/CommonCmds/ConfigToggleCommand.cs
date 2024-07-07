@@ -68,6 +68,7 @@ public class ConfigToggleCommand : AbstractCommand
         bool currentValue = (bool)field.GetValue(section);
         field.SetValue(section, !currentValue);
         field.OnChanged?.Invoke();
+        queue.Engine.Context.SignalDidChangeConfig(configName);
         if (queue.ShouldShowGood())
         {
             entry.GoodOutput(queue, $"For config '{TextStyle.SeparateVal(configName)}', toggled '{TextStyle.SeparateVal(configKey)}' to '{TextStyle.SeparateVal(!currentValue)}'");
