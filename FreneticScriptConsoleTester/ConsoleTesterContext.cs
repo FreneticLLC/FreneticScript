@@ -10,11 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticDataSyntax;
 using FreneticUtilities.FreneticToolkit;
 using FreneticScript;
 using FreneticScript.CommandSystem;
 using FreneticScript.TagHandlers;
-using FreneticUtilities.FreneticDataSyntax;
 
 namespace FreneticScriptConsoleTester;
 

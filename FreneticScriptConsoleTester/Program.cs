@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticToolkit;
 using FreneticScript;
 using FreneticScript.CommandSystem;
-using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScriptConsoleTester;
 
