@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.TagHandlers.HelperBases;
 

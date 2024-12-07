@@ -11,11 +11,11 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
-using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.CommandSystem.QueueCmds;
 

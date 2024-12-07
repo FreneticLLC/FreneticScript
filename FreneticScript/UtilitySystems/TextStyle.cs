@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using FreneticScript.TagHandlers.HelperBases;
 
-namespace FreneticScript;
+namespace FreneticScript.UtilitySystems;
 
 /// <summary>
 /// Holds all text styles to be used... replace these with your engine's color tag system.

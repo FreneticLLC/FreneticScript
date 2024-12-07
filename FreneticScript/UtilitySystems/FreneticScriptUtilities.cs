@@ -12,7 +12,7 @@ using System.Threading;
 using FreneticUtilities.FreneticToolkit;
 using FreneticScript.CommandSystem;
 
-namespace FreneticScript;
+namespace FreneticScript.UtilitySystems;
 
 /// <summary>Various utilities needed in FreneticScript.</summary>
 public static class FreneticScriptUtilities

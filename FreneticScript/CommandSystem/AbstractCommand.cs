@@ -14,6 +14,7 @@ using FreneticScript.CommandSystem.Arguments;
 using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.CommandSystem;
 

@@ -12,8 +12,8 @@ using System.Text;
 using FreneticUtilities.FreneticExtensions;
 using FreneticScript.CommandSystem;
 using FreneticScript.CommandSystem.Arguments;
-using FreneticScript.TagHandlers.CommonBases;
 using FreneticScript.TagHandlers.HelperBases;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.TagHandlers.Objects;
 
@@ -138,7 +138,7 @@ public class ListTag: TemplateObject, IListTagForm
             IListTagForm lform => lform.ListForm,
             DynamicTag dtag => CreateFor(dtag.Internal),
             TextTag _ => For(input.ToString()),
-            _ => new ListTag(new List<TemplateObject>() { input }),
+            _ => new ListTag([input]),
         };
     }
 

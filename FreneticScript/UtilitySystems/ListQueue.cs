@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FreneticScript;
+namespace FreneticScript.UtilitySystems;
 
 /// <summary>Holds an array, managing it both like a list and like a queue depending on need.</summary>
 public class ListQueue<T>

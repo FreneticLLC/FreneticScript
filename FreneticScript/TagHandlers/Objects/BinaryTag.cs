@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using FreneticUtilities.FreneticExtensions;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.TagHandlers.Objects;
 

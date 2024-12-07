@@ -18,6 +18,7 @@ using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers.CommonBases;
 using FreneticScript.TagHandlers.HelperBases;
 using FreneticScript.TagHandlers.Objects;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.TagHandlers;
 

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using FreneticUtilities.FreneticDataSyntax;
 using FreneticUtilities.FreneticToolkit;
+using FreneticScript.UtilitySystems;
 
 namespace FreneticScript.CommandSystem;
 
