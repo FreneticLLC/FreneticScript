@@ -21,7 +21,7 @@ using System.Text;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Frenetic LLC")]
 [assembly: AssemblyProduct("FreneticScriptConsoleTester")]
-[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2016-2024")]
+[assembly: AssemblyCopyright("Copyright © Frenetic LLC 2016-2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
