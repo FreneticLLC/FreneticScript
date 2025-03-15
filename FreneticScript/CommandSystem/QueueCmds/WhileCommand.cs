@@ -210,7 +210,7 @@ public class WhileCommand : AbstractCommand
     {
         WhileCommandData dat = queue.CurrentRunnable.EntryData[entry_ind] as WhileCommandData;
         integer.Internal = ++dat.Index;
-        return IfCommand.TryIf(queue, null, new List<Argument>(dat.ComparisonArgs));
+        return IfCommand.TryIf(queue, null, [.. dat.ComparisonArgs]);
     }
 
     /// <summary>Executes the callback part of the while command.</summary>
@@ -221,7 +221,7 @@ public class WhileCommand : AbstractCommand
     {
         WhileCommandData dat = queue.CurrentRunnable.EntryData[entry.BlockStart - 1] as WhileCommandData;
         integer.Internal = ++dat.Index;
-        if (IfCommand.TryIf(queue, entry, new List<Argument>(dat.ComparisonArgs)))
+        if (IfCommand.TryIf(queue, entry, [.. dat.ComparisonArgs]))
         {
             if (entry.ShouldShowGood(queue))
             {
@@ -241,7 +241,7 @@ public class WhileCommand : AbstractCommand
     /// <param name="entry">Entry to be executed.</param>
     public static bool TryWhileNumberedCIL_NoDebug(CommandQueue queue, CommandEntry entry)
     {
-        bool success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
+        bool success = IfCommand.TryIf(queue, entry, [.. entry.Arguments]);
         if (!success)
         {
             return false;
@@ -255,7 +255,7 @@ public class WhileCommand : AbstractCommand
     /// <param name="entry">Entry to be executed.</param>
     public static bool TryWhileNumberedCIL(CommandQueue queue, CommandEntry entry)
     {
-        bool success = IfCommand.TryIf(queue, entry, new List<Argument>(entry.Arguments));
+        bool success = IfCommand.TryIf(queue, entry, [.. entry.Arguments]);
         if (!success)
         {
             if (entry.ShouldShowGood(queue))

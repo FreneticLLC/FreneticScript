@@ -108,7 +108,7 @@ public class IfCommand: AbstractCommand
     public static bool TryIfCIL(CommandQueue queue, CommandEntry entry)
     {
         entry.SetData(queue, new IfCommandData() { Result = 0 });
-        bool success = TryIf(queue, entry, new List<Argument>(entry.Arguments));
+        bool success = TryIf(queue, entry, [.. entry.Arguments]);
         if (success)
         {
             if (entry.ShouldShowGood(queue))

@@ -270,7 +270,7 @@ public static class ScriptParser
                         cent.BlockStart = indexStart;
                         indexStart += block.Count;
                         cent.BlockEnd = indexStart - 1;
-                        List<CommandEntry> blockToInject = new(block);
+                        List<CommandEntry> blockToInject = [.. block];
                         int bc = block.Count;
                         cent.Command?.AdaptBlockFollowers(cent, blockToInject, block);
                         indexStart += (blockToInject.Count - bc);

@@ -136,7 +136,7 @@ public class ElseCommand: AbstractCommand
             ((IfCommandData)entry.GetData(queue)).Result = 1;
             return true;
         }
-        List<Argument> args = new(entry.Arguments);
+        List<Argument> args = [.. entry.Arguments];
         args.RemoveAt(0);
         bool success = IfCommand.TryIf(queue, entry, args);
         if (success)

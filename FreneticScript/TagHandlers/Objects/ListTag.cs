@@ -65,7 +65,7 @@ public class ListTag: TemplateObject, IListTagForm
     /// <param name="entries">The entries.</param>
     public ListTag(List<TemplateObject> entries)
     {
-        Internal = new List<TemplateObject>(entries);
+        Internal = [.. entries];
     }
 
     /// <summary>Constructs a list tag from a list of entries.</summary>
