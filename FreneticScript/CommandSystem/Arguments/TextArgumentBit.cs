@@ -12,6 +12,7 @@ using System.Text;
 using FreneticScript.ScriptSystems;
 using FreneticScript.TagHandlers;
 using FreneticScript.TagHandlers.Objects;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScript.CommandSystem.Arguments;
 
@@ -48,6 +49,12 @@ public class TextArgumentBit : ArgumentBit
         Engine = _engine;
     }
 
+    /// <summary>Matcher to validate that a number looks like a Long.</summary>
+    public static AsciiMatcher LongMatcher = new(AsciiMatcher.Digits + "-");
+
+    /// <summary>Matcher to validate that a number looks like a Double.</summary>
+    public static AsciiMatcher DoubleMatcher = new(AsciiMatcher.Digits + "-.");
+
     /// <summary>Constructs the argument with input text.</summary>
     /// <param name="_text">The input text.</param>
     /// <param name="wasquoted">Whether the argument was quoted at input time.</param>
@@ -80,13 +87,13 @@ public class TextArgumentBit : ArgumentBit
             ResType = NullTag.TYPE;
             return;
         }
-        else if (long.TryParse(_text, out long ti) && ti.ToString() == _text)
+        else if (LongMatcher.IsOnlyMatches(_text) && long.TryParse(_text, out long ti) && ti.ToString() == _text)
         {
             InputValue = new IntegerTag(ti);
             ResType = IntegerTag.TYPE;
             return;
         }
-        else if (double.TryParse(_text, out double tn) && (!perfect || tn.ToString() == _text))
+        else if (DoubleMatcher.IsOnlyMatches(_text) && double.TryParse(_text, out double tn) && (!perfect || tn.ToString() == _text))
         {
             InputValue = new NumberTag(tn);
             ResType = NumberTag.TYPE;
