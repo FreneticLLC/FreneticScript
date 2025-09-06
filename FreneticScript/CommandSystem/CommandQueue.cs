@@ -44,6 +44,9 @@ public class CommandQueue
     /// <summary>Whether the queue is running.</summary>
     public bool Running = false;
 
+    /// <summary>If true, show debug of basic queue state. If false, don't.</summary>
+    public bool BasicStateDebug = true;
+
     /// <summary>The command system running this queue.</summary>
     public ScriptEngine Engine;
 
@@ -63,14 +66,14 @@ public class CommandQueue
     /// <returns>The tag data object.</returns>
     public TagData GetTagData()
     {
-        if (BasicTagData == null)
+        if (BasicTagData is null)
         {
             BasicTagData = TagData.GenerateSimpleErrorTagData();
             BasicTagData.TagSystem = Engine.TagSystem;
             BasicTagData.ErrorHandler = Error;
         }
         BasicTagData.Runnable = CurrentRunnable;
-        BasicTagData.DBMode = CurrentRunnable == null ? DebugMode.FULL : CurrentRunnable.Debug;
+        BasicTagData.DBMode = CurrentRunnable is null ? DebugMode.FULL : CurrentRunnable.Debug;
         return BasicTagData;
     }
 
@@ -96,7 +99,7 @@ public class CommandQueue
     /// <returns>Whether it should output.</returns>
     public bool ShouldOutputLast(out CommandEntry entry)
     {
-        if (CurrentRunnable == null)
+        if (CurrentRunnable is null)
         {
             entry = null;
             return false;
@@ -109,7 +112,7 @@ public class CommandQueue
         {
             entry = CurrentRunnable.Entry.At(CurrentRunnable.Index - 1);
         }
-        return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
+        return entry is not null && entry.CorrectDBMode(this) == DebugMode.FULL;
     }
 
     /// <summary>Whether the current queue entry should output.</summary>
@@ -118,7 +121,7 @@ public class CommandQueue
     public bool ShouldOutputCurrent(out CommandEntry entry)
     {
         entry = CurrentRunnable?.CurrentCommandEntry;
-        return entry != null && entry.CorrectDBMode(this) == DebugMode.FULL;
+        return entry is not null && entry.CorrectDBMode(this) == DebugMode.FULL;
     }
 
     /// <summary>Starts running the command queue.</summary>
@@ -131,9 +134,9 @@ public class CommandQueue
         Running = true;
         ID = Interlocked.Increment(ref HighestID);
         CurrentRunnable = RunningStack.Peek();
-        if (ShouldOutputCurrent(out CommandEntry first))
+        if (BasicStateDebug && ShouldOutputCurrent(out CommandEntry first))
         {
-            first.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " started.");
+            first.GoodOutput(this, $"Queue {TextStyle.Separate}{ID}{TextStyle.Outgood} started.");
         }
         Tick(0f);
         if (Running)
@@ -151,7 +154,7 @@ public class CommandQueue
     /// </summary>
     public void Tick(double Delta)
     {
-        if (Delayable && WaitingOn != null)
+        if (Delayable && WaitingOn is not null)
         {
             return;
         }
@@ -169,7 +172,7 @@ public class CommandQueue
             DidWaitLast = false;
             if (ShouldOutputCurrent(out CommandEntry current))
             {
-                current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " resuming processing.");
+                current.GoodOutput(this, $"Queue {TextStyle.Separate}{ID}{TextStyle.Outgood} resuming processing.");
             }
         }
         while (RunningStack.Count > 0)
@@ -180,7 +183,7 @@ public class CommandQueue
             {
                 if (ShouldOutputLast(out CommandEntry current))
                 {
-                    current.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " waiting.");
+                    current.GoodOutput(this, $"Queue {TextStyle.Separate}{ID}{TextStyle.Outgood} waiting.");
                 }
                 DidWaitLast = true;
                 return;
@@ -192,9 +195,9 @@ public class CommandQueue
         }
         Complete?.Invoke(this, new CommandQueueEventArgs(this));
         Running = false;
-        if (ShouldOutputLast(out CommandEntry last))
+        if (BasicStateDebug && ShouldOutputLast(out CommandEntry last))
         {
-            last.GoodOutput(this, "Queue " + TextStyle.Separate + ID + TextStyle.Outgood + " completed.");
+            last.GoodOutput(this, $"Queue {TextStyle.Separate}{ID}{TextStyle.Outgood} completed.");
         }
     }
 

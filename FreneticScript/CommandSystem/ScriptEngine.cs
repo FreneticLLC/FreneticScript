@@ -286,21 +286,24 @@ public class ScriptEngine
     /// </summary>
     /// <param name="commands">The command string to parse.</param>
     /// <param name="outputter">The output function to call, or null if none.</param>
-    public void ExecuteCommands(string commands, OutputFunction outputter)
+    /// <param name="debugMode">What debug mode to start the queue with.</param>
+    /// <param name="basicQueueStateDebug">Whether to debug basic queue state. If null, will be true only if the command list is longer than one entry.</param>
+    public void ExecuteCommands(string commands, OutputFunction outputter, DebugMode debugMode = DebugMode.FULL, bool? basicQueueStateDebug = null)
     {
         CommandScript cs = ScriptParser.SeparateCommands("command_line", commands, this);
-        if (cs == null)
+        if (cs is null)
         {
             return;
         }
         cs.TypeName = "CommandLine";
-        if (cs == null)
+        if (cs is null)
         {
             outputter?.Invoke("Invalid commands specified, error outputted to logs.", MessageType.BAD);
             return;
         }
-        cs.Debug = DebugMode.FULL;
+        cs.Debug = debugMode;
         CommandQueue queue = cs.ToQueue(this);
+        queue.BasicStateDebug = basicQueueStateDebug ?? (cs.CommandArray.Length > 1);
         queue.Outputsystem = outputter;
         queue.Execute();
     }
