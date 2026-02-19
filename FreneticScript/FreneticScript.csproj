@@ -8,6 +8,7 @@
     <LangVersion>latest</LangVersion>
     <DocumentationFile>FreneticScript.xml</DocumentationFile>
     <Configurations>Debug;Release;DebugSave</Configurations>
+    <Nullable>Disable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>TRACE;DEBUG</DefineConstants>
