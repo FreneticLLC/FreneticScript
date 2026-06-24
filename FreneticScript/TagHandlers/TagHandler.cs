@@ -179,7 +179,7 @@ public class TagHandler
                                 thi.Meta.Ready(this);
                                 if (thi.Meta.SpecialCompiler)
                                 {
-                                    thi.Meta.SpecialCompileAction = method.CreateDelegate(typeof(Func<ILGeneratorTracker, TagArgumentBit, int, TagReturnType, TagReturnType>))
+                                    thi.Meta.SpecialCompileAction = method.CreateDelegate<Func<ILGeneratorTracker, TagArgumentBit, int, TagReturnType, TagReturnType>>()
                                         as Func<ILGeneratorTracker, TagArgumentBit, int, TagReturnType, TagReturnType>;
                                 }
                                 else
@@ -251,7 +251,7 @@ public class TagHandler
                                 if (thi.Meta.SpecialTypeHelperName != null)
                                 {
                                     thi.Meta.SpecialTypeHelper = type.RawType.GetMethod(thi.Meta.SpecialTypeHelperName, BindingFlags.Static | BindingFlags.Public)
-                                        .CreateDelegate(typeof(Func<TagArgumentBit, int, TagReturnType>)) as Func<TagArgumentBit, int, TagReturnType>;
+                                        .CreateDelegate<Func<TagArgumentBit, int, TagReturnType>>() as Func<TagArgumentBit, int, TagReturnType>;
                                 }
                                 type.TagHelpers.Add(tm.Name, thi);
                             }

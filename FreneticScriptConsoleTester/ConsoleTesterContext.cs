@@ -130,4 +130,8 @@ public class ConsoleTesterContext : ScriptEngineContext
             _ => null
         };
     }
+
+    public override void SignalDidChangeConfig(string name)
+    {
+    }
 }

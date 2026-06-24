@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FreneticUtilities.FreneticToolkit;
 
 namespace FreneticScriptConsoleTester;
 
@@ -18,9 +19,9 @@ public partial class SysConsole
 {
     volatile static List<KeyValuePair<string, string>> Waiting = [];
 
-    static Object ConsoleLock;
+    static readonly LockObject ConsoleLock = new();
 
-    static Object WriteLock;
+    static readonly LockObject WriteLock = new();
 
     static Thread ConsoleOutputThread;
 
@@ -52,8 +53,6 @@ public partial class SysConsole
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine("Preparing console...");
         Console.WriteLine("Starting system...");
-        ConsoleLock = new Object();
-        WriteLock = new Object();
         ConsoleOutputThread = new Thread(new ThreadStart(ConsoleLoop));
         //Program.ThreadsToClose.Add(ConsoleOutputThread);
         ConsoleOutputThread.Start();
